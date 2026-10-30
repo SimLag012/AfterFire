@@ -3,6 +3,7 @@ from fastapi import APIRouter
 from app.core.config import settings
 from app.providers.firms import FirmsProvider
 from app.providers.imagery import ImageryProvider
+from app.providers.api_subsets import configured_provider
 
 router = APIRouter()
 
@@ -32,6 +33,18 @@ async def build_system_status() -> Dict[str, Any]:
             effective_message = f"Real-data mode active, but NASA FIRMS API is currently unreachable: {firms_info['message']}"
 
     providers = {
+        "earth_engine": {
+            "name": "Google Earth Engine (MODIS Collection 6.1)",
+            "configured": bool(settings.AFTERFIRE_EARTH_ENGINE_ENABLED and settings.AFTERFIRE_EE_PROJECT_ID.strip()),
+            "selected": configured_provider()[0] == 'earth_engine',
+            "connected": False,
+            "status": "not_live_verified" if settings.AFTERFIRE_EARTH_ENGINE_ENABLED and settings.AFTERFIRE_EE_PROJECT_ID.strip() else "provider_not_configured",
+            "message": "Project settings alone do not verify credentials or collection access. Follow docs/EARTH_ENGINE_LIVE_SETUP.md and run python -m app.providers.earth_engine_check --live in backend and worker.",
+            "available_products": ["MODIS/061/MOD13Q1", "MODIS/061/MCD64A1"],
+            "date_ranges": {},
+            "last_check": None,
+            "last_retrieval": None,
+        },
         "firms": {
             "name": "NASA FIRMS (Active Fire / Hotspots)",
             "configured": firms_info["configured"],

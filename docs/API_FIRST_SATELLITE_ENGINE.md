@@ -27,4 +27,10 @@ Advanced `acquisition=hdf` is an explicit full-source operation and retains the 
 
 See `EARTH_ENGINE_PROVIDER.md`, `ORNL_PROVIDER.md`, `PROVIDER_EQUIVALENCE.md` and `API_FIRST_VERIFICATION.md`.
 
+Deployment/authentication instructions and an optional server-only credential
+overlay are in [EARTH_ENGINE_LIVE_SETUP.md](EARTH_ENGINE_LIVE_SETUP.md). A project
+setting alone is not authentication evidence. The bounded diagnostic command
+reports explicit SDK operation counts separately from decoded array bytes;
+neither includes initialization/retry traffic or exact HTTP wire overhead.
+
 Historical Reburn acquisition uses the same API-first plan and bounded native adapter. Existing HDF/AppEEARS/API sources are reused after integrity and AOI-coverage checks. The Reburn reader recognizes the API subset cache and holds the matching writer lock; it does not reinterpret API descriptors as AppEEARS manifests. Missing history has no implicit HDF or task fallback.

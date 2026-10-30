@@ -1,0 +1,16 @@
+# Opt-in overlay. Supply an existing credential file outside the repository.
+# No credential is baked into an image or passed to the frontend.
+services:
+  backend:
+    environment:
+      GOOGLE_APPLICATION_CREDENTIALS: /run/secrets/earth-engine-credentials
+    secrets:
+      - earth-engine-credentials
+  analysis-worker:
+    environment:
+      GOOGLE_APPLICATION_CREDENTIALS: /run/secrets/earth-engine-credentials
+    secrets:
+      - earth-engine-credentials
+secrets:
+  earth-engine-credentials:
+    file: ${AFTERFIRE_GOOGLE_CREDENTIALS_FILE:?Set an absolute path to an existing Google credential file outside the repository}

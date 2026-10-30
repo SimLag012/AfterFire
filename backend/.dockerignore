@@ -11,6 +11,10 @@ htmlcov
 *.sqlite3
 .env
 .env.*
+*credentials*.json
+*service-account*.json
+*.pem
+*.key
 
 
 data/firms-italy/

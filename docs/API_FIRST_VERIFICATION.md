@@ -1,5 +1,19 @@
 # API-first and Explorer verification — 2026-10-30
 
+## Follow-up: secure Earth Engine setup
+
+The owner confirmed that a Cloud project still needs registering. The follow-up
+adds private server credential routing, configuration-vs-live health reporting,
+an executable bounded real-provider diagnostic and first-error termination.
+Both deployed server diagnostics are blocked before any live request; no new
+Earth Engine science or HDF equivalence is claimed. The reference publication
+remains byte-identical after recreation. See
+[activation evidence](EARTH_ENGINE_REAL_ANALYSIS.md),
+[live setup](EARTH_ENGINE_LIVE_SETUP.md),
+[measured performance](API_FIRST_PERFORMANCE_BENCHMARK.md) and
+`earth-engine-activation-verification.json` for current final regression totals.
+The earlier 159-test results below describe the preceding checkpoint.
+
 ## Verified security boundary
 
 Remote `SimLag012/AfterFire`, `main`, was audited before edits. There were no tags, PRs, forks, branch protections or rulesets. The owner confirmed a coordinated window with the other writer. `git-filter-repo` rewrote both published commits in a separate mirror. All 543 reachable local/mirror objects and 163 application file versions were checked; only the secret replacement was allowed. The push updated only `main` with an explicit SHA lease. A fresh GitHub mirror independently scanned 126 objects after the prevention checkpoint with no exact old-key match. All 289 original modified/untracked entries were preserved before functional work.

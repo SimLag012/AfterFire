@@ -9,3 +9,11 @@ Before/after persisted-publication checks use `event-4a728489ea44ea85eab6a978870
 Live ORNL returned small real arrays but no explicit Collection 6.1 identity; equivalence is refused. Live Earth Engine is unavailable without an external registered project and runtime credentials. A future real comparison must compare identical dates/native cells and raw arrays, QA, transforms, valid masks, burned-cell IDs, statistics and anomalies, recording differences honestly. Do not mark provider equivalence established from HTTP 200 or from unchanged cached results.
 
 Additional controlled Reburn tests verify identical native BurnDate/uncertainty reconstruction from an API subset and prove that missing sources cannot invoke HDF or AppEEARS, even if the legacy submission setting is enabled.
+
+The follow-up setup audit confirmed the same reference SHA-256 before changes.
+The owner confirmed that a Google project must still be registered. New setup,
+redaction and first-error-stop tests are controlled software tests, not additional
+NASA observations. The live diagnostic intentionally reports
+`hdf_equivalence_verified=false`, even after a successful small probe. Compare
+retained HDF raw bands, full QA, dates and aligned native cells before promoting
+new Earth Engine publications; see [live setup](EARTH_ENGINE_LIVE_SETUP.md).

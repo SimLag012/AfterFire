@@ -13,4 +13,14 @@ There are no exports or indiscriminate collection `getInfo()` calls. Projection 
 
 This environment has no configured project/credentials. Live Earth Engine acquisition and provider-to-HDF equivalence therefore remain **unverified**. The offline controlled adapter tests do not constitute live provider verification.
 
+See [live setup](EARTH_ENGINE_LIVE_SETUP.md) for the executable procedure and
+`compose.earth-engine.yaml` for an optional read-only ADC secret shared by backend
+and worker. `python -m app.providers.earth_engine_check --live` performs a bounded
+historical probe through this same adapter; it never writes a publication.
+The system health response exposes configuration separately from live verification.
+Authentication, quota, request-budget and timeout failures stop the scientific
+pipeline at the first failing granule rather than repeating them across every date.
+Missing-image/band failures can still yield explicit partial science when other
+valid observations satisfy the unchanged publication rules.
+
 Catalogs: [MOD13Q1](https://developers.google.com/earth-engine/datasets/catalog/MODIS_061_MOD13Q1), [MCD64A1](https://developers.google.com/earth-engine/datasets/catalog/MODIS_061_MCD64A1).

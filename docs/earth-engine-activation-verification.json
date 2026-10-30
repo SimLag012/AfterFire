@@ -1,0 +1,206 @@
+{
+  "date": "2026-10-30",
+  "activation_complete": false,
+  "external_blocker": "Owner confirmed Google Cloud Earth Engine project registration is still required",
+  "runtime_probes": {
+    "backend": {
+      "checked_at": "2026-10-30T20:26:03.710638+00:00",
+      "live_requested": true,
+      "enabled": false,
+      "project_configured": false,
+      "status": "blocked",
+      "authentication_verified": false,
+      "products": [],
+      "decoded_array_bytes": 0,
+      "http_wire_bytes": null,
+      "explicit_api_operations": 0,
+      "operation_count_scope": "Explicit collection/projection/pixel calls; SDK initialization, authentication and retries excluded",
+      "hdf_downloads": 0,
+      "appeears_submissions": 0,
+      "hdf_equivalence_verified": false,
+      "error_code": "provider_not_configured",
+      "message": "provider_not_configured: Register/select a project at https://code.earthengine.google.com/register; follow docs/EARTH_ENGINE_LIVE_SETUP.md. No live request was attempted.",
+      "elapsed_seconds": 0.0001,
+      "process_peak_rss_kib": 89780
+    },
+    "analysis-worker": {
+      "checked_at": "2026-10-30T20:26:07.430882+00:00",
+      "live_requested": true,
+      "enabled": false,
+      "project_configured": false,
+      "status": "blocked",
+      "authentication_verified": false,
+      "products": [],
+      "decoded_array_bytes": 0,
+      "http_wire_bytes": null,
+      "explicit_api_operations": 0,
+      "operation_count_scope": "Explicit collection/projection/pixel calls; SDK initialization, authentication and retries excluded",
+      "hdf_downloads": 0,
+      "appeears_submissions": 0,
+      "hdf_equivalence_verified": false,
+      "error_code": "provider_not_configured",
+      "message": "provider_not_configured: Register/select a project at https://code.earthengine.google.com/register; follow docs/EARTH_ENGINE_LIVE_SETUP.md. No live request was attempted.",
+      "elapsed_seconds": 0.0002,
+      "process_peak_rss_kib": 90008
+    },
+    "health": {
+      "name": "Google Earth Engine (MODIS Collection 6.1)",
+      "configured": false,
+      "selected": false,
+      "connected": false,
+      "status": "provider_not_configured",
+      "message": "Project settings alone do not verify credentials or collection access. Follow docs/EARTH_ENGINE_LIVE_SETUP.md and run python -m app.providers.earth_engine_check --live in backend and worker.",
+      "available_products": [
+        "MODIS/061/MOD13Q1",
+        "MODIS/061/MCD64A1"
+      ],
+      "date_ranges": {},
+      "last_check": null,
+      "last_retrieval": null
+    },
+    "reference_publication": {
+      "byte_identical": true,
+      "sha256": "351b026453f1912204b29822bba6d1fed0c4ac1628432c7701a135563edb7d00"
+    }
+  },
+  "tests": {
+    "sqlite": {
+      "passed": 174,
+      "warnings": 53414,
+      "seconds": 81.66,
+      "isolated": true,
+      "runtime": "Existing backend Python 3.12 image with updated source and repository test configuration"
+    },
+    "postgresql_postgis": {
+      "passed": 174,
+      "warnings": 53411,
+      "seconds": 31.28,
+      "isolated": true,
+      "runtime": "Existing backend Python 3.12 image with updated source and repository test configuration"
+    }
+  },
+  "frontend_production_build": {
+    "passed": true,
+    "vite_seconds": 112
+  },
+  "browser": {
+    "scope": "Running UI, real persisted scientific reference; no live Earth Engine claim",
+    "runs": [
+      {
+        "viewport": {
+          "width": 1440,
+          "height": 1050
+        },
+        "explorer": true,
+        "savedPublication": true,
+        "job": "2abc3a98d03cd3f51f4c4491f555813afb97fe474ee6b21b590cb0e56eee90b3",
+        "attemptsUnchanged": true,
+        "savedResultMs": 1774.1114850000004,
+        "headings": [
+          "Candidate activity Aug 2021 (2d, 262 pts)",
+          "Analysis Status",
+          "Satellite Recovery Story",
+          "Recovery Intelligence \u00b7 NDVI",
+          "Initial observed change",
+          "Latest supported anomaly",
+          "Descriptive trend",
+          "Observation support",
+          "Before / After",
+          "Burned Area",
+          "Vegetation Recovery \u00b7 NDVI",
+          "Reburn History",
+          "Sources & Scientific Limitations",
+          "Pages",
+          "NASA Data Sources"
+        ],
+        "horizontalOverflow": false
+      },
+      {
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "explorer": true,
+        "savedPublication": true,
+        "job": "2abc3a98d03cd3f51f4c4491f555813afb97fe474ee6b21b590cb0e56eee90b3",
+        "attemptsUnchanged": true,
+        "savedResultMs": 1537.5018650000002,
+        "headings": [
+          "Candidate activity Aug 2021 (2d, 262 pts)",
+          "Analysis Status",
+          "Satellite Recovery Story",
+          "Recovery Intelligence \u00b7 NDVI",
+          "Initial observed change",
+          "Latest supported anomaly",
+          "Descriptive trend",
+          "Observation support",
+          "Before / After",
+          "Burned Area",
+          "Vegetation Recovery \u00b7 NDVI",
+          "Reburn History",
+          "Sources & Scientific Limitations",
+          "Pages",
+          "NASA Data Sources"
+        ],
+        "horizontalOverflow": false
+      }
+    ],
+    "errors": []
+  },
+  "saved_analyze_api": {
+    "event": "event-4a728489ea44ea85eab6a978870e0b06",
+    "seconds": 0.2191,
+    "response_bytes": 2706,
+    "same_job": true,
+    "attempts_unchanged": true,
+    "state": "partial"
+  },
+  "scientific_cache_inventory_bytes": 3921416895,
+  "new_event_live_analysis_completed": false,
+  "new_event_live_analysis_attempted": false,
+  "new_satellite_observations": 0,
+  "new_hdf_downloads": 0,
+  "new_appeears_submissions": 0,
+  "hdf_equivalence_verified": false,
+  "exact_http_wire_bytes": null,
+  "original_sqlite_quick_check": {
+    "afterfire.db": "ok",
+    "test.db": "ok"
+  },
+  "docker": {
+    "source_update_image_built": true,
+    "backend_worker_recreated": true,
+    "base_image": "sha256:74946d8e3f2680cee1477936671dbe699138fed8e0efa27768a3360721c3dcff",
+    "full_clean_dependency_rebuild_completed": false,
+    "full_rebuild_stop_reason": "Cancelled to retain root filesystem headroom; unchanged existing dependencies reused"
+  },
+  "git": {
+    "base_commit": "169bf3f3198d69de6f15041d8f2c827003b0f857",
+    "history_rewritten": false,
+    "preexisting_untracked_artifacts_preserved": true,
+    "delivery_commit": "See Git history and final chat response"
+  },
+  "reference_publication_bytes": 651070,
+  "archive_observation_count": 803761,
+  "changed_files": [
+    ".env.example",
+    ".gitignore",
+    "README.md",
+    "backend/.dockerignore",
+    "backend/app/api/routes/health.py",
+    "backend/app/providers/api_subsets.py",
+    "backend/app/providers/earth_engine_check.py",
+    "backend/app/services/post_fire_pipeline.py",
+    "backend/app/tests/test_earth_engine_setup.py",
+    "compose.earth-engine.yaml",
+    "docs/API_FIRST_PERFORMANCE_BENCHMARK.md",
+    "docs/API_FIRST_SATELLITE_ENGINE.md",
+    "docs/API_FIRST_VERIFICATION.md",
+    "docs/EARTH_ENGINE_LIVE_SETUP.md",
+    "docs/EARTH_ENGINE_PROVIDER.md",
+    "docs/EARTH_ENGINE_REAL_ANALYSIS.md",
+    "docs/FAST_ANALYSIS.md",
+    "docs/PROVIDER_EQUIVALENCE.md",
+    "docs/earth-engine-activation-verification.json"
+  ]
+}

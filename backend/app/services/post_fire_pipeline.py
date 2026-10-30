@@ -19,6 +19,7 @@ from app.models.event import FireEventCandidate, FireEventDetection
 from app.models.fire import FireDetection
 from app.models.satellite_analysis import SatelliteGranule, EventAnalysisResult
 from app.providers.modis_catalog import discover, LazyEarthdataDownloader, EarthdataAuthenticationError
+from app.providers.api_subsets import ProviderUnavailable
 from app.schemas.satellite_analysis import AnalysisConfiguration, ENGINE_VERSION
 from app.analysis.modis_science import (granule_identity, event_territory, area_km2, read_subset,
     burned_cells, vegetation_subset, seasonal_metrics, recurrence_state, expected_pixels, analysis_tiles, validate_source)
@@ -316,6 +317,8 @@ async def run_pipeline(job, progress):
                 # Quota errors stop the job; provider or raster errors allow a transparent partial result.
                 if isinstance(exc,EarthdataAuthenticationError):
                     raise
+                if isinstance(exc,ProviderUnavailable) and exc.code in ('authentication','provider_not_configured','rate_limited','request_budget','timeout'):
+                    raise
                 if isinstance(exc,ValueError) and ('limit' in str(exc) or 'space' in str(exc) or 'quota' in str(exc)):
                     raise
                 warnings.append(f"{record['original_id']}: {type(exc).__name__}: {str(exc)[:160] if isinstance(exc,ValueError) else 'provider or raster failure'}" + (f" (HTTP {exc.response.status_code})" if getattr(exc,'response',None) is not None else ''))
@@ -378,6 +381,8 @@ async def run_pipeline(job, progress):
                     telemetry['files_failed'] += 1
                 await report('vegetation', 'Vegetation granule failed', record)
                 if isinstance(exc,EarthdataAuthenticationError):
+                    raise
+                if isinstance(exc,ProviderUnavailable) and exc.code in ('authentication','provider_not_configured','rate_limited','request_budget','timeout'):
                     raise
                 if isinstance(exc,ValueError) and ('limit' in str(exc) or 'space' in str(exc) or 'quota' in str(exc)):
                     raise

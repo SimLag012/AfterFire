@@ -348,3 +348,11 @@ The Explorer now provides a world map, satellite filters, UTC date controls, tim
 Normal Analyze reuses scientific results and valid native caches, then compatible configured APIs. **Automatic full HDF downloads are disabled.** Earth Engine requires an externally registered project and runtime credentials; live ORNL Collection 6.1 equivalence is not verified and no substitution is made. No billing or NASA email orders are activated. The existing Recovery Story, Recovery Intelligence, comparison, reburn and gap flows remain available.
 
 See [global explorer](docs/FIRMS_STYLE_EXPLORER.md), [layers and timeline](docs/MAP_LAYERS_AND_TIMELINE.md), [API-first engine](docs/API_FIRST_SATELLITE_ENGINE.md), [Earth Engine setup](docs/EARTH_ENGINE_PROVIDER.md), [verification](docs/API_FIRST_VERIFICATION.md) and [Git history security](docs/GITHUB_HISTORY_SECURITY.md). Install local credential checks with `git config core.hooksPath .githooks`.
+
+Earth Engine activation requires an externally registered Google Cloud project.
+Follow [live setup](docs/EARTH_ENGINE_LIVE_SETUP.md) for registration, minimal IAM,
+private ADC authentication and the backend/worker secret overlay. Run
+`python -m app.providers.earth_engine_check --live` in both server runtimes to
+verify bounded real collection reads; `/api/v1/health` reports configuration
+without claiming live access. [Current activation evidence](docs/EARTH_ENGINE_REAL_ANALYSIS.md)
+distinguishes verified software from the outstanding live scientific checks.

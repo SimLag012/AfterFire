@@ -16,3 +16,10 @@ See [verification](ANALYSIS_PERFORMANCE_VERIFICATION.md), [NASA acquisition](DIR
 ## API-first acquisition update (2026-10-30)
 
 Normal Analyze now prefers persisted results and verified native sources/subsets, then configured compatible Collection 6.1 APIs. Missing data never triggers automatic full-tile HDF transfer or new AppEEARS submission. Scientific QA, baselines, anomalies, recovery and reburn calculations are unchanged. ORNL collection equivalence and live Earth Engine access remain explicit limitations. See [API-first engine](API_FIRST_SATELLITE_ENGINE.md), [provider equivalence](PROVIDER_EQUIVALENCE.md) and [verification](API_FIRST_VERIFICATION.md) for current behavior; older acquisition descriptions above are historical.
+
+If a new analysis reports `provider_not_configured`, follow
+[Earth Engine live setup](EARTH_ENGINE_LIVE_SETUP.md); the error now gives the
+registration URL, required runtime settings and that guide. Configure and probe
+both backend and worker. Cached publications remain readable while external
+registration is pending. Do not repeatedly retry Analyze before registration and
+authentication have succeeded.

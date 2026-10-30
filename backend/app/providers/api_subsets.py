@@ -43,11 +43,14 @@ def require_collection_061(payload):
 
 
 def configured_provider():
-    if settings.AFTERFIRE_SATELLITE_PROVIDER in ('auto','earth_engine') and settings.AFTERFIRE_EARTH_ENGINE_ENABLED and settings.AFTERFIRE_EE_PROJECT_ID:
+    if settings.AFTERFIRE_SATELLITE_PROVIDER in ('auto','earth_engine') and settings.AFTERFIRE_EARTH_ENGINE_ENABLED and settings.AFTERFIRE_EE_PROJECT_ID.strip():
         return 'earth_engine', None
     if settings.AFTERFIRE_SATELLITE_PROVIDER == 'ornl':
         return None, 'ORNL Collection 6.1/native-grid equivalence is not verified; configure Earth Engine'
-    return None, 'provider_not_configured: enable Earth Engine with a registered project; ORNL Collection 6.1 is unverified. Full HDF auto-download is disabled'
+    return None, ('provider_not_configured: register a project at https://code.earthengine.google.com/register; '
+                  'set AFTERFIRE_EARTH_ENGINE_ENABLED=true and AFTERFIRE_EE_PROJECT_ID; '
+                  'supply Google credentials to both backend and worker. See docs/EARTH_ENGINE_LIVE_SETUP.md. '
+                  'ORNL Collection 6.1 is unverified. Full HDF auto-download is disabled')
 
 
 def subset_window(record, geometry):
@@ -103,6 +106,18 @@ class ApiSubsetProvider:
         self.started=time.monotonic()
         self.ee=None
 
+    def initialize(self):
+        """Initialize lazily; credentials stay in the SDK, never in reports or logs."""
+        if self.ee is None:
+            if not settings.AFTERFIRE_EARTH_ENGINE_ENABLED or not settings.AFTERFIRE_EE_PROJECT_ID.strip():
+                raise ProviderUnavailable('provider_not_configured', configured_provider()[1] or 'Earth Engine is disabled')
+            import ee
+            ee.data.setDeadline(30000)
+            ee.data.setMaxRetries(1)
+            ee.Initialize(project=settings.AFTERFIRE_EE_PROJECT_ID)
+            self.ee=ee
+        return self.ee
+
     def _request(self):
         self.requests+=1
         if self.requests>settings.AFTERFIRE_API_MAX_REQUESTS:
@@ -137,12 +152,7 @@ class ApiSubsetProvider:
 
     def _earth_engine(self, record, win, affine):
         try:
-            if self.ee is None:
-                import ee
-                ee.data.setDeadline(30000); ee.data.setMaxRetries(1)
-                ee.Initialize(project=settings.AFTERFIRE_EE_PROJECT_ID)
-                self.ee=ee
-            ee=self.ee; product=record['product']; stamp=record['period']['start'].replace('-','_')
+            ee=self.initialize(); product=record['product']; stamp=record['period']['start'].replace('-','_')
             image=ee.Image(f'MODIS/061/{product}/{stamp}')
             self._request()
             projection=image.select(EE_BANDS[product][0]).projection().getInfo()
@@ -174,7 +184,9 @@ class ApiSubsetProvider:
                     'timeout' if any(t in detail for t in ('timeout','timed out','deadline')) else
                     'band_unavailable' if 'band' in detail and 'not' in detail else
                     'missing_data' if any(t in detail for t in ('not found','does not exist')) else 'provider_error')
-            raise ProviderUnavailable(reason,'Earth Engine request failed; check project access, credentials and dataset availability') from None
+            message = ('Earth Engine quota exceeded; valid cached subsets are retained. Retry later.' if reason=='rate_limited' else
+                       'Earth Engine request failed; check project registration, API enablement and identity permissions. See docs/EARTH_ENGINE_LIVE_SETUP.md')
+            raise ProviderUnavailable(reason,message) from None
 
     def acquire(self, record, geometry, budget, transferred):
         key,spec=cache_identity(record,geometry); folder=cache_root()/'api-subsets'/key
