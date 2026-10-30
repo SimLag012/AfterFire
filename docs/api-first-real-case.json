@@ -1,0 +1,173 @@
+{
+  "event_id": "event-30c4892d8b3bb714175bb3b2247b7f87",
+  "plan": {
+    "area_km2": 23.535300201189006,
+    "products": [
+      "MOD13Q1.061",
+      "MCD64A1.061"
+    ],
+    "record_providers": {
+      "d6e387aecb9d905092ce9c3a03ee5276453b0b0763a7af785d13bce471814a7c": "api",
+      "8776e1f7cb4026bba1ef9799349fe8829f9083491e9ceee8b0e47731acc337fa": "api",
+      "328c8cad7f24ffc072ca5496bda09ae7db07afe8a57ffa37c79cff98a1601d16": "api",
+      "acb833b8363f07b027ddafd435435a13b44c445f22d1701bb3fcffe92871ab39": "api",
+      "a81d03614591a7d24d7ed2632d32cf63f296cf9ab92c45be5334fdc5575ab0b9": "api",
+      "23656e1884360820b3c0a828f1703dc6e131645b4990a350c5c0848add8988af": "api",
+      "596697cf30b33e8f0ce866c3cbb24983d625bc1a9aca1df7a6ca3f59f5265e89": "api",
+      "bda0c954d87a05b55cc5f29a7d30ceaaf8dba4c03113a53dddbe742cc19f8492": "api",
+      "ae7257d7ddef70fbaac6393d6af54a6f81fc9906cc4fb242b7a3f28febe6f8f7": "api",
+      "c24a0919af52355b1cf1ddd883862eb9348e0220e11455c6928c5612afeec276": "api",
+      "700e3ec862cfb51049aacb1abbc64c8cf4dcd21d2278045b6938cc59bab05af7": "api",
+      "af61c67af10866eac60d6e768aa48bb376c0c6d58622ed90c45af066b3712d09": "api",
+      "d078cf61a7693f6b9f04efb183487a317f46bf488fcbb3d9c561b8077a241eb2": "api",
+      "c239e808bc3359e87b183405fb6238ee22a0e12d4e7ee7df3a1814d28c0152f5": "api",
+      "4b505d8286463ba7c490fc947fc3998654f38cb195535976e139842ad9d2108d": "api",
+      "ef1675dca4fc509f25da49b0dcdff06a564335de1b2e8ee32f144a287129ec6b": "api",
+      "7dd8f4e6c968edcfc7ae358161e9860e09437c07a12f656bcef6a79a41c0444c": "api",
+      "5c81b9ea67254e1e5654c23d9d08b33968542e4ee3dc1d6818955ea19c875919": "api",
+      "4451bc65b38bb74a61fcdc49ea1b03542447c51b581851b21add60e664c50ed3": "api",
+      "aa9869c0941d6fe3a0994ac33c4b5db1043c54e7f90d937cdc624a78f44e1dd0": "api",
+      "066440bd8cd6045807983146d3bd71c61cf7c5db5b70bebe540a247b2c463b44": "api",
+      "e02155fd40ce90a80589210ba09f877ac8b88a14456f2c9d04a4bc974ae2320a": "api",
+      "103cbb772090b844702edf24319cd5bd7b8f1257e831412edb2296704c9dee28": "api",
+      "b909c6e34a5638d27cc14f506caf28ce9f5c1fa0c91bf16ec5d4a83c96558e3c": "api",
+      "d57a82e1470f14a763074926ac6e6fedfb0566271bd7d3d5da62f37dbb77d41d": "api",
+      "69935b9ea52c1d8415ba5e2c7d530df1a3e933727948992f8d1800ebcde1b663": "api",
+      "33482b52ace3386fbfa141ff0c244aae1c02775859ef102bff01512c31b616fb": "api",
+      "ae9104c6aa10531b8d0dd62eef385dfa7ff51642c1734fcbee60c01767626fee": "api",
+      "3d67d895ad7613b134e1fde68355697b9584eef89425ea03eadad367c308dd7b": "api",
+      "a51176de18138e8bd61ae1cbe58b05faf8c0598efb498e67ed7537c2e908ad69": "api",
+      "d2bf95e62b341c8bce9d91c56c3570fe22d62a17d7e9583352edfb1bf49b7889": "api",
+      "607af40098d9f7f1307bbde32e6a7d27c71fa25b0c47da359d05d6b72d0d0176": "api",
+      "453ede2cfc51aa64ef71137a3710cf1fbd5fafd9e2c423b987ef83c714096786": "api",
+      "321aa165c6d3191344aeca02af82ca230f160aa52822d613e41f4f0d5cce9a4c": "api",
+      "8149c7bd7e2c80b3baf341eb6ab594df61eabc4f23d466382994c215f403bc29": "api",
+      "53060a9f0b948d3ac3a13ed2e455f5cd11d705005099552e32a04cfdbdd1fbd0": "api",
+      "488750543f994e185a61b05af449c102f0a21ca7ca835819eb4508f056aa726a": "api",
+      "0cd5e20f84c9fe59edb28e09ee59395243e660a4680f212baee1da7dd3021888": "api",
+      "3c4ef0fb0787870ee96f544419c3e7596df276de07d321e561417408e7496329": "api",
+      "f90391642d107d7fe79c3130ab97027e327b16f25631a536b37f8d5b7e1af41d": "api",
+      "26e0df6708dc88f21b89783fce23dbbb247f21611d1db68f650ae4bda4e43a01": "api",
+      "5c8e31ecf89852ed83334535a293c853b9ed9e2e81e9d60e163d3c6e76878707": "api",
+      "428d4213d7fca9c919a9e0e4d3188d428864d356657026f21f60fa4a6077404b": "api",
+      "ea9bd3df3721a062450faeb6c61393a84df0b74cea8471a6151318f52e0d5baa": "api",
+      "8318b4d618f3d44ae0256455eb6f1e2e09a0fa33b6ade700a8fc889f263bf472": "api",
+      "ba32e95970fdfdaffb9b22435dd8ec3bca7e82b28e25f742fd4a61ab3aec257a": "api",
+      "8f9b2cf0cc76061ac69af777d6a55bee24db6bee24225afa22b1a9cd7add9cb2": "api",
+      "8f4cc27a578a92254d1f5b3c592724935730be818c07c1fbf80c4a387acc6f87": "api",
+      "fa8ce71db23fd54f37ac8101d0af8eb83f4c1a26ed049dfafece8eca88eebc28": "api",
+      "d5366e37c9e02c90fb3b38ffd78f2963c546e634d8568f4f73bdc933fd36ae02": "api",
+      "bffb3dfd44b161edfbaebc84cd68c2847b917b9fd5494c58cdb72431eefee053": "api",
+      "15300d894a4d1f665afd9511341b8aa6f333bbb5c515f82db3903974b4c176fb": "api",
+      "22b76dc8c2ec1e44ef376d0f3a5d132e018503e50dc9b088f6f0df31449f27de": "api",
+      "3e7d3c1fe855578178196dfcae1597c57445220ad0aa5b07666d15e1f3d5aaee": "api",
+      "7e8e29e9b63fec468c55f3174427e6e2eb1750e9a468992b036cadc084488bc9": "api",
+      "23bd61cbb7a81096ce838f48dc43e1137d6e63ba834ada0ed56a53c99f2df152": "api",
+      "1269fe98e906023e405079c8ff1bb210095439d803ab99e341a90499a2e1cfa3": "api",
+      "4e05906e2dec76c803b12ea53a25164105727a4cff8e3dc0dfa25deb65e64b90": "api",
+      "975cd5e424d7b631f77a441457d51459ef96ffcd015406f474001aa397ba37b3": "api",
+      "9bb5c2897f9f0bf19f9606f2ae447b8eefdc8663e75fec080f25d900df321748": "api",
+      "4f76a1c4ef6bcc85dc28115ef44ac01b3b4657eedb5de49e101067b0de894558": "api",
+      "f71fb3018bf51f0ee5e0543a4b88af8a2fff216ca9483ec2605370036262f2d9": "api",
+      "879a18e250cf3f0d1da5917ee0b38bc5e4f4ae8140567164101c45417a0e8c15": "api",
+      "cb9fa75ebc277bb6b575984b63e5a0e131697e19204c4efda484c45fe54c61bc": "api",
+      "471ada1b26b60bab42379a8b08bdaded26a55cb441bd05331a1df0cc759d358c": "api",
+      "3616bb8737f498305794251e82d6c731031a1a1ec102903607615d39b464db82": "api",
+      "c37a504e03d3abf93a8dbf90a0e0a0845835fdf210056c237e189b6dca85151a": "api",
+      "e559e622815d18eb5199a021ce50c574eba26897a507b2111902bea176595038": "api"
+    },
+    "strategy": "persisted results → native subset cache → Collection 6.1 API",
+    "api_provider": null,
+    "automatic_hdf_download": false,
+    "catalog_full_tile_bytes": 15194122058,
+    "estimated_network_bytes": 1796288,
+    "known_network_bytes": 1796288,
+    "cached_bytes": 0,
+    "cached_files": 0,
+    "files": 68,
+    "blocks": [
+      {
+        "product": "MOD13Q1",
+        "year": "2023",
+        "provider": "api",
+        "files": 4,
+        "estimated_network_bytes": 0
+      },
+      {
+        "product": "MOD13Q1",
+        "year": "2024",
+        "provider": "api",
+        "files": 23,
+        "estimated_network_bytes": 0
+      },
+      {
+        "product": "MOD13Q1",
+        "year": "2025",
+        "provider": "api",
+        "files": 23,
+        "estimated_network_bytes": 0
+      },
+      {
+        "product": "MOD13Q1",
+        "year": "2026",
+        "provider": "api",
+        "files": 18,
+        "estimated_network_bytes": 0
+      }
+    ],
+    "limits": {
+      "request_network_bytes": 5368709120,
+      "block_bytes": 1073741824,
+      "temporary_bytes": 1073741824,
+      "derived_results_bytes": 2147483648,
+      "concurrent_downloads": 2,
+      "cache_bytes": 10737418240,
+      "free_disk_reserve_bytes": 1073741824
+    },
+    "free_disk_bytes": 1356103680,
+    "cache_used_bytes": 3921381131,
+    "limitations": [
+      "API-first: persisted results / valid native subsets / configured compatible APIs; no automatic HDF or new AppEEARS tasks"
+    ],
+    "blocked": [
+      "provider_not_configured: enable Earth Engine with a registered project; ORNL Collection 6.1 is unverified. Full HDF auto-download is disabled"
+    ],
+    "feasible": false,
+    "period": {
+      "start": "2023-10-27",
+      "end": "2026-10-30"
+    },
+    "timings": {
+      "metadata_lock_wait_seconds": 0.000274,
+      "metadata_cache_read_seconds": 0.001455,
+      "metadata_cache_hits": 2,
+      "MCD64A1_catalog_seconds": 0.0038,
+      "MOD13Q1_catalog_seconds": 0.0018,
+      "cache_and_plan_seconds": 1.5942,
+      "total_seconds": 1.7651
+    },
+    "generated_at": "2026-10-30T12:07:46.431540Z",
+    "configuration": {
+      "pre_years": 3,
+      "post_years": 10,
+      "as_of": "2026-10-30",
+      "acquisition": "auto",
+      "buffer_m": 1000,
+      "burn_tolerance_days": 3,
+      "seasonal_window_days": 24,
+      "min_baseline_years": 2,
+      "min_valid_fraction": 0.5
+    }
+  },
+  "elapsed_seconds": 1.772,
+  "max_rss_kib": 131352,
+  "cache_delta_bytes": 0,
+  "new_scientific_data_bytes": 0,
+  "new_scientific_observations": 0,
+  "calls": {
+    "hdf": 0,
+    "appeears_submission": 0
+  },
+  "result": "blocked by real provider availability; no mass acquisition attempted",
+  "scientific_provider_requests": 0
+}

@@ -10,9 +10,9 @@ class DatasetMetadata(Base):
     name = Column(String(100), nullable=False)
     provider = Column(String(100), nullable=False)
     official_url = Column(String(255), nullable=False)
-    version = Column(String(50), nullable=False)
-    spatial_resolution = Column(String(50), nullable=False)
-    temporal_frequency = Column(String(50), nullable=False)
+    version = Column(String(100), nullable=False)
+    spatial_resolution = Column(String(100), nullable=False)
+    temporal_frequency = Column(String(255), nullable=False)
     temporal_range = Column(String(100), nullable=False)
     
     last_import_at = Column(DateTime, nullable=True)

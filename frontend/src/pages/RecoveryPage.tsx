@@ -42,7 +42,7 @@ export const RecoveryPage: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-dark-950 text-slate-100 flex flex-col pb-20">
-      <DemoBanner />
+      <DemoBanner area={area} />
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 w-full space-y-8">
         {/* Header & Territory Switcher */}
@@ -102,7 +102,7 @@ export const RecoveryPage: React.FC = () => {
             <div className="glass-panel p-4 rounded-xl border border-dark-700/80 space-y-1">
               <div className="text-xs text-slate-400 flex items-center justify-between">
                 <span>Pre-Fire Baseline</span>
-                <span className="text-[10px] text-sky-400 font-mono">16-day seasonal</span>
+                <span className="text-[10px] text-sky-400 font-mono">16-day composites</span>
               </div>
               <div className="text-2xl font-bold text-sky-400 font-mono">
                 {recovery.pre_fire_baseline_mean.toFixed(3)}
@@ -163,7 +163,7 @@ export const RecoveryPage: React.FC = () => {
               <div>
                 <h2 className="text-base font-bold text-white">Canopy Greenness Trajectory Over Time</h2>
                 <p className="text-xs text-slate-400">
-                  Observed NDVI (green) compared against pre-fire baseline (blue dashed) and ±1σ seasonal variance band.
+                  Observed NDVI (green) compared against pre-fire baseline (blue dashed) and ±1σ pre-fire sample spread.
                 </p>
               </div>
               <div className="flex items-center space-x-2 text-xs font-mono text-slate-400">

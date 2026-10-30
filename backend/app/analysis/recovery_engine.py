@@ -13,7 +13,7 @@ class RecoveryEngine:
     and returns rich trajectory points with explicit data quality bounds.
     """
 
-    METHODOLOGY = "Harmonized Pre-Fire Multi-Year Seasonal Baseline (MOD13Q1 250m)"
+    METHODOLOGY = "Observed Pre-Fire Mean Baseline (MOD13Q1 250m; no seasonal matching)"
     VERSION = "1.2.0"
 
     @classmethod
@@ -54,16 +54,12 @@ class RecoveryEngine:
             if (o["observation_date"] if isinstance(o["observation_date"], date) else datetime.strptime(str(o["observation_date"])[:10], "%Y-%m-%d").date()) >= fire_event_date
         ]
 
-        # Check sufficiency
-        if len(pre_fire_obs) < 3:
-            coverage_score = "insufficient data"
-            baseline_mean = 0.65
-            baseline_std = 0.08
-        else:
-            coverage_score = "good coverage" if len(pre_fire_obs) >= 8 and len(post_fire_obs) >= 5 else "limited observations"
-            pre_vals = [float(o["scaled_value"]) for o in pre_fire_obs]
-            baseline_mean = round(float(np.mean(pre_vals)), 4)
-            baseline_std = round(float(np.std(pre_vals)), 4)
+        if len(pre_fire_obs) < 3 or len(post_fire_obs) < 2:
+            raise ValueError("Insufficient observations: at least 3 valid pre-fire and 2 post-fire NDVI observations are required.")
+        coverage_score = "good coverage" if len(pre_fire_obs) >= 8 and len(post_fire_obs) >= 5 else "limited observations"
+        pre_vals = [float(o["scaled_value"]) for o in pre_fire_obs]
+        baseline_mean = round(float(np.mean(pre_vals)), 4)
+        baseline_std = round(float(np.std(pre_vals)), 4)
 
         # Baseline dates
         pre_start_d = pre_fire_obs[0]["observation_date"] if pre_fire_obs else (fire_event_date - timedelta(days=365))

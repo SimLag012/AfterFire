@@ -3,7 +3,7 @@ from datetime import date
 from typing import Optional, Tuple
 
 from fastapi import APIRouter, HTTPException
-from pydantic import BaseModel, Field, model_validator
+from pydantic import BaseModel, model_validator
 
 from app.core.config import settings
 from app.providers.firms import FirmsProvider
@@ -64,26 +64,32 @@ async def preview_analysis(payload: AnalysisPreviewRequest):
     total_days = (end_date - start_date).days + 1
     request_days = settings.MAX_DOWNLOAD_DAYS_PER_REQUEST
     windows = (total_days + request_days - 1) // request_days
+    products = ("VIIRS_SNPP_NRT", "MODIS_NRT")
     return {
         "bbox": bbox,
         "start_date": start_date,
         "end_date": end_date,
         "days": total_days,
         "approximate_area_km2": round(
-            (north_south_km := (bbox[3] - bbox[1]) * 111.0)
-            * (east_west_km := (bbox[2] - bbox[0]) * 111.0 * math.cos(math.radians((bbox[1] + bbox[3]) / 2))),
+            (bbox[3] - bbox[1]) * 111.0
+            * (bbox[2] - bbox[0]) * 111.0
+            * math.cos(math.radians((bbox[1] + bbox[3]) / 2)),
             2,
         ),
+        "requests_estimate": windows * len(products),
         "downloads": [
-            {
+            *[
+                {
                 "provider": "NASA FIRMS",
-                "product": "VIIRS_SNPP_NRT",
+                "product": product,
                 "request_windows": windows,
                 "max_days_per_request": request_days,
                 "estimated_size_bytes": None,
                 "status": "ready" if FirmsProvider.is_configured() else "credentials_required",
                 "limitation": "Near-real-time active-fire detections only; size is not reliably estimable before the request.",
-            },
+                }
+                for product in products
+            ],
             {
                 "provider": "NASA LP DAAC",
                 "product": "MCD64A1 burned area and MOD13Q1 vegetation indices",
@@ -94,8 +100,9 @@ async def preview_analysis(payload: AnalysisPreviewRequest):
             },
         ],
         "warning": (
-            f"The FIRMS request may require up to {windows} API calls. "
-            f"Responses are capped at {settings.MAX_DOWNLOAD_SIZE_MB} MB total per operation."
+            f"The FIRMS request may require up to {windows * len(products)} API calls "
+            f"({windows} per product). Responses are capped at {settings.MAX_DOWNLOAD_SIZE_MB} MB "
+            "per product operation."
         ),
     }
 

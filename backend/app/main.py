@@ -16,9 +16,15 @@ from app.api.routes.vegetation import router as vegetation_router
 from app.api.routes.comparison import router as comparison_router
 from app.api.routes.reports import router as reports_router
 from app.api.routes.analysis import router as analysis_router
+from app.api.routes.events import router as events_router
+from app.api.routes.italy import router as italy_router
+from app.api.routes.explorer import router as explorer_router
+from app.api.routes.event_analysis import router as event_analysis_router
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
+# Provider URLs contain the FIRMS key; never log httpx request URLs.
+logging.getLogger("httpx").setLevel(logging.WARNING)
 
 
 @asynccontextmanager
@@ -27,7 +33,7 @@ async def lifespan(app: FastAPI):
     await init_db()
     logger.info("Seeding initial dataset & demo presets if needed...")
     async with AsyncSessionLocal() as session:
-        await seed_initial_data(session)
+        await seed_initial_data(session, seed_demo_data=settings.DEMO_MODE)
     logger.info("AfterFire API backend initialized successfully.")
     yield
 
@@ -58,3 +64,14 @@ app.include_router(vegetation_router, prefix=settings.API_V1_STR, tags=["Vegetat
 app.include_router(comparison_router, prefix=settings.API_V1_STR, tags=["Cross-Territory Comparison"])
 app.include_router(reports_router, prefix=settings.API_V1_STR, tags=["AI Analyst & Scientific Reports"])
 app.include_router(analysis_router, prefix=settings.API_V1_STR, tags=["Geographic Analysis"])
+app.include_router(events_router, prefix=settings.API_V1_STR, tags=["Candidate Fire Events"])
+app.include_router(italy_router, prefix=settings.API_V1_STR, tags=["Italy Data Coverage"])
+app.include_router(explorer_router, prefix=settings.API_V1_STR, tags=["Observation Explorer"])
+
+app.include_router(event_analysis_router, prefix=settings.API_V1_STR, tags=["Post-fire satellite analysis"])
+
+from app.api.routes.recovery_intelligence import router as recovery_intelligence_router
+app.include_router(recovery_intelligence_router, prefix=settings.API_V1_STR, tags=["Recovery Intelligence"])
+
+from app.api.routes.reburn import router as reburn_router
+app.include_router(reburn_router, prefix=settings.API_V1_STR, tags=['Reburn Intelligence'])

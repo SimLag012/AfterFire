@@ -1,4 +1,5 @@
 import csv
+import math
 import logging
 import asyncio
 import uuid
@@ -29,11 +30,124 @@ class FirmsProvider:
     """
 
     BASE_URL = "https://firms.modaps.eosdis.nasa.gov/api"
-    MAX_AREA_API_DAYS = 10
+    MAX_AREA_API_DAYS = 5
+    _cached_connectivity: Optional[Dict[str, Any]] = None
+    _connectivity_checked_at: Optional[datetime] = None
+    _last_successful_check: Optional[str] = None
+    _last_successful_retrieval: Optional[str] = None
+    _CONNECTIVITY_TTL_SECONDS: int = 300
 
     @classmethod
     def is_configured(cls) -> bool:
         return bool(settings.FIRMS_MAP_KEY and settings.FIRMS_MAP_KEY.strip())
+
+    @classmethod
+    async def check_connectivity(cls, force: bool = False) -> Dict[str, Any]:
+        """
+        Validates connectivity with the official NASA FIRMS API via /api/data_availability/csv/{KEY}/ALL.
+        Never returns or logs the secret MAP_KEY.
+        Caches results for 300 seconds to prevent rate-limit exhaustion.
+        """
+        if not cls.is_configured():
+            return {
+                "configured": False,
+                "connected": False,
+                "status": "credentials_unconfigured",
+                "message": "FIRMS_MAP_KEY is not configured in environment.",
+                "available_products": [],
+                "date_ranges": {},
+                "last_check": cls._last_successful_check,
+                "last_retrieval": cls._last_successful_retrieval,
+            }
+
+        now = datetime.utcnow()
+        if (
+            not force
+            and cls._cached_connectivity is not None
+            and cls._connectivity_checked_at is not None
+            and (now - cls._connectivity_checked_at).total_seconds() < cls._CONNECTIVITY_TTL_SECONDS
+        ):
+            return cls._cached_connectivity
+
+        url = f"{cls.BASE_URL}/data_availability/csv/{settings.FIRMS_MAP_KEY}/ALL"
+        try:
+            async with httpx.AsyncClient(timeout=httpx.Timeout(10.0, connect=5.0)) as client:
+                resp = await client.get(url, headers={"User-Agent": "AfterFire/1.0"})
+                if resp.status_code == 200:
+                    lines = resp.text.strip().splitlines()
+                    date_ranges = {}
+                    products = []
+                    if len(lines) > 1:
+                        reader = csv.DictReader(lines)
+                        for r in reader:
+                            pid = r.get("data_id", "").strip()
+                            if pid:
+                                products.append(pid)
+                                date_ranges[pid] = {
+                                    "min_date": r.get("min_date", "").strip(),
+                                    "max_date": r.get("max_date", "").strip(),
+                                }
+                    if not date_ranges:
+                        raise ValueError("NASA availability response did not contain recognized product/date rows.")
+                    cls._last_successful_check = datetime.utcnow().isoformat() + "Z"
+                    result = {
+                        "configured": True,
+                        "connected": True,
+                        "status": "connected",
+                        "message": f"NASA FIRMS API validated successfully. {len(products)} products available.",
+                        "available_products": products,
+                        "date_ranges": date_ranges,
+                        "last_check": cls._last_successful_check,
+                        "last_retrieval": cls._last_successful_retrieval,
+                    }
+                elif resp.status_code in (401, 403):
+                    result = {
+                        "configured": True,
+                        "connected": False,
+                        "status": "auth_failed",
+                        "message": "NASA FIRMS rejected the MAP_KEY (authentication/authorization failure).",
+                        "available_products": [],
+                        "date_ranges": {},
+                        "last_check": datetime.utcnow().isoformat() + "Z",
+                        "last_retrieval": cls._last_successful_retrieval,
+                    }
+                else:
+                    result = {
+                        "configured": True,
+                        "connected": False,
+                        "status": "unavailable",
+                        "message": f"NASA FIRMS responded with HTTP {resp.status_code}.",
+                        "available_products": [],
+                        "date_ranges": {},
+                        "last_check": datetime.utcnow().isoformat() + "Z",
+                        "last_retrieval": cls._last_successful_retrieval,
+                    }
+        except httpx.TimeoutException:
+            result = {
+                "configured": True,
+                "connected": False,
+                "status": "unavailable",
+                "message": "Connection to NASA FIRMS API timed out.",
+                "available_products": [],
+                "date_ranges": {},
+                "last_check": datetime.utcnow().isoformat() + "Z",
+                "last_retrieval": cls._last_successful_retrieval,
+            }
+        except Exception as exc:
+            result = {
+                "configured": True,
+                "connected": False,
+                "status": "unavailable",
+                "message": f"Could not reach NASA FIRMS ({type(exc).__name__}).",
+                "available_products": [],
+                "date_ranges": {},
+                "last_check": datetime.utcnow().isoformat() + "Z",
+                "last_retrieval": cls._last_successful_retrieval,
+            }
+
+        cls._cached_connectivity = result
+        cls._connectivity_checked_at = now
+        return result
 
     @classmethod
     def normalize_confidence(cls, instrument: str, raw_conf: Any) -> tuple[str, Optional[float]]:
@@ -62,11 +176,11 @@ class FirmsProvider:
             
         # Check categorical (typical VIIRS or NRT)
         if str_val in ("h", "high"):
-            return "high", 90.0
+            return "high", None
         elif str_val in ("n", "nominal", "med", "medium"):
-            return "nominal", 60.0
+            return "nominal", None
         elif str_val in ("l", "low"):
-            return "low", 20.0
+            return "low", None
         return "nominal", None
 
     @classmethod
@@ -86,9 +200,13 @@ class FirmsProvider:
         
         try:
             parsed_date = datetime.strptime(acq_date_raw, "%Y-%m-%d").date()
-        except ValueError:
-            parsed_date = date.today()
+        except ValueError as exc:
+            raise ValueError("Invalid FIRMS acquisition date; expected YYYY-MM-DD.") from exc
             
+        if not (math.isfinite(lat) and math.isfinite(lon) and -90 <= lat <= 90 and -180 <= lon <= 180):
+            raise ValueError("Invalid FIRMS coordinates.")
+        if not acq_time_raw.isdigit() or len(acq_time_raw) != 4 or int(acq_time_raw[:2]) > 23 or int(acq_time_raw[2:]) > 59:
+            raise ValueError("Invalid FIRMS acquisition time.")
         raw_conf = row.get("confidence")
         conf_level, conf_pct = cls.normalize_confidence(instrument, raw_conf)
         
@@ -126,7 +244,9 @@ class FirmsProvider:
         # Create unique deterministic ID if none provided
         rec_id = f"{instrument}_{satellite}_{acq_date_raw}_{acq_time_raw}_{lat:.4f}_{lon:.4f}"
         
+        from app.services.italy_coverage import point_is_in_italy
         return {
+            "import_region": "Italy" if point_is_in_italy(lat, lon) else "other",
             "id": rec_id,
             "latitude": lat,
             "longitude": lon,
@@ -161,18 +281,21 @@ class FirmsProvider:
         target_date: Optional[str] = None,
         start_date: Optional[date] = None,
         end_date: Optional[date] = None,
+        max_records: Optional[int] = None,
+        response_byte_limit: Optional[int] = None,
     ) -> List[Dict[str, Any]]:
         """
         Calls NASA FIRMS Area API:
         /api/area/csv/[MAP_KEY]/[SOURCE]/[EXTENT]/[DAY_RANGE]/[DATE]
-        Extent format: west,south,east,north. DATE is the final date in each
-        inclusive window; DAY_RANGE is capped by FIRMS' 10-day Area API limit.
+        Extent format: west,south,east,north. DATE is the first date in each
+        inclusive window; use the documented 1–5 day Area API windows.
         """
         if not cls.is_configured():
             raise FirmsProviderError("FIRMS_MAP_KEY is not configured; no live data was downloaded.", 503)
 
         cls._validate_bbox(min_lon, min_lat, max_lon, max_lat)
-        if source not in {"VIIRS_SNPP_NRT", "MODIS_NRT"}:
+        if source not in {"MODIS_NRT", "MODIS_SP", "VIIRS_SNPP_NRT", "VIIRS_SNPP_SP",
+                          "VIIRS_NOAA20_NRT", "VIIRS_NOAA20_SP", "VIIRS_NOAA21_NRT", "VIIRS_NOAA21_SP"}:
             raise FirmsProviderError(f"Unsupported FIRMS Area API source: {source}.", 400)
 
         if target_date:
@@ -196,12 +319,14 @@ class FirmsProvider:
         bbox = (min_lon, min_lat, max_lon, max_lat)
         windows = cls.split_date_range(start_date, end_date, request_days)
         total_downloaded = 0
-        max_bytes = settings.MAX_DOWNLOAD_SIZE_MB * 1024 * 1024
+        max_bytes = min(settings.MAX_DOWNLOAD_SIZE_MB * 1024 * 1024, response_byte_limit or settings.MAX_DOWNLOAD_SIZE_MB * 1024 * 1024)
+        response_bytes = 0
         records: List[Dict[str, Any]] = []
 
         for window_start, window_end in windows:
             cache_key = {
                 "provider": "NASA_FIRMS",
+                "freshness_hour": datetime.utcnow().strftime("%Y%m%d%H") if window_end >= date.today() - timedelta(days=1) else None,
                 "product": source,
                 "bbox": [round(value, 6) for value in bbox],
                 "start_date": window_start.isoformat(),
@@ -217,6 +342,9 @@ class FirmsProvider:
             )
             total_downloaded += downloaded_bytes
             try:
+                response_bytes += csv_path.stat().st_size
+                if response_bytes > max_bytes:
+                    raise FirmsProviderError('FIRMS response exceeds bounded body size; narrow the area or period.',413)
                 with csv_path.open("r", encoding="utf-8-sig", newline="") as stream:
                     reader = csv.DictReader(stream)
                     required_fields = {"latitude", "longitude", "acq_date", "acq_time"}
@@ -232,9 +360,14 @@ class FirmsProvider:
                             and min_lat <= parsed["latitude"] <= max_lat
                         ):
                             records.append(parsed)
+                            if max_records is not None and len(records)>max_records:
+                                raise FirmsProviderError('FIRMS record limit reached; narrow the area or period.',413)
             finally:
                 if not settings.DATA_CACHE_ENABLED:
                     csv_path.unlink(missing_ok=True)
+        cls._last_successful_retrieval = datetime.utcnow().isoformat() + "Z"
+        if cls._cached_connectivity:
+            cls._cached_connectivity["last_retrieval"] = cls._last_successful_retrieval
         return records
 
     @classmethod
@@ -244,7 +377,7 @@ class FirmsProvider:
         if start_date > end_date:
             raise FirmsProviderError("start_date must be on or before end_date.", 400)
         if not 1 <= max_days <= cls.MAX_AREA_API_DAYS:
-            raise FirmsProviderError("FIRMS Area API windows must be between 1 and 10 days.", 400)
+            raise FirmsProviderError("FIRMS Area API windows must be between 1 and 5 days.", 400)
         windows = []
         cursor = start_date
         while cursor <= end_date:
@@ -305,7 +438,7 @@ class FirmsProvider:
         extent = ",".join(f"{coordinate:.6f}" for coordinate in bbox)
         url = (
             f"{cls.BASE_URL}/area/csv/{settings.FIRMS_MAP_KEY}/{source}/"
-            f"{extent}/{window_days}/{end_date.isoformat()}"
+            f"{extent}/{window_days}/{start_date.isoformat()}"
         )
         try:
             async with _download_slots:

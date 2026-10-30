@@ -58,18 +58,26 @@ async def _extract_metrics(area_id: str, db: AsyncSession) -> AreaMetricSummary:
 
     if veg_records:
         first_ev = (await db.execute(select(FireEventCandidate).filter(FireEventCandidate.area_id == area_id).order_by(FireEventCandidate.start_date.asc()))).scalars().first()
-        fire_d = first_ev.start_date if first_ev else veg_records[len(veg_records)//2].observation_date
+        fire_d = first_ev.start_date if first_ev else None
         
         obs_dicts = [
             {"observation_date": v.observation_date, "scaled_value": v.scaled_value, "is_valid": v.is_valid}
             for v in veg_records
         ]
-        rec_data = RecoveryEngine.compute_recovery_analysis(area.id, area.name, fire_d, obs_dicts)
-        pre_base = rec_data["pre_fire_baseline_mean"]
-        trough = rec_data["fire_trough_ndvi"]
-        drop_pct = rec_data["drop_pct"]
-        rec_pct = rec_data["recovery_pct"]
-        rec_status = rec_data["recovery_status"]
+        rec_data = None
+        if first_ev:
+            obs_dicts = [dict(observation_date=v.observation_date, scaled_value=v.scaled_value, is_valid=v.is_valid)
+                         for v in veg_records if v.index_name == "NDVI" and v.is_synthetic_demo == first_ev.is_synthetic_demo]
+            try:
+                rec_data = RecoveryEngine.compute_recovery_analysis(area.id, area.name, fire_d, obs_dicts)
+            except ValueError:
+                pass
+        if rec_data:
+            pre_base = rec_data["pre_fire_baseline_mean"]
+            trough = rec_data["fire_trough_ndvi"]
+            drop_pct = rec_data["drop_pct"]
+            rec_pct = rec_data["recovery_pct"]
+            rec_status = rec_data["recovery_status"]
 
     return AreaMetricSummary(
         area_id=area.id,
@@ -119,7 +127,7 @@ async def compare_areas(payload: ComparisonRequest, db: AsyncSession = Depends(g
         differences.append(f"Recovery return gap: {summary_a.area_name} stands at {summary_a.recovery_pct:.1f}% vs {summary_b.area_name} at {summary_b.recovery_pct:.1f}% (Δ {diff_rec:.1f}%).")
 
     comparability_notes.append("Multi-sensor thermal observations harmonized with identical sensor weighting.")
-    comparability_notes.append("Baseline computations apply 16-day seasonal-matched MOD13Q1 composite windowing.")
+    comparability_notes.append("Baseline uses the mean of valid pre-fire MOD13Q1 observations; seasonal matching is not implemented.")
 
     is_comparable = len(warnings) == 0
 

@@ -1,0 +1,237 @@
+{
+  "job_id": "368db3c385ad899ce29d4486ad8877fc8d2a0639cd8e09d511e8d03da6fb81ad",
+  "elapsed_seconds": 12.795,
+  "states": [
+    {
+      "state": "queued",
+      "progress": 0,
+      "phase": null,
+      "elapsed": 0.284
+    },
+    {
+      "state": "queued",
+      "progress": 0,
+      "phase": null,
+      "elapsed": 1.322
+    },
+    {
+      "state": "queued",
+      "progress": 0,
+      "phase": null,
+      "elapsed": 2.351
+    },
+    {
+      "state": "fetching",
+      "progress": 1,
+      "phase": null,
+      "elapsed": 3.411
+    },
+    {
+      "state": "processing",
+      "progress": 5,
+      "phase": "planning",
+      "elapsed": 4.554
+    },
+    {
+      "state": "processing",
+      "progress": 5,
+      "phase": "planning",
+      "elapsed": 5.59
+    },
+    {
+      "state": "processing",
+      "progress": 5,
+      "phase": "planning",
+      "elapsed": 6.621
+    },
+    {
+      "state": "processing",
+      "progress": 5,
+      "phase": "planning",
+      "elapsed": 7.655
+    },
+    {
+      "state": "processing",
+      "progress": 5,
+      "phase": "planning",
+      "elapsed": 8.685
+    },
+    {
+      "state": "processing",
+      "progress": 5,
+      "phase": "planning",
+      "elapsed": 9.71
+    },
+    {
+      "state": "processing",
+      "progress": 5,
+      "phase": "planning",
+      "elapsed": 10.745
+    },
+    {
+      "state": "processing",
+      "progress": 5,
+      "phase": "planning",
+      "elapsed": 11.767
+    },
+    {
+      "state": "failed",
+      "progress": 5,
+      "phase": "planning",
+      "elapsed": 12.795
+    }
+  ],
+  "status": {
+    "phase": "planning",
+    "phase_label": "Checking source integrity cache and resource limits",
+    "phase_progress_percent": null,
+    "files_discovered": 0,
+    "files_total": null,
+    "files_downloaded": 0,
+    "files_cached": 0,
+    "files_failed": 0,
+    "files_validated": 0,
+    "granules_processed": 0,
+    "granules_failed": 0,
+    "bytes_downloaded": 0,
+    "bytes_cached": 0,
+    "bytes_total_estimated": null,
+    "result_bytes": null,
+    "download_speed_bytes_per_second": null,
+    "recent_download_speed_bytes_per_second": null,
+    "estimated_remaining_seconds": null,
+    "phase_estimated_remaining_seconds": null,
+    "started_at": "2026-10-30T12:09:34.618314+00:00",
+    "finished_at": "2026-10-30T12:09:44.104839+00:00",
+    "current_file": null,
+    "current_operation": "Checking source integrity cache and resource limits",
+    "warning": null,
+    "completed_phases": [
+      "preparing",
+      "discovering"
+    ],
+    "phases": [
+      {
+        "id": "preparing",
+        "label": "Preparing analysis"
+      },
+      {
+        "id": "discovering",
+        "label": "Discovering satellite data"
+      },
+      {
+        "id": "planning",
+        "label": "Checking source integrity cache and resource limits"
+      },
+      {
+        "id": "api_subset",
+        "label": "Acquiring bounded native API pixels"
+      },
+      {
+        "id": "api_validate",
+        "label": "Validating API subset grid and QA"
+      },
+      {
+        "id": "subset_submit",
+        "label": "Checking saved NASA extraction blocks"
+      },
+      {
+        "id": "remote_wait",
+        "label": "Waiting for remote NASA processing"
+      },
+      {
+        "id": "subset_download",
+        "label": "Downloading spatial subset"
+      },
+      {
+        "id": "subset_validate",
+        "label": "Validating native subset grid and QA"
+      },
+      {
+        "id": "burned_area",
+        "label": "Acquiring and processing burned area"
+      },
+      {
+        "id": "vegetation",
+        "label": "Acquiring and processing vegetation"
+      },
+      {
+        "id": "baseline",
+        "label": "Building seasonal baseline"
+      },
+      {
+        "id": "indicators",
+        "label": "Computing recovery indicators"
+      },
+      {
+        "id": "recovery_assessment",
+        "label": "Computing temporal anomalies and persistence"
+      },
+      {
+        "id": "spatial_indicators",
+        "label": "Computing native pixel baselines and persistent zones"
+      },
+      {
+        "id": "reburn_search",
+        "label": "Searching historical observations"
+      },
+      {
+        "id": "reburn_episodes",
+        "label": "Reconstructing native burn episodes"
+      },
+      {
+        "id": "reburn_vegetation",
+        "label": "Evaluating shared-cell vegetation and recovery gaps"
+      },
+      {
+        "id": "publishing",
+        "label": "Persisting and verifying results"
+      }
+    ],
+    "bytes_downloaded_previous_attempts": 0,
+    "operation_started_at": "2026-10-30T12:09:35.707351+00:00",
+    "last_activity_at": "2026-10-30T12:09:35.707376+00:00",
+    "subset_files_downloaded": 0,
+    "subset_files_cached": 0,
+    "timings": {
+      "metadata_lock_wait_seconds": 0.0003,
+      "metadata_cache_read_seconds": 0.001088,
+      "metadata_cache_hits": 2
+    },
+    "worker_health": "failed",
+    "heartbeat_age_seconds": 0.3,
+    "last_activity_age_seconds": 8.7,
+    "job_id": "368db3c385ad899ce29d4486ad8877fc8d2a0639cd8e09d511e8d03da6fb81ad",
+    "status": "failed",
+    "progress_percent": 5,
+    "elapsed_seconds": 9.49,
+    "updated_at": "2026-10-30T12:09:44.089769+00:00",
+    "id": "368db3c385ad899ce29d4486ad8877fc8d2a0639cd8e09d511e8d03da6fb81ad",
+    "event_id": "event-30c4892d8b3bb714175bb3b2247b7f87",
+    "state": "failed",
+    "progress": 5,
+    "error": "provider_not_configured: enable Earth Engine with a registered project; ORNL Collection 6.1 is unverified. Full HDF auto-download is disabled",
+    "configuration": {
+      "pre_years": 3,
+      "post_years": 10,
+      "as_of": "2026-10-30",
+      "acquisition": "auto",
+      "buffer_m": 1000,
+      "burn_tolerance_days": 3,
+      "seasonal_window_days": 24,
+      "min_baseline_years": 2,
+      "min_valid_fraction": 0.5
+    },
+    "engine_version": "modis-recovery-3.0.0",
+    "attempts": 3,
+    "created_at": "2026-10-30T11:13:08.073195Z",
+    "result_available": false,
+    "appeears_submission_enabled": false,
+    "result_job_id": null
+  },
+  "assertions": {
+    "failed_explicitly_for_missing_provider": true,
+    "new_hdf_bytes": 0,
+    "no_scientific_success_claimed": true
+  }
+}

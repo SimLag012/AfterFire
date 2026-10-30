@@ -1,0 +1,99 @@
+{
+  "clusters_italy": {
+    "seconds": [
+      1.7786,
+      0.0083
+    ],
+    "response_bytes": 7443,
+    "summary": {
+      "clusters": 31,
+      "total_observations": 802239,
+      "data_coverage": {
+        "status": "observations_present",
+        "partial": true,
+        "matching_real_observations": 802239,
+        "detail": "Available local observations match this query. Geographic coverage is incomplete: imported coverage is Italy only.",
+        "completeness": "not_assessed"
+      }
+    }
+  },
+  "clusters_noaa21": {
+    "seconds": [
+      0.3827,
+      0.0085
+    ],
+    "response_bytes": 6499,
+    "summary": {
+      "clusters": 28,
+      "total_observations": 86998,
+      "data_coverage": {
+        "status": "observations_present",
+        "partial": true,
+        "matching_real_observations": 86998,
+        "detail": "Available local observations match this query. Geographic coverage is incomplete: imported coverage is Italy only.",
+        "completeness": "not_assessed"
+      }
+    }
+  },
+  "archive_outside_italy": {
+    "seconds": [
+      0.0199,
+      0.0082
+    ],
+    "response_bytes": 391,
+    "summary": {
+      "clusters": 0,
+      "total_observations": 0,
+      "data_coverage": {
+        "status": "outside_italy",
+        "partial": true,
+        "matching_real_observations": 0,
+        "detail": "No data available in the current local archive for this area and period. Imported coverage is Italy only.",
+        "completeness": "not_assessed"
+      }
+    }
+  },
+  "dateline": {
+    "seconds": [
+      0.0509,
+      0.0062
+    ],
+    "response_bytes": 391,
+    "summary": {
+      "clusters": 0,
+      "total_observations": 0,
+      "data_coverage": {
+        "status": "outside_italy",
+        "partial": true,
+        "matching_real_observations": 0,
+        "detail": "No data available in the current local archive for this area and period. Imported coverage is Italy only.",
+        "completeness": "not_assessed"
+      }
+    }
+  },
+  "hotspots": {
+    "seconds": [
+      0.1392,
+      0.1243
+    ],
+    "response_bytes": 112698,
+    "summary": {
+      "detections": 254,
+      "truncated": false
+    }
+  },
+  "location": {
+    "seconds": [
+      0.4924,
+      0.0126
+    ],
+    "response_bytes": 447,
+    "summary": {
+      "results": 5
+    }
+  },
+  "reference_publication": {
+    "byte_identical": true,
+    "sha256": "351b026453f1912204b29822bba6d1fed0c4ac1628432c7701a135563edb7d00"
+  }
+}

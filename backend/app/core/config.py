@@ -15,10 +15,50 @@ class Settings(BaseSettings):
     DATABASE_URL: str = "sqlite+aiosqlite:///./afterfire.db"
 
     FIRMS_MAP_KEY: str = ""
+    AFTERFIRE_API_FIRST: bool = True
+    AFTERFIRE_FULL_HDF_AUTO_DOWNLOAD: bool = False
+    AFTERFIRE_SATELLITE_PROVIDER: str = Field(default='auto', pattern='^(auto|earth_engine|ornl)$')
+    AFTERFIRE_ORNL_ENABLED: bool = True
+    AFTERFIRE_EARTH_ENGINE_ENABLED: bool = False
+    AFTERFIRE_EE_PROJECT_ID: str = ''
+    AFTERFIRE_API_MAX_REQUESTS: int = Field(default=1000, ge=1, le=5000)
+    AFTERFIRE_API_MAX_RESPONSE_MB: int = Field(default=16, ge=1, le=32)
+    AFTERFIRE_API_MAX_PIXELS: int = Field(default=100000, ge=1, le=1000000)
     EARTHDATA_USERNAME: str = ""
     EARTHDATA_PASSWORD: str = ""
+    EARTHDATA_TOKEN: str = ""
+    AFTERFIRE_CATALOG_CACHE_ENABLED: bool = True
+    AFTERFIRE_CATALOG_CACHE_TTL_HOURS: float = Field(default=24, gt=0)
+    AFTERFIRE_PREFLIGHT_TTL_HOURS: float = Field(default=6, gt=0)
+    AFTERFIRE_CACHE_AUTO_CLEANUP: bool = True
+    AFTERFIRE_CACHE_CLEANUP_THRESHOLD_PERCENT: int = Field(default=85, ge=1, le=100)
+    AFTERFIRE_CACHE_TARGET_PERCENT: int = Field(default=70, ge=1, le=100)
+    AFTERFIRE_RECOVERY_MAX_CELL_OBSERVATIONS: int = Field(default=2_000_000, ge=1000, le=10_000_000)
+    AFTERFIRE_ADMIN_TOKEN: str = ""
+    AFTERFIRE_ANALYSIS_ON_DEMAND: bool = True
+    AFTERFIRE_ANALYSIS_WORKERS: int = Field(default=1, ge=1, le=4)
+    AFTERFIRE_ANALYSIS_MAX_CONCURRENT_DOWNLOADS: int = Field(default=2, ge=1, le=4)
+    AFTERFIRE_ANALYSIS_PRE_EVENT_YEARS: int = Field(default=3, ge=1, le=10)
+    AFTERFIRE_ANALYSIS_MAX_POST_EVENT_YEARS: int = Field(default=10, ge=1, le=26)
+    AFTERFIRE_ANALYSIS_CACHE_MAX_GB: float = Field(default=10, gt=0)
+    AFTERFIRE_ANALYSIS_RESULTS_MAX_GB: float = Field(default=2, gt=0)
+    AFTERFIRE_ANALYSIS_TEMP_MAX_GB: float = Field(default=1, gt=0)
+    AFTERFIRE_ANALYSIS_MAX_BLOCK_GB: float = Field(default=1, gt=0)
+    AFTERFIRE_APPEEARS_WAIT_SECONDS: int = Field(default=1800, ge=10, le=7200)
+    AFTERFIRE_APPEEARS_ENABLED: bool = True
+    AFTERFIRE_APPEEARS_SUBMISSION_ENABLED: bool = False
+    AFTERFIRE_ANALYSIS_HEARTBEAT_TIMEOUT_SECONDS: int = Field(default=60, ge=20)
+    AFTERFIRE_ANALYSIS_NO_PROGRESS_SECONDS: int = Field(default=180, ge=10)
+    AFTERFIRE_ANALYSIS_OPERATION_TIMEOUT_SECONDS: int = Field(default=600, ge=30)
+    AFTERFIRE_ANALYSIS_MAX_JOB_GB: float = Field(default=5, gt=0)
+    AFTERFIRE_ANALYSIS_MAX_GRANULES: int = Field(default=400, ge=1, le=3000)
+    AFTERFIRE_ANALYSIS_MAX_AREA_KM2: float = Field(default=2500, gt=0)
+    AFTERFIRE_ANALYSIS_KEEP_SOURCE_GRANULES: bool = True
+    AFTERFIRE_ANALYSIS_CACHE_POLICY: str = Field(default="retain", pattern="^(retain|lru_sources)$")
+    AFTERFIRE_ANALYSIS_CACHE_DIR: str = ""
+    AFTERFIRE_ANALYSIS_MIN_FREE_GB: float = Field(default=1, ge=0)
     LLM_API_KEY: str = ""
-    DEMO_MODE: bool = True
+    DEMO_MODE: bool = False
 
     ANALYSIS_BBOX: str = "14.7,37.1,15.4,37.8"
     ANALYSIS_REGION_NAME: str = "Sicily East"

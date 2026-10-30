@@ -55,3 +55,9 @@ python3 scripts/check_secrets.py --all
 The hook scans staged blobs; CI scans all tracked blobs. These conservative
 checks catch environment files, FIRMS literals, GitHub tokens and private keys;
 they do not claim to detect every possible credential format.
+
+## Final prevention checkpoint
+
+The prevention checkpoint `4c4762c` was pushed after the clean-history checkpoint. A fresh mirror cloned from GitHub scanned 126 reachable objects with zero exact matches before the temporary replacement file was unlinked. The local pre-commit hook is installed, and its executable Git mode is recorded for future clones. GitHub reports this repository as private and `security_and_analysis: null`; native secret-scanning/push-protection availability is not established. The staged-file hook and tracked-file CI scanner are implemented independently.
+
+To preserve the filesystem reserve during Docker builds, the verified backup was moved to the private directory `/mnt/DATA/.afterfire-security-backups/20261030T114300Z` (0700 parent); the original state-directory path is a symlink to it. Source, scientific data, Git objects and the verified bundle remain. Reproducible `.venv`/`node_modules` copies were omitted; the original working dependencies were retained. The backup copy was checked by file/size inventory and bundle verification after relocation.

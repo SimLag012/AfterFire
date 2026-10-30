@@ -1,7 +1,8 @@
 import math
+import hashlib
 from typing import List, Dict, Any, Optional
 from datetime import datetime, date, timedelta
-from collections import defaultdict
+from collections import defaultdict, deque
 import numpy as np
 
 
@@ -125,7 +126,12 @@ class HarmonizationEngine:
 
         sorted_dets = sorted(
             detections, 
-            key=lambda d: d["acq_date"] if isinstance(d["acq_date"], date) else datetime.strptime(str(d["acq_date"])[:10], "%Y-%m-%d").date()
+            key=lambda d: (
+                d["acq_date"] if isinstance(d["acq_date"], date) else datetime.strptime(str(d["acq_date"])[:10], "%Y-%m-%d").date(),
+                str(d.get("id", "")),
+                float(d["latitude"]),
+                float(d["longitude"]),
+            )
         )
 
         clusters: List[List[Dict[str, Any]]] = []
@@ -137,33 +143,43 @@ class HarmonizationEngine:
             a = math.sin(dlat / 2)**2 + math.cos(math.radians(lat1)) * math.cos(math.radians(lat2)) * math.sin(dlon / 2)**2
             return 2 * R * math.asin(math.sqrt(a))
 
+        # Spatial buckets retain only the last 15, temporally eligible points per cluster.
+        # This preserves the existing greedy grouping rule without scanning every past event.
+        buckets = defaultdict(deque)
+        def cell(lat, lon):
+            lat, lon = math.radians(lat), math.radians(lon)
+            return tuple(math.floor(v / max_distance_km) for v in (
+                6371 * math.cos(lat) * math.cos(lon),
+                6371 * math.cos(lat) * math.sin(lon), 6371 * math.sin(lat)))
         for det in sorted_dets:
-            det_date = det["acq_date"] if isinstance(det["acq_date"], date) else datetime.strptime(str(det["acq_date"])[:10], "%Y-%m-%d").date()
-            lat = det["latitude"]
-            lon = det["longitude"]
-
-            assigned = False
-            for cluster in clusters:
-                # Check proximity to any recent point in cluster
-                recent_pts = cluster[-15:]  # Check last points
-                for pt in recent_pts:
-                    pt_date = pt["acq_date"] if isinstance(pt["acq_date"], date) else datetime.strptime(str(pt["acq_date"])[:10], "%Y-%m-%d").date()
-                    day_diff = abs((det_date - pt_date).days)
-                    if day_diff <= max_time_gap_days:
-                        dist = haversine_km(lat, lon, pt["latitude"], pt["longitude"])
-                        if dist <= max_distance_km:
-                            cluster.append(det)
-                            assigned = True
-                            break
-                if assigned:
-                    break
-
-            if not assigned:
+            det_date = det["acq_date"] if isinstance(det["acq_date"], date) else date.fromisoformat(str(det["acq_date"])[:10])
+            lat, lon = det["latitude"], det["longitude"]
+            key = cell(lat, lon)
+            possible = set()
+            for dx in (-1, 0, 1):
+                for dy in (-1, 0, 1):
+                    for dz in (-1, 0, 1):
+                        neighbor = (key[0]+dx, key[1]+dy, key[2]+dz)
+                        bucket = buckets.get(neighbor)
+                        if not bucket:
+                            continue
+                        while bucket and (bucket[0][2] < det_date - timedelta(days=max_time_gap_days)):
+                            bucket.popleft()
+                        bucket = deque(p for p in bucket if p[1] >= len(clusters[p[0]]) - 15)
+                        buckets[neighbor] = bucket
+                        for cluster_id, point_index, point_date, plat, plon in bucket:
+                            if haversine_km(lat, lon, plat, plon) <= max_distance_km:
+                                possible.add(cluster_id)
+            if possible:
+                cluster_id = min(possible)
+                clusters[cluster_id].append(det)
+            else:
+                cluster_id = len(clusters)
                 clusters.append([det])
+            buckets[key].append((cluster_id, len(clusters[cluster_id])-1, det_date, lat, lon))
 
         # Filter clusters with at least 3 detections to eliminate isolated sensor noise
         events = []
-        cluster_idx = 1
         for cluster in clusters:
             if len(cluster) < 3:
                 continue
@@ -194,12 +210,26 @@ class HarmonizationEngine:
             lon_dist = (max_ln - min_ln) * 111.0 * math.cos(math.radians(np.mean(lats)))
             extent_km2 = round(max(0.5, lat_dist * lon_dist), 2)
 
-            event_id = f"EVENT_{area_id}_{start_d.strftime('%Y%m%d')}_{cluster_idx}"
-            event_name = f"Wildfire Event {start_d.strftime('%b %Y')} ({duration}d, {len(cluster)} pts)"
+            detection_ids = sorted(str(d.get("id") or (
+                f"{d['acq_date']}:{d['latitude']:.6f}:{d['longitude']:.6f}:"
+                f"{d.get('instrument', '')}:{d.get('satellite', '')}"
+            )) for d in cluster)
+            identity = hashlib.sha256(
+                f"{area_id}:{'|'.join(detection_ids)}".encode("utf-8")
+            ).hexdigest()[:32]
+            event_id = f"event-{identity}"
+            event_name = f"Candidate activity {start_d.strftime('%b %Y')} ({duration}d, {len(cluster)} pts)"
 
             events.append({
                 "id": event_id,
                 "area_id": area_id,
+                "detection_ids": detection_ids,
+                "center_lat": round(float(np.mean(lats)), 6),
+                "center_lon": round(float(np.mean(lons)), 6),
+                "min_lat": min_lt,
+                "max_lat": max_lt,
+                "min_lon": min_ln,
+                "max_lon": max_ln,
                 "name": event_name,
                 "start_date": start_d.strftime("%Y-%m-%d"),
                 "end_date": end_d.strftime("%Y-%m-%d"),
@@ -209,13 +239,11 @@ class HarmonizationEngine:
                 "viirs_detections": viirs_c,
                 "total_frp_mw": tot_frp,
                 "max_frp_mw": max_frp,
-                "clustering_method": f"Spatiotemporal DBSCAN Proximity ({max_distance_km}km, max {max_time_gap_days}d gap)",
+                "clustering_method": f"Greedy spatiotemporal proximity ({max_distance_km}km, max {max_time_gap_days}d gap)",
                 "estimated_fire_extent_km2": extent_km2,
-                "confidence_summary": f"Dual-sensor confirmed ({modis_c} MODIS, {viirs_c} VIIRS)" if (modis_c > 0 and viirs_c > 0) else f"Single-sensor concentrated ({len(cluster)} hits)",
+                "confidence_summary": f"Dual-sensor observations ({modis_c} MODIS, {viirs_c} VIIRS)" if (modis_c > 0 and viirs_c > 0) else f"Single-sensor concentrated ({len(cluster)} hits)",
                 "notes": "Candidate event derived from spatiotemporal thermal anomaly clusters. Not an official cadastral wildfire perimeter.",
-                "is_synthetic_demo": cluster[0].get("is_synthetic_demo", "false")
+                "is_synthetic_demo": cluster[0].get("is_synthetic_demo") or "false"
             })
-            cluster_idx += 1
 
         return events
-

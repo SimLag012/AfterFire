@@ -1,3 +1,4 @@
+import {RecoveryComparisonPanel} from '../components/analysis/RecoveryComparisonPanel';
 import React, { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { GitCompare, AlertTriangle, CheckCircle, ArrowRight, ShieldAlert, Activity } from 'lucide-react';
@@ -19,9 +20,13 @@ export const ComparePage: React.FC = () => {
     enabled: !!areaIdA && !!areaIdB && areaIdA !== areaIdB,
   });
 
+  const areaA = areas.find((a) => a.id === areaIdA);
+  const areaB = areas.find((a) => a.id === areaIdB);
+  const isBothDemo = areaA?.is_demo_preset === 'true' && areaB?.is_demo_preset === 'true';
+
   return (
     <div className="min-h-screen bg-dark-950 text-slate-100 flex flex-col pb-20">
-      <DemoBanner />
+      <DemoBanner isDemo={isBothDemo} area={isBothDemo ? areaA : undefined} />
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 w-full space-y-8">
         {/* Header */}
@@ -34,6 +39,8 @@ export const ComparePage: React.FC = () => {
             Compare disturbance severity, baseline NDVI, and recovery trajectories across distinct ecosystems with scientific comparability checks
           </p>
         </div>
+
+        <RecoveryComparisonPanel />
 
         {/* Territory Selectors */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

@@ -1,15 +1,23 @@
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Flame, Compass, Activity, Repeat, GitCompare, FileText, Database, Menu, X, ShieldCheck } from 'lucide-react';
+import { useQuery } from '@tanstack/react-query';
+import { Flame, Compass, Activity, Repeat, GitCompare, FileText, Database, Menu, X, ShieldCheck, Wifi, WifiOff, AlertTriangle } from 'lucide-react';
+import { apiClient } from '../../api/client';
 
 export const Navbar: React.FC = () => {
   const location = useLocation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
+  const { data: health } = useQuery({
+    queryKey: ['systemHealth'],
+    queryFn: apiClient.getHealth,
+    refetchInterval: 30000,
+  });
+
   const navLinks = [
     { to: '/explorer', label: 'Explorer', icon: Compass },
     { to: '/recovery/rhodes-greece-2023', label: 'Recovery', icon: Activity },
-    { to: '/recurrence/kangaroo-island-2020', label: 'Recurring Fires', icon: Repeat },
+    { to: '/recurrence', label: 'Recurring Fires', icon: Repeat },
     { to: '/compare', label: 'Compare', icon: GitCompare },
     { to: '/report/rhodes-greece-2023', label: 'Reports', icon: FileText },
     { to: '/datasets', label: 'Datasets', icon: Database },
@@ -68,10 +76,49 @@ export const Navbar: React.FC = () => {
 
           {/* Right Status Badge */}
           <div className="hidden lg:flex items-center space-x-3">
-            <div className="flex items-center space-x-2 px-2.5 py-1 rounded-full bg-dark-850 border border-dark-700/80 text-xs text-slate-400">
-              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
-              <span className="font-mono text-[11px] text-emerald-300">MODIS + VIIRS Harmonized</span>
-            </div>
+            {health?.app_mode === 'demo' ? (
+              <div
+                title={health.message}
+                className="flex items-center space-x-2 px-2.5 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-xs text-amber-300 shadow-sm"
+              >
+                <span className="w-2 h-2 rounded-full bg-amber-400"></span>
+                <span className="font-mono text-[11px] font-semibold tracking-wide">DEMO MODE</span>
+              </div>
+            ) : health?.effective_status === 'real_connected' ? (
+              <div
+                title={health.message}
+                className="flex items-center space-x-2 px-2.5 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-xs text-emerald-300 shadow-sm"
+              >
+                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                <span className="font-mono text-[11px] font-semibold tracking-wide">REAL DATA · FIRMS CONNECTED</span>
+              </div>
+            ) : health?.effective_status === 'real_unconfigured' ? (
+              <div
+                title={health.message}
+                className="flex items-center space-x-2 px-2.5 py-1 rounded-full bg-sky-500/10 border border-sky-500/30 text-xs text-sky-300 shadow-sm"
+              >
+                <span className="w-2 h-2 rounded-full bg-sky-400"></span>
+                <span className="font-mono text-[11px] font-semibold tracking-wide">REAL DATA · MAP_KEY NEEDED</span>
+              </div>
+            ) : health?.effective_status === 'real_auth_failed' ? (
+              <div
+                title={health.message}
+                className="flex items-center space-x-2 px-2.5 py-1 rounded-full bg-rose-500/10 border border-rose-500/30 text-xs text-rose-300 shadow-sm"
+              >
+                <AlertTriangle className="w-3 h-3 text-rose-400" />
+                <span className="font-mono text-[11px] font-semibold tracking-wide">REAL DATA · AUTH FAILED</span>
+              </div>
+            ) : (
+              <div
+                title={health?.message || 'Connecting to backend...'}
+                className="flex items-center space-x-2 px-2.5 py-1 rounded-full bg-dark-850 border border-dark-700/80 text-xs text-slate-400"
+              >
+                <span className="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>
+                <span className="font-mono text-[11px] text-slate-300">
+                  {health ? 'REAL DATA · UNAVAILABLE' : 'CONNECTING...'}
+                </span>
+              </div>
+            )}
           </div>
 
           {/* Mobile menu button */}

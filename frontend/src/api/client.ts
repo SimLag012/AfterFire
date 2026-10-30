@@ -5,6 +5,11 @@ import {
   FireDetection,
   CalendarAggregation,
   FireEventCandidate,
+  EventSearchResponse,
+  CircleEventSearchResponse,
+  EventDetailResponse,
+  ExplorerClustersResponse,
+  ExplorerCoverageResponse,
   BurnedAreaSummary,
   VegetationTimeSeries,
   RecoveryAnalysis,
@@ -13,6 +18,7 @@ import {
   ExplainResponse,
   ReportResponse,
   DatasetMetadata,
+  SystemStatus,
 } from '../types';
 
 const api = axios.create({
@@ -45,9 +51,14 @@ export const apiClient = {
     return res.data;
   },
 
-  // Health
-  getHealth: async () => {
+  // Health & Status
+  getHealth: async (): Promise<SystemStatus> => {
     const res = await api.get('/health');
+    return res.data;
+  },
+
+  getStatus: async (): Promise<SystemStatus> => {
+    const res = await api.get('/status');
     return res.data;
   },
 
@@ -87,8 +98,10 @@ export const apiClient = {
     return res.data;
   },
 
-  getAreaSummary: async (areaId: string): Promise<AreaSummary> => {
-    const res = await api.get(`/areas/${areaId}/summary`);
+  getAreaSummary: async (areaId: string, includeSynthetic: boolean = true): Promise<AreaSummary> => {
+    const res = await api.get(`/areas/${areaId}/summary`, {
+      params: { include_synthetic: includeSynthetic },
+    });
     return res.data;
   },
 
@@ -100,6 +113,7 @@ export const apiClient = {
       end_date?: string;
       instrument?: string;
       confidence_level?: string;
+      include_synthetic?: boolean;
       limit?: number;
     }
   ): Promise<FireDetection[]> => {
@@ -111,16 +125,93 @@ export const apiClient = {
     areaId: string,
     granularity: 'day' | 'week' | 'month' | 'year' = 'day',
     startDate?: string,
-    endDate?: string
+    endDate?: string,
+    includeSynthetic: boolean = true
   ): Promise<CalendarAggregation> => {
     const res = await api.get(`/areas/${areaId}/calendar`, {
-      params: { granularity, start_date: startDate, end_date: endDate },
+      params: {
+        granularity,
+        start_date: startDate,
+        end_date: endDate,
+        include_synthetic: includeSynthetic,
+      },
     });
     return res.data;
   },
 
   getEvents: async (areaId: string): Promise<FireEventCandidate[]> => {
     const res = await api.get(`/areas/${areaId}/events`);
+    return res.data;
+  },
+
+  searchEvents: async (params: {
+    bbox: string;
+    start_date?: string;
+    end_date?: string;
+    sensor?: 'MODIS' | 'VIIRS' | 'both';
+    limit?: number;
+    offset?: number;
+    include_synthetic?: boolean;
+  }, signal?: AbortSignal): Promise<EventSearchResponse> => {
+    const res = await api.get('/events', { params, signal });
+    return res.data;
+  },
+
+  searchEventsInCircle: async (params: {
+    center_lat: number;
+    center_lon: number;
+    radius_km: number;
+    start_date?: string;
+    end_date?: string;
+    sensor?: 'MODIS' | 'VIIRS' | 'both';
+    limit?: number;
+    include_synthetic?: boolean;
+  }, signal?: AbortSignal): Promise<CircleEventSearchResponse> => {
+    const res = await api.get('/events/circle', { params, signal });
+    return res.data;
+  },
+
+  getEvent: async (eventId: string, signal?: AbortSignal): Promise<EventDetailResponse> => {
+    const res = await api.get(`/events/${encodeURIComponent(eventId)}`, { signal });
+    return res.data;
+  },
+
+  getItalyCoverage: async (signal?: AbortSignal): Promise<ExplorerCoverageResponse> => {
+    const res = await api.get('/italy/coverage', { signal });
+    return res.data;
+  },
+
+  getExplorerHotspots: async (params: Record<string, string | number | undefined>, online: boolean, signal?: AbortSignal): Promise<{detections: FireDetection[]; truncated: boolean}> => {
+    const res = await api.get(online ? '/explorer/recent' : '/explorer/hotspots', { params, signal });
+    return res.data;
+  },
+  searchLocations: async (q: string): Promise<{results: {name:string;lat:number;lon:number}[];attribution:string}> => {
+    const res = await api.get('/explorer/search', {params:{q}}); return res.data;
+  },
+
+  getExplorerClusters: async (params: {
+    bbox: string;
+    zoom: number;
+    scope?: 'all' | 'italy';
+    start_date?: string;
+    end_date?: string;
+    sensor?: 'MODIS' | 'VIIRS';
+    satellite?: string;
+    after_utc?: string;
+    center_lat?: number;
+    center_lon?: number;
+    radius_km?: number;
+  }, signal?: AbortSignal): Promise<ExplorerClustersResponse> => {
+    const res = await api.get('/explorer/clusters', { params, signal });
+    return res.data;
+  },
+
+  getExplorerEvents: async (params: {
+    bbox: string; start_date?: string; end_date?: string; sensor?: 'MODIS' | 'VIIRS'; satellite?: string; after_utc?: string;
+    scope?: 'all' | 'italy'; center_lat?: number; center_lon?: number; radius_km?: number;
+    limit: number; offset: number;
+  }, signal?: AbortSignal): Promise<EventSearchResponse> => {
+    const res = await api.get('/explorer/events', { params, signal });
     return res.data;
   },
 
@@ -132,8 +223,10 @@ export const apiClient = {
   },
 
   // Burned Area
-  getBurnedArea: async (areaId: string): Promise<BurnedAreaSummary> => {
-    const res = await api.get(`/areas/${areaId}/burned-area`);
+  getBurnedArea: async (areaId: string, includeSynthetic: boolean = true): Promise<BurnedAreaSummary> => {
+    const res = await api.get(`/areas/${areaId}/burned-area`, {
+      params: { include_synthetic: includeSynthetic },
+    });
     return res.data;
   },
 
@@ -143,7 +236,8 @@ export const apiClient = {
     indexName: string = 'NDVI',
     startDate?: string,
     endDate?: string,
-    includeInvalid: boolean = true
+    includeInvalid: boolean = true,
+    eventId?: string
   ): Promise<VegetationTimeSeries> => {
     const res = await api.get(`/areas/${areaId}/vegetation`, {
       params: {
@@ -151,6 +245,7 @@ export const apiClient = {
         start_date: startDate,
         end_date: endDate,
         include_invalid: includeInvalid,
+        event_id: eventId,
       },
     });
     return res.data;
@@ -163,8 +258,8 @@ export const apiClient = {
     return res.data;
   },
 
-  getRecurrence: async (areaId: string): Promise<RecurrenceAnalysis> => {
-    const res = await api.get(`/areas/${areaId}/recurrence`);
+  getRecurrence: async (areaId: string, eventId?: string): Promise<RecurrenceAnalysis> => {
+    const res = await api.get(`/areas/${areaId}/recurrence`, { params: { event_id: eventId } });
     return res.data;
   },
 

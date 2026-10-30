@@ -19,7 +19,7 @@ AfterFire reconstructs the complete environmental story of a territory before, d
 Rather than being another static map of fire markers, AfterFire addresses concrete scientific questions:
 - **Where and when was combustion activity detected?** Harmonizing NASA MODIS (1km) and VIIRS (375m) observations.
 - **What physical surface was burned?** Differentiating active point thermal hotspots from MODIS MCD64A1 500m pixel-mapped burned areas.
-- **What was the pre-fire baseline?** Calculating seasonal multi-year vegetative reference values from MODIS MOD13Q1 250m 16-day composites.
+- **What was the pre-fire baseline?** Calculating observed pre-fire mean vegetative reference values from MODIS MOD13Q1 250m 16-day composites.
 - **How did canopy greenness evolve after the event?** Quantifying drop magnitude, trajectory recovery quotients, and QA masking.
 - **Are there areas exhibiting delayed or truncated recovery?** Detecting recurring wildfires and compound disturbances before canopy restoration.
 - **How reliable are these conclusions?** Enforcing strict traceability, zero hallucinated figures, explicit remote-sensing limitations, and transparent demo vs live tagging.
@@ -85,7 +85,7 @@ MODIS (1km nominal nadir) and VIIRS (375m I-band) differ fundamentally in pixel 
 - AfterFire **preserves full sensor provenance**: instrument, satellite, acquisition time, raw confidence, and Fire Radiative Power (MW).
 - Standardizes confidence into normalized tiers: `high`, `nominal`, `low`.
 - Groups observations into multi-sensor activity calendars without double-counting physical fire perimeters.
-- Implements spatiotemporal clustering (DBSCAN 7km / 3-day max temporal gap) to infer candidate disturbance events.
+- Implements greedy spatiotemporal proximity grouping (7km / 3-day max temporal gap) to infer candidate disturbance events.
 
 ### 3.2 Pre-Fire Baseline & Recovery Trajectory Engine
 - **Multi-Year Seasonal Baseline**: Uses 16-day MODIS MOD13Q1 NDVI composite observations prior to the fire disturbance to calculate baseline mean ($\mu$) and standard deviation ($\sigma$).
@@ -126,8 +126,56 @@ pip install -r requirements.txt
 cp ../.env.example .env
 uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
 ```
-The backend initializes the database and seeds the calibrated study cases automatically.
+The backend initializes the database and seeds calibrated synthetic study cases only when
+`DEMO_MODE=true`. Real-data mode is the default; create a study area and configure a NASA
+FIRMS MAP key to retrieve observations. The Explorer hides synthetic presets and only
+displays real observations, grouped into zoom-dependent map clusters.
+
+The Explorer opens on Italy and defaults to all available dates in the local archive.
+For complete Italy ingestion, resumable annual downloads, API backfill and indexing, see [backend/README.md](backend/README.md).
+The map remains globally navigable; its Italian starting view is not a geographic
+restriction on map movement or area searches. An optional WGS84 circle can be drawn
+anywhere on the map and searches only observations inside its radius, with the
+selected date and sensor filters. Outside the imported coverage, the Explorer reports
+that local data are unavailable rather than implying that no fires occurred.
+Synthetic detections are excluded from real-data results by default. Zoom-dependent
+map clusters are visual aggregations, not individual fires; the results list shows
+algorithmic event candidates separately and can highlight one on the map. Candidates and detection memberships are indexed outside map requests and paginated on the server.
+`GET /api/v1/events/{event_id}` supports direct, shareable event-analysis URLs at
+`/events/{event_id}`. These candidates are not official fire perimeters. Display clusters aggregate the full matching observation set in SQL; candidate pages refer to complete persisted histories. The Explorer
+search URL is preserved when navigating to and back from a candidate analysis.
 Open API documentation at: **http://localhost:8000/docs**
+
+#### Geographic analysis limits
+
+The backend validates the analysis configuration at startup. Set the WGS84 bounding
+box as `west,south,east,north` in `.env`; the example values are editable defaults,
+not a permanent analysis period. `MAX_DOWNLOAD_DAYS_PER_REQUEST`,
+`MAX_CONCURRENT_DOWNLOADS`, and `MAX_DOWNLOAD_SIZE_MB` bound active-fire retrieval.
+FIRMS responses are requested for the bounding box at NASA rather than fetched
+globally and filtered afterward.
+
+The Explorer's optional **Draw circle** search is independent of the configured
+analysis bounding box used for provider downloads. Users can pan and zoom globally,
+draw or clear a circular area, and return to the Italy view without changing their
+date or sensor filters. A circle search is evaluated against the local archive only;
+it does not trigger a global download. The separate analysis workflow continues to
+use the configured bounding box and date interval to constrain provider retrieval.
+
+The current automated remote downloader supports NASA FIRMS active-fire feeds
+(MODIS and VIIRS Suomi-NPP, NOAA-20 and NOAA-21; standard and NRT feeds). MCD64A1 and MOD13Q1 are currently parsed/imported
+products; AfterFire does not claim to automatically retrieve them or apply source
+side region/date filtering to their global granules. FIRMS NRT availability is
+provider-controlled, so a valid historical date range may still be rejected by
+NASA; the API reports provider failures instead of silently substituting data.
+See the [NASA FIRMS API documentation](https://firms.modaps.eosdis.nasa.gov/api/)
+for its MAP_KEY requirement and transaction limits.
+
+Downloaded FIRMS CSV responses are cached under `~/.cache/afterfire` for local
+development. Docker Compose stores them in the persistent `afterfire-cache`
+volume. Cache inspection and disposable-cache removal are available at
+`GET /api/v1/analysis/cache` and `DELETE /api/v1/analysis/cache`; these operate
+only on cached provider CSV files and never touch the application database.
 
 #### 3. Frontend Setup
 ```bash
@@ -182,14 +230,16 @@ npm run build
    - Click **Explore the Map**.
 
 2. **Interactive Explorer (`/explorer`)**:
-   - Switch between calibrated territories (e.g. *Rhodes Island 2023*, *Jasper Canada 2024*, *Kangaroo Island 2020*).
-   - Toggle layers:
-     - **MODIS (1km)**: Yellow/red circles with white rims.
-     - **VIIRS (375m)**: Blue/red circles with cyan rims (higher spatial density).
-     - **MCD64A1 Burned Area**: 500m mapped burnt patches.
-     - **GIBS True Color**: NASA Worldview RGB background layer.
-   - Click any hotspot marker to inspect its acquisition timestamp, confidence tier, and Fire Radiative Power (MW).
-   - Expand the **Harmonized Activity Calendar** at the bottom right.
+   - Start with the map centered on Italy and its currently available archive data.
+   - Use date and sensor filters to update the visible clusters and synchronized
+     results list; the active period and archive coverage remain explicit.
+   - Pan anywhere in the world and optionally draw a circle to search that area.
+     Clear it to return to the Italian results, or use **Return to Italy** to restore
+     the initial view while retaining the filters.
+   - Treat visual clusters as groups of observations, not confirmed individual fires.
+     Local coverage gaps are reported as unavailable data, not as evidence of no fire.
+   - Synthetic study cases remain explicitly identified as **DEMO DATA** and separate
+     from real satellite observations.
 
 3. **Territory Story & Synchronized Timeline (`/territory/rhodes-greece-2023`)**:
    - Scrub through the 4 phases:
@@ -234,7 +284,15 @@ npm run build
 | `EARTHDATA_USERNAME` | NASA Earthdata login username | *(Optional)* |
 | `EARTHDATA_PASSWORD` | NASA Earthdata login password | *(Optional)* |
 | `LLM_API_KEY` | OpenAI API key for AI Analyst narrative | *(Optional)* |
-| `DEMO_MODE` | Flags synthetic samples transparently | `true` |
+| `DEMO_MODE` | Seeds and enables synthetic study cases | `false` |
+| `ANALYSIS_BBOX` | Default region as west,south,east,north WGS84 coordinates | `14.7,37.1,15.4,37.8` |
+| `ANALYSIS_REGION_NAME` | Human-readable configured region label | `Sicily East` |
+| `ANALYSIS_START_DATE` / `ANALYSIS_END_DATE` | Initial analysis date interval | `2024-01-01` / `2026-10-27` |
+| `MAX_DOWNLOAD_DAYS_PER_REQUEST` | Maximum days in one FIRMS API window (1–5) | `5` |
+| `MAX_CONCURRENT_DOWNLOADS` | Maximum simultaneous provider downloads | `2` |
+| `MAX_DOWNLOAD_SIZE_MB` | Maximum bytes accepted per provider operation/upload | `250` |
+| `DATA_CACHE_ENABLED` | Reuse downloaded provider responses | `true` |
+| `ALLOW_GLOBAL_DOWNLOADS` | Explicit opt-in for whole-globe requests | `false` |
 
 ---
 
@@ -252,3 +310,41 @@ npm run build
 
 This project is licensed under the MIT License — see the LICENSE file for details. Built for the NASA Space Apps Challenge 2026.
 
+## On-demand post-fire analysis
+
+The event page now supports a persistent NASA MODIS analysis worker, event-specific burned cells, QA-screened NDVI/EVI, seasonal baselines, dated rasters and descriptive recurrence evidence. Start with [Post-Fire Recovery](docs/POST_FIRE_RECOVERY.md), [pipeline](docs/SATELLITE_DATA_PIPELINE.md), [methodology](docs/SCIENTIFIC_METHODOLOGY.md), [cache configuration](docs/ANALYSIS_CACHE.md) and [verification evidence](docs/POST_FIRE_VERIFICATION.md). Real acquisition requires working backend Earthdata credentials; the checked-in verification report states what was actually acquired.
+
+## Phase 4 — Recovery Story
+
+Event analysis now previews cache-aware acquisition, requests annual NASA AppEEARS native spatial subsets with all required QA layers, and retains the original bounded HDF provider. Recovery Story adds real-composite playback, year/date selection, a shared-map Before/After divider and synchronized anomaly charts. The 5 GiB job limit applies to new network bytes; cache, block, temporary and derived-result limits are separate. See [Recovery Story](docs/RECOVERY_STORY.md), [subsetting](docs/SATELLITE_SUBSETTING.md) and [verification evidence](docs/PHASE4_VERIFICATION.md).
+
+
+## Fase 5 — Recovery Intelligence
+
+La pagina evento include assessment stagionale NDVI/EVI, persistenza osservata, baseline per pixel, mappa delle anomalie e GeoTIFF multibanda. Compare Recovery confronta eventi reali per mesi dall’incendio, con controlli di qualità. Preflight persistente asincrono, cache metadati TTL e cleanup conservativo con dry-run mantengono separati rete, catalogo e spazio locale.
+
+- [Architettura e API](docs/RECOVERY_INTELLIGENCE.md)
+- [Metodologia scientifica](docs/RECOVERY_ASSESSMENT_METHODOLOGY.md) e [analisi spaziale](docs/SPATIAL_RECOVERY_ANALYSIS.md)
+- [Preflight asincrono](docs/ASYNC_PREFLIGHT.md) e [gestione cache](docs/CACHE_MANAGEMENT.md)
+- [Risultati, test e limiti verificati](docs/PHASE5_VERIFICATION.md)
+
+Il POST preflight restituisce ora 202 e un planning ID: i client devono leggere il piano da GET/SSE quando ready. Nessun download o task NASA viene avviato dalla pianificazione. Gli indicatori descrivono gli indici vegetativi osservati e non certificano recupero ecologico completo.
+
+
+## Phase 6 — Reburn & Recovery Gap
+
+The existing implementation is extended by [Reburn Intelligence](docs/REBURN_INTELLIGENCE.md), [observed episode methodology](docs/REBURN_DETECTION_METHODOLOGY.md), [shared-area Recovery Gap](docs/RECOVERY_GAP.md) and [cumulative vegetation](docs/CUMULATIVE_VEGETATION.md). See [measured infrastructure changes](docs/PERFORMANCE_OPTIMIZATION.md) and [verification and limitations](docs/PHASE6_VERIFICATION.md). Previous-phase publications and reports are preserved.
+
+
+## Fast analysis update — 30 October 2026
+
+Analysis now opens saved scientific publications without preflight or automatic retry. New AppEEARS task submission defaults to disabled; missing sources use bounded direct NASA HDF access. See [Fast analysis](docs/FAST_ANALYSIS.md) and [measured verification](docs/ANALYSIS_PERFORMANCE_VERIFICATION.md).
+
+
+## Global Explorer and API-first analysis
+
+The Explorer now provides a world map, satellite filters, UTC date controls, timeline, searchable/saved/shareable views, bounded hotspots/SQL clusters and event-scoped persisted burned-area/NDVI/EVI overlays. The initial view remains Italy. Local archive coverage and recent online FIRMS access are distinguished; contextual satellite basemaps are not historical imagery of the selected fire date.
+
+Normal Analyze reuses scientific results and valid native caches, then compatible configured APIs. **Automatic full HDF downloads are disabled.** Earth Engine requires an externally registered project and runtime credentials; live ORNL Collection 6.1 equivalence is not verified and no substitution is made. No billing or NASA email orders are activated. The existing Recovery Story, Recovery Intelligence, comparison, reburn and gap flows remain available.
+
+See [global explorer](docs/FIRMS_STYLE_EXPLORER.md), [layers and timeline](docs/MAP_LAYERS_AND_TIMELINE.md), [API-first engine](docs/API_FIRST_SATELLITE_ENGINE.md), [Earth Engine setup](docs/EARTH_ENGINE_PROVIDER.md), [verification](docs/API_FIRST_VERIFICATION.md) and [Git history security](docs/GITHUB_HISTORY_SECURITY.md). Install local credential checks with `git config core.hooksPath .githooks`.

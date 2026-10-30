@@ -33,6 +33,7 @@ export interface AreaSummary {
 }
 
 export interface FireDetection {
+  candidate_event_id?: string;
   id: string;
   latitude: number;
   longitude: number;
@@ -98,6 +99,146 @@ export interface FireEventCandidate {
   confidence_summary: string;
   notes?: string;
   is_synthetic_demo: string;
+}
+
+export interface EventMapItem extends FireEventCandidate {
+  center_lat: number;
+  center_lon: number;
+  min_lat: number;
+  max_lat: number;
+  min_lon: number;
+  max_lon: number;
+  detection_ids: string[];
+}
+
+export interface EventSearchResponse {
+  total_events?: number;
+  index_status?: string;
+  events: EventMapItem[];
+  detections: FireDetection[];
+  total_detections: number;
+  truncated: boolean;
+}
+
+export interface CircleEventSearchResponse extends EventSearchResponse {
+  center_lat: number;
+  center_lon: number;
+  radius_km: number;
+  observed_start_date?: string | null;
+  observed_end_date?: string | null;
+}
+
+export interface ExplorerMapCluster {
+  id: string;
+  latitude: number;
+  longitude: number;
+  count: number;
+  start_date: string;
+  end_date: string;
+  sensors: string[];
+}
+
+export interface ExplorerCoverage {
+  covered?: boolean;
+  partial?: boolean;
+  message?: string;
+  status?: string;
+  detail?: string;
+  completeness?: string;
+  matching_real_observations?: number;
+  start_date?: string;
+  end_date?: string;
+  available_start_date?: string;
+  available_end_date?: string;
+  earliest_date?: string;
+  latest_date?: string;
+  date_range?: { start?: string; end?: string };
+  [key: string]: unknown;
+}
+
+export interface ExplorerCoverageResponse {
+  region: string;
+  completeness: string;
+  configured_sources: {
+    nasa_firms_map_key_configured: boolean;
+    historical_archive_csv_import: string;
+    recent_area_api: string;
+  };
+  real: {
+    count: number;
+    sensors: string[];
+    satellites: string[];
+    min_date: string | null;
+    max_date: string | null;
+    last_import_at: string | null;
+    products: Array<{
+      dataset_name: string;
+      count: number;
+      sensors: string[];
+      satellites: string[];
+      min_date: string;
+      max_date: string;
+      last_import_at: string | null;
+    }>;
+  };
+  demo: {
+    count: number;
+    sensors: string[];
+    satellites: string[];
+    min_date: string | null;
+    max_date: string | null;
+    last_import_at: string | null;
+    products: Array<{
+      dataset_name: string;
+      count: number;
+      sensors: string[];
+      satellites: string[];
+      min_date: string;
+      max_date: string;
+      last_import_at: string | null;
+    }>;
+    scope_note: string;
+    [key: string]: unknown;
+  };
+  products: Array<{
+    dataset_name: string;
+    name: string;
+    instrument: string;
+    satellites: string;
+    archive_product: string;
+    recent_api_source: string;
+    source_configured: boolean;
+    historical_archive_import: string;
+    recent_api: string;
+    loaded_count: number;
+    loaded_min_date: string | null;
+    loaded_max_date: string | null;
+    last_import_at: string | null;
+    coverage_status: string;
+  }>;
+  imports: Array<Record<string, unknown>>;
+  [key: string]: unknown;
+}
+
+export interface ExplorerClustersResponse {
+  clusters: ExplorerMapCluster[];
+  total_observations?: number;
+  total_detections?: number;
+  data_coverage?: ExplorerCoverage;
+  coverage?: ExplorerCoverage;
+  zoom?: number;
+  cluster_cell_pixels?: number;
+  semantics?: string;
+}
+
+export interface EventDetailResponse {
+  event: EventMapItem;
+  area?: AreaOfInterest | null;
+  detections: FireDetection[];
+  burned_area: BurnedAreaObservation[];
+  vegetation_observation_count: number;
+  data_sources: string[];
+  limitations: string[];
 }
 
 export interface BurnedAreaObservation {
@@ -332,3 +473,40 @@ export interface DatasetMetadata {
   citation: string;
 }
 
+export interface ProviderInfo {
+  name: string;
+  configured: boolean;
+  connected: boolean;
+  status: string;
+  message: string;
+  available_products: string[];
+  date_ranges?: Record<string, { min_date: string; max_date: string }>;
+  last_check?: string | null;
+  last_retrieval?: string | null;
+}
+
+export interface SystemStatus {
+  status: string;
+  service: string;
+  version: string;
+  demo_mode: boolean;
+  app_mode: 'demo' | 'real';
+  effective_status: 'demo' | 'real_connected' | 'real_unconfigured' | 'real_auth_failed' | 'real_unavailable';
+  message: string;
+  firms_configured: boolean;
+  earthdata_configured: boolean;
+  ai_analyst_configured: boolean;
+  last_provider_check?: string | null;
+  last_data_retrieval?: string | null;
+  providers: {
+    firms: ProviderInfo;
+    lp_daac: ProviderInfo;
+    gibs: ProviderInfo;
+  };
+  active_analysis: {
+    region_name: string;
+    bbox: [number, number, number, number];
+    start_date: string;
+    end_date: string;
+  };
+}

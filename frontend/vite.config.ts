@@ -15,7 +15,7 @@ export default defineConfig({
     host: '0.0.0.0',
     proxy: {
       '/api': {
-        target: 'http://127.0.0.1:8000',
+        target: process.env.AF_API_PROXY_URL || 'http://127.0.0.1:8000',
         changeOrigin: true,
         secure: false,
       },

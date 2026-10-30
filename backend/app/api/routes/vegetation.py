@@ -20,8 +20,9 @@ router = APIRouter()
 async def get_vegetation_time_series(
     area_id: str,
     index_name: str = Query("NDVI", pattern="^(NDVI|EVI)$"),
-    start_date: Optional[str] = None,
-    end_date: Optional[str] = None,
+    start_date: Optional[date] = None,
+    end_date: Optional[date] = None,
+    event_id: Optional[str] = None,
     include_invalid: bool = True,
     db: AsyncSession = Depends(get_db)
 ):
@@ -34,10 +35,17 @@ async def get_vegetation_time_series(
         VegetationObservation.area_id == area_id,
         VegetationObservation.index_name == index_name
     ]
+    if start_date and end_date and start_date > end_date:
+        raise HTTPException(422, "start_date must be on or before end_date.")
+    if event_id:
+        event = await db.get(FireEventCandidate, event_id)
+        if not event or event.area_id != area_id:
+            raise HTTPException(404, "Event candidate not found in this area.")
+        conditions.append(VegetationObservation.is_synthetic_demo == event.is_synthetic_demo)
     if start_date:
-        conditions.append(VegetationObservation.observation_date >= datetime.strptime(start_date, "%Y-%m-%d").date())
+        conditions.append(VegetationObservation.observation_date >= start_date)
     if end_date:
-        conditions.append(VegetationObservation.observation_date <= datetime.strptime(end_date, "%Y-%m-%d").date())
+        conditions.append(VegetationObservation.observation_date <= end_date)
     if not include_invalid:
         conditions.append(VegetationObservation.is_valid == True)
 
@@ -78,8 +86,8 @@ async def get_vegetation_time_series(
             is_synthetic_demo=r.is_synthetic_demo
         ))
 
-    s_d = str(records[0].observation_date) if records else (start_date or "N/A")
-    e_d = str(records[-1].observation_date) if records else (end_date or "N/A")
+    s_d = str(records[0].observation_date) if records else (str(start_date) if start_date else "N/A")
+    e_d = str(records[-1].observation_date) if records else (str(end_date) if end_date else "N/A")
 
     mean_v = round(float(sum(vals) / len(vals)), 4) if vals else None
     min_v = round(min(vals), 4) if vals else None
@@ -139,15 +147,18 @@ async def get_recovery_analysis(
     events = (await db.execute(ev_query)).scalars().all()
     target_event = events[0] if events else None
 
+    if event_id and not target_event:
+        raise HTTPException(404, "Event candidate not found in this area.")
     if target_event:
+        veg_records = [v for v in veg_records if v.index_name == "NDVI" and v.is_synthetic_demo == target_event.is_synthetic_demo]
         fire_d = target_event.start_date
         ev_name = target_event.name
         ev_id = target_event.id
     else:
-        # Fallback to midpoint of time series
-        fire_d = veg_records[len(veg_records) // 2].observation_date
-        ev_name = "Inferred disturbance"
-        ev_id = None
+        raise HTTPException(422, "No candidate event is available; a fire date cannot be inferred from the vegetation midpoint.")
+    valid = [v for v in veg_records if v.is_valid and v.scaled_value is not None]
+    if sum(v.observation_date < fire_d for v in valid) < 3 or sum(v.observation_date >= fire_d for v in valid) < 2:
+        raise HTTPException(422, "Insufficient valid NDVI observations: at least 3 before and 2 after the event are required.")
 
     obs_dicts = [
         {
@@ -175,11 +186,12 @@ async def get_recovery_analysis(
 @router.get("/areas/{area_id}/recurrence", response_model=RecurrenceAnalysisResponse)
 async def get_recurrence_analysis(
     area_id: str,
+    event_id: Optional[str] = None,
     db: AsyncSession = Depends(get_db)
 ):
     """
-    Analyzes multiple recurring fire disturbances, measuring return intervals
-    and identifying whether vegetation recovered between consecutive events.
+    Legacy candidate chronology only. Shared-ground vegetation evidence requires
+    the versioned event Reburn History / Recovery Gap analysis.
     """
     a_res = await db.execute(select(AreaOfInterest).filter(AreaOfInterest.id == area_id))
     area = a_res.scalars().first()
@@ -190,9 +202,11 @@ async def get_recurrence_analysis(
     ev_res = await db.execute(select(FireEventCandidate).filter(FireEventCandidate.area_id == area_id).order_by(FireEventCandidate.start_date.asc()))
     events = ev_res.scalars().all()
 
-    # Get vegetation
-    v_res = await db.execute(select(VegetationObservation).filter(VegetationObservation.area_id == area_id).order_by(VegetationObservation.observation_date.asc()))
-    veg_records = v_res.scalars().all()
+    if event_id:
+        target = await db.get(FireEventCandidate, event_id)
+        if not target or target.area_id != area_id:
+            raise HTTPException(404, "Event candidate not found in this area.")
+        events = [e for e in events if e.is_synthetic_demo == target.is_synthetic_demo]
 
     ev_dicts = [
         {
@@ -205,20 +219,11 @@ async def get_recurrence_analysis(
         for e in events
     ]
 
-    veg_dicts = [
-        {
-            "observation_date": v.observation_date,
-            "scaled_value": v.scaled_value,
-            "is_valid": v.is_valid
-        }
-        for v in veg_records
-    ]
-
     result = RecurrenceEngine.analyze_recurrence(
         area_id=area.id,
         area_name=area.name,
         events=ev_dicts,
-        vegetation_obs=veg_dicts
+        vegetation_obs=[]
     )
 
     return RecurrenceAnalysisResponse(**result)

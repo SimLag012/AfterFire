@@ -5,6 +5,8 @@ WORKDIR /app
 # Install system dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
+    libhdf4-alt-dev \
+    libexpat1 \
     curl \
     && rm -rf /var/lib/apt/lists/*
 

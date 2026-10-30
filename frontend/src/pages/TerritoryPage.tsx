@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import {
@@ -19,9 +19,22 @@ import { LeafletMap } from '../components/map/LeafletMap';
 import { TimelineBar, TimelinePhase } from '../components/timeline/TimelineBar';
 import { DemoBanner } from '../components/common/DemoBanner';
 
+const toDateValue = (date: string | undefined, fallback: string): string => {
+  if (!date || Number.isNaN(new Date(`${date}T00:00:00.000Z`).getTime())) {
+    return fallback;
+  }
+  return date;
+};
+
+const addDays = (date: string, days: number): string => {
+  const timestamp = new Date(`${date}T00:00:00.000Z`).getTime() + days * 24 * 60 * 60 * 1000;
+  return new Date(timestamp).toISOString().slice(0, 10);
+};
+
 export const TerritoryPage: React.FC = () => {
   const { areaId = 'rhodes-greece-2023' } = useParams<{ areaId: string }>();
   const [currentPhase, setCurrentPhase] = useState<TimelinePhase>('fire');
+  const [selectedDate, setSelectedDate] = useState<string>('2023-07-22');
 
   // Query territory
   const { data: area } = useQuery({
@@ -55,9 +68,37 @@ export const TerritoryPage: React.FC = () => {
     queryFn: () => apiClient.getBurnedArea(areaId),
   });
 
-  // Date and detections displayed change according to the active timeline phase
-  let displayedDetections = allDetections;
-  let mapContextDate = firstEvent ? firstEvent.start_date : '2023-07-22';
+  const fireStartDate = toDateValue(firstEvent?.start_date, '2023-07-18');
+  const fireEndDate = toDateValue(firstEvent?.end_date, '2023-07-28');
+  const beforeDate = addDays(fireStartDate, -30);
+  const afterDate = addDays(fireEndDate, 18);
+  const recoveryDate = addDays(fireEndDate, 320);
+
+  useEffect(() => {
+    if (!firstEvent) return;
+    setSelectedDate(fireStartDate);
+  }, [firstEvent?.start_date]);
+
+  const minDate = useMemo(() => addDays(fireStartDate, -365), [fireStartDate]);
+  const maxDate = useMemo(() => addDays(recoveryDate, 120), [recoveryDate]);
+
+  const resolvedDate = selectedDate || fireStartDate;
+
+  const phaseDateMap: Record<TimelinePhase, string> = {
+    before: beforeDate,
+    fire: fireStartDate,
+    after: afterDate,
+    recovery: recoveryDate,
+  };
+
+  const mapContextDate = toDateValue(resolvedDate, fireStartDate);
+
+  let displayedDetections = allDetections.filter((detection) => {
+    const detectionDate = detection.acq_date ?? '';
+    if (!detectionDate) return false;
+    return detectionDate <= mapContextDate || detectionDate >= mapContextDate;
+  });
+
   let phaseDescription = '';
   let phaseMetrics = {
     title: '',
@@ -74,7 +115,6 @@ export const TerritoryPage: React.FC = () => {
 
   if (currentPhase === 'before') {
     displayedDetections = [];
-    mapContextDate = '2023-05-15';
     phaseDescription = 'Territory prior to fire disturbance. Demonstrates intact vegetative canopy with seasonal baseline NDVI ~0.65.';
     phaseMetrics = {
       title: 'Baseline Canopy State',
@@ -82,17 +122,19 @@ export const TerritoryPage: React.FC = () => {
       subtext: 'Intact Mediterranean pine canopy',
     };
   } else if (currentPhase === 'fire') {
-    displayedDetections = allDetections;
-    mapContextDate = firstEvent ? firstEvent.start_date : '2023-07-22';
-    phaseDescription = `Active wildfire disturbance. ${allDetections.length} harmonized MODIS and VIIRS thermal detections recorded across active flaming frontiers.`;
+    displayedDetections = allDetections.filter((detection) => {
+      const detectionDate = detection.acq_date ?? '';
+      if (!detectionDate) return false;
+      return detectionDate >= fireStartDate && detectionDate <= fireEndDate;
+    });
+    phaseDescription = `Active wildfire disturbance. ${displayedDetections.length} harmonized MODIS and VIIRS thermal detections recorded across active flaming frontiers.`;
     phaseMetrics = {
       title: 'Peak Detection Phase',
-      value: `${allDetections.length} Hotspots`,
+      value: `${displayedDetections.length} Hotspots`,
       subtext: `Max FRP: ${firstEvent?.max_frp_mw || 650} MW`,
     };
   } else if (currentPhase === 'after') {
     displayedDetections = [];
-    mapContextDate = '2023-08-15';
     phaseDescription = 'Immediate post-fire disturbance. Burn scar verified by MODIS MCD64A1 500m product. Severe canopy chlorophyll drop down to 0.17.';
     phaseMetrics = {
       title: 'Post-Fire Char / Scar',
@@ -101,7 +143,6 @@ export const TerritoryPage: React.FC = () => {
     };
   } else if (currentPhase === 'recovery') {
     displayedDetections = [];
-    mapContextDate = '2024-06-01';
     phaseDescription = 'Regeneration and vegetative succession. Multi-year trajectory monitored by 16-day MOD13Q1 composites with QA quality masking.';
     phaseMetrics = {
       title: 'Current Recovery Progress',
@@ -112,7 +153,7 @@ export const TerritoryPage: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-dark-950 text-slate-100 flex flex-col pb-16">
-      <DemoBanner />
+      <DemoBanner area={area} detectionCount={summary?.detection_count ?? allDetections.length} />
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 w-full space-y-6">
         {/* Header Breadcrumbs & Actions */}
@@ -146,10 +187,28 @@ export const TerritoryPage: React.FC = () => {
         {/* 4-Phase Synchronized Scrubber */}
         <TimelineBar
           currentPhase={currentPhase}
-          onPhaseChange={(p) => setCurrentPhase(p)}
+          onPhaseChange={(p) => {
+            setCurrentPhase(p);
+            setSelectedDate(phaseDateMap[p] ?? mapContextDate);
+          }}
           currentDate={mapContextDate}
-          fireStartDate={firstEvent?.start_date}
-          fireEndDate={firstEvent?.end_date}
+          onDateChange={(date) => {
+            setSelectedDate(date);
+            const time = new Date(`${date}T00:00:00.000Z`).getTime();
+            if (time < new Date(`${fireStartDate}T00:00:00.000Z`).getTime()) {
+              setCurrentPhase('before');
+            } else if (time <= new Date(`${fireEndDate}T00:00:00.000Z`).getTime()) {
+              setCurrentPhase('fire');
+            } else if (time <= new Date(`${afterDate}T00:00:00.000Z`).getTime()) {
+              setCurrentPhase('after');
+            } else {
+              setCurrentPhase('recovery');
+            }
+          }}
+          minimumDate={minDate}
+          maximumDate={maxDate}
+          fireStartDate={fireStartDate}
+          fireEndDate={fireEndDate}
         />
 
         {/* Dynamic Phase Inspection Card */}
@@ -217,4 +276,3 @@ export const TerritoryPage: React.FC = () => {
     </div>
   );
 };
-

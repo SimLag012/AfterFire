@@ -14,9 +14,9 @@ def test_confidence_normalization():
     assert FirmsProvider.normalize_confidence("MODIS", "15") == ("low", 15.0)
 
     # VIIRS categorical strings
-    assert FirmsProvider.normalize_confidence("VIIRS", "h") == ("high", 90.0)
-    assert FirmsProvider.normalize_confidence("VIIRS", "nominal") == ("nominal", 60.0)
-    assert FirmsProvider.normalize_confidence("VIIRS", "low") == ("low", 20.0)
+    assert FirmsProvider.normalize_confidence("VIIRS", "h") == ("high", None)
+    assert FirmsProvider.normalize_confidence("VIIRS", "nominal") == ("nominal", None)
+    assert FirmsProvider.normalize_confidence("VIIRS", "low") == ("low", None)
 
 
 def test_parse_firms_csv_record():
@@ -64,6 +64,26 @@ def test_harmonization_calendar_aggregation():
     assert day1["mean_frp"] == 80.0
 
 
+def test_candidate_event_ids_are_stable_across_input_order():
+    detections = [
+        {
+            "id": f"det-{index}",
+            "latitude": 36.1 + index * 0.001,
+            "longitude": 28.0 + index * 0.001,
+            "acq_date": date(2023, 7, 20 + index % 2),
+            "instrument": "VIIRS",
+            "frp": 12.0,
+        }
+        for index in range(8)
+    ]
+
+    forward = HarmonizationEngine.cluster_candidate_events("area-a", detections)
+    reverse = HarmonizationEngine.cluster_candidate_events("area-a", list(reversed(detections)))
+
+    assert [event["id"] for event in forward] == [event["id"] for event in reverse]
+    assert forward[0]["detection_ids"] == reverse[0]["detection_ids"]
+
+
 def test_vegetation_qa_and_scaling():
     # Scaling test (raw integer 7200 -> 0.72)
     scaled = VegetationProvider.scale_ndvi(7200)
@@ -107,3 +127,43 @@ def test_recovery_engine_computation():
     assert analysis["recovery_pct"] > 80.0
     assert analysis["coverage_score"] in ("good coverage", "limited observations")
     assert len(analysis["trajectory"]) == 7
+
+
+@pytest.mark.parametrize('observations', [[], [
+    {'observation_date': date(2024, 8, 1), 'scaled_value': 0.2, 'is_valid': True},
+]])
+def test_recovery_never_invents_missing_baseline(observations):
+    with pytest.raises(ValueError, match='Insufficient observations'):
+        RecoveryEngine.compute_recovery_analysis('missing', 'Missing data', date(2024, 7, 1), observations)
+
+
+def test_recurrence_missing_vegetation_preserves_unknowns():
+    result = RecurrenceEngine.analyze_recurrence('missing', 'Missing data', [
+        {'id':'a', 'start_date':date(2020, 7, 1)},
+        {'id':'b', 'start_date':date(2024, 7, 1)},
+    ], [])
+    assert all(e['pre_event_ndvi'] is None and e['ndvi_drop'] is None for e in result['events'])
+    assert result['events'][0]['did_recover_before_next'] is None
+
+
+def test_firms_parser_rejects_invalid_date_instead_of_using_today():
+    with pytest.raises(ValueError, match='acquisition date'):
+        FirmsProvider.parse_csv_record({'latitude':'42', 'longitude':'12', 'acq_date':'bad', 'acq_time':'1200'})
+
+
+def test_dense_greedy_groups_retain_all_members():
+    observations = [dict(id=f'dense-{i}', latitude=40+(i % 2)*2, longitude=12.5,
+                         acq_date=date(2024, 7, 1+i % 3), instrument='VIIRS') for i in range(1000)]
+    events = HarmonizationEngine.cluster_candidate_events('dense', observations)
+    assert sorted(e['detection_count'] for e in events) == [500, 500]
+    assert {d for e in events for d in e['detection_ids']} == {d['id'] for d in observations}
+
+
+def test_viirs_response_does_not_expose_invented_legacy_percentages():
+    from app.schemas.fire import FireDetectionResponse
+    result = FireDetectionResponse(id="legacy", latitude=42, longitude=12,
+        acq_date=date(2024, 7, 1), acq_time="1200", satellite="Suomi-NPP", instrument="VIIRS",
+        confidence_raw="n", confidence_level="nominal", confidence_pct=60,
+        dataset_name="FIRMS_VIIRS_SNPP_NRT")
+    assert result.confidence_raw == "n" and result.confidence_level == "nominal"
+    assert result.confidence_pct is None

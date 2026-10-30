@@ -11,6 +11,7 @@ class FireDetection(Base):
     
     latitude = Column(Float, nullable=False, index=True)
     longitude = Column(Float, nullable=False, index=True)
+    import_region = Column(String(64), nullable=True, index=True)
     
     acq_date = Column(Date, nullable=False, index=True)
     acq_time = Column(String(10), nullable=False)  # HHMM string e.g. "0345"
@@ -48,6 +49,7 @@ class FireDetection(Base):
 
     __table_args__ = (
         Index("idx_fire_date_instrument", "acq_date", "instrument"),
+        Index("idx_fire_dataset_date", "dataset_name", "acq_date"),
         Index("idx_fire_coords", "latitude", "longitude"),
         Index("idx_fire_area_date", "area_id", "acq_date"),
     )

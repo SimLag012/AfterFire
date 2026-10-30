@@ -1,0 +1,22 @@
+{
+  "status": {
+    "state": "partial",
+    "result_job_id": "2abc3a98d03cd3f51f4c4491f555813afb97fe474ee6b21b590cb0e56eee90b3"
+  },
+  "result": {
+    "sha256": "351b026453f1912204b29822bba6d1fed0c4ac1628432c7701a135563edb7d00",
+    "job_id": "2abc3a98d03cd3f51f4c4491f555813afb97fe474ee6b21b590cb0e56eee90b3",
+    "ndvi": 166,
+    "evi": 166,
+    "burned_cells": 94,
+    "burned_area_summary": {
+      "available_granules": 3,
+      "valid_mapping_pixels": 1170,
+      "mapping_pixels": 1170,
+      "valid_mapping_fraction": 1.0,
+      "observed_cell_area_km2": 20.1779152898568,
+      "unambiguous_cell_area_km2": 20.1779152898568,
+      "ambiguous_cells": 0
+    }
+  }
+}

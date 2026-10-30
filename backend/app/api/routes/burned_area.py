@@ -14,6 +14,7 @@ router = APIRouter()
 @router.get("/areas/{area_id}/burned-area", response_model=BurnedAreaSummaryResponse)
 async def get_burned_area(
     area_id: str,
+    include_synthetic: bool = Query(True),
     db: AsyncSession = Depends(get_db)
 ):
     res = await db.execute(select(AreaOfInterest).filter(AreaOfInterest.id == area_id))
@@ -21,7 +22,10 @@ async def get_burned_area(
     if not area:
         raise HTTPException(status_code=404, detail="Area not found")
 
-    q = select(BurnedAreaObservation).filter(BurnedAreaObservation.area_id == area_id).order_by(BurnedAreaObservation.observation_date.asc())
+    conditions = [BurnedAreaObservation.area_id == area_id]
+    if not include_synthetic:
+        conditions.append(BurnedAreaObservation.is_synthetic_demo != "true")
+    q = select(BurnedAreaObservation).filter(*conditions).order_by(BurnedAreaObservation.observation_date.asc())
     records = (await db.execute(q)).scalars().all()
 
     formatted = []
@@ -71,4 +75,3 @@ async def get_burned_area(
         },
         limitations=limitations
     )
-

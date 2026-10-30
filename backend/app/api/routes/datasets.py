@@ -10,6 +10,7 @@ from app.models.burned_area import BurnedAreaObservation
 from app.models.vegetation import VegetationObservation
 from app.schemas.dataset import DatasetMetadataResponse, DatasetStatusResponse
 from app.core.config import settings
+from app.providers.firms import FirmsProvider
 
 router = APIRouter()
 
@@ -36,23 +37,34 @@ async def get_dataset_status(dataset_id: str, db: AsyncSession = Depends(get_db)
     if "FIRMS" in dataset_id:
         c_res = await db.execute(select(func.count(FireDetection.id)).filter(FireDetection.dataset_name.contains(ds.name[:10])))
         count = c_res.scalar() or 0
-        is_live = bool(settings.FIRMS_MAP_KEY)
+        firms_status = await FirmsProvider.check_connectivity(force=False)
+        is_live = firms_status["connected"]
         requires_cred = True
-        msg = "Live NASA FIRMS Area API connected via FIRMS_MAP_KEY." if is_live else "FIRMS_MAP_KEY not set. Using calibrated historical demo data & CSV import mode."
+        msg = firms_status["message"]
 
     elif "MCD64A1" in dataset_id:
         c_res = await db.execute(select(func.count(BurnedAreaObservation.id)))
         count = c_res.scalar() or 0
-        is_live = bool(settings.EARTHDATA_USERNAME and settings.EARTHDATA_PASSWORD)
+        has_earthdata = bool(settings.EARTHDATA_USERNAME and settings.EARTHDATA_PASSWORD)
+        is_live = False
         requires_cred = True
-        msg = "NASA Earthdata authentication configured." if is_live else "Direct LP DAAC automated download requires Earthdata Login. Operating in cached / verified import mode."
+        msg = (
+            "NASA Earthdata credentials configured. Validated CSV/HDF file ingestion supported; automated regional subsetting download is not available."
+            if has_earthdata
+            else "NASA Earthdata login not configured. Operating in verified import / historical sample mode."
+        )
 
     elif "MOD13Q1" in dataset_id:
         c_res = await db.execute(select(func.count(VegetationObservation.id)))
         count = c_res.scalar() or 0
-        is_live = bool(settings.EARTHDATA_USERNAME and settings.EARTHDATA_PASSWORD)
+        has_earthdata = bool(settings.EARTHDATA_USERNAME and settings.EARTHDATA_PASSWORD)
+        is_live = False
         requires_cred = True
-        msg = "NASA Earthdata authentication configured." if is_live else "Operating in calibrated time-series import mode."
+        msg = (
+            "NASA Earthdata credentials configured. Supports ingestion and 16-bit QA bitmask parsing for MOD13Q1 250m composites."
+            if has_earthdata
+            else "NASA Earthdata login not configured. Operating in verified import / historical sample mode."
+        )
 
     return DatasetStatusResponse(
         dataset_id=ds.id,

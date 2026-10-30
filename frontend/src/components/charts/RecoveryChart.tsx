@@ -18,6 +18,7 @@ interface RecoveryChartProps {
   baselineMean: number;
   fireDate: string;
   troughNdvi: number;
+  selectedDate?: string;
 }
 
 export const RecoveryChart: React.FC<RecoveryChartProps> = ({
@@ -25,6 +26,7 @@ export const RecoveryChart: React.FC<RecoveryChartProps> = ({
   baselineMean,
   fireDate,
   troughNdvi,
+  selectedDate,
 }) => {
   if (!trajectory || trajectory.length === 0) {
     return (
@@ -137,6 +139,15 @@ export const RecoveryChart: React.FC<RecoveryChartProps> = ({
             />
           )}
 
+          {selectedDate && selectedDate !== fireDate && (
+            <ReferenceLine
+              x={selectedDate}
+              stroke="#fbbf24"
+              strokeDasharray="3 3"
+              label={{ value: 'Selected observation date', position: 'insideTopRight', fill: '#fbbf24', fontSize: 10 }}
+            />
+          )}
+
           {/* Baseline reference line */}
           <ReferenceLine
             y={baselineMean}
@@ -184,3 +195,36 @@ export const RecoveryChart: React.FC<RecoveryChartProps> = ({
   );
 };
 
+// Event-scoped Collection 6.1 observations, including explicit null composites.
+import { ReferenceArea } from 'recharts';
+import { SatelliteObservation } from '../../types/satellite';
+
+export const SatelliteRecoveryChart: React.FC<{
+  observations: SatelliteObservation[]; selectedDate: string;
+  eventStart: string; eventEnd: string; recurrenceDates: string[]; onSelect: (date: string) => void;
+}> = ({observations,selectedDate,eventStart,eventEnd,recurrenceDates,onSelect}) => {
+  const data = observations.map(o=>({...o,time:Date.parse(o.date)}));
+  return <div className="h-80 w-full" aria-label="Observed vegetation and seasonal baseline">
+    <ResponsiveContainer width="100%" height="100%">
+      <ComposedChart data={data} onClick={state => {
+        const time=Number(state?.activeLabel);
+        if (Number.isFinite(time)) onSelect(new Date(time).toISOString().slice(0,10));
+      }}>
+        <CartesianGrid stroke="#263244" strokeDasharray="3 3" />
+        <XAxis dataKey="time" type="number" domain={['dataMin','dataMax']} tickFormatter={v=>new Date(v).toISOString().slice(0,10)} tick={{fill:'#94a3b8',fontSize:10}} />
+        <YAxis domain={[-0.2,1]} tick={{fill:'#94a3b8',fontSize:10}} />
+        <Tooltip labelFormatter={v=>new Date(Number(v)).toISOString().slice(0,10)} contentStyle={{background:'#0f172a',borderColor:'#334155'}} />
+        <Legend />
+        <ReferenceArea x1={Date.parse(eventStart)} x2={Date.parse(eventEnd)+86400000} fill="#f97316" fillOpacity={0.18} />
+        {recurrenceDates.map(d=><ReferenceLine key={d} x={Date.parse(d)} stroke="#fb7185" strokeDasharray="4 4" />)}
+        <ReferenceLine x={Date.parse(selectedDate)} stroke="#fbbf24" />
+        <Line dataKey="baseline" name="Seasonal median" stroke="#38bdf8" dot={false} connectNulls={false} />
+        <Line dataKey="baseline_lower" name="Reference lower band" stroke="#64748b" strokeDasharray="3 3" dot={false} connectNulls={false} />
+        <Line dataKey="baseline_upper" name="Reference upper band" stroke="#64748b" strokeDasharray="3 3" dot={false} connectNulls={false} />
+        <YAxis yAxisId="anomaly" orientation="right" domain={[-1.2,1.2]} tick={{fill:'#fbbf24',fontSize:10}} width={35} />
+        <Line yAxisId="anomaly" dataKey="anomaly" name="Anomaly Δ (right axis)" stroke="#fbbf24" dot={false} connectNulls={false} />
+        <Line dataKey="value" name={observations[0]?.index ?? 'Vegetation'} stroke="#34d399" dot={{r:2}} connectNulls={false} />
+      </ComposedChart>
+    </ResponsiveContainer>
+  </div>;
+};

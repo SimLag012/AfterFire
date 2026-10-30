@@ -16,7 +16,7 @@ from app.models.dataset import DatasetMetadata
 logger = logging.getLogger(__name__)
 
 
-async def seed_initial_data(session: AsyncSession):
+async def seed_initial_data(session: AsyncSession, seed_demo_data: bool = True):
     """
     Seeds initial datasets, areas of interest, harmonized fire detections,
     MCD64A1 burned area, and MOD13Q1 NDVI time series.
@@ -82,6 +82,10 @@ async def seed_initial_data(session: AsyncSession):
         session.add_all(datasets)
         await session.commit()
         logger.info("Seeded dataset metadata successfully.")
+
+    if not seed_demo_data:
+        logger.info("Skipping synthetic demo areas and observations.")
+        return
 
     # 2. Areas of Interest
     existing_areas = await session.execute(select(AreaOfInterest))

@@ -1,7 +1,7 @@
 import math
 import uuid
 from typing import List
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, func
 
@@ -73,63 +73,78 @@ async def get_area(area_id: str, db: AsyncSession = Depends(get_db)):
 
 
 @router.get("/areas/{area_id}/summary", response_model=AreaSummaryResponse)
-async def get_area_summary(area_id: str, db: AsyncSession = Depends(get_db)):
+async def get_area_summary(
+    area_id: str,
+    include_synthetic: bool = Query(True),
+    db: AsyncSession = Depends(get_db),
+):
     res = await db.execute(select(AreaOfInterest).filter(AreaOfInterest.id == area_id))
     area = res.scalars().first()
     if not area:
         raise HTTPException(status_code=404, detail="Area of Interest not found")
 
     # Thermal detections count & sensor breakout
+    detection_scope = [
+        (FireDetection.area_id == area_id) |
+        (
+            (FireDetection.latitude >= area.min_lat) &
+            (FireDetection.latitude <= area.max_lat) &
+            (FireDetection.longitude >= area.min_lon) &
+            (FireDetection.longitude <= area.max_lon)
+        )
+    ]
+    if not include_synthetic:
+        detection_scope.append(FireDetection.is_synthetic_demo != "true")
+
     f_res = await db.execute(
         select(
             func.count(FireDetection.id),
             func.min(FireDetection.acq_date),
             func.max(FireDetection.acq_date)
-        ).filter(
-            (FireDetection.area_id == area_id) | 
-            (
-                (FireDetection.latitude >= area.min_lat) & 
-                (FireDetection.latitude <= area.max_lat) & 
-                (FireDetection.longitude >= area.min_lon) & 
-                (FireDetection.longitude <= area.max_lon)
-            )
-        )
+        ).filter(*detection_scope)
     )
     tot_dets, min_d, max_d = f_res.first()
 
     modis_res = await db.execute(
         select(func.count(FireDetection.id)).filter(
-            ((FireDetection.area_id == area_id) | 
-             ((FireDetection.latitude >= area.min_lat) & (FireDetection.latitude <= area.max_lat) & 
-              (FireDetection.longitude >= area.min_lon) & (FireDetection.longitude <= area.max_lon))),
-            FireDetection.instrument.contains("MODIS")
+            *detection_scope,
+            FireDetection.instrument.contains("MODIS"),
         )
     )
     modis_c = modis_res.scalar() or 0
     viirs_c = (tot_dets or 0) - modis_c
 
     # Burned area summary
+    burned_area_scope = [BurnedAreaObservation.area_id == area_id]
+    if not include_synthetic:
+        burned_area_scope.append(BurnedAreaObservation.is_synthetic_demo != "true")
     b_res = await db.execute(
         select(
             func.count(BurnedAreaObservation.id),
             func.sum(BurnedAreaObservation.area_hectares)
-        ).filter(BurnedAreaObservation.area_id == area_id)
+        ).filter(*burned_area_scope)
     )
     b_count, b_ha = b_res.first()
 
     # Vegetation observation summary
+    vegetation_scope = [VegetationObservation.area_id == area_id]
+    if not include_synthetic:
+        vegetation_scope.append(VegetationObservation.is_synthetic_demo != "true")
     v_res = await db.execute(
         select(
             func.count(VegetationObservation.id),
             func.min(VegetationObservation.observation_date),
             func.max(VegetationObservation.observation_date)
-        ).filter(VegetationObservation.area_id == area_id)
+        ).filter(*vegetation_scope)
     )
     v_count, v_min_d, v_max_d = v_res.first()
 
     # Candidate events
+    event_scope = [FireEventCandidate.area_id == area_id]
+    if not include_synthetic:
+        event_scope.append(FireEventCandidate.is_synthetic_demo != "true")
     ev_res = await db.execute(
-        select(func.count(FireEventCandidate.id)).filter(FireEventCandidate.area_id == area_id)
+        select(func.count(FireEventCandidate.id)).filter(*event_scope)
     )
     ev_count = ev_res.scalar() or 0
 
@@ -159,4 +174,3 @@ async def get_area_summary(area_id: str, db: AsyncSession = Depends(get_db)):
         data_quality_notes=notes,
         is_demo_data=is_demo
     )
-

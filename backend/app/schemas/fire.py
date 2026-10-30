@@ -1,13 +1,14 @@
 from datetime import date, datetime
+import math
 from typing import Optional, List, Dict, Any
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, model_validator
 
 
 class FireDetectionResponse(BaseModel):
     id: str
     latitude: float
     longitude: float
-    acq_date: str
+    acq_date: date
     acq_time: str
     satellite: str
     instrument: str
@@ -23,6 +24,19 @@ class FireDetectionResponse(BaseModel):
     dataset_name: str
     version: Optional[str] = None
     is_synthetic_demo: str = "false"
+
+    @model_validator(mode="after")
+    def retain_native_confidence(self):
+        # Legacy caches assigned invented percentages to VIIRS qualitative classes.
+        try:
+            numeric = float(self.confidence_raw)
+        except (TypeError, ValueError):
+            numeric = None
+        self.confidence_pct = numeric if (
+            "MODIS" in self.instrument.upper() and numeric is not None
+            and math.isfinite(numeric) and 0 <= numeric <= 100
+        ) else None
+        return self
 
     model_config = ConfigDict(from_attributes=True)
 

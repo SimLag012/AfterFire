@@ -27,6 +27,7 @@ async def get_area_detections(
     end_date: Optional[str] = Query(None, description="YYYY-MM-DD"),
     instrument: Optional[str] = Query(None, description="MODIS or VIIRS"),
     confidence_level: Optional[str] = Query(None, description="low, nominal, high"),
+    include_synthetic: bool = Query(True),
     limit: int = Query(2000, le=10000),
     db: AsyncSession = Depends(get_db)
 ):
@@ -44,6 +45,8 @@ async def get_area_detections(
             (FireDetection.longitude <= area.max_lon)
         )
     ]
+    if not include_synthetic:
+        conditions.append(FireDetection.is_synthetic_demo != "true")
 
     if start_date:
         d_start = datetime.strptime(start_date, "%Y-%m-%d").date()
@@ -93,6 +96,7 @@ async def get_area_calendar(
     granularity: str = Query("day", pattern="^(day|week|month|year)$"),
     start_date: Optional[str] = None,
     end_date: Optional[str] = None,
+    include_synthetic: bool = Query(True),
     db: AsyncSession = Depends(get_db)
 ):
     """
@@ -113,6 +117,8 @@ async def get_area_calendar(
             (FireDetection.longitude <= area.max_lon)
         )
     ]
+    if not include_synthetic:
+        conditions.append(FireDetection.is_synthetic_demo != "true")
     if start_date:
         conditions.append(FireDetection.acq_date >= datetime.strptime(start_date, "%Y-%m-%d").date())
     if end_date:

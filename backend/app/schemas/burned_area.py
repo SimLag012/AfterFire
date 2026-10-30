@@ -1,3 +1,4 @@
+from datetime import date
 from typing import Optional, List, Dict, Any
 from pydantic import BaseModel, ConfigDict
 
@@ -5,8 +6,8 @@ from pydantic import BaseModel, ConfigDict
 class BurnedAreaResponse(BaseModel):
     id: str
     area_id: str
-    observation_date: str
-    burn_date: Optional[str] = None
+    observation_date: date
+    burn_date: Optional[date] = None
     burn_day_of_year: Optional[int] = None
     latitude: float
     longitude: float

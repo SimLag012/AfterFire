@@ -1,5 +1,5 @@
 from datetime import datetime, date
-from sqlalchemy import Column, String, Float, Integer, Date, DateTime, Text, Index
+from sqlalchemy import Column, String, Float, Integer, Date, DateTime, Text, Index, ForeignKey
 from app.db.database import Base
 
 
@@ -27,7 +27,7 @@ class FireEventCandidate(Base):
     estimated_fire_extent_km2 = Column(Float, nullable=True)
     
     # Limitations & confidence
-    confidence_summary = Column(String(50), default="High detection density")
+    confidence_summary = Column(String(255), default="High detection density")
     notes = Column(Text, nullable=True)
     
     is_synthetic_demo = Column(String(10), default="false")
@@ -37,3 +37,18 @@ class FireEventCandidate(Base):
         Index("idx_event_area_dates", "area_id", "start_date", "end_date"),
     )
 
+
+class FireEventDetection(Base):
+    __tablename__ = "fire_event_detections"
+
+    event_id = Column(String(64), ForeignKey("fire_event_candidates.id"), primary_key=True)
+    detection_id = Column(String(64), ForeignKey("fire_detections.id"), primary_key=True)
+
+    __table_args__ = (
+        Index("idx_event_detection_detection", "detection_id"),
+    )
+
+
+class CurrentEventIndex(Base):
+    __tablename__ = "current_event_index"
+    event_id = Column(String(64), ForeignKey("fire_event_candidates.id"), primary_key=True)
