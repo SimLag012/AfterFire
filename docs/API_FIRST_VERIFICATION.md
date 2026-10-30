@@ -1,5 +1,15 @@
 # API-first and Explorer verification — 2026-10-30
 
+## Current live follow-up
+
+The registered project and private ADC supplied by the owner now pass live
+checks in both deployed server services. The comparison with all 51 retained
+reference HDFs passes exactly after two adapter fixes. Full regressions pass
+with **176 tests on SQLite and 176 on PostgreSQL/PostGIS**. See
+[current live verification](EARTH_ENGINE_LIVE_VERIFICATION.md) and
+`earth-engine-live-verification.json` for real acquisition, publication and
+post-fire support. Earlier setup and 159/174-test sections below are historical.
+
 ## Follow-up: secure Earth Engine setup
 
 The owner confirmed that a Cloud project still needs registering. The follow-up

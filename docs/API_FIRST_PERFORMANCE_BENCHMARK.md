@@ -1,5 +1,10 @@
 # API-first follow-up measurements — 2026-10-30
 
+The table below is the historical pre-registration checkpoint. Current real
+Earth Engine probe, HDF equivalence and new-event measurements are recorded in
+[live verification](EARTH_ENGINE_LIVE_VERIFICATION.md) and
+`earth-engine-live-verification.json`; estimates below are not live traffic.
+
 No live Earth Engine benchmark was possible: the owner must first register a
 project. See `earth-engine-activation-verification.json` for both runtime probe
 results, actual test totals and browser timings.

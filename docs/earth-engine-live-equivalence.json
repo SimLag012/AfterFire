@@ -1,0 +1,4857 @@
+{
+  "checked_at": "2026-10-30T21:50:51.051969+00:00",
+  "scope": "All retained full HDFs used by the reference publication; bounded native windows only",
+  "reference_event": "event-4a728489ea44ea85eab6a978870e0b06",
+  "products": [
+    {
+      "product": "MCD64A1.061",
+      "original_id": "MCD64A1.A2021182.h19v05.061.2021309114520.hdf",
+      "date": "2021-07-01",
+      "validation": {
+        "format": "HDF4/HDF-EOS2",
+        "projection": "MODIS Sinusoidal R=6371007.181",
+        "dimensions": [
+          2400,
+          2400
+        ],
+        "pixel_size_m": 463.31271652777775,
+        "bands": {
+          "Burn Date": {
+            "valid_range": [
+              0,
+              366
+            ],
+            "_FillValue": -1
+          },
+          "Burn Date Uncertainty": {
+            "units": "days"
+          },
+          "QA": {
+            "units": "bit field"
+          },
+          "First Day": {
+            "valid_range": [
+              1,
+              366
+            ],
+            "_FillValue": -1
+          },
+          "Last Day": {
+            "valid_range": [
+              1,
+              366
+            ],
+            "_FillValue": -1
+          }
+        },
+        "identity_verified": true,
+        "georeferencing_verified": true
+      },
+      "native_window": [
+        424,
+        707,
+        19,
+        20
+      ],
+      "affine_transform": [
+        463.31271652777775,
+        0.0,
+        1308395.1114744458,
+        0.0,
+        -463.31271652777775,
+        4120239.988081528,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "aoi_center_cells": 94,
+      "bands": {
+        "Burn Date": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        },
+        "Burn Date Uncertainty": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        },
+        "QA": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        },
+        "First Day": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        },
+        "Last Day": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        }
+      },
+      "qa_mask_identical": true,
+      "decoded_array_bytes": 7600,
+      "acquisition_seconds": 5.3297
+    },
+    {
+      "product": "MCD64A1.061",
+      "original_id": "MCD64A1.A2021213.h19v05.061.2021309115552.hdf",
+      "date": "2021-08-01",
+      "validation": {
+        "format": "HDF4/HDF-EOS2",
+        "projection": "MODIS Sinusoidal R=6371007.181",
+        "dimensions": [
+          2400,
+          2400
+        ],
+        "pixel_size_m": 463.31271652777775,
+        "bands": {
+          "Burn Date": {
+            "valid_range": [
+              0,
+              366
+            ],
+            "_FillValue": -1
+          },
+          "Burn Date Uncertainty": {
+            "units": "days"
+          },
+          "QA": {
+            "units": "bit field"
+          },
+          "First Day": {
+            "valid_range": [
+              1,
+              366
+            ],
+            "_FillValue": -1
+          },
+          "Last Day": {
+            "valid_range": [
+              1,
+              366
+            ],
+            "_FillValue": -1
+          }
+        },
+        "identity_verified": true,
+        "georeferencing_verified": true
+      },
+      "native_window": [
+        424,
+        707,
+        19,
+        20
+      ],
+      "affine_transform": [
+        463.31271652777775,
+        0.0,
+        1308395.1114744458,
+        0.0,
+        -463.31271652777775,
+        4120239.988081528,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "aoi_center_cells": 94,
+      "bands": {
+        "Burn Date": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        },
+        "Burn Date Uncertainty": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        },
+        "QA": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        },
+        "First Day": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        },
+        "Last Day": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        }
+      },
+      "qa_mask_identical": true,
+      "decoded_array_bytes": 7600,
+      "acquisition_seconds": 1.1865
+    },
+    {
+      "product": "MCD64A1.061",
+      "original_id": "MCD64A1.A2021244.h19v05.061.2021316194715.hdf",
+      "date": "2021-09-01",
+      "validation": {
+        "format": "HDF4/HDF-EOS2",
+        "projection": "MODIS Sinusoidal R=6371007.181",
+        "dimensions": [
+          2400,
+          2400
+        ],
+        "pixel_size_m": 463.31271652777775,
+        "bands": {
+          "Burn Date": {
+            "valid_range": [
+              0,
+              366
+            ],
+            "_FillValue": -1
+          },
+          "Burn Date Uncertainty": {
+            "units": "days"
+          },
+          "QA": {
+            "units": "bit field"
+          },
+          "First Day": {
+            "valid_range": [
+              1,
+              366
+            ],
+            "_FillValue": -1
+          },
+          "Last Day": {
+            "valid_range": [
+              1,
+              366
+            ],
+            "_FillValue": -1
+          }
+        },
+        "identity_verified": true,
+        "georeferencing_verified": true
+      },
+      "native_window": [
+        424,
+        707,
+        19,
+        20
+      ],
+      "affine_transform": [
+        463.31271652777775,
+        0.0,
+        1308395.1114744458,
+        0.0,
+        -463.31271652777775,
+        4120239.988081528,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "aoi_center_cells": 94,
+      "bands": {
+        "Burn Date": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        },
+        "Burn Date Uncertainty": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        },
+        "QA": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        },
+        "First Day": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        },
+        "Last Day": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        }
+      },
+      "qa_mask_identical": true,
+      "decoded_array_bytes": 7600,
+      "acquisition_seconds": 0.571
+    },
+    {
+      "product": "MOD13Q1.061",
+      "original_id": "MOD13Q1.A2019225.h19v05.061.2020306135225.hdf",
+      "date": "2019-08-13",
+      "validation": {
+        "format": "HDF4/HDF-EOS2",
+        "projection": "MODIS Sinusoidal R=6371007.181",
+        "dimensions": [
+          4800,
+          4800
+        ],
+        "pixel_size_m": 231.65635826388888,
+        "bands": {
+          "250m 16 days NDVI": {
+            "valid_range": [
+              -2000,
+              10000
+            ],
+            "_FillValue": -3000,
+            "scale_factor": 10000.0,
+            "units": "NDVI"
+          },
+          "250m 16 days EVI": {
+            "valid_range": [
+              -2000,
+              10000
+            ],
+            "_FillValue": -3000,
+            "scale_factor": 10000.0,
+            "units": "EVI"
+          },
+          "250m 16 days VI Quality": {
+            "valid_range": [
+              0,
+              65534
+            ],
+            "_FillValue": 65535,
+            "units": "bit field"
+          },
+          "250m 16 days pixel reliability": {
+            "valid_range": [
+              0,
+              3
+            ],
+            "_FillValue": -1,
+            "units": "rank"
+          }
+        },
+        "identity_verified": true,
+        "georeferencing_verified": true
+      },
+      "native_window": [
+        849,
+        1415,
+        36,
+        38
+      ],
+      "affine_transform": [
+        231.65635826388888,
+        0.0,
+        1308626.7678327097,
+        0.0,
+        -231.65635826388888,
+        4120008.331723264,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "aoi_center_cells": 376,
+      "bands": {
+        "250m 16 days NDVI": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        },
+        "250m 16 days EVI": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        },
+        "250m 16 days VI Quality": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        },
+        "250m 16 days pixel reliability": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        }
+      },
+      "qa_mask_identical": true,
+      "decoded_array_bytes": 21888,
+      "acquisition_seconds": 1.223
+    },
+    {
+      "product": "MOD13Q1.061",
+      "original_id": "MOD13Q1.A2019241.h19v05.061.2020308173531.hdf",
+      "date": "2019-08-29",
+      "validation": {
+        "format": "HDF4/HDF-EOS2",
+        "projection": "MODIS Sinusoidal R=6371007.181",
+        "dimensions": [
+          4800,
+          4800
+        ],
+        "pixel_size_m": 231.65635826388888,
+        "bands": {
+          "250m 16 days NDVI": {
+            "valid_range": [
+              -2000,
+              10000
+            ],
+            "_FillValue": -3000,
+            "scale_factor": 10000.0,
+            "units": "NDVI"
+          },
+          "250m 16 days EVI": {
+            "valid_range": [
+              -2000,
+              10000
+            ],
+            "_FillValue": -3000,
+            "scale_factor": 10000.0,
+            "units": "EVI"
+          },
+          "250m 16 days VI Quality": {
+            "valid_range": [
+              0,
+              65534
+            ],
+            "_FillValue": 65535,
+            "units": "bit field"
+          },
+          "250m 16 days pixel reliability": {
+            "valid_range": [
+              0,
+              3
+            ],
+            "_FillValue": -1,
+            "units": "rank"
+          }
+        },
+        "identity_verified": true,
+        "georeferencing_verified": true
+      },
+      "native_window": [
+        849,
+        1415,
+        36,
+        38
+      ],
+      "affine_transform": [
+        231.65635826388888,
+        0.0,
+        1308626.7678327097,
+        0.0,
+        -231.65635826388888,
+        4120008.331723264,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "aoi_center_cells": 376,
+      "bands": {
+        "250m 16 days NDVI": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        },
+        "250m 16 days EVI": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        },
+        "250m 16 days VI Quality": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        },
+        "250m 16 days pixel reliability": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        }
+      },
+      "qa_mask_identical": true,
+      "decoded_array_bytes": 21888,
+      "acquisition_seconds": 0.625
+    },
+    {
+      "product": "MOD13Q1.061",
+      "original_id": "MOD13Q1.A2019257.h19v05.061.2020312074851.hdf",
+      "date": "2019-09-14",
+      "validation": {
+        "format": "HDF4/HDF-EOS2",
+        "projection": "MODIS Sinusoidal R=6371007.181",
+        "dimensions": [
+          4800,
+          4800
+        ],
+        "pixel_size_m": 231.65635826388888,
+        "bands": {
+          "250m 16 days NDVI": {
+            "valid_range": [
+              -2000,
+              10000
+            ],
+            "_FillValue": -3000,
+            "scale_factor": 10000.0,
+            "units": "NDVI"
+          },
+          "250m 16 days EVI": {
+            "valid_range": [
+              -2000,
+              10000
+            ],
+            "_FillValue": -3000,
+            "scale_factor": 10000.0,
+            "units": "EVI"
+          },
+          "250m 16 days VI Quality": {
+            "valid_range": [
+              0,
+              65534
+            ],
+            "_FillValue": 65535,
+            "units": "bit field"
+          },
+          "250m 16 days pixel reliability": {
+            "valid_range": [
+              0,
+              3
+            ],
+            "_FillValue": -1,
+            "units": "rank"
+          }
+        },
+        "identity_verified": true,
+        "georeferencing_verified": true
+      },
+      "native_window": [
+        849,
+        1415,
+        36,
+        38
+      ],
+      "affine_transform": [
+        231.65635826388888,
+        0.0,
+        1308626.7678327097,
+        0.0,
+        -231.65635826388888,
+        4120008.331723264,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "aoi_center_cells": 376,
+      "bands": {
+        "250m 16 days NDVI": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        },
+        "250m 16 days EVI": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        },
+        "250m 16 days VI Quality": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        },
+        "250m 16 days pixel reliability": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        }
+      },
+      "qa_mask_identical": true,
+      "decoded_array_bytes": 21888,
+      "acquisition_seconds": 1.2603
+    },
+    {
+      "product": "MOD13Q1.061",
+      "original_id": "MOD13Q1.A2019273.h19v05.061.2020314003848.hdf",
+      "date": "2019-09-30",
+      "validation": {
+        "format": "HDF4/HDF-EOS2",
+        "projection": "MODIS Sinusoidal R=6371007.181",
+        "dimensions": [
+          4800,
+          4800
+        ],
+        "pixel_size_m": 231.65635826388888,
+        "bands": {
+          "250m 16 days NDVI": {
+            "valid_range": [
+              -2000,
+              10000
+            ],
+            "_FillValue": -3000,
+            "scale_factor": 10000.0,
+            "units": "NDVI"
+          },
+          "250m 16 days EVI": {
+            "valid_range": [
+              -2000,
+              10000
+            ],
+            "_FillValue": -3000,
+            "scale_factor": 10000.0,
+            "units": "EVI"
+          },
+          "250m 16 days VI Quality": {
+            "valid_range": [
+              0,
+              65534
+            ],
+            "_FillValue": 65535,
+            "units": "bit field"
+          },
+          "250m 16 days pixel reliability": {
+            "valid_range": [
+              0,
+              3
+            ],
+            "_FillValue": -1,
+            "units": "rank"
+          }
+        },
+        "identity_verified": true,
+        "georeferencing_verified": true
+      },
+      "native_window": [
+        849,
+        1415,
+        36,
+        38
+      ],
+      "affine_transform": [
+        231.65635826388888,
+        0.0,
+        1308626.7678327097,
+        0.0,
+        -231.65635826388888,
+        4120008.331723264,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "aoi_center_cells": 376,
+      "bands": {
+        "250m 16 days NDVI": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        },
+        "250m 16 days EVI": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        },
+        "250m 16 days VI Quality": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        },
+        "250m 16 days pixel reliability": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        }
+      },
+      "qa_mask_identical": true,
+      "decoded_array_bytes": 21888,
+      "acquisition_seconds": 1.2754
+    },
+    {
+      "product": "MOD13Q1.061",
+      "original_id": "MOD13Q1.A2019289.h19v05.061.2020315233726.hdf",
+      "date": "2019-10-16",
+      "validation": {
+        "format": "HDF4/HDF-EOS2",
+        "projection": "MODIS Sinusoidal R=6371007.181",
+        "dimensions": [
+          4800,
+          4800
+        ],
+        "pixel_size_m": 231.65635826388888,
+        "bands": {
+          "250m 16 days NDVI": {
+            "valid_range": [
+              -2000,
+              10000
+            ],
+            "_FillValue": -3000,
+            "scale_factor": 10000.0,
+            "units": "NDVI"
+          },
+          "250m 16 days EVI": {
+            "valid_range": [
+              -2000,
+              10000
+            ],
+            "_FillValue": -3000,
+            "scale_factor": 10000.0,
+            "units": "EVI"
+          },
+          "250m 16 days VI Quality": {
+            "valid_range": [
+              0,
+              65534
+            ],
+            "_FillValue": 65535,
+            "units": "bit field"
+          },
+          "250m 16 days pixel reliability": {
+            "valid_range": [
+              0,
+              3
+            ],
+            "_FillValue": -1,
+            "units": "rank"
+          }
+        },
+        "identity_verified": true,
+        "georeferencing_verified": true
+      },
+      "native_window": [
+        849,
+        1415,
+        36,
+        38
+      ],
+      "affine_transform": [
+        231.65635826388888,
+        0.0,
+        1308626.7678327097,
+        0.0,
+        -231.65635826388888,
+        4120008.331723264,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "aoi_center_cells": 376,
+      "bands": {
+        "250m 16 days NDVI": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        },
+        "250m 16 days EVI": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        },
+        "250m 16 days VI Quality": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        },
+        "250m 16 days pixel reliability": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        }
+      },
+      "qa_mask_identical": true,
+      "decoded_array_bytes": 21888,
+      "acquisition_seconds": 1.1955
+    },
+    {
+      "product": "MOD13Q1.061",
+      "original_id": "MOD13Q1.A2019305.h19v05.061.2020317205631.hdf",
+      "date": "2019-11-01",
+      "validation": {
+        "format": "HDF4/HDF-EOS2",
+        "projection": "MODIS Sinusoidal R=6371007.181",
+        "dimensions": [
+          4800,
+          4800
+        ],
+        "pixel_size_m": 231.65635826388888,
+        "bands": {
+          "250m 16 days NDVI": {
+            "valid_range": [
+              -2000,
+              10000
+            ],
+            "_FillValue": -3000,
+            "scale_factor": 10000.0,
+            "units": "NDVI"
+          },
+          "250m 16 days EVI": {
+            "valid_range": [
+              -2000,
+              10000
+            ],
+            "_FillValue": -3000,
+            "scale_factor": 10000.0,
+            "units": "EVI"
+          },
+          "250m 16 days VI Quality": {
+            "valid_range": [
+              0,
+              65534
+            ],
+            "_FillValue": 65535,
+            "units": "bit field"
+          },
+          "250m 16 days pixel reliability": {
+            "valid_range": [
+              0,
+              3
+            ],
+            "_FillValue": -1,
+            "units": "rank"
+          }
+        },
+        "identity_verified": true,
+        "georeferencing_verified": true
+      },
+      "native_window": [
+        849,
+        1415,
+        36,
+        38
+      ],
+      "affine_transform": [
+        231.65635826388888,
+        0.0,
+        1308626.7678327097,
+        0.0,
+        -231.65635826388888,
+        4120008.331723264,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "aoi_center_cells": 376,
+      "bands": {
+        "250m 16 days NDVI": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        },
+        "250m 16 days EVI": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        },
+        "250m 16 days VI Quality": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        },
+        "250m 16 days pixel reliability": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        }
+      },
+      "qa_mask_identical": true,
+      "decoded_array_bytes": 21888,
+      "acquisition_seconds": 0.6197
+    },
+    {
+      "product": "MOD13Q1.061",
+      "original_id": "MOD13Q1.A2019321.h19v05.061.2020319011912.hdf",
+      "date": "2019-11-17",
+      "validation": {
+        "format": "HDF4/HDF-EOS2",
+        "projection": "MODIS Sinusoidal R=6371007.181",
+        "dimensions": [
+          4800,
+          4800
+        ],
+        "pixel_size_m": 231.65635826388888,
+        "bands": {
+          "250m 16 days NDVI": {
+            "valid_range": [
+              -2000,
+              10000
+            ],
+            "_FillValue": -3000,
+            "scale_factor": 10000.0,
+            "units": "NDVI"
+          },
+          "250m 16 days EVI": {
+            "valid_range": [
+              -2000,
+              10000
+            ],
+            "_FillValue": -3000,
+            "scale_factor": 10000.0,
+            "units": "EVI"
+          },
+          "250m 16 days VI Quality": {
+            "valid_range": [
+              0,
+              65534
+            ],
+            "_FillValue": 65535,
+            "units": "bit field"
+          },
+          "250m 16 days pixel reliability": {
+            "valid_range": [
+              0,
+              3
+            ],
+            "_FillValue": -1,
+            "units": "rank"
+          }
+        },
+        "identity_verified": true,
+        "georeferencing_verified": true
+      },
+      "native_window": [
+        849,
+        1415,
+        36,
+        38
+      ],
+      "affine_transform": [
+        231.65635826388888,
+        0.0,
+        1308626.7678327097,
+        0.0,
+        -231.65635826388888,
+        4120008.331723264,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "aoi_center_cells": 376,
+      "bands": {
+        "250m 16 days NDVI": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        },
+        "250m 16 days EVI": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        },
+        "250m 16 days VI Quality": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        },
+        "250m 16 days pixel reliability": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        }
+      },
+      "qa_mask_identical": true,
+      "decoded_array_bytes": 21888,
+      "acquisition_seconds": 0.6158
+    },
+    {
+      "product": "MOD13Q1.061",
+      "original_id": "MOD13Q1.A2019337.h19v05.061.2020321211048.hdf",
+      "date": "2019-12-03",
+      "validation": {
+        "format": "HDF4/HDF-EOS2",
+        "projection": "MODIS Sinusoidal R=6371007.181",
+        "dimensions": [
+          4800,
+          4800
+        ],
+        "pixel_size_m": 231.65635826388888,
+        "bands": {
+          "250m 16 days NDVI": {
+            "valid_range": [
+              -2000,
+              10000
+            ],
+            "_FillValue": -3000,
+            "scale_factor": 10000.0,
+            "units": "NDVI"
+          },
+          "250m 16 days EVI": {
+            "valid_range": [
+              -2000,
+              10000
+            ],
+            "_FillValue": -3000,
+            "scale_factor": 10000.0,
+            "units": "EVI"
+          },
+          "250m 16 days VI Quality": {
+            "valid_range": [
+              0,
+              65534
+            ],
+            "_FillValue": 65535,
+            "units": "bit field"
+          },
+          "250m 16 days pixel reliability": {
+            "valid_range": [
+              0,
+              3
+            ],
+            "_FillValue": -1,
+            "units": "rank"
+          }
+        },
+        "identity_verified": true,
+        "georeferencing_verified": true
+      },
+      "native_window": [
+        849,
+        1415,
+        36,
+        38
+      ],
+      "affine_transform": [
+        231.65635826388888,
+        0.0,
+        1308626.7678327097,
+        0.0,
+        -231.65635826388888,
+        4120008.331723264,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "aoi_center_cells": 376,
+      "bands": {
+        "250m 16 days NDVI": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        },
+        "250m 16 days EVI": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        },
+        "250m 16 days VI Quality": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        },
+        "250m 16 days pixel reliability": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        }
+      },
+      "qa_mask_identical": true,
+      "decoded_array_bytes": 21888,
+      "acquisition_seconds": 1.193
+    },
+    {
+      "product": "MOD13Q1.061",
+      "original_id": "MOD13Q1.A2019353.h19v05.061.2020323174403.hdf",
+      "date": "2019-12-19",
+      "validation": {
+        "format": "HDF4/HDF-EOS2",
+        "projection": "MODIS Sinusoidal R=6371007.181",
+        "dimensions": [
+          4800,
+          4800
+        ],
+        "pixel_size_m": 231.65635826388888,
+        "bands": {
+          "250m 16 days NDVI": {
+            "valid_range": [
+              -2000,
+              10000
+            ],
+            "_FillValue": -3000,
+            "scale_factor": 10000.0,
+            "units": "NDVI"
+          },
+          "250m 16 days EVI": {
+            "valid_range": [
+              -2000,
+              10000
+            ],
+            "_FillValue": -3000,
+            "scale_factor": 10000.0,
+            "units": "EVI"
+          },
+          "250m 16 days VI Quality": {
+            "valid_range": [
+              0,
+              65534
+            ],
+            "_FillValue": 65535,
+            "units": "bit field"
+          },
+          "250m 16 days pixel reliability": {
+            "valid_range": [
+              0,
+              3
+            ],
+            "_FillValue": -1,
+            "units": "rank"
+          }
+        },
+        "identity_verified": true,
+        "georeferencing_verified": true
+      },
+      "native_window": [
+        849,
+        1415,
+        36,
+        38
+      ],
+      "affine_transform": [
+        231.65635826388888,
+        0.0,
+        1308626.7678327097,
+        0.0,
+        -231.65635826388888,
+        4120008.331723264,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "aoi_center_cells": 376,
+      "bands": {
+        "250m 16 days NDVI": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        },
+        "250m 16 days EVI": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        },
+        "250m 16 days VI Quality": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        },
+        "250m 16 days pixel reliability": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        }
+      },
+      "qa_mask_identical": true,
+      "decoded_array_bytes": 21888,
+      "acquisition_seconds": 1.1489
+    },
+    {
+      "product": "MOD13Q1.061",
+      "original_id": "MOD13Q1.A2020001.h19v05.061.2020326042825.hdf",
+      "date": "2020-01-01",
+      "validation": {
+        "format": "HDF4/HDF-EOS2",
+        "projection": "MODIS Sinusoidal R=6371007.181",
+        "dimensions": [
+          4800,
+          4800
+        ],
+        "pixel_size_m": 231.65635826388888,
+        "bands": {
+          "250m 16 days NDVI": {
+            "valid_range": [
+              -2000,
+              10000
+            ],
+            "_FillValue": -3000,
+            "scale_factor": 10000.0,
+            "units": "NDVI"
+          },
+          "250m 16 days EVI": {
+            "valid_range": [
+              -2000,
+              10000
+            ],
+            "_FillValue": -3000,
+            "scale_factor": 10000.0,
+            "units": "EVI"
+          },
+          "250m 16 days VI Quality": {
+            "valid_range": [
+              0,
+              65534
+            ],
+            "_FillValue": 65535,
+            "units": "bit field"
+          },
+          "250m 16 days pixel reliability": {
+            "valid_range": [
+              0,
+              3
+            ],
+            "_FillValue": -1,
+            "units": "rank"
+          }
+        },
+        "identity_verified": true,
+        "georeferencing_verified": true
+      },
+      "native_window": [
+        849,
+        1415,
+        36,
+        38
+      ],
+      "affine_transform": [
+        231.65635826388888,
+        0.0,
+        1308626.7678327097,
+        0.0,
+        -231.65635826388888,
+        4120008.331723264,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "aoi_center_cells": 376,
+      "bands": {
+        "250m 16 days NDVI": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        },
+        "250m 16 days EVI": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        },
+        "250m 16 days VI Quality": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        },
+        "250m 16 days pixel reliability": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        }
+      },
+      "qa_mask_identical": true,
+      "decoded_array_bytes": 21888,
+      "acquisition_seconds": 1.2963
+    },
+    {
+      "product": "MOD13Q1.061",
+      "original_id": "MOD13Q1.A2020017.h19v05.061.2020328134530.hdf",
+      "date": "2020-01-17",
+      "validation": {
+        "format": "HDF4/HDF-EOS2",
+        "projection": "MODIS Sinusoidal R=6371007.181",
+        "dimensions": [
+          4800,
+          4800
+        ],
+        "pixel_size_m": 231.65635826388888,
+        "bands": {
+          "250m 16 days NDVI": {
+            "valid_range": [
+              -2000,
+              10000
+            ],
+            "_FillValue": -3000,
+            "scale_factor": 10000.0,
+            "units": "NDVI"
+          },
+          "250m 16 days EVI": {
+            "valid_range": [
+              -2000,
+              10000
+            ],
+            "_FillValue": -3000,
+            "scale_factor": 10000.0,
+            "units": "EVI"
+          },
+          "250m 16 days VI Quality": {
+            "valid_range": [
+              0,
+              65534
+            ],
+            "_FillValue": 65535,
+            "units": "bit field"
+          },
+          "250m 16 days pixel reliability": {
+            "valid_range": [
+              0,
+              3
+            ],
+            "_FillValue": -1,
+            "units": "rank"
+          }
+        },
+        "identity_verified": true,
+        "georeferencing_verified": true
+      },
+      "native_window": [
+        849,
+        1415,
+        36,
+        38
+      ],
+      "affine_transform": [
+        231.65635826388888,
+        0.0,
+        1308626.7678327097,
+        0.0,
+        -231.65635826388888,
+        4120008.331723264,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "aoi_center_cells": 376,
+      "bands": {
+        "250m 16 days NDVI": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        },
+        "250m 16 days EVI": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        },
+        "250m 16 days VI Quality": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        },
+        "250m 16 days pixel reliability": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        }
+      },
+      "qa_mask_identical": true,
+      "decoded_array_bytes": 21888,
+      "acquisition_seconds": 0.6231
+    },
+    {
+      "product": "MOD13Q1.061",
+      "original_id": "MOD13Q1.A2020033.h19v05.061.2020329061808.hdf",
+      "date": "2020-02-02",
+      "validation": {
+        "format": "HDF4/HDF-EOS2",
+        "projection": "MODIS Sinusoidal R=6371007.181",
+        "dimensions": [
+          4800,
+          4800
+        ],
+        "pixel_size_m": 231.65635826388888,
+        "bands": {
+          "250m 16 days NDVI": {
+            "valid_range": [
+              -2000,
+              10000
+            ],
+            "_FillValue": -3000,
+            "scale_factor": 10000.0,
+            "units": "NDVI"
+          },
+          "250m 16 days EVI": {
+            "valid_range": [
+              -2000,
+              10000
+            ],
+            "_FillValue": -3000,
+            "scale_factor": 10000.0,
+            "units": "EVI"
+          },
+          "250m 16 days VI Quality": {
+            "valid_range": [
+              0,
+              65534
+            ],
+            "_FillValue": 65535,
+            "units": "bit field"
+          },
+          "250m 16 days pixel reliability": {
+            "valid_range": [
+              0,
+              3
+            ],
+            "_FillValue": -1,
+            "units": "rank"
+          }
+        },
+        "identity_verified": true,
+        "georeferencing_verified": true
+      },
+      "native_window": [
+        849,
+        1415,
+        36,
+        38
+      ],
+      "affine_transform": [
+        231.65635826388888,
+        0.0,
+        1308626.7678327097,
+        0.0,
+        -231.65635826388888,
+        4120008.331723264,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "aoi_center_cells": 376,
+      "bands": {
+        "250m 16 days NDVI": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        },
+        "250m 16 days EVI": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        },
+        "250m 16 days VI Quality": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        },
+        "250m 16 days pixel reliability": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        }
+      },
+      "qa_mask_identical": true,
+      "decoded_array_bytes": 21888,
+      "acquisition_seconds": 1.9007
+    },
+    {
+      "product": "MOD13Q1.061",
+      "original_id": "MOD13Q1.A2020049.h19v05.061.2020335000433.hdf",
+      "date": "2020-02-18",
+      "validation": {
+        "format": "HDF4/HDF-EOS2",
+        "projection": "MODIS Sinusoidal R=6371007.181",
+        "dimensions": [
+          4800,
+          4800
+        ],
+        "pixel_size_m": 231.65635826388888,
+        "bands": {
+          "250m 16 days NDVI": {
+            "valid_range": [
+              -2000,
+              10000
+            ],
+            "_FillValue": -3000,
+            "scale_factor": 10000.0,
+            "units": "NDVI"
+          },
+          "250m 16 days EVI": {
+            "valid_range": [
+              -2000,
+              10000
+            ],
+            "_FillValue": -3000,
+            "scale_factor": 10000.0,
+            "units": "EVI"
+          },
+          "250m 16 days VI Quality": {
+            "valid_range": [
+              0,
+              65534
+            ],
+            "_FillValue": 65535,
+            "units": "bit field"
+          },
+          "250m 16 days pixel reliability": {
+            "valid_range": [
+              0,
+              3
+            ],
+            "_FillValue": -1,
+            "units": "rank"
+          }
+        },
+        "identity_verified": true,
+        "georeferencing_verified": true
+      },
+      "native_window": [
+        849,
+        1415,
+        36,
+        38
+      ],
+      "affine_transform": [
+        231.65635826388888,
+        0.0,
+        1308626.7678327097,
+        0.0,
+        -231.65635826388888,
+        4120008.331723264,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "aoi_center_cells": 376,
+      "bands": {
+        "250m 16 days NDVI": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        },
+        "250m 16 days EVI": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        },
+        "250m 16 days VI Quality": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        },
+        "250m 16 days pixel reliability": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        }
+      },
+      "qa_mask_identical": true,
+      "decoded_array_bytes": 21888,
+      "acquisition_seconds": 1.1809
+    },
+    {
+      "product": "MOD13Q1.061",
+      "original_id": "MOD13Q1.A2020065.h19v05.061.2020330162047.hdf",
+      "date": "2020-03-05",
+      "validation": {
+        "format": "HDF4/HDF-EOS2",
+        "projection": "MODIS Sinusoidal R=6371007.181",
+        "dimensions": [
+          4800,
+          4800
+        ],
+        "pixel_size_m": 231.65635826388888,
+        "bands": {
+          "250m 16 days NDVI": {
+            "valid_range": [
+              -2000,
+              10000
+            ],
+            "_FillValue": -3000,
+            "scale_factor": 10000.0,
+            "units": "NDVI"
+          },
+          "250m 16 days EVI": {
+            "valid_range": [
+              -2000,
+              10000
+            ],
+            "_FillValue": -3000,
+            "scale_factor": 10000.0,
+            "units": "EVI"
+          },
+          "250m 16 days VI Quality": {
+            "valid_range": [
+              0,
+              65534
+            ],
+            "_FillValue": 65535,
+            "units": "bit field"
+          },
+          "250m 16 days pixel reliability": {
+            "valid_range": [
+              0,
+              3
+            ],
+            "_FillValue": -1,
+            "units": "rank"
+          }
+        },
+        "identity_verified": true,
+        "georeferencing_verified": true
+      },
+      "native_window": [
+        849,
+        1415,
+        36,
+        38
+      ],
+      "affine_transform": [
+        231.65635826388888,
+        0.0,
+        1308626.7678327097,
+        0.0,
+        -231.65635826388888,
+        4120008.331723264,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "aoi_center_cells": 376,
+      "bands": {
+        "250m 16 days NDVI": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        },
+        "250m 16 days EVI": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        },
+        "250m 16 days VI Quality": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        },
+        "250m 16 days pixel reliability": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        }
+      },
+      "qa_mask_identical": true,
+      "decoded_array_bytes": 21888,
+      "acquisition_seconds": 0.7535
+    },
+    {
+      "product": "MOD13Q1.061",
+      "original_id": "MOD13Q1.A2020081.h19v05.061.2020335013903.hdf",
+      "date": "2020-03-21",
+      "validation": {
+        "format": "HDF4/HDF-EOS2",
+        "projection": "MODIS Sinusoidal R=6371007.181",
+        "dimensions": [
+          4800,
+          4800
+        ],
+        "pixel_size_m": 231.65635826388888,
+        "bands": {
+          "250m 16 days NDVI": {
+            "valid_range": [
+              -2000,
+              10000
+            ],
+            "_FillValue": -3000,
+            "scale_factor": 10000.0,
+            "units": "NDVI"
+          },
+          "250m 16 days EVI": {
+            "valid_range": [
+              -2000,
+              10000
+            ],
+            "_FillValue": -3000,
+            "scale_factor": 10000.0,
+            "units": "EVI"
+          },
+          "250m 16 days VI Quality": {
+            "valid_range": [
+              0,
+              65534
+            ],
+            "_FillValue": 65535,
+            "units": "bit field"
+          },
+          "250m 16 days pixel reliability": {
+            "valid_range": [
+              0,
+              3
+            ],
+            "_FillValue": -1,
+            "units": "rank"
+          }
+        },
+        "identity_verified": true,
+        "georeferencing_verified": true
+      },
+      "native_window": [
+        849,
+        1415,
+        36,
+        38
+      ],
+      "affine_transform": [
+        231.65635826388888,
+        0.0,
+        1308626.7678327097,
+        0.0,
+        -231.65635826388888,
+        4120008.331723264,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "aoi_center_cells": 376,
+      "bands": {
+        "250m 16 days NDVI": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        },
+        "250m 16 days EVI": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        },
+        "250m 16 days VI Quality": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        },
+        "250m 16 days pixel reliability": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        }
+      },
+      "qa_mask_identical": true,
+      "decoded_array_bytes": 21888,
+      "acquisition_seconds": 0.6581
+    },
+    {
+      "product": "MOD13Q1.061",
+      "original_id": "MOD13Q1.A2020097.h19v05.061.2020332102311.hdf",
+      "date": "2020-04-06",
+      "validation": {
+        "format": "HDF4/HDF-EOS2",
+        "projection": "MODIS Sinusoidal R=6371007.181",
+        "dimensions": [
+          4800,
+          4800
+        ],
+        "pixel_size_m": 231.65635826388888,
+        "bands": {
+          "250m 16 days NDVI": {
+            "valid_range": [
+              -2000,
+              10000
+            ],
+            "_FillValue": -3000,
+            "scale_factor": 10000.0,
+            "units": "NDVI"
+          },
+          "250m 16 days EVI": {
+            "valid_range": [
+              -2000,
+              10000
+            ],
+            "_FillValue": -3000,
+            "scale_factor": 10000.0,
+            "units": "EVI"
+          },
+          "250m 16 days VI Quality": {
+            "valid_range": [
+              0,
+              65534
+            ],
+            "_FillValue": 65535,
+            "units": "bit field"
+          },
+          "250m 16 days pixel reliability": {
+            "valid_range": [
+              0,
+              3
+            ],
+            "_FillValue": -1,
+            "units": "rank"
+          }
+        },
+        "identity_verified": true,
+        "georeferencing_verified": true
+      },
+      "native_window": [
+        849,
+        1415,
+        36,
+        38
+      ],
+      "affine_transform": [
+        231.65635826388888,
+        0.0,
+        1308626.7678327097,
+        0.0,
+        -231.65635826388888,
+        4120008.331723264,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "aoi_center_cells": 376,
+      "bands": {
+        "250m 16 days NDVI": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        },
+        "250m 16 days EVI": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        },
+        "250m 16 days VI Quality": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        },
+        "250m 16 days pixel reliability": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        }
+      },
+      "qa_mask_identical": true,
+      "decoded_array_bytes": 21888,
+      "acquisition_seconds": 1.1622
+    },
+    {
+      "product": "MOD13Q1.061",
+      "original_id": "MOD13Q1.A2020113.h19v05.061.2020333045037.hdf",
+      "date": "2020-04-22",
+      "validation": {
+        "format": "HDF4/HDF-EOS2",
+        "projection": "MODIS Sinusoidal R=6371007.181",
+        "dimensions": [
+          4800,
+          4800
+        ],
+        "pixel_size_m": 231.65635826388888,
+        "bands": {
+          "250m 16 days NDVI": {
+            "valid_range": [
+              -2000,
+              10000
+            ],
+            "_FillValue": -3000,
+            "scale_factor": 10000.0,
+            "units": "NDVI"
+          },
+          "250m 16 days EVI": {
+            "valid_range": [
+              -2000,
+              10000
+            ],
+            "_FillValue": -3000,
+            "scale_factor": 10000.0,
+            "units": "EVI"
+          },
+          "250m 16 days VI Quality": {
+            "valid_range": [
+              0,
+              65534
+            ],
+            "_FillValue": 65535,
+            "units": "bit field"
+          },
+          "250m 16 days pixel reliability": {
+            "valid_range": [
+              0,
+              3
+            ],
+            "_FillValue": -1,
+            "units": "rank"
+          }
+        },
+        "identity_verified": true,
+        "georeferencing_verified": true
+      },
+      "native_window": [
+        849,
+        1415,
+        36,
+        38
+      ],
+      "affine_transform": [
+        231.65635826388888,
+        0.0,
+        1308626.7678327097,
+        0.0,
+        -231.65635826388888,
+        4120008.331723264,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "aoi_center_cells": 376,
+      "bands": {
+        "250m 16 days NDVI": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        },
+        "250m 16 days EVI": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        },
+        "250m 16 days VI Quality": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        },
+        "250m 16 days pixel reliability": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        }
+      },
+      "qa_mask_identical": true,
+      "decoded_array_bytes": 21888,
+      "acquisition_seconds": 0.6468
+    },
+    {
+      "product": "MOD13Q1.061",
+      "original_id": "MOD13Q1.A2020129.h19v05.061.2020334200702.hdf",
+      "date": "2020-05-08",
+      "validation": {
+        "format": "HDF4/HDF-EOS2",
+        "projection": "MODIS Sinusoidal R=6371007.181",
+        "dimensions": [
+          4800,
+          4800
+        ],
+        "pixel_size_m": 231.65635826388888,
+        "bands": {
+          "250m 16 days NDVI": {
+            "valid_range": [
+              -2000,
+              10000
+            ],
+            "_FillValue": -3000,
+            "scale_factor": 10000.0,
+            "units": "NDVI"
+          },
+          "250m 16 days EVI": {
+            "valid_range": [
+              -2000,
+              10000
+            ],
+            "_FillValue": -3000,
+            "scale_factor": 10000.0,
+            "units": "EVI"
+          },
+          "250m 16 days VI Quality": {
+            "valid_range": [
+              0,
+              65534
+            ],
+            "_FillValue": 65535,
+            "units": "bit field"
+          },
+          "250m 16 days pixel reliability": {
+            "valid_range": [
+              0,
+              3
+            ],
+            "_FillValue": -1,
+            "units": "rank"
+          }
+        },
+        "identity_verified": true,
+        "georeferencing_verified": true
+      },
+      "native_window": [
+        849,
+        1415,
+        36,
+        38
+      ],
+      "affine_transform": [
+        231.65635826388888,
+        0.0,
+        1308626.7678327097,
+        0.0,
+        -231.65635826388888,
+        4120008.331723264,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "aoi_center_cells": 376,
+      "bands": {
+        "250m 16 days NDVI": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        },
+        "250m 16 days EVI": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        },
+        "250m 16 days VI Quality": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        },
+        "250m 16 days pixel reliability": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        }
+      },
+      "qa_mask_identical": true,
+      "decoded_array_bytes": 21888,
+      "acquisition_seconds": 1.2249
+    },
+    {
+      "product": "MOD13Q1.061",
+      "original_id": "MOD13Q1.A2020145.h19v05.061.2020335212832.hdf",
+      "date": "2020-05-24",
+      "validation": {
+        "format": "HDF4/HDF-EOS2",
+        "projection": "MODIS Sinusoidal R=6371007.181",
+        "dimensions": [
+          4800,
+          4800
+        ],
+        "pixel_size_m": 231.65635826388888,
+        "bands": {
+          "250m 16 days NDVI": {
+            "valid_range": [
+              -2000,
+              10000
+            ],
+            "_FillValue": -3000,
+            "scale_factor": 10000.0,
+            "units": "NDVI"
+          },
+          "250m 16 days EVI": {
+            "valid_range": [
+              -2000,
+              10000
+            ],
+            "_FillValue": -3000,
+            "scale_factor": 10000.0,
+            "units": "EVI"
+          },
+          "250m 16 days VI Quality": {
+            "valid_range": [
+              0,
+              65534
+            ],
+            "_FillValue": 65535,
+            "units": "bit field"
+          },
+          "250m 16 days pixel reliability": {
+            "valid_range": [
+              0,
+              3
+            ],
+            "_FillValue": -1,
+            "units": "rank"
+          }
+        },
+        "identity_verified": true,
+        "georeferencing_verified": true
+      },
+      "native_window": [
+        849,
+        1415,
+        36,
+        38
+      ],
+      "affine_transform": [
+        231.65635826388888,
+        0.0,
+        1308626.7678327097,
+        0.0,
+        -231.65635826388888,
+        4120008.331723264,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "aoi_center_cells": 376,
+      "bands": {
+        "250m 16 days NDVI": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        },
+        "250m 16 days EVI": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        },
+        "250m 16 days VI Quality": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        },
+        "250m 16 days pixel reliability": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        }
+      },
+      "qa_mask_identical": true,
+      "decoded_array_bytes": 21888,
+      "acquisition_seconds": 1.1636
+    },
+    {
+      "product": "MOD13Q1.061",
+      "original_id": "MOD13Q1.A2020161.h19v05.061.2020336160925.hdf",
+      "date": "2020-06-09",
+      "validation": {
+        "format": "HDF4/HDF-EOS2",
+        "projection": "MODIS Sinusoidal R=6371007.181",
+        "dimensions": [
+          4800,
+          4800
+        ],
+        "pixel_size_m": 231.65635826388888,
+        "bands": {
+          "250m 16 days NDVI": {
+            "valid_range": [
+              -2000,
+              10000
+            ],
+            "_FillValue": -3000,
+            "scale_factor": 10000.0,
+            "units": "NDVI"
+          },
+          "250m 16 days EVI": {
+            "valid_range": [
+              -2000,
+              10000
+            ],
+            "_FillValue": -3000,
+            "scale_factor": 10000.0,
+            "units": "EVI"
+          },
+          "250m 16 days VI Quality": {
+            "valid_range": [
+              0,
+              65534
+            ],
+            "_FillValue": 65535,
+            "units": "bit field"
+          },
+          "250m 16 days pixel reliability": {
+            "valid_range": [
+              0,
+              3
+            ],
+            "_FillValue": -1,
+            "units": "rank"
+          }
+        },
+        "identity_verified": true,
+        "georeferencing_verified": true
+      },
+      "native_window": [
+        849,
+        1415,
+        36,
+        38
+      ],
+      "affine_transform": [
+        231.65635826388888,
+        0.0,
+        1308626.7678327097,
+        0.0,
+        -231.65635826388888,
+        4120008.331723264,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "aoi_center_cells": 376,
+      "bands": {
+        "250m 16 days NDVI": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        },
+        "250m 16 days EVI": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        },
+        "250m 16 days VI Quality": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        },
+        "250m 16 days pixel reliability": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        }
+      },
+      "qa_mask_identical": true,
+      "decoded_array_bytes": 21888,
+      "acquisition_seconds": 0.6121
+    },
+    {
+      "product": "MOD13Q1.061",
+      "original_id": "MOD13Q1.A2020177.h19v05.061.2020340103044.hdf",
+      "date": "2020-06-25",
+      "validation": {
+        "format": "HDF4/HDF-EOS2",
+        "projection": "MODIS Sinusoidal R=6371007.181",
+        "dimensions": [
+          4800,
+          4800
+        ],
+        "pixel_size_m": 231.65635826388888,
+        "bands": {
+          "250m 16 days NDVI": {
+            "valid_range": [
+              -2000,
+              10000
+            ],
+            "_FillValue": -3000,
+            "scale_factor": 10000.0,
+            "units": "NDVI"
+          },
+          "250m 16 days EVI": {
+            "valid_range": [
+              -2000,
+              10000
+            ],
+            "_FillValue": -3000,
+            "scale_factor": 10000.0,
+            "units": "EVI"
+          },
+          "250m 16 days VI Quality": {
+            "valid_range": [
+              0,
+              65534
+            ],
+            "_FillValue": 65535,
+            "units": "bit field"
+          },
+          "250m 16 days pixel reliability": {
+            "valid_range": [
+              0,
+              3
+            ],
+            "_FillValue": -1,
+            "units": "rank"
+          }
+        },
+        "identity_verified": true,
+        "georeferencing_verified": true
+      },
+      "native_window": [
+        849,
+        1415,
+        36,
+        38
+      ],
+      "affine_transform": [
+        231.65635826388888,
+        0.0,
+        1308626.7678327097,
+        0.0,
+        -231.65635826388888,
+        4120008.331723264,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "aoi_center_cells": 376,
+      "bands": {
+        "250m 16 days NDVI": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        },
+        "250m 16 days EVI": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        },
+        "250m 16 days VI Quality": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        },
+        "250m 16 days pixel reliability": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        }
+      },
+      "qa_mask_identical": true,
+      "decoded_array_bytes": 21888,
+      "acquisition_seconds": 0.6106
+    },
+    {
+      "product": "MOD13Q1.061",
+      "original_id": "MOD13Q1.A2020193.h19v05.061.2020340133613.hdf",
+      "date": "2020-07-11",
+      "validation": {
+        "format": "HDF4/HDF-EOS2",
+        "projection": "MODIS Sinusoidal R=6371007.181",
+        "dimensions": [
+          4800,
+          4800
+        ],
+        "pixel_size_m": 231.65635826388888,
+        "bands": {
+          "250m 16 days NDVI": {
+            "valid_range": [
+              -2000,
+              10000
+            ],
+            "_FillValue": -3000,
+            "scale_factor": 10000.0,
+            "units": "NDVI"
+          },
+          "250m 16 days EVI": {
+            "valid_range": [
+              -2000,
+              10000
+            ],
+            "_FillValue": -3000,
+            "scale_factor": 10000.0,
+            "units": "EVI"
+          },
+          "250m 16 days VI Quality": {
+            "valid_range": [
+              0,
+              65534
+            ],
+            "_FillValue": 65535,
+            "units": "bit field"
+          },
+          "250m 16 days pixel reliability": {
+            "valid_range": [
+              0,
+              3
+            ],
+            "_FillValue": -1,
+            "units": "rank"
+          }
+        },
+        "identity_verified": true,
+        "georeferencing_verified": true
+      },
+      "native_window": [
+        849,
+        1415,
+        36,
+        38
+      ],
+      "affine_transform": [
+        231.65635826388888,
+        0.0,
+        1308626.7678327097,
+        0.0,
+        -231.65635826388888,
+        4120008.331723264,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "aoi_center_cells": 376,
+      "bands": {
+        "250m 16 days NDVI": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        },
+        "250m 16 days EVI": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        },
+        "250m 16 days VI Quality": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        },
+        "250m 16 days pixel reliability": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        }
+      },
+      "qa_mask_identical": true,
+      "decoded_array_bytes": 21888,
+      "acquisition_seconds": 1.2317
+    },
+    {
+      "product": "MOD13Q1.061",
+      "original_id": "MOD13Q1.A2020209.h19v05.061.2020342020621.hdf",
+      "date": "2020-07-27",
+      "validation": {
+        "format": "HDF4/HDF-EOS2",
+        "projection": "MODIS Sinusoidal R=6371007.181",
+        "dimensions": [
+          4800,
+          4800
+        ],
+        "pixel_size_m": 231.65635826388888,
+        "bands": {
+          "250m 16 days NDVI": {
+            "valid_range": [
+              -2000,
+              10000
+            ],
+            "_FillValue": -3000,
+            "scale_factor": 10000.0,
+            "units": "NDVI"
+          },
+          "250m 16 days EVI": {
+            "valid_range": [
+              -2000,
+              10000
+            ],
+            "_FillValue": -3000,
+            "scale_factor": 10000.0,
+            "units": "EVI"
+          },
+          "250m 16 days VI Quality": {
+            "valid_range": [
+              0,
+              65534
+            ],
+            "_FillValue": 65535,
+            "units": "bit field"
+          },
+          "250m 16 days pixel reliability": {
+            "valid_range": [
+              0,
+              3
+            ],
+            "_FillValue": -1,
+            "units": "rank"
+          }
+        },
+        "identity_verified": true,
+        "georeferencing_verified": true
+      },
+      "native_window": [
+        849,
+        1415,
+        36,
+        38
+      ],
+      "affine_transform": [
+        231.65635826388888,
+        0.0,
+        1308626.7678327097,
+        0.0,
+        -231.65635826388888,
+        4120008.331723264,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "aoi_center_cells": 376,
+      "bands": {
+        "250m 16 days NDVI": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        },
+        "250m 16 days EVI": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        },
+        "250m 16 days VI Quality": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        },
+        "250m 16 days pixel reliability": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        }
+      },
+      "qa_mask_identical": true,
+      "decoded_array_bytes": 21888,
+      "acquisition_seconds": 0.5755
+    },
+    {
+      "product": "MOD13Q1.061",
+      "original_id": "MOD13Q1.A2020225.h19v05.061.2020344204510.hdf",
+      "date": "2020-08-12",
+      "validation": {
+        "format": "HDF4/HDF-EOS2",
+        "projection": "MODIS Sinusoidal R=6371007.181",
+        "dimensions": [
+          4800,
+          4800
+        ],
+        "pixel_size_m": 231.65635826388888,
+        "bands": {
+          "250m 16 days NDVI": {
+            "valid_range": [
+              -2000,
+              10000
+            ],
+            "_FillValue": -3000,
+            "scale_factor": 10000.0,
+            "units": "NDVI"
+          },
+          "250m 16 days EVI": {
+            "valid_range": [
+              -2000,
+              10000
+            ],
+            "_FillValue": -3000,
+            "scale_factor": 10000.0,
+            "units": "EVI"
+          },
+          "250m 16 days VI Quality": {
+            "valid_range": [
+              0,
+              65534
+            ],
+            "_FillValue": 65535,
+            "units": "bit field"
+          },
+          "250m 16 days pixel reliability": {
+            "valid_range": [
+              0,
+              3
+            ],
+            "_FillValue": -1,
+            "units": "rank"
+          }
+        },
+        "identity_verified": true,
+        "georeferencing_verified": true
+      },
+      "native_window": [
+        849,
+        1415,
+        36,
+        38
+      ],
+      "affine_transform": [
+        231.65635826388888,
+        0.0,
+        1308626.7678327097,
+        0.0,
+        -231.65635826388888,
+        4120008.331723264,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "aoi_center_cells": 376,
+      "bands": {
+        "250m 16 days NDVI": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        },
+        "250m 16 days EVI": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        },
+        "250m 16 days VI Quality": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        },
+        "250m 16 days pixel reliability": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        }
+      },
+      "qa_mask_identical": true,
+      "decoded_array_bytes": 21888,
+      "acquisition_seconds": 1.1498
+    },
+    {
+      "product": "MOD13Q1.061",
+      "original_id": "MOD13Q1.A2020241.h19v05.061.2020346101039.hdf",
+      "date": "2020-08-28",
+      "validation": {
+        "format": "HDF4/HDF-EOS2",
+        "projection": "MODIS Sinusoidal R=6371007.181",
+        "dimensions": [
+          4800,
+          4800
+        ],
+        "pixel_size_m": 231.65635826388888,
+        "bands": {
+          "250m 16 days NDVI": {
+            "valid_range": [
+              -2000,
+              10000
+            ],
+            "_FillValue": -3000,
+            "scale_factor": 10000.0,
+            "units": "NDVI"
+          },
+          "250m 16 days EVI": {
+            "valid_range": [
+              -2000,
+              10000
+            ],
+            "_FillValue": -3000,
+            "scale_factor": 10000.0,
+            "units": "EVI"
+          },
+          "250m 16 days VI Quality": {
+            "valid_range": [
+              0,
+              65534
+            ],
+            "_FillValue": 65535,
+            "units": "bit field"
+          },
+          "250m 16 days pixel reliability": {
+            "valid_range": [
+              0,
+              3
+            ],
+            "_FillValue": -1,
+            "units": "rank"
+          }
+        },
+        "identity_verified": true,
+        "georeferencing_verified": true
+      },
+      "native_window": [
+        849,
+        1415,
+        36,
+        38
+      ],
+      "affine_transform": [
+        231.65635826388888,
+        0.0,
+        1308626.7678327097,
+        0.0,
+        -231.65635826388888,
+        4120008.331723264,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "aoi_center_cells": 376,
+      "bands": {
+        "250m 16 days NDVI": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        },
+        "250m 16 days EVI": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        },
+        "250m 16 days VI Quality": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        },
+        "250m 16 days pixel reliability": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        }
+      },
+      "qa_mask_identical": true,
+      "decoded_array_bytes": 21888,
+      "acquisition_seconds": 0.5112
+    },
+    {
+      "product": "MOD13Q1.061",
+      "original_id": "MOD13Q1.A2020257.h19v05.061.2020347055750.hdf",
+      "date": "2020-09-13",
+      "validation": {
+        "format": "HDF4/HDF-EOS2",
+        "projection": "MODIS Sinusoidal R=6371007.181",
+        "dimensions": [
+          4800,
+          4800
+        ],
+        "pixel_size_m": 231.65635826388888,
+        "bands": {
+          "250m 16 days NDVI": {
+            "valid_range": [
+              -2000,
+              10000
+            ],
+            "_FillValue": -3000,
+            "scale_factor": 10000.0,
+            "units": "NDVI"
+          },
+          "250m 16 days EVI": {
+            "valid_range": [
+              -2000,
+              10000
+            ],
+            "_FillValue": -3000,
+            "scale_factor": 10000.0,
+            "units": "EVI"
+          },
+          "250m 16 days VI Quality": {
+            "valid_range": [
+              0,
+              65534
+            ],
+            "_FillValue": 65535,
+            "units": "bit field"
+          },
+          "250m 16 days pixel reliability": {
+            "valid_range": [
+              0,
+              3
+            ],
+            "_FillValue": -1,
+            "units": "rank"
+          }
+        },
+        "identity_verified": true,
+        "georeferencing_verified": true
+      },
+      "native_window": [
+        849,
+        1415,
+        36,
+        38
+      ],
+      "affine_transform": [
+        231.65635826388888,
+        0.0,
+        1308626.7678327097,
+        0.0,
+        -231.65635826388888,
+        4120008.331723264,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "aoi_center_cells": 376,
+      "bands": {
+        "250m 16 days NDVI": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        },
+        "250m 16 days EVI": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        },
+        "250m 16 days VI Quality": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        },
+        "250m 16 days pixel reliability": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        }
+      },
+      "qa_mask_identical": true,
+      "decoded_array_bytes": 21888,
+      "acquisition_seconds": 1.7312
+    },
+    {
+      "product": "MOD13Q1.061",
+      "original_id": "MOD13Q1.A2020273.h19v05.061.2020349201744.hdf",
+      "date": "2020-09-29",
+      "validation": {
+        "format": "HDF4/HDF-EOS2",
+        "projection": "MODIS Sinusoidal R=6371007.181",
+        "dimensions": [
+          4800,
+          4800
+        ],
+        "pixel_size_m": 231.65635826388888,
+        "bands": {
+          "250m 16 days NDVI": {
+            "valid_range": [
+              -2000,
+              10000
+            ],
+            "_FillValue": -3000,
+            "scale_factor": 10000.0,
+            "units": "NDVI"
+          },
+          "250m 16 days EVI": {
+            "valid_range": [
+              -2000,
+              10000
+            ],
+            "_FillValue": -3000,
+            "scale_factor": 10000.0,
+            "units": "EVI"
+          },
+          "250m 16 days VI Quality": {
+            "valid_range": [
+              0,
+              65534
+            ],
+            "_FillValue": 65535,
+            "units": "bit field"
+          },
+          "250m 16 days pixel reliability": {
+            "valid_range": [
+              0,
+              3
+            ],
+            "_FillValue": -1,
+            "units": "rank"
+          }
+        },
+        "identity_verified": true,
+        "georeferencing_verified": true
+      },
+      "native_window": [
+        849,
+        1415,
+        36,
+        38
+      ],
+      "affine_transform": [
+        231.65635826388888,
+        0.0,
+        1308626.7678327097,
+        0.0,
+        -231.65635826388888,
+        4120008.331723264,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "aoi_center_cells": 376,
+      "bands": {
+        "250m 16 days NDVI": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        },
+        "250m 16 days EVI": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        },
+        "250m 16 days VI Quality": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        },
+        "250m 16 days pixel reliability": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        }
+      },
+      "qa_mask_identical": true,
+      "decoded_array_bytes": 21888,
+      "acquisition_seconds": 0.5526
+    },
+    {
+      "product": "MOD13Q1.061",
+      "original_id": "MOD13Q1.A2020289.h19v05.061.2020352193846.hdf",
+      "date": "2020-10-15",
+      "validation": {
+        "format": "HDF4/HDF-EOS2",
+        "projection": "MODIS Sinusoidal R=6371007.181",
+        "dimensions": [
+          4800,
+          4800
+        ],
+        "pixel_size_m": 231.65635826388888,
+        "bands": {
+          "250m 16 days NDVI": {
+            "valid_range": [
+              -2000,
+              10000
+            ],
+            "_FillValue": -3000,
+            "scale_factor": 10000.0,
+            "units": "NDVI"
+          },
+          "250m 16 days EVI": {
+            "valid_range": [
+              -2000,
+              10000
+            ],
+            "_FillValue": -3000,
+            "scale_factor": 10000.0,
+            "units": "EVI"
+          },
+          "250m 16 days VI Quality": {
+            "valid_range": [
+              0,
+              65534
+            ],
+            "_FillValue": 65535,
+            "units": "bit field"
+          },
+          "250m 16 days pixel reliability": {
+            "valid_range": [
+              0,
+              3
+            ],
+            "_FillValue": -1,
+            "units": "rank"
+          }
+        },
+        "identity_verified": true,
+        "georeferencing_verified": true
+      },
+      "native_window": [
+        849,
+        1415,
+        36,
+        38
+      ],
+      "affine_transform": [
+        231.65635826388888,
+        0.0,
+        1308626.7678327097,
+        0.0,
+        -231.65635826388888,
+        4120008.331723264,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "aoi_center_cells": 376,
+      "bands": {
+        "250m 16 days NDVI": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        },
+        "250m 16 days EVI": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        },
+        "250m 16 days VI Quality": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        },
+        "250m 16 days pixel reliability": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        }
+      },
+      "qa_mask_identical": true,
+      "decoded_array_bytes": 21888,
+      "acquisition_seconds": 0.5701
+    },
+    {
+      "product": "MOD13Q1.061",
+      "original_id": "MOD13Q1.A2020305.h19v05.061.2020353091427.hdf",
+      "date": "2020-10-31",
+      "validation": {
+        "format": "HDF4/HDF-EOS2",
+        "projection": "MODIS Sinusoidal R=6371007.181",
+        "dimensions": [
+          4800,
+          4800
+        ],
+        "pixel_size_m": 231.65635826388888,
+        "bands": {
+          "250m 16 days NDVI": {
+            "valid_range": [
+              -2000,
+              10000
+            ],
+            "_FillValue": -3000,
+            "scale_factor": 10000.0,
+            "units": "NDVI"
+          },
+          "250m 16 days EVI": {
+            "valid_range": [
+              -2000,
+              10000
+            ],
+            "_FillValue": -3000,
+            "scale_factor": 10000.0,
+            "units": "EVI"
+          },
+          "250m 16 days VI Quality": {
+            "valid_range": [
+              0,
+              65534
+            ],
+            "_FillValue": 65535,
+            "units": "bit field"
+          },
+          "250m 16 days pixel reliability": {
+            "valid_range": [
+              0,
+              3
+            ],
+            "_FillValue": -1,
+            "units": "rank"
+          }
+        },
+        "identity_verified": true,
+        "georeferencing_verified": true
+      },
+      "native_window": [
+        849,
+        1415,
+        36,
+        38
+      ],
+      "affine_transform": [
+        231.65635826388888,
+        0.0,
+        1308626.7678327097,
+        0.0,
+        -231.65635826388888,
+        4120008.331723264,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "aoi_center_cells": 376,
+      "bands": {
+        "250m 16 days NDVI": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        },
+        "250m 16 days EVI": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        },
+        "250m 16 days VI Quality": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        },
+        "250m 16 days pixel reliability": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        }
+      },
+      "qa_mask_identical": true,
+      "decoded_array_bytes": 21888,
+      "acquisition_seconds": 0.795
+    },
+    {
+      "product": "MOD13Q1.061",
+      "original_id": "MOD13Q1.A2020321.h19v05.061.2020357083012.hdf",
+      "date": "2020-11-16",
+      "validation": {
+        "format": "HDF4/HDF-EOS2",
+        "projection": "MODIS Sinusoidal R=6371007.181",
+        "dimensions": [
+          4800,
+          4800
+        ],
+        "pixel_size_m": 231.65635826388888,
+        "bands": {
+          "250m 16 days NDVI": {
+            "valid_range": [
+              -2000,
+              10000
+            ],
+            "_FillValue": -3000,
+            "scale_factor": 10000.0,
+            "units": "NDVI"
+          },
+          "250m 16 days EVI": {
+            "valid_range": [
+              -2000,
+              10000
+            ],
+            "_FillValue": -3000,
+            "scale_factor": 10000.0,
+            "units": "EVI"
+          },
+          "250m 16 days VI Quality": {
+            "valid_range": [
+              0,
+              65534
+            ],
+            "_FillValue": 65535,
+            "units": "bit field"
+          },
+          "250m 16 days pixel reliability": {
+            "valid_range": [
+              0,
+              3
+            ],
+            "_FillValue": -1,
+            "units": "rank"
+          }
+        },
+        "identity_verified": true,
+        "georeferencing_verified": true
+      },
+      "native_window": [
+        849,
+        1415,
+        36,
+        38
+      ],
+      "affine_transform": [
+        231.65635826388888,
+        0.0,
+        1308626.7678327097,
+        0.0,
+        -231.65635826388888,
+        4120008.331723264,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "aoi_center_cells": 376,
+      "bands": {
+        "250m 16 days NDVI": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        },
+        "250m 16 days EVI": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        },
+        "250m 16 days VI Quality": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        },
+        "250m 16 days pixel reliability": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        }
+      },
+      "qa_mask_identical": true,
+      "decoded_array_bytes": 21888,
+      "acquisition_seconds": 0.5532
+    },
+    {
+      "product": "MOD13Q1.061",
+      "original_id": "MOD13Q1.A2020337.h19v05.061.2021011165944.hdf",
+      "date": "2020-12-02",
+      "validation": {
+        "format": "HDF4/HDF-EOS2",
+        "projection": "MODIS Sinusoidal R=6371007.181",
+        "dimensions": [
+          4800,
+          4800
+        ],
+        "pixel_size_m": 231.65635826388888,
+        "bands": {
+          "250m 16 days NDVI": {
+            "valid_range": [
+              -2000,
+              10000
+            ],
+            "_FillValue": -3000,
+            "scale_factor": 10000.0,
+            "units": "NDVI"
+          },
+          "250m 16 days EVI": {
+            "valid_range": [
+              -2000,
+              10000
+            ],
+            "_FillValue": -3000,
+            "scale_factor": 10000.0,
+            "units": "EVI"
+          },
+          "250m 16 days VI Quality": {
+            "valid_range": [
+              0,
+              65534
+            ],
+            "_FillValue": 65535,
+            "units": "bit field"
+          },
+          "250m 16 days pixel reliability": {
+            "valid_range": [
+              0,
+              3
+            ],
+            "_FillValue": -1,
+            "units": "rank"
+          }
+        },
+        "identity_verified": true,
+        "georeferencing_verified": true
+      },
+      "native_window": [
+        849,
+        1415,
+        36,
+        38
+      ],
+      "affine_transform": [
+        231.65635826388888,
+        0.0,
+        1308626.7678327097,
+        0.0,
+        -231.65635826388888,
+        4120008.331723264,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "aoi_center_cells": 376,
+      "bands": {
+        "250m 16 days NDVI": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        },
+        "250m 16 days EVI": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        },
+        "250m 16 days VI Quality": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        },
+        "250m 16 days pixel reliability": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        }
+      },
+      "qa_mask_identical": true,
+      "decoded_array_bytes": 21888,
+      "acquisition_seconds": 0.4799
+    },
+    {
+      "product": "MOD13Q1.061",
+      "original_id": "MOD13Q1.A2020353.h19v05.061.2021012023047.hdf",
+      "date": "2020-12-18",
+      "validation": {
+        "format": "HDF4/HDF-EOS2",
+        "projection": "MODIS Sinusoidal R=6371007.181",
+        "dimensions": [
+          4800,
+          4800
+        ],
+        "pixel_size_m": 231.65635826388888,
+        "bands": {
+          "250m 16 days NDVI": {
+            "valid_range": [
+              -2000,
+              10000
+            ],
+            "_FillValue": -3000,
+            "scale_factor": 10000.0,
+            "units": "NDVI"
+          },
+          "250m 16 days EVI": {
+            "valid_range": [
+              -2000,
+              10000
+            ],
+            "_FillValue": -3000,
+            "scale_factor": 10000.0,
+            "units": "EVI"
+          },
+          "250m 16 days VI Quality": {
+            "valid_range": [
+              0,
+              65534
+            ],
+            "_FillValue": 65535,
+            "units": "bit field"
+          },
+          "250m 16 days pixel reliability": {
+            "valid_range": [
+              0,
+              3
+            ],
+            "_FillValue": -1,
+            "units": "rank"
+          }
+        },
+        "identity_verified": true,
+        "georeferencing_verified": true
+      },
+      "native_window": [
+        849,
+        1415,
+        36,
+        38
+      ],
+      "affine_transform": [
+        231.65635826388888,
+        0.0,
+        1308626.7678327097,
+        0.0,
+        -231.65635826388888,
+        4120008.331723264,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "aoi_center_cells": 376,
+      "bands": {
+        "250m 16 days NDVI": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        },
+        "250m 16 days EVI": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        },
+        "250m 16 days VI Quality": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        },
+        "250m 16 days pixel reliability": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        }
+      },
+      "qa_mask_identical": true,
+      "decoded_array_bytes": 21888,
+      "acquisition_seconds": 1.1732
+    },
+    {
+      "product": "MOD13Q1.061",
+      "original_id": "MOD13Q1.A2021001.h19v05.061.2021043142824.hdf",
+      "date": "2021-01-01",
+      "validation": {
+        "format": "HDF4/HDF-EOS2",
+        "projection": "MODIS Sinusoidal R=6371007.181",
+        "dimensions": [
+          4800,
+          4800
+        ],
+        "pixel_size_m": 231.65635826388888,
+        "bands": {
+          "250m 16 days NDVI": {
+            "valid_range": [
+              -2000,
+              10000
+            ],
+            "_FillValue": -3000,
+            "scale_factor": 10000.0,
+            "units": "NDVI"
+          },
+          "250m 16 days EVI": {
+            "valid_range": [
+              -2000,
+              10000
+            ],
+            "_FillValue": -3000,
+            "scale_factor": 10000.0,
+            "units": "EVI"
+          },
+          "250m 16 days VI Quality": {
+            "valid_range": [
+              0,
+              65534
+            ],
+            "_FillValue": 65535,
+            "units": "bit field"
+          },
+          "250m 16 days pixel reliability": {
+            "valid_range": [
+              0,
+              3
+            ],
+            "_FillValue": -1,
+            "units": "rank"
+          }
+        },
+        "identity_verified": true,
+        "georeferencing_verified": true
+      },
+      "native_window": [
+        849,
+        1415,
+        36,
+        38
+      ],
+      "affine_transform": [
+        231.65635826388888,
+        0.0,
+        1308626.7678327097,
+        0.0,
+        -231.65635826388888,
+        4120008.331723264,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "aoi_center_cells": 376,
+      "bands": {
+        "250m 16 days NDVI": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        },
+        "250m 16 days EVI": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        },
+        "250m 16 days VI Quality": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        },
+        "250m 16 days pixel reliability": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        }
+      },
+      "qa_mask_identical": true,
+      "decoded_array_bytes": 21888,
+      "acquisition_seconds": 0.5364
+    },
+    {
+      "product": "MOD13Q1.061",
+      "original_id": "MOD13Q1.A2021017.h19v05.061.2021040165053.hdf",
+      "date": "2021-01-17",
+      "validation": {
+        "format": "HDF4/HDF-EOS2",
+        "projection": "MODIS Sinusoidal R=6371007.181",
+        "dimensions": [
+          4800,
+          4800
+        ],
+        "pixel_size_m": 231.65635826388888,
+        "bands": {
+          "250m 16 days NDVI": {
+            "valid_range": [
+              -2000,
+              10000
+            ],
+            "_FillValue": -3000,
+            "scale_factor": 10000.0,
+            "units": "NDVI"
+          },
+          "250m 16 days EVI": {
+            "valid_range": [
+              -2000,
+              10000
+            ],
+            "_FillValue": -3000,
+            "scale_factor": 10000.0,
+            "units": "EVI"
+          },
+          "250m 16 days VI Quality": {
+            "valid_range": [
+              0,
+              65534
+            ],
+            "_FillValue": 65535,
+            "units": "bit field"
+          },
+          "250m 16 days pixel reliability": {
+            "valid_range": [
+              0,
+              3
+            ],
+            "_FillValue": -1,
+            "units": "rank"
+          }
+        },
+        "identity_verified": true,
+        "georeferencing_verified": true
+      },
+      "native_window": [
+        849,
+        1415,
+        36,
+        38
+      ],
+      "affine_transform": [
+        231.65635826388888,
+        0.0,
+        1308626.7678327097,
+        0.0,
+        -231.65635826388888,
+        4120008.331723264,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "aoi_center_cells": 376,
+      "bands": {
+        "250m 16 days NDVI": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        },
+        "250m 16 days EVI": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        },
+        "250m 16 days VI Quality": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        },
+        "250m 16 days pixel reliability": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        }
+      },
+      "qa_mask_identical": true,
+      "decoded_array_bytes": 21888,
+      "acquisition_seconds": 1.6637
+    },
+    {
+      "product": "MOD13Q1.061",
+      "original_id": "MOD13Q1.A2021033.h19v05.061.2021049224647.hdf",
+      "date": "2021-02-02",
+      "validation": {
+        "format": "HDF4/HDF-EOS2",
+        "projection": "MODIS Sinusoidal R=6371007.181",
+        "dimensions": [
+          4800,
+          4800
+        ],
+        "pixel_size_m": 231.65635826388888,
+        "bands": {
+          "250m 16 days NDVI": {
+            "valid_range": [
+              -2000,
+              10000
+            ],
+            "_FillValue": -3000,
+            "scale_factor": 10000.0,
+            "units": "NDVI"
+          },
+          "250m 16 days EVI": {
+            "valid_range": [
+              -2000,
+              10000
+            ],
+            "_FillValue": -3000,
+            "scale_factor": 10000.0,
+            "units": "EVI"
+          },
+          "250m 16 days VI Quality": {
+            "valid_range": [
+              0,
+              65534
+            ],
+            "_FillValue": 65535,
+            "units": "bit field"
+          },
+          "250m 16 days pixel reliability": {
+            "valid_range": [
+              0,
+              3
+            ],
+            "_FillValue": -1,
+            "units": "rank"
+          }
+        },
+        "identity_verified": true,
+        "georeferencing_verified": true
+      },
+      "native_window": [
+        849,
+        1415,
+        36,
+        38
+      ],
+      "affine_transform": [
+        231.65635826388888,
+        0.0,
+        1308626.7678327097,
+        0.0,
+        -231.65635826388888,
+        4120008.331723264,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "aoi_center_cells": 376,
+      "bands": {
+        "250m 16 days NDVI": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        },
+        "250m 16 days EVI": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        },
+        "250m 16 days VI Quality": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        },
+        "250m 16 days pixel reliability": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        }
+      },
+      "qa_mask_identical": true,
+      "decoded_array_bytes": 21888,
+      "acquisition_seconds": 0.5909
+    },
+    {
+      "product": "MOD13Q1.061",
+      "original_id": "MOD13Q1.A2021049.h19v05.061.2021068101407.hdf",
+      "date": "2021-02-18",
+      "validation": {
+        "format": "HDF4/HDF-EOS2",
+        "projection": "MODIS Sinusoidal R=6371007.181",
+        "dimensions": [
+          4800,
+          4800
+        ],
+        "pixel_size_m": 231.65635826388888,
+        "bands": {
+          "250m 16 days NDVI": {
+            "valid_range": [
+              -2000,
+              10000
+            ],
+            "_FillValue": -3000,
+            "scale_factor": 10000.0,
+            "units": "NDVI"
+          },
+          "250m 16 days EVI": {
+            "valid_range": [
+              -2000,
+              10000
+            ],
+            "_FillValue": -3000,
+            "scale_factor": 10000.0,
+            "units": "EVI"
+          },
+          "250m 16 days VI Quality": {
+            "valid_range": [
+              0,
+              65534
+            ],
+            "_FillValue": 65535,
+            "units": "bit field"
+          },
+          "250m 16 days pixel reliability": {
+            "valid_range": [
+              0,
+              3
+            ],
+            "_FillValue": -1,
+            "units": "rank"
+          }
+        },
+        "identity_verified": true,
+        "georeferencing_verified": true
+      },
+      "native_window": [
+        849,
+        1415,
+        36,
+        38
+      ],
+      "affine_transform": [
+        231.65635826388888,
+        0.0,
+        1308626.7678327097,
+        0.0,
+        -231.65635826388888,
+        4120008.331723264,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "aoi_center_cells": 376,
+      "bands": {
+        "250m 16 days NDVI": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        },
+        "250m 16 days EVI": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        },
+        "250m 16 days VI Quality": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        },
+        "250m 16 days pixel reliability": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        }
+      },
+      "qa_mask_identical": true,
+      "decoded_array_bytes": 21888,
+      "acquisition_seconds": 1.1868
+    },
+    {
+      "product": "MOD13Q1.061",
+      "original_id": "MOD13Q1.A2021065.h19v05.061.2021082134036.hdf",
+      "date": "2021-03-06",
+      "validation": {
+        "format": "HDF4/HDF-EOS2",
+        "projection": "MODIS Sinusoidal R=6371007.181",
+        "dimensions": [
+          4800,
+          4800
+        ],
+        "pixel_size_m": 231.65635826388888,
+        "bands": {
+          "250m 16 days NDVI": {
+            "valid_range": [
+              -2000,
+              10000
+            ],
+            "_FillValue": -3000,
+            "scale_factor": 10000.0,
+            "units": "NDVI"
+          },
+          "250m 16 days EVI": {
+            "valid_range": [
+              -2000,
+              10000
+            ],
+            "_FillValue": -3000,
+            "scale_factor": 10000.0,
+            "units": "EVI"
+          },
+          "250m 16 days VI Quality": {
+            "valid_range": [
+              0,
+              65534
+            ],
+            "_FillValue": 65535,
+            "units": "bit field"
+          },
+          "250m 16 days pixel reliability": {
+            "valid_range": [
+              0,
+              3
+            ],
+            "_FillValue": -1,
+            "units": "rank"
+          }
+        },
+        "identity_verified": true,
+        "georeferencing_verified": true
+      },
+      "native_window": [
+        849,
+        1415,
+        36,
+        38
+      ],
+      "affine_transform": [
+        231.65635826388888,
+        0.0,
+        1308626.7678327097,
+        0.0,
+        -231.65635826388888,
+        4120008.331723264,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "aoi_center_cells": 376,
+      "bands": {
+        "250m 16 days NDVI": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        },
+        "250m 16 days EVI": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        },
+        "250m 16 days VI Quality": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        },
+        "250m 16 days pixel reliability": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        }
+      },
+      "qa_mask_identical": true,
+      "decoded_array_bytes": 21888,
+      "acquisition_seconds": 1.1688
+    },
+    {
+      "product": "MOD13Q1.061",
+      "original_id": "MOD13Q1.A2021081.h19v05.061.2021098020219.hdf",
+      "date": "2021-03-22",
+      "validation": {
+        "format": "HDF4/HDF-EOS2",
+        "projection": "MODIS Sinusoidal R=6371007.181",
+        "dimensions": [
+          4800,
+          4800
+        ],
+        "pixel_size_m": 231.65635826388888,
+        "bands": {
+          "250m 16 days NDVI": {
+            "valid_range": [
+              -2000,
+              10000
+            ],
+            "_FillValue": -3000,
+            "scale_factor": 10000.0,
+            "units": "NDVI"
+          },
+          "250m 16 days EVI": {
+            "valid_range": [
+              -2000,
+              10000
+            ],
+            "_FillValue": -3000,
+            "scale_factor": 10000.0,
+            "units": "EVI"
+          },
+          "250m 16 days VI Quality": {
+            "valid_range": [
+              0,
+              65534
+            ],
+            "_FillValue": 65535,
+            "units": "bit field"
+          },
+          "250m 16 days pixel reliability": {
+            "valid_range": [
+              0,
+              3
+            ],
+            "_FillValue": -1,
+            "units": "rank"
+          }
+        },
+        "identity_verified": true,
+        "georeferencing_verified": true
+      },
+      "native_window": [
+        849,
+        1415,
+        36,
+        38
+      ],
+      "affine_transform": [
+        231.65635826388888,
+        0.0,
+        1308626.7678327097,
+        0.0,
+        -231.65635826388888,
+        4120008.331723264,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "aoi_center_cells": 376,
+      "bands": {
+        "250m 16 days NDVI": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        },
+        "250m 16 days EVI": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        },
+        "250m 16 days VI Quality": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        },
+        "250m 16 days pixel reliability": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        }
+      },
+      "qa_mask_identical": true,
+      "decoded_array_bytes": 21888,
+      "acquisition_seconds": 1.2564
+    },
+    {
+      "product": "MOD13Q1.061",
+      "original_id": "MOD13Q1.A2021097.h19v05.061.2021115210734.hdf",
+      "date": "2021-04-07",
+      "validation": {
+        "format": "HDF4/HDF-EOS2",
+        "projection": "MODIS Sinusoidal R=6371007.181",
+        "dimensions": [
+          4800,
+          4800
+        ],
+        "pixel_size_m": 231.65635826388888,
+        "bands": {
+          "250m 16 days NDVI": {
+            "valid_range": [
+              -2000,
+              10000
+            ],
+            "_FillValue": -3000,
+            "scale_factor": 10000.0,
+            "units": "NDVI"
+          },
+          "250m 16 days EVI": {
+            "valid_range": [
+              -2000,
+              10000
+            ],
+            "_FillValue": -3000,
+            "scale_factor": 10000.0,
+            "units": "EVI"
+          },
+          "250m 16 days VI Quality": {
+            "valid_range": [
+              0,
+              65534
+            ],
+            "_FillValue": 65535,
+            "units": "bit field"
+          },
+          "250m 16 days pixel reliability": {
+            "valid_range": [
+              0,
+              3
+            ],
+            "_FillValue": -1,
+            "units": "rank"
+          }
+        },
+        "identity_verified": true,
+        "georeferencing_verified": true
+      },
+      "native_window": [
+        849,
+        1415,
+        36,
+        38
+      ],
+      "affine_transform": [
+        231.65635826388888,
+        0.0,
+        1308626.7678327097,
+        0.0,
+        -231.65635826388888,
+        4120008.331723264,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "aoi_center_cells": 376,
+      "bands": {
+        "250m 16 days NDVI": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        },
+        "250m 16 days EVI": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        },
+        "250m 16 days VI Quality": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        },
+        "250m 16 days pixel reliability": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        }
+      },
+      "qa_mask_identical": true,
+      "decoded_array_bytes": 21888,
+      "acquisition_seconds": 1.1919
+    },
+    {
+      "product": "MOD13Q1.061",
+      "original_id": "MOD13Q1.A2021113.h19v05.061.2021133131301.hdf",
+      "date": "2021-04-23",
+      "validation": {
+        "format": "HDF4/HDF-EOS2",
+        "projection": "MODIS Sinusoidal R=6371007.181",
+        "dimensions": [
+          4800,
+          4800
+        ],
+        "pixel_size_m": 231.65635826388888,
+        "bands": {
+          "250m 16 days NDVI": {
+            "valid_range": [
+              -2000,
+              10000
+            ],
+            "_FillValue": -3000,
+            "scale_factor": 10000.0,
+            "units": "NDVI"
+          },
+          "250m 16 days EVI": {
+            "valid_range": [
+              -2000,
+              10000
+            ],
+            "_FillValue": -3000,
+            "scale_factor": 10000.0,
+            "units": "EVI"
+          },
+          "250m 16 days VI Quality": {
+            "valid_range": [
+              0,
+              65534
+            ],
+            "_FillValue": 65535,
+            "units": "bit field"
+          },
+          "250m 16 days pixel reliability": {
+            "valid_range": [
+              0,
+              3
+            ],
+            "_FillValue": -1,
+            "units": "rank"
+          }
+        },
+        "identity_verified": true,
+        "georeferencing_verified": true
+      },
+      "native_window": [
+        849,
+        1415,
+        36,
+        38
+      ],
+      "affine_transform": [
+        231.65635826388888,
+        0.0,
+        1308626.7678327097,
+        0.0,
+        -231.65635826388888,
+        4120008.331723264,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "aoi_center_cells": 376,
+      "bands": {
+        "250m 16 days NDVI": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        },
+        "250m 16 days EVI": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        },
+        "250m 16 days VI Quality": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        },
+        "250m 16 days pixel reliability": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        }
+      },
+      "qa_mask_identical": true,
+      "decoded_array_bytes": 21888,
+      "acquisition_seconds": 1.1651
+    },
+    {
+      "product": "MOD13Q1.061",
+      "original_id": "MOD13Q1.A2021129.h19v05.061.2021146093756.hdf",
+      "date": "2021-05-09",
+      "validation": {
+        "format": "HDF4/HDF-EOS2",
+        "projection": "MODIS Sinusoidal R=6371007.181",
+        "dimensions": [
+          4800,
+          4800
+        ],
+        "pixel_size_m": 231.65635826388888,
+        "bands": {
+          "250m 16 days NDVI": {
+            "valid_range": [
+              -2000,
+              10000
+            ],
+            "_FillValue": -3000,
+            "scale_factor": 10000.0,
+            "units": "NDVI"
+          },
+          "250m 16 days EVI": {
+            "valid_range": [
+              -2000,
+              10000
+            ],
+            "_FillValue": -3000,
+            "scale_factor": 10000.0,
+            "units": "EVI"
+          },
+          "250m 16 days VI Quality": {
+            "valid_range": [
+              0,
+              65534
+            ],
+            "_FillValue": 65535,
+            "units": "bit field"
+          },
+          "250m 16 days pixel reliability": {
+            "valid_range": [
+              0,
+              3
+            ],
+            "_FillValue": -1,
+            "units": "rank"
+          }
+        },
+        "identity_verified": true,
+        "georeferencing_verified": true
+      },
+      "native_window": [
+        849,
+        1415,
+        36,
+        38
+      ],
+      "affine_transform": [
+        231.65635826388888,
+        0.0,
+        1308626.7678327097,
+        0.0,
+        -231.65635826388888,
+        4120008.331723264,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "aoi_center_cells": 376,
+      "bands": {
+        "250m 16 days NDVI": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        },
+        "250m 16 days EVI": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        },
+        "250m 16 days VI Quality": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        },
+        "250m 16 days pixel reliability": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        }
+      },
+      "qa_mask_identical": true,
+      "decoded_array_bytes": 21888,
+      "acquisition_seconds": 1.1492
+    },
+    {
+      "product": "MOD13Q1.061",
+      "original_id": "MOD13Q1.A2021145.h19v05.061.2021165122613.hdf",
+      "date": "2021-05-25",
+      "validation": {
+        "format": "HDF4/HDF-EOS2",
+        "projection": "MODIS Sinusoidal R=6371007.181",
+        "dimensions": [
+          4800,
+          4800
+        ],
+        "pixel_size_m": 231.65635826388888,
+        "bands": {
+          "250m 16 days NDVI": {
+            "valid_range": [
+              -2000,
+              10000
+            ],
+            "_FillValue": -3000,
+            "scale_factor": 10000.0,
+            "units": "NDVI"
+          },
+          "250m 16 days EVI": {
+            "valid_range": [
+              -2000,
+              10000
+            ],
+            "_FillValue": -3000,
+            "scale_factor": 10000.0,
+            "units": "EVI"
+          },
+          "250m 16 days VI Quality": {
+            "valid_range": [
+              0,
+              65534
+            ],
+            "_FillValue": 65535,
+            "units": "bit field"
+          },
+          "250m 16 days pixel reliability": {
+            "valid_range": [
+              0,
+              3
+            ],
+            "_FillValue": -1,
+            "units": "rank"
+          }
+        },
+        "identity_verified": true,
+        "georeferencing_verified": true
+      },
+      "native_window": [
+        849,
+        1415,
+        36,
+        38
+      ],
+      "affine_transform": [
+        231.65635826388888,
+        0.0,
+        1308626.7678327097,
+        0.0,
+        -231.65635826388888,
+        4120008.331723264,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "aoi_center_cells": 376,
+      "bands": {
+        "250m 16 days NDVI": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        },
+        "250m 16 days EVI": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        },
+        "250m 16 days VI Quality": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        },
+        "250m 16 days pixel reliability": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        }
+      },
+      "qa_mask_identical": true,
+      "decoded_array_bytes": 21888,
+      "acquisition_seconds": 0.5747
+    },
+    {
+      "product": "MOD13Q1.061",
+      "original_id": "MOD13Q1.A2021161.h19v05.061.2021178033053.hdf",
+      "date": "2021-06-10",
+      "validation": {
+        "format": "HDF4/HDF-EOS2",
+        "projection": "MODIS Sinusoidal R=6371007.181",
+        "dimensions": [
+          4800,
+          4800
+        ],
+        "pixel_size_m": 231.65635826388888,
+        "bands": {
+          "250m 16 days NDVI": {
+            "valid_range": [
+              -2000,
+              10000
+            ],
+            "_FillValue": -3000,
+            "scale_factor": 10000.0,
+            "units": "NDVI"
+          },
+          "250m 16 days EVI": {
+            "valid_range": [
+              -2000,
+              10000
+            ],
+            "_FillValue": -3000,
+            "scale_factor": 10000.0,
+            "units": "EVI"
+          },
+          "250m 16 days VI Quality": {
+            "valid_range": [
+              0,
+              65534
+            ],
+            "_FillValue": 65535,
+            "units": "bit field"
+          },
+          "250m 16 days pixel reliability": {
+            "valid_range": [
+              0,
+              3
+            ],
+            "_FillValue": -1,
+            "units": "rank"
+          }
+        },
+        "identity_verified": true,
+        "georeferencing_verified": true
+      },
+      "native_window": [
+        849,
+        1415,
+        36,
+        38
+      ],
+      "affine_transform": [
+        231.65635826388888,
+        0.0,
+        1308626.7678327097,
+        0.0,
+        -231.65635826388888,
+        4120008.331723264,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "aoi_center_cells": 376,
+      "bands": {
+        "250m 16 days NDVI": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        },
+        "250m 16 days EVI": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        },
+        "250m 16 days VI Quality": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        },
+        "250m 16 days pixel reliability": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        }
+      },
+      "qa_mask_identical": true,
+      "decoded_array_bytes": 21888,
+      "acquisition_seconds": 0.5487
+    },
+    {
+      "product": "MOD13Q1.061",
+      "original_id": "MOD13Q1.A2021177.h19v05.061.2021194030628.hdf",
+      "date": "2021-06-26",
+      "validation": {
+        "format": "HDF4/HDF-EOS2",
+        "projection": "MODIS Sinusoidal R=6371007.181",
+        "dimensions": [
+          4800,
+          4800
+        ],
+        "pixel_size_m": 231.65635826388888,
+        "bands": {
+          "250m 16 days NDVI": {
+            "valid_range": [
+              -2000,
+              10000
+            ],
+            "_FillValue": -3000,
+            "scale_factor": 10000.0,
+            "units": "NDVI"
+          },
+          "250m 16 days EVI": {
+            "valid_range": [
+              -2000,
+              10000
+            ],
+            "_FillValue": -3000,
+            "scale_factor": 10000.0,
+            "units": "EVI"
+          },
+          "250m 16 days VI Quality": {
+            "valid_range": [
+              0,
+              65534
+            ],
+            "_FillValue": 65535,
+            "units": "bit field"
+          },
+          "250m 16 days pixel reliability": {
+            "valid_range": [
+              0,
+              3
+            ],
+            "_FillValue": -1,
+            "units": "rank"
+          }
+        },
+        "identity_verified": true,
+        "georeferencing_verified": true
+      },
+      "native_window": [
+        849,
+        1415,
+        36,
+        38
+      ],
+      "affine_transform": [
+        231.65635826388888,
+        0.0,
+        1308626.7678327097,
+        0.0,
+        -231.65635826388888,
+        4120008.331723264,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "aoi_center_cells": 376,
+      "bands": {
+        "250m 16 days NDVI": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        },
+        "250m 16 days EVI": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        },
+        "250m 16 days VI Quality": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        },
+        "250m 16 days pixel reliability": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        }
+      },
+      "qa_mask_identical": true,
+      "decoded_array_bytes": 21888,
+      "acquisition_seconds": 0.585
+    },
+    {
+      "product": "MOD13Q1.061",
+      "original_id": "MOD13Q1.A2021193.h19v05.061.2021213234858.hdf",
+      "date": "2021-07-12",
+      "validation": {
+        "format": "HDF4/HDF-EOS2",
+        "projection": "MODIS Sinusoidal R=6371007.181",
+        "dimensions": [
+          4800,
+          4800
+        ],
+        "pixel_size_m": 231.65635826388888,
+        "bands": {
+          "250m 16 days NDVI": {
+            "valid_range": [
+              -2000,
+              10000
+            ],
+            "_FillValue": -3000,
+            "scale_factor": 10000.0,
+            "units": "NDVI"
+          },
+          "250m 16 days EVI": {
+            "valid_range": [
+              -2000,
+              10000
+            ],
+            "_FillValue": -3000,
+            "scale_factor": 10000.0,
+            "units": "EVI"
+          },
+          "250m 16 days VI Quality": {
+            "valid_range": [
+              0,
+              65534
+            ],
+            "_FillValue": 65535,
+            "units": "bit field"
+          },
+          "250m 16 days pixel reliability": {
+            "valid_range": [
+              0,
+              3
+            ],
+            "_FillValue": -1,
+            "units": "rank"
+          }
+        },
+        "identity_verified": true,
+        "georeferencing_verified": true
+      },
+      "native_window": [
+        849,
+        1415,
+        36,
+        38
+      ],
+      "affine_transform": [
+        231.65635826388888,
+        0.0,
+        1308626.7678327097,
+        0.0,
+        -231.65635826388888,
+        4120008.331723264,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "aoi_center_cells": 376,
+      "bands": {
+        "250m 16 days NDVI": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        },
+        "250m 16 days EVI": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        },
+        "250m 16 days VI Quality": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        },
+        "250m 16 days pixel reliability": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        }
+      },
+      "qa_mask_identical": true,
+      "decoded_array_bytes": 21888,
+      "acquisition_seconds": 1.1383
+    },
+    {
+      "product": "MOD13Q1.061",
+      "original_id": "MOD13Q1.A2021209.h19v05.061.2021226040622.hdf",
+      "date": "2021-07-28",
+      "validation": {
+        "format": "HDF4/HDF-EOS2",
+        "projection": "MODIS Sinusoidal R=6371007.181",
+        "dimensions": [
+          4800,
+          4800
+        ],
+        "pixel_size_m": 231.65635826388888,
+        "bands": {
+          "250m 16 days NDVI": {
+            "valid_range": [
+              -2000,
+              10000
+            ],
+            "_FillValue": -3000,
+            "scale_factor": 10000.0,
+            "units": "NDVI"
+          },
+          "250m 16 days EVI": {
+            "valid_range": [
+              -2000,
+              10000
+            ],
+            "_FillValue": -3000,
+            "scale_factor": 10000.0,
+            "units": "EVI"
+          },
+          "250m 16 days VI Quality": {
+            "valid_range": [
+              0,
+              65534
+            ],
+            "_FillValue": 65535,
+            "units": "bit field"
+          },
+          "250m 16 days pixel reliability": {
+            "valid_range": [
+              0,
+              3
+            ],
+            "_FillValue": -1,
+            "units": "rank"
+          }
+        },
+        "identity_verified": true,
+        "georeferencing_verified": true
+      },
+      "native_window": [
+        849,
+        1415,
+        36,
+        38
+      ],
+      "affine_transform": [
+        231.65635826388888,
+        0.0,
+        1308626.7678327097,
+        0.0,
+        -231.65635826388888,
+        4120008.331723264,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "aoi_center_cells": 376,
+      "bands": {
+        "250m 16 days NDVI": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        },
+        "250m 16 days EVI": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        },
+        "250m 16 days VI Quality": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        },
+        "250m 16 days pixel reliability": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        }
+      },
+      "qa_mask_identical": true,
+      "decoded_array_bytes": 21888,
+      "acquisition_seconds": 0.4891
+    },
+    {
+      "product": "MOD13Q1.061",
+      "original_id": "MOD13Q1.A2021225.h19v05.061.2026110160252.hdf",
+      "date": "2021-08-13",
+      "validation": {
+        "format": "HDF4/HDF-EOS2",
+        "projection": "MODIS Sinusoidal R=6371007.181",
+        "dimensions": [
+          4800,
+          4800
+        ],
+        "pixel_size_m": 231.65635826388888,
+        "bands": {
+          "250m 16 days NDVI": {
+            "valid_range": [
+              -2000,
+              10000
+            ],
+            "_FillValue": -3000,
+            "scale_factor": 10000.0,
+            "units": "NDVI"
+          },
+          "250m 16 days EVI": {
+            "valid_range": [
+              -2000,
+              10000
+            ],
+            "_FillValue": -3000,
+            "scale_factor": 10000.0,
+            "units": "EVI"
+          },
+          "250m 16 days VI Quality": {
+            "valid_range": [
+              0,
+              65534
+            ],
+            "_FillValue": 65535,
+            "units": "bit field"
+          },
+          "250m 16 days pixel reliability": {
+            "valid_range": [
+              0,
+              3
+            ],
+            "_FillValue": -1,
+            "units": "rank"
+          }
+        },
+        "identity_verified": true,
+        "georeferencing_verified": true
+      },
+      "native_window": [
+        849,
+        1415,
+        36,
+        38
+      ],
+      "affine_transform": [
+        231.65635826388888,
+        0.0,
+        1308626.7678327097,
+        0.0,
+        -231.65635826388888,
+        4120008.331723264,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "aoi_center_cells": 376,
+      "bands": {
+        "250m 16 days NDVI": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        },
+        "250m 16 days EVI": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        },
+        "250m 16 days VI Quality": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        },
+        "250m 16 days pixel reliability": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        }
+      },
+      "qa_mask_identical": true,
+      "decoded_array_bytes": 21888,
+      "acquisition_seconds": 1.1532
+    },
+    {
+      "product": "MOD13Q1.061",
+      "original_id": "MOD13Q1.A2021241.h19v05.061.2021258033505.hdf",
+      "date": "2021-08-29",
+      "validation": {
+        "format": "HDF4/HDF-EOS2",
+        "projection": "MODIS Sinusoidal R=6371007.181",
+        "dimensions": [
+          4800,
+          4800
+        ],
+        "pixel_size_m": 231.65635826388888,
+        "bands": {
+          "250m 16 days NDVI": {
+            "valid_range": [
+              -2000,
+              10000
+            ],
+            "_FillValue": -3000,
+            "scale_factor": 10000.0,
+            "units": "NDVI"
+          },
+          "250m 16 days EVI": {
+            "valid_range": [
+              -2000,
+              10000
+            ],
+            "_FillValue": -3000,
+            "scale_factor": 10000.0,
+            "units": "EVI"
+          },
+          "250m 16 days VI Quality": {
+            "valid_range": [
+              0,
+              65534
+            ],
+            "_FillValue": 65535,
+            "units": "bit field"
+          },
+          "250m 16 days pixel reliability": {
+            "valid_range": [
+              0,
+              3
+            ],
+            "_FillValue": -1,
+            "units": "rank"
+          }
+        },
+        "identity_verified": true,
+        "georeferencing_verified": true
+      },
+      "native_window": [
+        849,
+        1415,
+        36,
+        38
+      ],
+      "affine_transform": [
+        231.65635826388888,
+        0.0,
+        1308626.7678327097,
+        0.0,
+        -231.65635826388888,
+        4120008.331723264,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "aoi_center_cells": 376,
+      "bands": {
+        "250m 16 days NDVI": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        },
+        "250m 16 days EVI": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        },
+        "250m 16 days VI Quality": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        },
+        "250m 16 days pixel reliability": {
+          "different_cells": 0,
+          "different_aoi_cells": 0,
+          "max_absolute_difference": 0
+        }
+      },
+      "qa_mask_identical": true,
+      "decoded_array_bytes": 21888,
+      "acquisition_seconds": 0.4697
+    }
+  ],
+  "new_hdf_downloads": 0,
+  "new_appeears_submissions": 0,
+  "decoded_array_bytes": 1073424,
+  "exact_http_wire_bytes": null,
+  "explicit_api_operations": 102,
+  "operation_count_scope": "Explicit projection/pixel calls; SDK initialization, authentication and retries excluded",
+  "elapsed_seconds": 76.2831,
+  "process_peak_rss_kib": 179648,
+  "all_raw_bands_identical": true,
+  "all_aoi_raw_bands_identical": true,
+  "all_qa_masks_identical": true
+}

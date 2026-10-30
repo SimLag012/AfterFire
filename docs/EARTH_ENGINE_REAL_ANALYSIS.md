@@ -1,5 +1,11 @@
 # Earth Engine activation evidence — 2026-10-30
 
+**Historical setup checkpoint.** Subsequent owner-authorized activation now has
+valid project/ADC access, passed live probes and exact comparison against all
+51 retained reference HDFs. See [current live verification](EARTH_ENGINE_LIVE_VERIFICATION.md)
+and `earth-engine-live-verification.json` for the current measured outcome.
+The external-registration blocker below describes the earlier checkpoint.
+
 **Activation is incomplete: external project registration is required.** The owner
 confirmed that a Google Cloud project still needs registering. No project ID,
 Google ADC file or Earth Engine user credential was found in the audited host

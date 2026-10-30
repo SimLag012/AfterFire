@@ -11,7 +11,12 @@ The adapter uses date-specific images, a small projection metadata read and [com
 
 There are no exports or indiscriminate collection `getInfo()` calls. Projection metadata reads are bounded; API requests have a deadline and limited SDK retries. Request counts, bytes of decoded arrays and cache hits are exposed in provenance/progress. Exact wire-byte telemetry is not available through this SDK conversion and is not claimed.
 
-This environment has no configured project/credentials. Live Earth Engine acquisition and provider-to-HDF equivalence therefore remain **unverified**. The offline controlled adapter tests do not constitute live provider verification.
+The initial audit had no configured project/credentials. The owner subsequently
+supplied a registered project and private ADC; both server services now pass
+the live probe. Comparison against all 51 retained reference HDFs matches every
+raw band and QA mask. See [current live verification](EARTH_ENGINE_LIVE_VERIFICATION.md)
+for measurements and new-event limitations. Controlled adapter tests remain
+distinct from these real provider checks.
 
 See [live setup](EARTH_ENGINE_LIVE_SETUP.md) for the executable procedure and
 `compose.earth-engine.yaml` for an optional read-only ADC secret shared by backend

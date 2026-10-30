@@ -74,7 +74,7 @@ def subset_window(record, geometry):
 
 def cache_identity(record, geometry):
     win,affine=subset_window(record,geometry)
-    spec={'schema':1,'product':record['product'],'collection':'061','tile':record['tile'],
+    spec={'schema':2,'product':record['product'],'collection':'061','tile':record['tile'],
           'date':record['period']['start'],'window':[win.col_off,win.row_off,win.width,win.height],
           'bands':EE_BANDS[record['product']],'transform':list(affine),'qa':'native_raw','source_original_id':record.get('original_id','')}
     key=hashlib.sha256(json.dumps(spec,sort_keys=True).encode()).hexdigest()
@@ -112,9 +112,10 @@ class ApiSubsetProvider:
             if not settings.AFTERFIRE_EARTH_ENGINE_ENABLED or not settings.AFTERFIRE_EE_PROJECT_ID.strip():
                 raise ProviderUnavailable('provider_not_configured', configured_provider()[1] or 'Earth Engine is disabled')
             import ee
+            ee.Initialize(project=settings.AFTERFIRE_EE_PROJECT_ID)
+            # Recent SDKs require an initialized request session before setDeadline.
             ee.data.setDeadline(30000)
             ee.data.setMaxRetries(1)
-            ee.Initialize(project=settings.AFTERFIRE_EE_PROJECT_ID)
             self.ee=ee
         return self.ee
 
@@ -172,7 +173,12 @@ class ApiSubsetProvider:
                 'affineTransform':{'scaleX':affine.a,'shearX':0,'translateX':affine.c,'shearY':0,'scaleY':affine.e,'translateY':affine.f},'crsCode':'SR-ORG:6974'}})
             if data.nbytes>settings.AFTERFIRE_API_MAX_RESPONSE_MB*1024**2:
                 raise ProviderUnavailable('result_limit','Earth Engine result exceeds configured limit')
-            return {name:np.asarray(data[band]) for name,band in zip(LAYERS[product],EE_BANDS[product])},data.nbytes
+            arrays={name:np.asarray(data[band]) for name,band in zip(LAYERS[product],EE_BANDS[product])}
+            if product=='MCD64A1':
+                # EE masks uncertainty on observed unburned land; native HDF stores zero.
+                restore=(arrays['Burn Date']==0)&((arrays['QA']&3)==3)&(arrays['Burn Date Uncertainty']==255)
+                arrays['Burn Date Uncertainty']=np.where(restore,0,arrays['Burn Date Uncertainty'])
+            return arrays,data.nbytes
         except ProviderUnavailable:raise
         except ImportError:
             raise ProviderUnavailable('provider_not_configured','Install earthengine-api and configure application default credentials') from None

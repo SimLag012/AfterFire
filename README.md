@@ -354,5 +354,5 @@ Follow [live setup](docs/EARTH_ENGINE_LIVE_SETUP.md) for registration, minimal I
 private ADC authentication and the backend/worker secret overlay. Run
 `python -m app.providers.earth_engine_check --live` in both server runtimes to
 verify bounded real collection reads; `/api/v1/health` reports configuration
-without claiming live access. [Current activation evidence](docs/EARTH_ENGINE_REAL_ANALYSIS.md)
+without claiming live access. [Current activation evidence](docs/EARTH_ENGINE_LIVE_VERIFICATION.md)
 distinguishes verified software from the outstanding live scientific checks.

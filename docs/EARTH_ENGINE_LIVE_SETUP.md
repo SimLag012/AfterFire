@@ -1,5 +1,14 @@
 # Earth Engine live setup
 
+## Current live follow-up
+
+The owner subsequently supplied a registered project and private ADC. Both
+server services now authenticate and retrieve real native arrays. The live
+comparison covers all 51 retained reference HDFs with identical raw arrays and
+QA masks after the adapter corrections documented in
+[live verification](EARTH_ENGINE_LIVE_VERIFICATION.md). The earlier audit below
+records the state before registration; it is not the current activation status.
+
 The 2026-10-30 audit found no configured project, Earth Engine user credentials,
 or ADC file in either server container or the usual host locations. The owner
 confirmed that a project still needs registering. Live activation stops at this
@@ -93,6 +102,12 @@ counts describe received decoded arrays, not HTTP body/wire bytes. A passed prob
 does not establish HDF equivalence, sufficient baseline support or successful
 multiyear analysis. No mock is used by the probe command.
 
+Initialize the SDK before setting its deadline/retry policy: current releases
+require an existing request session. Adapter cache schema 2 restores the native
+HDF zero uncertainty only for observed, QA-mapped unburned MCD64A1 cells where
+Earth Engine masks that band. Burned/unknown missing uncertainty remains
+invalid. Earlier cache schemas are retained but not reused.
+
 For denied/unregistered projects verify registration, API and IAM in Google's
 console. For missing credentials check both runtime identities and the mount.
 For quota errors stop and retry later within the project's quota; do not add
@@ -107,6 +122,16 @@ Compare identical reference dates against the **retained local** NASA HDFs,
 including raw bands, QA, fill, native affine/grid, cell centers and final masks.
 Do not download fresh full HDFs for this check. Preserve the reference result SHA
 `351b026453f1912204b29822bba6d1fed0c4ac1628432c7701a135563edb7d00`.
+
+The bounded read-only comparator can be rerun using the existing HDF cache:
+
+```sh
+docker compose -f compose.yaml -f compose.earth-engine.yaml cp scripts/verify_earth_engine_equivalence.py backend:/tmp/verify_earth_engine_equivalence.py
+docker compose -f compose.yaml -f compose.earth-engine.yaml exec -T -e PYTHONPATH=/app backend python /tmp/verify_earth_engine_equivalence.py
+```
+
+It writes only `/tmp/afterfire-earth-engine-equivalence.json` in that container,
+prints measured results and exits nonzero if AOI values or QA masks differ.
 
 Then Analyze `event-30c4892d8b3bb714175bb3b2247b7f87`, retain missing-date
 warnings, verify publication, recovery/reburn support, desktop/mobile and the

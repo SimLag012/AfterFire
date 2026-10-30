@@ -1,5 +1,6 @@
 """Controlled setup/error tests. None establish live Google access or equivalence."""
 import json
+import sys
 from datetime import date
 from types import SimpleNamespace
 import numpy as np
@@ -9,6 +10,51 @@ from shapely.geometry import box
 from app.core.config import settings
 from app.providers import api_subsets as api
 from app.providers.earth_engine_check import check
+
+
+def test_sdk_initializes_before_configuring_request_session(monkeypatch):
+    monkeypatch.setattr(settings, 'AFTERFIRE_EARTH_ENGINE_ENABLED', True)
+    monkeypatch.setattr(settings, 'AFTERFIRE_EE_PROJECT_ID', 'fixture-project')
+    calls=[]
+    def initialize(**kwargs):
+        assert kwargs == {'project':'fixture-project'}
+        calls.append('initialize')
+    def deadline(value):
+        assert calls == ['initialize'] and value == 30000
+        calls.append('deadline')
+    def retries(value):
+        assert calls == ['initialize','deadline'] and value == 1
+        calls.append('retries')
+    sdk=SimpleNamespace(Initialize=initialize,data=SimpleNamespace(setDeadline=deadline,setMaxRetries=retries))
+    monkeypatch.setitem(sys.modules, 'ee', sdk)
+    client=api.ApiSubsetProvider()
+    assert client.initialize() is sdk and client.initialize() is sdk
+    assert calls == ['initialize','deadline','retries']
+
+
+def test_ee_masked_uncertainty_restores_only_observed_unburned_cells(monkeypatch):
+    from rasterio.windows import Window
+    from app.analysis.modis_science import tile_transform
+    affine=tile_transform('h19v05',2400)
+    data=np.zeros((1,4),dtype=[(b,'int32') for b in api.EE_BANDS['MCD64A1']])
+    data['BurnDate']=[0,223,0,0]
+    data['Uncertainty']=[255,255,255,4]
+    data['QA']=[3,3,0,3]
+    class Image:
+        def __init__(self,*args): pass
+        def select(self,*args): return self
+        def projection(self): return self
+        def getInfo(self): return {'crs':'SR-ORG:6974','transform':list(affine)[:6]}
+        def toInt32(self): return self
+        def unmask(self,*args): return self
+        @staticmethod
+        def cat(*args): return Image()
+    sdk=SimpleNamespace(Image=Image,data=SimpleNamespace(computePixels=lambda _:data))
+    client=api.ApiSubsetProvider()
+    monkeypatch.setattr(client,'initialize',lambda:sdk)
+    arrays,count=client._earth_engine({'product':'MCD64A1','tile':'h19v05','period':{'start':'2021-08-01'}},Window(0,0,4,1),affine)
+    assert arrays['Burn Date Uncertainty'].tolist()==[[0,255,255,4]]
+    assert count==data.nbytes
 
 
 def test_unconfigured_probe_never_initializes_sdk(monkeypatch):

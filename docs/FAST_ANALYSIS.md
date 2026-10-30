@@ -1,5 +1,11 @@
 # Fast analysis
 
+The live Earth Engine follow-up now verifies server authentication and exact
+native arrays against retained HDFs. New acquisitions remain explicit and
+bounded; an event newer than published products can have real pre-fire data
+while post-fire recovery remains unsupported. See
+[current live measurements](EARTH_ENGINE_LIVE_VERIFICATION.md).
+
 Analyze is an explicit POST. Opening an event performs read-only GETs, displays FIRMS immediately, and loads the latest saved scientific publication independently of NASA planning. Partial scientific results retain their original period and quality warnings. A FIRMS overview is never labelled a completed scientific analysis.
 
 Normal Analyze sends `retry=false`: exact scientific configuration and event geometry reuse the existing publication/job. The primary-key identity plus conflict recovery and conditional retry prevent concurrent clicks from duplicating jobs. New identities include the linked FIRMS geometry and observation dates; validated legacy publications retain their IDs. Changed science parameters or engine versions create separate results. Acquisition preference remains part of the request identity for compatibility with existing publications.

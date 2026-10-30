@@ -1,5 +1,10 @@
 # API-first satellite engine
 
+Live Earth Engine access and raw-array equivalence are now verified for the
+tested reference windows. Cache schema 2 preserves native MCD64A1 uncertainty
+on observed unburned land while retaining invalid values for unknown/burned
+masked cells. See [live verification](EARTH_ENGINE_LIVE_VERIFICATION.md).
+
 Normal `acquisition=auto` follows: persisted scientific result → verified existing sources/native subset cache → configured compatible Collection 6.1 API → explicit unavailable result. Existing scientific engines, QA, baseline, anomaly, recovery and reburn methods are unchanged. Cached HDFs may still be read locally; missing full tiles are never downloaded automatically by the default path.
 
 `app/providers/api_subsets.py` implements native windows and the optional Earth Engine adapter. Geometry is projected to the original MODIS sinusoidal sphere, expanded by one 500 m cell to preserve whole burned-cell selection, intersected with the catalog tile and snapped to integer native offsets. Required raw bands are fetched together. No spatial resampling or substitute aggregate statistic is introduced. The existing native GeoTIFF adapter then applies the same per-pixel science.
