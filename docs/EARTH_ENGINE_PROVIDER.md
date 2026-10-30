@@ -29,3 +29,10 @@ Missing-image/band failures can still yield explicit partial science when other
 valid observations satisfy the unchanged publication rules.
 
 Catalogs: [MOD13Q1](https://developers.google.com/earth-engine/datasets/catalog/MODIS_061_MOD13Q1), [MCD64A1](https://developers.google.com/earth-engine/datasets/catalog/MODIS_061_MCD64A1).
+
+## Phase 6.5
+
+See [measured performance and verification](ULTRA_FAST_ANALYSIS.md),
+[native batching](EARTH_ENGINE_BATCHING.md) and
+[on-demand visualization](LAZY_RASTER_GENERATION.md). Scientific formulas and QA
+thresholds are unchanged; native spatial consumers retain the original float32 contract.

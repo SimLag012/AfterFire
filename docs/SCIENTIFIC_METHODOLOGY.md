@@ -170,3 +170,10 @@ The fast-analysis changes preserve native cells, strict QA, scale factors, relia
 ## API-first acquisition update (2026-10-30)
 
 Normal Analyze now prefers persisted results and verified native sources/subsets, then configured compatible Collection 6.1 APIs. Missing data never triggers automatic full-tile HDF transfer or new AppEEARS submission. Scientific QA, baselines, anomalies, recovery and reburn calculations are unchanged. ORNL collection equivalence and live Earth Engine access remain explicit limitations. See [API-first engine](API_FIRST_SATELLITE_ENGINE.md), [provider equivalence](PROVIDER_EQUIVALENCE.md) and [verification](API_FIRST_VERIFICATION.md) for current behavior; older acquisition descriptions above are historical.
+
+## Phase 6.5
+
+See [measured performance and verification](ULTRA_FAST_ANALYSIS.md),
+[native batching](EARTH_ENGINE_BATCHING.md) and
+[on-demand visualization](LAZY_RASTER_GENERATION.md). Scientific formulas and QA
+thresholds are unchanged; native spatial consumers retain the original float32 contract.

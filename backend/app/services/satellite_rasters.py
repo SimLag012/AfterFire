@@ -12,6 +12,75 @@ from app.analysis.modis_science import SINUSOIDAL
 from app.services.satellite_cache import cache_root, ensure_space, file_lock, cache_bytes
 
 
+def defer_raster(job_id, name, index, checkpoint, values, affine):
+    """Protect the verified native checkpoint in results; no GeoTIFF/PNG rendering."""
+    folder=cache_root()/'results'/job_id
+    folder.mkdir(parents=True,exist_ok=True)
+    target=folder/(name+'.npz')
+    manifest=folder/(name+'.json')
+    with file_lock(cache_root()/'locks'/('defer-'+job_id+'-'+name+'.lock')):
+        if not target.exists():
+            temporary=target.with_suffix('.npz.part')
+            try:
+                os.link(checkpoint,temporary)
+                os.replace(temporary,target)
+            finally:
+                temporary.unlink(missing_ok=True)
+        checksum=hashlib.sha256(target.read_bytes()).hexdigest()
+        h,w=values.shape
+        transform,width,height=calculate_default_transform(SINUSOIDAL,'EPSG:4326',w,h,*array_bounds(h,w,affine))
+        west,south,east,north=array_bounds(height,width,transform)
+        asset={'name':name+'.png','raster':name+'.tif','bounds':[[south,west],[north,east]],
+            'legend':{'min':-0.2,'max':1.0,'units':'dimensionless','nodata':'transparent'},'state':'on_demand'}
+        saved={'schema':1,'index':index,'native':target.name,'checksum':checksum,'bytes':target.stat().st_size,
+            'qa':'strict_good_land','renderer':1,'asset':asset}
+        temporary=manifest.with_suffix('.json.part')
+        temporary.write_text(json.dumps(saved));os.replace(temporary,manifest)
+    return asset
+
+
+def deferred_native(job_id, name):
+    """Read only publication-owned, checksum-verified data; no provider call."""
+    if Path(name).name != name or Path(job_id).name != job_id:
+        raise ValueError('Invalid native asset identity')
+    folder=cache_root()/'results'/job_id
+    manifest=folder/(Path(name).stem+'.json')
+    saved=json.loads(manifest.read_text())
+    if saved['schema']!=1 or saved['native']!=Path(name).stem+'.npz' or saved['index'] not in ('NDVI','EVI'):
+        raise ValueError('Invalid deferred native manifest')
+    path=folder/saved['native']
+    from app.services.source_integrity import verify
+    if not verify(path,{'bytes':saved['bytes'],'checksum':saved['checksum']},{'native_manifest':saved}):
+        raise ValueError('Native scientific asset failed integrity verification')
+    with np.load(path,allow_pickle=False) as data:
+        from rasterio.transform import Affine
+        return data[saved['index']],Affine(*data['transform']),saved
+
+
+def materialize_raster(job_id, name):
+    values,affine,saved=deferred_native(job_id,name)
+    return write_raster(job_id,Path(name).stem,values,affine)
+
+
+def native_raster(job_id, name):
+    """Existing raster consumers can read deferred native data without visual assets."""
+    from contextlib import contextmanager
+    @contextmanager
+    def dataset():
+        path=cache_root()/'results'/job_id/name
+        if path.is_file():
+            with rasterio.open(path) as source:
+                yield source
+        else:
+            values,affine,_=deferred_native(job_id,name)
+            # Published scientific GeoTIFFs use float32; preserve that exact spatial contract.
+            values=values.astype('float32')
+            from types import SimpleNamespace
+            yield SimpleNamespace(transform=affine,crs=rasterio.crs.CRS.from_wkt(SINUSOIDAL.to_wkt()),
+                read=lambda band,masked=False:np.ma.masked_invalid(values) if masked else values)
+    return dataset()
+
+
 def _preview(values,affine):
     src = values.astype('float32')
     h,w = src.shape

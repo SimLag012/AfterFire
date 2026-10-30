@@ -1,0 +1,233 @@
+{
+  "event": "event-ed3e8c51a5e5d521edb70fefadd50287",
+  "job": "10721ee3c565c297d76117ddf730960e7213ed2bb01ec59f2138d37ac4c80b2b",
+  "status": {
+    "phase": "published",
+    "phase_label": "Partial results published",
+    "phase_progress_percent": 100,
+    "files_discovered": 72,
+    "files_total": 72,
+    "files_downloaded": 72,
+    "files_cached": 0,
+    "files_failed": 0,
+    "files_validated": 72,
+    "granules_processed": 72,
+    "granules_failed": 0,
+    "bytes_downloaded": 442912,
+    "bytes_cached": 0,
+    "bytes_total_estimated": 737824,
+    "result_bytes": 219817,
+    "download_speed_bytes_per_second": null,
+    "recent_download_speed_bytes_per_second": 45224.312130771366,
+    "estimated_remaining_seconds": 0,
+    "phase_estimated_remaining_seconds": null,
+    "started_at": "2026-10-30T22:30:51.586515+00:00",
+    "finished_at": "2026-10-30T22:31:49.086868+00:00",
+    "current_file": null,
+    "current_operation": "Results published",
+    "warning": "Analysis uses provisional hotspot buffer; no uniquely associated quality-screened burned cells; Time series contains missing/QA-rejected composites; no interpolation applied",
+    "completed_phases": [
+      "preparing",
+      "discovering",
+      "planning",
+      "api_subset",
+      "api_validate",
+      "subset_submit",
+      "burned_area",
+      "vegetation",
+      "baseline",
+      "indicators",
+      "publishing"
+    ],
+    "phases": [
+      {
+        "id": "preparing",
+        "label": "Preparing analysis"
+      },
+      {
+        "id": "discovering",
+        "label": "Discovering satellite data"
+      },
+      {
+        "id": "planning",
+        "label": "Checking source integrity cache and resource limits"
+      },
+      {
+        "id": "api_subset",
+        "label": "Acquiring bounded native API pixels"
+      },
+      {
+        "id": "api_validate",
+        "label": "Validating API subset grid and QA"
+      },
+      {
+        "id": "subset_submit",
+        "label": "Checking saved NASA extraction blocks"
+      },
+      {
+        "id": "remote_wait",
+        "label": "Waiting for remote NASA processing"
+      },
+      {
+        "id": "subset_download",
+        "label": "Downloading spatial subset"
+      },
+      {
+        "id": "subset_validate",
+        "label": "Validating native subset grid and QA"
+      },
+      {
+        "id": "burned_area",
+        "label": "Acquiring and processing burned area"
+      },
+      {
+        "id": "vegetation",
+        "label": "Acquiring and processing vegetation"
+      },
+      {
+        "id": "baseline",
+        "label": "Building seasonal baseline"
+      },
+      {
+        "id": "indicators",
+        "label": "Computing recovery indicators"
+      },
+      {
+        "id": "recovery_assessment",
+        "label": "Computing temporal anomalies and persistence"
+      },
+      {
+        "id": "spatial_indicators",
+        "label": "Computing native pixel baselines and persistent zones"
+      },
+      {
+        "id": "reburn_search",
+        "label": "Searching historical observations"
+      },
+      {
+        "id": "reburn_episodes",
+        "label": "Reconstructing native burn episodes"
+      },
+      {
+        "id": "reburn_vegetation",
+        "label": "Evaluating shared-cell vegetation and recovery gaps"
+      },
+      {
+        "id": "publishing",
+        "label": "Persisting and verifying results"
+      }
+    ],
+    "operation_started_at": "2026-10-30T22:31:49.061259+00:00",
+    "last_activity_at": "2026-10-30T22:31:49.061268+00:00",
+    "subset_files_downloaded": 0,
+    "subset_files_cached": 0,
+    "timings": {
+      "metadata_lock_wait_seconds": 0.000383,
+      "metadata_cache_read_seconds": 0.000129,
+      "cmr_http_seconds": 0.825678,
+      "cmr_enumeration_validation_seconds": 0.011957,
+      "prune_sources_calls": 1,
+      "prune_sources_wall_seconds": 3.765969,
+      "prune_sources_cpu_seconds": 3.707908,
+      "acquire_many_calls": 1,
+      "acquire_many_wall_seconds": 30.894643,
+      "acquire_many_cpu_seconds": 20.966963,
+      "cached_source_calls": 72,
+      "cached_source_wall_seconds": 0.015,
+      "cached_source_cpu_seconds": 0.015321,
+      "validate_source_calls": 72,
+      "validate_source_wall_seconds": 2.103984,
+      "validate_source_cpu_seconds": 2.06927,
+      "read_subset_calls": 72,
+      "read_subset_wall_seconds": 1.904909,
+      "read_subset_cpu_seconds": 1.872599,
+      "load_checkpoint_calls": 68,
+      "load_checkpoint_wall_seconds": 0.056255,
+      "load_checkpoint_cpu_seconds": 0.054276,
+      "save_checkpoint_calls": 68,
+      "save_checkpoint_wall_seconds": 10.245829,
+      "save_checkpoint_cpu_seconds": 9.935249,
+      "defer_raster_calls": 136,
+      "defer_raster_wall_seconds": 1.222981,
+      "defer_raster_cpu_seconds": 1.197804
+    },
+    "api_dates_total": 72,
+    "temporal_blocks_total": 5,
+    "temporal_blocks_completed": 5,
+    "provider": "Google Earth Engine",
+    "api_requests_completed": 8,
+    "remote_tasks_total": 0,
+    "phase_units_done": 68,
+    "phase_units_total": 68,
+    "worker_health": "partial",
+    "heartbeat_age_seconds": 1.1,
+    "last_activity_age_seconds": 1.1,
+    "job_id": "10721ee3c565c297d76117ddf730960e7213ed2bb01ec59f2138d37ac4c80b2b",
+    "status": "partial",
+    "progress_percent": 100,
+    "elapsed_seconds": 57.5,
+    "updated_at": "2026-10-30T22:31:49.071685+00:00",
+    "id": "10721ee3c565c297d76117ddf730960e7213ed2bb01ec59f2138d37ac4c80b2b",
+    "event_id": "event-ed3e8c51a5e5d521edb70fefadd50287",
+    "state": "partial",
+    "progress": 100,
+    "error": null,
+    "configuration": {
+      "pre_years": 2,
+      "post_years": 1,
+      "as_of": "2023-01-04",
+      "acquisition": "auto",
+      "buffer_m": 1000,
+      "burn_tolerance_days": 3,
+      "seasonal_window_days": 24,
+      "min_baseline_years": 2,
+      "min_valid_fraction": 0.5
+    },
+    "engine_version": "modis-recovery-3.0.0",
+    "attempts": 1,
+    "created_at": "2026-10-30T22:30:50.924431Z",
+    "result_available": true,
+    "appeears_submission_enabled": false,
+    "result_job_id": "10721ee3c565c297d76117ddf730960e7213ed2bb01ec59f2138d37ac4c80b2b"
+  },
+  "result_summary": {
+    "metrics": {
+      "NDVI": {
+        "pre_median": 0.4797,
+        "post_latest": 0.6354000000000001,
+        "post_date": "2022-12-19",
+        "seasonal_anomaly": 0.08904999999999996,
+        "status": "above baseline",
+        "pre_observations": 42,
+        "post_observations": 20
+      },
+      "EVI": {
+        "pre_median": 0.3083,
+        "post_latest": 0.3995,
+        "post_date": "2022-12-19",
+        "seasonal_anomaly": 0.08080000000000004,
+        "status": "above baseline",
+        "pre_observations": 42,
+        "post_observations": 20
+      }
+    },
+    "downloaded_bytes": 442912,
+    "elapsed_seconds": 57.47,
+    "result_states": {
+      "scientific_summary": "ready",
+      "native_spatial": "ready",
+      "visual_assets": "on_demand"
+    },
+    "burned_area_summary": {
+      "available_granules": 4,
+      "valid_mapping_pixels": 152,
+      "mapping_pixels": 152,
+      "valid_mapping_fraction": 1.0,
+      "observed_cell_area_km2": 0,
+      "unambiguous_cell_area_km2": 0,
+      "ambiguous_cells": 0
+    }
+  },
+  "sources": 72,
+  "repeat_same_job_and_attempts": true
+}

@@ -18,7 +18,7 @@ def job_identity(event_id,configuration):
     return hashlib.sha256(json.dumps({'event':event_id,'configuration':configuration,'engine':ENGINE_VERSION},sort_keys=True).encode()).hexdigest()
 
 
-async def enqueue(db,event_id,configuration,retry=False):
+async def enqueue(db,event_id,configuration,retry=False,create=True):
     config=configuration.model_dump(mode='json')
     identity=job_identity(event_id,config)
     job=await db.get(EventAnalysisJob,identity)
@@ -37,6 +37,8 @@ async def enqueue(db,event_id,configuration,retry=False):
         if job is None or (result and not unchanged):
             identity=geometry_id
             job=await db.get(EventAnalysisJob,identity)
+    if not create:
+        return job
     if job is None:
         job=EventAnalysisJob(id=identity,event_id=event_id,configuration=config,engine_version=ENGINE_VERSION,state='queued',progress=0)
         db.add(job)

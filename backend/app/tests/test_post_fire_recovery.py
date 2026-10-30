@@ -380,6 +380,9 @@ async def test_full_pipeline_with_controlled_native_rasters(tmp_path,monkeypatch
     assert post['valid_pixels']==16 and post['valid_fraction']==1
     assert post['baseline']==pytest.approx(0.6)
     assert post['anomaly']==pytest.approx(-0.4) and post['status']=='below seasonal baseline'
+    from app.services.satellite_rasters import materialize_raster
+    assert not (tmp_path/'results/fixture-job'/post['assets'][0]['name']).exists()
+    materialize_raster('fixture-job',post['assets'][0]['name'])
     assert (tmp_path/'results/fixture-job'/post['assets'][0]['name']).exists()
     incomplete=next(o for o in payload['observations'] if o['date']=='2021-07-28' and o['index']=='NDVI')
     assert incomplete['value'] is None and incomplete['quality']=='incomplete_period' and not incomplete['granule_ids']

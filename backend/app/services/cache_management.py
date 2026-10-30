@@ -115,6 +115,10 @@ async def reference_audit(db):
         for observation in row.payload.get('observations',[]):
             for asset in observation.get('assets',[]):
                 referenced.update(str(row.job_id+'/'+asset[k]) for k in ('name','raster') if k in asset)
+                if asset.get('state')=='on_demand':
+                    from pathlib import Path
+                    stem=Path(asset['name']).stem
+                    referenced.update(row.job_id+'/'+stem+suffix for suffix in ('.npz','.json'))
         scientific={'event':row.event_id,'configuration':row.payload.get('configuration'),
             'geometry':row.analysis_geometry,'engine_version':row.payload.get('engine_version'),
             'burned_area':row.payload.get('burned_area'),

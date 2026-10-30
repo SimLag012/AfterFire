@@ -29,3 +29,10 @@ Probe peak RSS is the whole diagnostic process high-water mark, not memory for
 a completed multiyear scientific job. Backend/worker memory snapshots are not
 used as a substitute for a scientific-processing benchmark. No new-event cache
 hit or new-event ETA is claimed.
+
+## Phase 6.5
+
+See [measured performance and verification](ULTRA_FAST_ANALYSIS.md),
+[native batching](EARTH_ENGINE_BATCHING.md) and
+[on-demand visualization](LAZY_RASTER_GENERATION.md). Scientific formulas and QA
+thresholds are unchanged; native spatial consumers retain the original float32 contract.

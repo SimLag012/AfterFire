@@ -184,11 +184,12 @@ def read_vegetation(payload, cutoff=None):
             name=asset['raster']
             if Path(name).name!=name: raise ValueError('Invalid published raster name')
             path=folder/name
-            if not path.is_file(): continue
+            if not path.is_file() and not path.with_suffix('.json').is_file(): continue
             tile=re.search(r'h\d{2}v\d{2}',name)
             if tile is None: raise ValueError('Published raster has no native tile')
             tile=tile[0]; base=tile_transform(tile,4800)
-            with rasterio.open(path) as src:
+            from app.services.satellite_rasters import native_raster
+            with native_raster(payload['job_id'],name) as src:
                 if src.crs!=rasterio.crs.CRS.from_wkt(SINUSOIDAL.to_wkt()):
                     raise ValueError('VI history requires native CRS')
                 col,row=~base*(src.transform.c,src.transform.f)

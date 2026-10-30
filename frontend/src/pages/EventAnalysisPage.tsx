@@ -33,6 +33,7 @@ export const EventAnalysisPage: React.FC = () => {
   const [divider,setDivider]=useState(50);
   const [acquisition,setAcquisition]=useState('auto');
   const [showBurned,setShowBurned]=useState(true);
+  const [historicalContext,setHistoricalContext]=useState(false);
   const [preYears,setPreYears]=useState(3);
   const [postYears,setPostYears]=useState(10);
   const [buffer,setBuffer]=useState(1000);
@@ -90,7 +91,7 @@ export const EventAnalysisPage: React.FC = () => {
     stream.onmessage=message=>{try{client.setQueryData(['preflight',eventId,planningId],JSON.parse(message.data));}catch{/* Polling recovers incomplete frames. */}};
     return ()=>stream.close();
   },[planningId,planning?.state,eventId,client]);
-  const start=useMutation({mutationFn:(retry:boolean)=>satelliteApi.start(eventId,configuration,retry),
+  const start=useMutation({mutationFn:(retry:boolean)=>satelliteApi.start(eventId,configuration,retry,historicalContext),
     onSuccess:data=>{client.setQueryData(['satellite-status',eventId],data);}});
   const event=detailQuery.data?.event;
   const observations=useMemo(()=>result?.observations.filter(o=>o.index===index) ?? [],[result,index]);
@@ -175,6 +176,11 @@ export const EventAnalysisPage: React.FC = () => {
           {start.isPending?'Requesting…':active?'Analysis in progress':result&&matchesCurrent?'Load saved analysis':'Analyze this territory'}
         </button>
         <p className="text-xs text-slate-400">Acquisition starts only on request. Regional MODIS tiles are shared in the persistent cache. Configured area, granule and disk limits apply.</p>
+        {start.data?.availability && <div role="status" className="space-y-2 text-sm text-amber-200">
+          <p>{start.data.availability.message}</p>
+          <p>Burned-area mapping: {start.data.availability.burned_area_mapping.replace(/_/g,' ')}. Recovery: {start.data.availability.recovery_analysis.replace(/_/g,' ')}.</p>
+          <label className="flex items-center gap-2"><input type="checkbox" checked={historicalContext} onChange={e=>setHistoricalContext(e.target.checked)}/> Request pre-fire vegetation context with Analyze</label>
+        </div>}
         {(job?.error||errorMessage) && <p role="alert" className="text-amber-300">{job?.error||errorMessage}</p>}
         {resultQuery.isError && <p role="alert">The published result could not be loaded. Refresh to retry.</p>}
         {result && result.job_id !== job?.id && <p className="text-sm text-amber-300">Showing the previous published result. Current job status is shown above.</p>}

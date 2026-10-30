@@ -24,7 +24,7 @@ from app.schemas.satellite_analysis import AnalysisConfiguration, ENGINE_VERSION
 from app.analysis.modis_science import (granule_identity, event_territory, area_km2, read_subset,
     burned_cells, vegetation_subset, seasonal_metrics, recurrence_state, expected_pixels, analysis_tiles, validate_source)
 from app.services.satellite_cache import cache_root, acquire, active_cache, prune_sources, cached_source
-from app.services.satellite_rasters import write_raster
+from app.services.satellite_rasters import defer_raster
 
 VI_LAYERS = ['250m 16 days NDVI','250m 16 days EVI','250m 16 days VI Quality','250m 16 days pixel reliability']
 BA_LAYERS = ['Burn Date','Burn Date Uncertainty','QA']
@@ -185,6 +185,21 @@ async def run_pipeline(job, progress):
     from app.providers.api_subsets import ApiSubsetProvider
     api_client = ApiSubsetProvider()
     with active_cache():
+        prefetched = {}
+        api_records = [r for r in all_records if plan['record_providers'].get(r['id']) == 'api']
+        if api_records:
+            await report('api_subset', 'Acquiring bounded temporal batches', provider='Google Earth Engine')
+            loop = asyncio.get_running_loop()
+            def batch_transfer(count):
+                nonlocal consumed_bytes
+                consumed_bytes += count
+                if consumed_bytes > budget:
+                    raise ValueError('Request network byte limit exceeded')
+                if hasattr(progress, 'transfer'):
+                    asyncio.run_coroutine_threadsafe(progress.transfer(count), loop).result()
+            async with DOWNLOAD_SEMAPHORE:
+                prefetched = await cache_io(api_client.acquire_many, api_records, provisional, budget-consumed_bytes, batch_transfer)
+            await report('api_validate', 'Temporal batches validated', api_requests_completed=api_client.requests)
         if settings.AFTERFIRE_APPEEARS_ENABLED and config.acquisition!='hdf':
             from app.providers.appeears import AppEEARS
             from app.analysis.modis_science import project, WGS84, SINUSOIDAL
@@ -225,7 +240,9 @@ async def run_pipeline(job, progress):
             cached = await cache_io(cached_source,record)
             remote = not cached and plan['record_providers'].get(record['id']) in ('appeears','saved_subset','subset_cache')
             remote = remote and (record['product'],int(record['period']['start'][:4])) not in fallback_blocks
-            if cached:
+            if record['id'] in prefetched:
+                path,meta,downloaded=prefetched[record['id']]
+            elif cached:
                 path,meta=cached
                 downloaded=0
             elif plan['record_providers'].get(record['id']) in ('api','api_cache'):
@@ -277,7 +294,7 @@ async def run_pipeline(job, progress):
             validation = await cache_io(validate_source,path,record)
             telemetry['files_validated'] += 1
             # Integration adapters may return measured bytes without invoking a streaming callback.
-            if consumed_bytes==attempt_start:
+            if consumed_bytes==attempt_start and record['id'] not in prefetched:
                 consumed_bytes+=downloaded
             if consumed_bytes>budget:
                 raise ValueError('Request network byte limit exceeded')
@@ -370,9 +387,10 @@ async def run_pipeline(job, progress):
                         group['valid']+=valid
                         group['total']+=total
                         group['granules'].append(record['id'])
-                        await report('vegetation', f'Generating QA-masked {index} map layer', record)
-                        candidate=next((a for a in reusable_assets.get((str(identity['date']),index),[]) if record['tile'] in a[0].name),None)
-                        asset=await cache_io(write_raster,job.id,f"{identity['date']}-{index}-{record['tile']}-{job.owner}",values,affine,candidate=candidate)
+                        await report('vegetation', f'Publishing native {index} data; map on demand', record)
+                        from app.services.vegetation_checkpoint import checkpoint_path
+                        asset=await cache_io(defer_raster,job.id,f"{identity['date']}-{index}-{record['tile']}-{job.owner}",
+                            index,checkpoint_path(record,analysis_area),values,affine)
                         group['assets'].append(asset)
                 telemetry['granules_processed'] += 1
             except Exception as exc:
@@ -441,6 +459,7 @@ async def run_pipeline(job, progress):
     if successful_burn_granules and ba_total and ba_valid/ba_total<config.min_valid_fraction:
         warnings.append('MCD64A1 has insufficient valid mapping coverage')
     payload={'event_id':event.id,'job_id':job.id,'engine_version':ENGINE_VERSION,'acquisition_plan':plan,
+        'result_states':{'scientific_summary':'ready','native_spatial':'ready','visual_assets':'on_demand'},
         'event_period':{'start':str(event.start_date),'end':str(event.end_date)},
         'period':{'start':str(before),'end':str(after)},'configuration':config.model_dump(mode='json'),
         'hotspot_footprint':mapping(footprint),'analysis_geometry':mapping(analysis_area),

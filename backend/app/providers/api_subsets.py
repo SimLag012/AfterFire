@@ -3,6 +3,8 @@ import hashlib
 import json
 import math
 import time
+from contextlib import ExitStack, nullcontext
+from functools import lru_cache
 from datetime import date, timedelta
 from pathlib import Path
 
@@ -56,8 +58,16 @@ def configured_provider():
 def subset_window(record, geometry):
     if record.get('version','061') != '061':
         raise ProviderUnavailable('scientific_incompatibility','Only Collection 061 is accepted')
-    size = GRID_DIMENSIONS[record['product']]
-    tile = tile_transform(record['tile'],size)
+    win,affine=_subset_window(record['product'], record['tile'], geometry)
+    if win.width*win.height>settings.AFTERFIRE_API_MAX_PIXELS:
+        raise ProviderUnavailable('result_limit','AOI exceeds bounded native pixel limit')
+    return win,affine
+
+
+@lru_cache(maxsize=256)
+def _subset_window(product, tile_name, geometry):
+    size = GRID_DIMENSIONS[product]
+    tile = tile_transform(tile_name,size)
     # Preserve whole burned cells used by the downstream vegetation selection.
     native = project(geometry,WGS84,SINUSOIDAL).buffer(500).envelope
     x0,y0=tile*(0,0); x1,y1=tile*(size,size)
@@ -74,7 +84,7 @@ def subset_window(record, geometry):
 
 def cache_identity(record, geometry):
     win,affine=subset_window(record,geometry)
-    spec={'schema':2,'product':record['product'],'collection':'061','tile':record['tile'],
+    spec={'schema':3,'product':record['product'],'collection':'061','tile':record['tile'],
           'date':record['period']['start'],'window':[win.col_off,win.row_off,win.width,win.height],
           'bands':EE_BANDS[record['product']],'transform':list(affine),'qa':'native_raw','source_original_id':record.get('original_id','')}
     key=hashlib.sha256(json.dumps(spec,sort_keys=True).encode()).hexdigest()
@@ -88,6 +98,7 @@ def cached_subset(record, geometry):
         info=json.loads(descriptor.read_text())
         if any(info.get(k)!=v for k,v in spec.items() if k!='bands'):return None
         if set(info['bands'])!=set(LAYERS[record['product']]):return None
+        if info.get('band_indices')!={name:i for i,name in enumerate(LAYERS[record['product']],1)}:return None
         if set(info['checksums'])!=set(info['bands'].values()):return None
         if any(Path(name).name!=name for name in info['checksums']):return None
         for name,checksum in info['checksums'].items():
@@ -105,6 +116,7 @@ class ApiSubsetProvider:
         self.requests=0
         self.started=time.monotonic()
         self.ee=None
+        self.grids={}
 
     def initialize(self):
         """Initialize lazily; credentials stay in the SDK, never in reports or logs."""
@@ -207,28 +219,156 @@ class ApiSubsetProvider:
                 raise ProviderUnavailable('network_budget','Native array response would exceed request budget')
             arrays,count=self._earth_engine(record,win,affine)
             transferred(count)
-            from app.services.satellite_cache import cache_bytes
-            with file_lock(cache_root()/'quota.lock'):
-                if cache_bytes(cache_root())+estimate+65536>settings.AFTERFIRE_ANALYSIS_CACHE_MAX_GB*1024**3:
-                    raise ProviderUnavailable('cache_quota','Subset cache quota exceeded')
-                ensure_space(cache_root(),estimate+65536); folder.mkdir(parents=True,exist_ok=True)
-                files={};checksums={}
-                for i,(name,values) in enumerate(arrays.items()):
-                    if values.shape!=(int(win.height),int(win.width)) or not np.issubdtype(values.dtype,np.integer):
-                        raise ProviderUnavailable('scientific_incompatibility','Unexpected provider raw array shape/type')
-                    filename=f'band-{i}.tif'; target=folder/filename; tmp=target.with_suffix('.part')
-                    if name in ('250m 16 days NDVI','250m 16 days EVI') and (np.any(values < -32768) or np.any(values > 32767)):
-                        raise ProviderUnavailable('scientific_incompatibility','VI raw values exceed native integer storage')
-                    dtype='int16' if name in ('250m 16 days NDVI','250m 16 days EVI') else 'int32'
-                    with rasterio.open(tmp,'w',driver='GTiff',height=values.shape[0],width=values.shape[1],count=1,
-                                       dtype=dtype,crs=SINUSOIDAL,transform=affine,compress='deflate') as dst:
-                        dst.write(values.astype(dtype),1)
-                    tmp.replace(target); files[name]=filename; checksums[filename]=hashlib.sha256(target.read_bytes()).hexdigest()
-                info={**spec,'provider':'Google Earth Engine','collection':'061','task_id':None,
-                      'geometry':mapping(geometry),'bands':files,'checksums':checksums,'api_requests':self.requests,
-                      'transfer_measurement':'decoded native NumPy payload bytes; HTTP wire overhead unavailable'}
-                tmp=folder/'source.part';tmp.write_text(json.dumps(info));tmp.replace(folder/'source.json')
-            cached=cached_subset(record,geometry)
-            if not cached:raise ProviderUnavailable('cache_integrity','Subset publication failed checksum validation')
-            path,meta=cached
-            return path,{**meta,'new_source_bytes':count,'api_requests':self.requests},count
+            return self._publish(record, geometry, arrays, count, win, affine, key, spec, folder)
+
+    def _publish(self, record, geometry, arrays, count, win, affine, key, spec, folder, reserved=False):
+        estimate = sum(a.nbytes for a in arrays.values())
+        with (nullcontext() if reserved else file_lock(cache_root()/'quota.lock')):
+            if not reserved:ensure_space(cache_root(),estimate+65536)
+            folder.mkdir(parents=True,exist_ok=True)
+            names=LAYERS[record['product']]
+            if set(arrays)!=set(names):
+                raise ProviderUnavailable('scientific_incompatibility','Unexpected provider band set')
+            for name,values in arrays.items():
+                if values.shape!=(int(win.height),int(win.width)) or not np.issubdtype(values.dtype,np.integer):
+                    raise ProviderUnavailable('scientific_incompatibility','Unexpected provider raw array shape/type')
+                if name in LAYERS['MOD13Q1'][:2] and (np.any(values < -32768) or np.any(values > 32767)):
+                    raise ProviderUnavailable('scientific_incompatibility','VI raw values exceed native integer storage')
+            target=folder/'native.tif';tmp=folder/'native.tif.part'
+            try:
+                with rasterio.open(tmp,'w',driver='GTiff',height=int(win.height),width=int(win.width),count=len(names),
+                                   dtype='int32',crs=SINUSOIDAL,transform=affine,compress='deflate') as dst:
+                    for i,name in enumerate(names,1):
+                        dst.write(arrays[name].astype('int32',copy=False),i)
+                        dst.set_band_description(i,name)
+                tmp.replace(target)
+            finally:
+                tmp.unlink(missing_ok=True)
+            files={name:target.name for name in names}
+            checksums={target.name:hashlib.sha256(target.read_bytes()).hexdigest()}
+            info={**spec,'provider':'Google Earth Engine','collection':'061','task_id':None,
+                  'geometry':mapping(geometry),'bands':files,'band_indices':{name:i for i,name in enumerate(names,1)},'checksums':checksums,'api_requests':self.requests,
+                  'transfer_measurement':'decoded native NumPy payload bytes; HTTP wire overhead unavailable'}
+            tmp=folder/'source.part';tmp.write_text(json.dumps(info));tmp.replace(folder/'source.json')
+        cached=cached_subset(record,geometry)
+        if not cached:raise ProviderUnavailable('cache_integrity','Subset publication failed checksum validation')
+        path,meta=cached
+        return path,{**meta,'new_source_bytes':count,'api_requests':self.requests},count
+
+    def _earth_engine_batch(self, records, win, affine):
+        """One bounded metadata RPC and one pixel RPC; validate every source grid."""
+        ee = self.initialize()
+        product = records[0]['product']
+        if any(r['product'] != product or r['tile'] != records[0]['tile'] for r in records):
+            raise ProviderUnavailable('scientific_incompatibility', 'Batch mixes native tiles/products')
+        images = [ee.Image(f"MODIS/061/{product}/{r['period']['start'].replace('-', '_')}") for r in records]
+        for r in records:
+            key=hashlib.sha256(json.dumps({'source':r['original_id'],'tile':r['tile'],'collection':'061'},sort_keys=True).encode()).hexdigest()
+            path=cache_root()/'native-grids'/(key+'.json')
+            try:
+                saved=json.loads(path.read_text())
+                if (saved['source']==r['original_id'] and saved['tile']==r['tile'] and saved['schema']==1
+                    and 0<=time.time()-saved['verified_at']<86400):
+                    self.grids[r['original_id']]=saved['projection']
+            except (OSError,ValueError,KeyError):pass
+        missing = {str(i): image.select(EE_BANDS[product][0]).projection()
+                   for i, (r, image) in enumerate(zip(records, images)) if r['original_id'] not in self.grids}
+        if missing:
+            self._request()
+            projections = ee.Dictionary(missing).getInfo()
+            if set(projections)!=set(missing):
+                raise ProviderUnavailable('scientific_incompatibility','Incomplete grid metadata response')
+            for index,projection in projections.items():
+                self.grids[records[int(index)]['original_id']]=projection
+        for r in records:
+            projection=self.grids[r['original_id']]
+            native = Affine(*projection['transform'])
+            reference = tile_transform(r['tile'], GRID_DIMENSIONS[product])
+            offset = ~reference * (native.c, native.f)
+            if (projection['crs'] != 'SR-ORG:6974' or
+                not np.allclose([native.a,native.e,native.b,native.d], [reference.a,reference.e,0,0], rtol=0,atol=1e-5) or
+                not np.allclose(offset,np.round(offset),rtol=0,atol=1e-5)):
+                raise ProviderUnavailable('scientific_incompatibility', 'Source native grid differs; resampling refused')
+            key=hashlib.sha256(json.dumps({'source':r['original_id'],'tile':r['tile'],'collection':'061'},sort_keys=True).encode()).hexdigest()
+            path=cache_root()/'native-grids'/(key+'.json')
+            if str(records.index(r)) in missing:
+                path.parent.mkdir(parents=True,exist_ok=True)
+                with file_lock(cache_root()/'locks'/('grid-'+key+'.lock')):
+                    saved={'schema':1,'product':product,'collection':'061','source':r['original_id'],'tile':r['tile'],
+                        'projection':projection,'grid_fingerprint':hashlib.sha256(json.dumps(projection,sort_keys=True).encode()).hexdigest(),
+                        'pixel_size_m':abs(native.a),'origin':[native.c,native.f],'verified_at':time.time(),'valid_seconds':86400}
+                    temporary=path.with_suffix('.part');temporary.write_text(json.dumps(saved));temporary.replace(path)
+        bands, names = [], []
+        for i, image in enumerate(images):
+            for band, fill in zip(EE_BANDS[product], FILL[product]):
+                name = f'd{i:03d}_{band}'
+                bands.append(image.select(band).toInt32().unmask(fill).rename(name))
+                names.append(name)
+        expected = int(win.width * win.height) * len(names) * 4
+        if len(names)>1024 or max(win.width,win.height)>32000 or expected>min(48*1024**2,settings.AFTERFIRE_API_MAX_RESPONSE_MB*1024**2):
+            raise ProviderUnavailable('result_limit', 'Batch exceeds computePixels/configured limits')
+        self._request()
+        data = ee.data.computePixels({'expression':ee.Image.cat(*bands),'fileFormat':'NUMPY_NDARRAY',
+            'bandIds':names,'grid':{'dimensions':{'width':int(win.width),'height':int(win.height)},
+            'affineTransform':{'scaleX':affine.a,'shearX':0,'translateX':affine.c,'shearY':0,'scaleY':affine.e,'translateY':affine.f},'crsCode':'SR-ORG:6974'}})
+        if data.nbytes != expected or set(data.dtype.names or ()) != set(names):
+            raise ProviderUnavailable('scientific_incompatibility', 'Unexpected batch bands/size')
+        output = []
+        for i in range(len(records)):
+            arrays = {name:np.asarray(data[f'd{i:03d}_{band}']) for name,band in zip(LAYERS[product],EE_BANDS[product])}
+            if product=='MCD64A1':
+                restore=(arrays['Burn Date']==0)&((arrays['QA']&3)==3)&(arrays['Burn Date Uncertainty']==255)
+                arrays['Burn Date Uncertainty']=np.where(restore,0,arrays['Burn Date Uncertainty'])
+            output.append(arrays)
+        return output, data.nbytes
+
+    def acquire_many(self, records, geometry, budget, transferred):
+        """Deduplicate across processes; publish each complete source through schema 2."""
+        unique={}
+        for record in records:
+            if record['id'] in unique and record != unique[record['id']]:
+                raise ProviderUnavailable('scientific_incompatibility','Conflicting source identities')
+            unique[record['id']]=record
+        records=list(unique.values())
+        if len(records)==1:
+            return {records[0]['id']:self.acquire(records[0],geometry,budget,transferred)}
+        groups={}
+        for r in records:
+            groups.setdefault((r['product'],r['tile']),[]).append(r)
+        acquired={}
+        for grouped in groups.values():
+            win,affine=subset_window(grouped[0],geometry)
+            per_date=int(win.width*win.height)*len(EE_BANDS[grouped[0]['product']])*4
+            capacity=min(settings.AFTERFIRE_EE_BATCH_DATES,1024//len(EE_BANDS[grouped[0]['product']]),
+                int(min(48*1024**2,settings.AFTERFIRE_API_MAX_RESPONSE_MB*1024**2))//max(1,per_date))
+            if capacity<1:raise ProviderUnavailable('result_limit','Single native date exceeds pixel response limit')
+            for offset in range(0,len(grouped),capacity):
+                batch=grouped[offset:offset+capacity]
+                with ExitStack() as locks:
+                    for key in sorted({cache_identity(r,geometry)[0] for r in batch}):
+                        locks.enter_context(file_lock(cache_root()/'locks'/('api-'+key+'.lock')))
+                    missing=[]
+                    for r in batch:
+                        hit=cached_subset(r,geometry)
+                        if hit:acquired[r['id']]=(*hit,0)
+                        else:missing.append(r)
+                    if not missing:continue
+                    if per_date*len(missing)>budget:raise ProviderUnavailable('network_budget','Batch exceeds remaining job budget')
+                    try:
+                        arrays,count=self._earth_engine_batch(missing,win,affine)
+                    except ProviderUnavailable:raise
+                    except Exception as exc:
+                        code=str(getattr(exc,'code',''))
+                        detail=str(exc).lower()
+                        reason=('rate_limited' if code=='429' or any(t in detail for t in ('quota','too many requests')) else
+                            'authentication' if code in ('401','403') or any(t in detail for t in ('credential','permission','authorize','not registered')) else
+                            'timeout' if any(t in detail for t in ('timeout','timed out','deadline')) else 'provider_error')
+                        raise ProviderUnavailable(reason,'Earth Engine batch failed; validated cache retained') from None
+                    transferred(count);budget-=count
+                    # One conservative reservation under the same cross-process lock for the whole batch.
+                    with file_lock(cache_root()/'quota.lock'):
+                        ensure_space(cache_root(),count+65536*len(missing))
+                        for r,values in zip(missing,arrays):
+                            key,spec=cache_identity(r,geometry)
+                            acquired[r['id']]=self._publish(r,geometry,values,per_date,win,affine,key,spec,cache_root()/'api-subsets'/key,reserved=True)
+        return acquired

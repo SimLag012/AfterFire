@@ -39,3 +39,10 @@ reports explicit SDK operation counts separately from decoded array bytes;
 neither includes initialization/retry traffic or exact HTTP wire overhead.
 
 Historical Reburn acquisition uses the same API-first plan and bounded native adapter. Existing HDF/AppEEARS/API sources are reused after integrity and AOI-coverage checks. The Reburn reader recognizes the API subset cache and holds the matching writer lock; it does not reinterpret API descriptors as AppEEARS manifests. Missing history has no implicit HDF or task fallback.
+
+## Phase 6.5
+
+See [measured performance and verification](ULTRA_FAST_ANALYSIS.md),
+[native batching](EARTH_ENGINE_BATCHING.md) and
+[on-demand visualization](LAZY_RASTER_GENERATION.md). Scientific formulas and QA
+thresholds are unchanged; native spatial consumers retain the original float32 contract.

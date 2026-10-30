@@ -1,6 +1,7 @@
 """Strict native-grid adapter. Reject shifted/reprojected grids rather than resample QA."""
 import json
 import math
+from contextlib import ExitStack
 from pathlib import Path
 import numpy as np
 import rasterio
@@ -20,9 +21,13 @@ def read_native(descriptor, identity, geometry, names):
     if native.is_empty: return None
     arrays={}
     reference=None
-    for name in names:
-        path=Path(descriptor).parent/info['bands'][name]
-        with rasterio.open(path) as src:
+    with ExitStack() as stack:
+        datasets={}
+        for name in names:
+            path=Path(descriptor).parent/info['bands'][name]
+            if path not in datasets:
+                datasets[path]=stack.enter_context(rasterio.open(path))
+            src=datasets[path]
             affine=src.transform
             if src.crs is None or src.crs != rasterio.crs.CRS.from_wkt(SINUSOIDAL.to_wkt()):
                 # rasterio CRS has no equals on older GDAL builds.
@@ -38,7 +43,7 @@ def read_native(descriptor, identity, geometry, names):
             if c1<=c0 or r1<=r0: return None
             win=Window(c0,r0,c1-c0,r1-r0)
             transform=window_transform(win,affine)
-            raw=src.read(1,window=win)
+            raw=src.read(info.get('band_indices',{}).get(name,1),window=win)
             if reference is not None and (raw.shape!=reference[0] or not np.allclose(tuple(transform),tuple(reference[1]),rtol=0,atol=1e-5)):
                 raise ValueError('AppEEARS bands have incompatible grids')
             reference=(raw.shape,transform)
@@ -50,6 +55,9 @@ def read_native(descriptor, identity, geometry, names):
                     if np.any(good & (np.abs(raw/0.0001-converted)>0.002)):
                         raise ValueError('AppEEARS VI precision is inconsistent with original integer quantization')
                     raw=converted.astype('int16')
+                elif (info.get('provider')=='Google Earth Engine' and info.get('schema')==3 and raw.dtype==np.dtype('int32')
+                      and np.all((raw>=-32768)&(raw<=32767))):
+                    raw=raw.astype('int16')
                 elif raw.dtype!=np.dtype('int16'):
                     raise ValueError('Unexpected AppEEARS VI data type')
             elif not np.issubdtype(raw.dtype,np.integer):

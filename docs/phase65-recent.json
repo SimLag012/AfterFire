@@ -1,0 +1,25 @@
+{
+  "seconds": 3.94231419100106,
+  "response": {
+    "state": "observations_pending",
+    "progress": 0,
+    "result_available": false,
+    "availability": {
+      "provider": "Google Earth Engine",
+      "collection": "061",
+      "checked_at": "2026-10-30T22:32:54.787455+00:00",
+      "ttl_seconds": 3600,
+      "latest_dates": {
+        "MOD13Q1": "2026-09-30",
+        "MCD64A1": "2026-08-01"
+      },
+      "first_post_fire_composite": null,
+      "event_overview": "available",
+      "pre_fire_context": "on_explicit_request",
+      "burned_area_mapping": "observations_pending",
+      "recovery_analysis": "observations_pending",
+      "message": "Post-fire satellite observations not yet available"
+    }
+  },
+  "original_http_sha256": "351b026453f1912204b29822bba6d1fed0c4ac1628432c7701a135563edb7d00"
+}

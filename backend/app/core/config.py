@@ -24,6 +24,7 @@ class Settings(BaseSettings):
     AFTERFIRE_API_MAX_REQUESTS: int = Field(default=1000, ge=1, le=5000)
     AFTERFIRE_API_MAX_RESPONSE_MB: int = Field(default=16, ge=1, le=32)
     AFTERFIRE_API_MAX_PIXELS: int = Field(default=100000, ge=1, le=1000000)
+    AFTERFIRE_EE_BATCH_DATES: int = Field(default=32, ge=1, le=32)
     EARTHDATA_USERNAME: str = ""
     EARTHDATA_PASSWORD: str = ""
     EARTHDATA_TOKEN: str = ""

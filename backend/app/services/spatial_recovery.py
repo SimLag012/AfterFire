@@ -50,11 +50,12 @@ def spatial_assessment(payload, parameters):
                 if not re.fullmatch(r'\d{4}-\d{2}-\d{2}-(NDVI|EVI)-h\d{2}v\d{2}-[0-9a-f]{32}\.tif',name):
                     raise ValueError('Unrecognized published raster name')
                 path=folder/name
-                if not path.is_file():
+                if not path.is_file() and not path.with_suffix('.json').is_file():
                     missing_assets.append(name); continue
                 tile=re.search(r'h\d{2}v\d{2}',name)[0]
                 base=tile_transform(tile,4800)
-                with rasterio.open(path) as src:
+                from app.services.satellite_rasters import native_raster
+                with native_raster(payload['job_id'],name) as src:
                     if src.crs != rasterio.crs.CRS.from_wkt(SINUSOIDAL.to_wkt()):
                         raise ValueError('Spatial assessment requires original sinusoidal CRS')
                     if not np.allclose([src.transform.a,src.transform.e,src.transform.b,src.transform.d],

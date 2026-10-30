@@ -26,3 +26,4 @@ class AnalysisConfiguration(BaseModel):
 class AnalysisRequest(BaseModel):
     configuration: AnalysisConfiguration = Field(default_factory=AnalysisConfiguration)
     retry: bool = False
+    historical_context: bool = False

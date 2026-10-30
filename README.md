@@ -356,3 +356,10 @@ private ADC authentication and the backend/worker secret overlay. Run
 verify bounded real collection reads; `/api/v1/health` reports configuration
 without claiming live access. [Current activation evidence](docs/EARTH_ENGINE_LIVE_VERIFICATION.md)
 distinguishes verified software from the outstanding live scientific checks.
+
+## Phase 6.5 performance
+
+[Measured optimization report](docs/ULTRA_FAST_ANALYSIS.md): native temporal batches,
+source-specific grid verification, multiband source storage, early product availability
+and maps on demand. The isolated real three-year analysis took 22.84 s; the measured
+persistent-worker trial took 57.47 s. These are measured cases, not latency guarantees.

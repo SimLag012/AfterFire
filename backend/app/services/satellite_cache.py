@@ -30,17 +30,26 @@ def file_lock(path):
 def cache_bytes(root):
     seen = set()
     total = 0
-    for path in root.rglob('*'):
-        if path.is_symlink() or not path.is_file():
-            continue
+    pending = [root]
+    while pending:
         try:
-            stat = path.stat()
+            with os.scandir(pending.pop()) as entries:
+                for entry in entries:
+                    if entry.is_symlink():
+                        continue
+                    if entry.is_dir(follow_symlinks=False):
+                        pending.append(entry.path)
+                    elif entry.is_file(follow_symlinks=False):
+                        try:
+                            stat = entry.stat(follow_symlinks=False)
+                        except FileNotFoundError:
+                            continue
+                        key = (stat.st_dev, stat.st_ino)
+                        if key not in seen:
+                            total += stat.st_size
+                            seen.add(key)
         except FileNotFoundError:
             continue
-        key = (stat.st_dev, stat.st_ino)
-        if key not in seen:
-            total += stat.st_size
-            seen.add(key)
     return total
 
 
@@ -159,7 +168,17 @@ def cached_source(record, locked=False):
 async def cache_io(function, *args, **kwargs):
     """Keep the caller's cache lease until native IO stops, including on cancellation."""
     import asyncio
-    task = asyncio.create_task(asyncio.to_thread(function, *args, **kwargs))
+    def measured():
+        from app.services.planning_metrics import record
+        wall, cpu = time.perf_counter(), time.thread_time()
+        try:
+            return function(*args, **kwargs)
+        finally:
+            stage = function.__name__
+            record(stage + '_calls', 1)
+            record(stage + '_wall_seconds', time.perf_counter() - wall)
+            record(stage + '_cpu_seconds', time.thread_time() - cpu)
+    task = asyncio.create_task(asyncio.to_thread(measured))
     try:
         return await asyncio.shield(task)
     except asyncio.CancelledError:

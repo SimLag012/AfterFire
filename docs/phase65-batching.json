@@ -1,0 +1,81 @@
+{
+  "scope": "Real read-only Earth Engine requests against all retained HDF reference windows; same dates/order. Provider-side caches are uncontrolled. Decoded bytes exclude wire overhead.",
+  "sources": 51,
+  "experiments": [
+    {
+      "batch_dates": 4,
+      "seconds": 21.6254,
+      "cpu_seconds": 1.2669,
+      "explicit_operations": 26,
+      "decoded_bytes": 1073424,
+      "batches": 13,
+      "batch_latencies_seconds": [
+        5.741291791997355,
+        2.0808603660007066,
+        1.471047313996678,
+        1.9229424910008674,
+        1.3139029720005055,
+        1.357110881999688,
+        1.2923137440011487,
+        1.4924996139998257,
+        1.3630022059987823,
+        0.7538828899996588,
+        1.409466959998099,
+        0.9162743339984445,
+        0.5076224500007811
+      ],
+      "every_raw_band_exact": true,
+      "peak_rss_kib": 160752
+    },
+    {
+      "batch_dates": 8,
+      "seconds": 13.3478,
+      "cpu_seconds": 0.5273,
+      "explicit_operations": 14,
+      "decoded_bytes": 1073424,
+      "batches": 7,
+      "batch_latencies_seconds": [
+        3.481816057999822,
+        2.2105561860007583,
+        1.1506213930006197,
+        2.2130359360016882,
+        2.2497057799992035,
+        1.5487778110000363,
+        0.4892042300016328
+      ],
+      "every_raw_band_exact": true,
+      "peak_rss_kib": 162800
+    },
+    {
+      "batch_dates": 16,
+      "seconds": 8.5169,
+      "cpu_seconds": 0.3351,
+      "explicit_operations": 8,
+      "decoded_bytes": 1073424,
+      "batches": 4,
+      "batch_latencies_seconds": [
+        4.848855461001222,
+        1.1868530900028418,
+        1.8463095580009394,
+        0.6312477569990733
+      ],
+      "every_raw_band_exact": true,
+      "peak_rss_kib": 165616
+    },
+    {
+      "batch_dates": 32,
+      "seconds": 6.4212,
+      "cpu_seconds": 0.5988,
+      "explicit_operations": 6,
+      "decoded_bytes": 1073424,
+      "batches": 3,
+      "batch_latencies_seconds": [
+        3.6888611020003736,
+        2.075981642003171,
+        0.6527764610000304
+      ],
+      "every_raw_band_exact": true,
+      "peak_rss_kib": 167408
+    }
+  ]
+}

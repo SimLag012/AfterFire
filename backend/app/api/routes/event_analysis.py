@@ -90,6 +90,21 @@ async def request_analysis(event_id:str,request:AnalysisRequest=AnalysisRequest(
         raise HTTPException(422,'Choose a real FIRMS event for satellite acquisition')
     if request.configuration.as_of<event.end_date:
         raise HTTPException(422,'as_of precedes event end')
+    saved=await enqueue(db,event_id,request.configuration,False,create=False)
+    if (not saved or request.retry) and not request.historical_context:
+        from app.providers.api_subsets import configured_provider, ProviderUnavailable
+        if configured_provider()[0]=='earth_engine':
+            from app.services.post_fire_pipeline import load_event
+            from app.analysis.modis_science import event_territory
+            from app.providers.satellite_availability import availability
+            _,detections=await load_event(event_id)
+            _,geometry=event_territory([(d.longitude,d.latitude) for d in detections],request.configuration.buffer_m)
+            try:
+                support=await availability(geometry.bounds,max(d.acq_date for d in detections),request.configuration.as_of)
+            except ProviderUnavailable as exc:
+                raise HTTPException(503,str(exc)) from None
+            if support['recovery_analysis']=='observations_pending':
+                return {'state':'observations_pending','progress':0,'result_available':False,'availability':support}
     job=await enqueue(db,event_id,request.configuration,request.retry)
     return await durable_status(db,job)
 
@@ -181,5 +196,11 @@ async def asset(event_id:str,job_id:str,filename:str,db:AsyncSession=Depends(get
         raise HTTPException(404,'Asset does not belong to this published result')
     path=cache_root()/'results'/job_id/filename
     if not path.is_file():
-        raise HTTPException(404,'Raster asset is unavailable; retry analysis')
+        from app.services.satellite_rasters import materialize_raster
+        from app.services.satellite_cache import cache_io, active_cache
+        try:
+            with active_cache():
+                await cache_io(materialize_raster,job_id,filename)
+        except (OSError,ValueError,KeyError):
+            raise HTTPException(404,'Raster native data is unavailable or failed validation') from None
     return FileResponse(path,media_type='image/png' if filename.endswith('.png') else 'image/tiff',headers={'Cache-Control':'no-cache'})

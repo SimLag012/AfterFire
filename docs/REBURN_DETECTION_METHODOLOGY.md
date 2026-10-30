@@ -41,3 +41,10 @@ A long connected temporal chain can merge otherwise separable disturbances; a sp
 - [NASA Earthdata](https://www.earthdata.nasa.gov/): access and product provenance.
 
 Official documentation was checked on 29 October 2026. The DOI initially returned 403 through the document fetcher; the NASA Earthdata search entry was accessible. Scientific thresholds above are application conventions, distinct from NASA product specifications.
+
+## Phase 6.5
+
+See [measured performance and verification](ULTRA_FAST_ANALYSIS.md),
+[native batching](EARTH_ENGINE_BATCHING.md) and
+[on-demand visualization](LAZY_RASTER_GENERATION.md). Scientific formulas and QA
+thresholds are unchanged; native spatial consumers retain the original float32 contract.
