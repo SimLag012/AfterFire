@@ -1,7 +1,12 @@
 # Environment & Secrets
 .env
+.env.*
+!.env.example
 .env.local
 *.env
+*.pem
+*.key
+*service-account*.json
 
 # Python
 __pycache__/
@@ -56,3 +61,13 @@ Thumbs.db
 *.swp
 *.swo
 
+
+# Downloaded NASA annual archives (provenance remains in import metadata)
+backend/data/firms-italy/
+
+# SQLite transaction sidecars
+*.db-journal
+*.db-wal
+*.db-shm
+
+backend/data/import-backups/
