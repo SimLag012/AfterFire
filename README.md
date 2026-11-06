@@ -1,3 +1,5 @@
+> **Clean environment active (2026-11-06):** PostgreSQL/PostGIS, API, worker and frontend are running; FIRMS and Earth Engine are authenticated. Open http://localhost:3000/explorer and select a bounded area. A new real Rhodes analysis and cache reuse passed. See [current verification and limits](docs/PHASE7_REAL_VERIFICATION.md). For future starts use `sudo bash scripts/start_clean_environment.sh --earth-engine` to retain the read-only ADC mounts.
+
 > **Clean API-first installation (2026-11-06):** The old database/cache were intentionally deleted; no recovery or bulk reimport is required. Start a dedicated empty PostgreSQL/PostGIS environment with `sudo bash scripts/start_clean_environment.sh`. FIRMS on-demand is the Explorer default; Earth Engine requires private ADC setup. See [setup and current verification status](docs/DOCKER_ENVIRONMENT_RECOVERY.md).
 
 # AfterFire — The Life of a Forest After Fire

@@ -17,6 +17,7 @@ started=time.perf_counter();job=post('/events/'+event+'/analysis',{'configuratio
 assert job.get('id'),job
 samples=[]
 while True:
+ if time.perf_counter()-started>600:raise TimeoutError('Analysis did not finish within the verification budget; inspect the durable job')
  status=get('/events/'+event+'/analysis/status?job_id='+job['id']);samples.append({k:status.get(k) for k in ('state','progress','phase','api_requests_completed','bytes_downloaded','elapsed_seconds')})
  if status['state'] in ('completed','partial','failed'):break
  time.sleep(1)
@@ -24,11 +25,16 @@ assert status['state']!='failed',status
 result=get('/events/'+event+'/analysis/result?job_id='+job['id'])
 start=time.perf_counter();repeat=post('/events/'+event+'/analysis',{'configuration':config});repeat_seconds=time.perf_counter()-start
 assert repeat['id']==job['id'] and repeat['attempts']==status['attempts']
-reference=get('/events/event-4a728489ea44ea85eab6a978870e0b06/analysis/result?job_id=2abc3a98d03cd3f51f4c4491f555813afb97fe474ee6b21b590cb0e56eee90b3')
-assert hashlib.sha256(json.dumps(reference,sort_keys=True).encode()).hexdigest()=='4c8c61e3c1a1227882fd6197ba0e54b537b6116123394b6ed251a8352d35597f'
+reference_preserved = None
+# A clean installation intentionally has no previous publication. Legacy integrity
+# verification remains opt-in and must never be inferred from an absent archive.
+if os.environ.get('VERIFY_LEGACY_PUBLICATION') == 'true':
+ reference=get('/events/event-4a728489ea44ea85eab6a978870e0b06/analysis/result?job_id=2abc3a98d03cd3f51f4c4491f555813afb97fe474ee6b21b590cb0e56eee90b3')
+ assert hashlib.sha256(json.dumps(reference,sort_keys=True).encode()).hexdigest()=='4c8c61e3c1a1227882fd6197ba0e54b537b6116123394b6ed251a8352d35597f'
+ reference_preserved = True
 report={'event':event,'job':job['id'],'source':'FIRMS_MODIS_SP','viewport_detections':len(rows['detections']),'candidate_detections':rows['events'][0]['detection_count'],
  'request_to_result_seconds':time.perf_counter()-started,'pipeline_seconds':result['elapsed_seconds'],'status':status['state'],
  'sources':len(result['granules']),'decoded_bytes':result['downloaded_bytes'],'explicit_operations':max((g.get('api_requests',0) for g in result['granules']),default=0),
  'metrics':result['metrics'],'burned_area_summary':result['burned_area_summary'],'burned_cells':len(result['burned_area']['features']),
- 'warnings':result['warnings'],'repeat_seconds':repeat_seconds,'repeat_same_job_and_attempt':True,'reference_preserved':True,'samples':samples}
-Path('docs/phase7-analysis'+('-Rhodes' if case=='Rhodes' else '')+'.json').write_text(json.dumps(report,indent=2)+'\n');print(json.dumps({k:v for k,v in report.items() if k!='samples'}))
+ 'warnings':result['warnings'],'repeat_seconds':repeat_seconds,'repeat_same_job_and_attempt':True,'reference_preserved':reference_preserved,'samples':samples}
+Path('/tmp/afterfire-clean-analysis-'+case+'.json').write_text(json.dumps(report,indent=2)+'\n');print(json.dumps({k:v for k,v in report.items() if k!='samples'}))

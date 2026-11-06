@@ -1,3 +1,5 @@
+> **Clean installation activated, 2026-11-06:** Google Cloud CLI 592.0.0 was installed in the user directory from the official archive, SHA-256 `16fda6058d66e4ec29e8575e2b6e19b0d03cea7b091e6730f7e8361209e6955f`. Owner browser login created ADC outside Git, mode 0600; the existing project was retained. The ignored .env path was updated and read-only mounts applied. Backend and worker both passed live MOD13Q1/MCD64A1 native-array probes (6240 decoded bytes, 12 explicit operations each; 13.5565 s and 12.6236 s). No HDF or AppEEARS tasks. Historical HDF equivalence was not rerun because those stores were intentionally removed.
+
 > **New OS, 2026-11-06:** The previous ADC was intentionally removed. Historical live results below do not verify this installation. Follow [clean setup](DOCKER_ENVIRONMENT_RECOVERY.md), preserve the existing Cloud project, and include `compose.clean.yaml` in every command for the new installation. Live science is pending fresh authentication.
 
 # Earth Engine live setup

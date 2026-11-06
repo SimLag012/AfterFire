@@ -88,3 +88,9 @@ Deployment used a source-only layer over the existing verified backend image
 `2306c2c35c72359b3d6210f0139072d68b2b1d43ee7a31bf91eabb391dd54beb`.
 No dependency upgrade was deployed. The normal dependency-resolving build was stopped.
 ADC remains mounted read-only only in server services; frontend receives no ADC.
+
+## Clean installation measurement — 2026-11-06
+
+A new Rhodes FIRMS candidate (30 observations; 2023-07-21–22) was analyzed over 2021–2024. Pipeline: **33.22 s**, request-to-result: **41.331 s**, 71 sources, **1,991,732 decoded bytes**, maximum cumulative explicit operation counter 8. Repeated Analyze returned the same job and attempt in **0.03174 s**. MOD13Q1 supplied both indices and strict QA; 134 MCD64A1 cells represent **28.76426222171076 km²**, not an official perimeter. The result is partial because rejected/missing composites remain gaps. QA/formulas were unchanged. A dated scientific map was materialized lazily and loaded in the browser.
+
+This trial misses 15–30 s. It is not a controlled comparison with the former 294.41 s event, and does not establish p95<60 s. Wire bytes were not measured. See [measurement](clean-api-first-analysis.json). Previous archive/reference checks are unavailable on this intentionally empty installation; the 186 SQLite and 186 PostgreSQL regressions include controlled scientific fixtures, not new NASA/HDF equivalence proof.

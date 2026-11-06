@@ -1,0 +1,49 @@
+{
+  "event": "global-d77c8ac8d89369a61e7125f78cfe2e76",
+  "job": "8553c3f357e4874558e228482e7298d4e162f7dbd7c27c8b1a793db059abf3fc",
+  "source": "FIRMS_MODIS_SP",
+  "viewport_detections": 30,
+  "candidate_detections": 30,
+  "request_to_result_seconds": 41.331443782999486,
+  "pipeline_seconds": 33.22,
+  "status": "partial",
+  "sources": 71,
+  "decoded_bytes": 1991732,
+  "explicit_operations": 8,
+  "metrics": {
+    "NDVI": {
+      "pre_median": 0.55715,
+      "post_latest": 0.29195000000000004,
+      "post_date": "2024-06-25",
+      "seasonal_anomaly": -0.20165,
+      "status": "below seasonal baseline",
+      "pre_observations": 41,
+      "post_observations": 22
+    },
+    "EVI": {
+      "pre_median": 0.29685000000000006,
+      "post_latest": 0.17265000000000003,
+      "post_date": "2024-06-25",
+      "seasonal_anomaly": -0.11195,
+      "status": "below seasonal baseline",
+      "pre_observations": 41,
+      "post_observations": 22
+    }
+  },
+  "burned_area_summary": {
+    "available_granules": 3,
+    "valid_mapping_pixels": 642,
+    "mapping_pixels": 642,
+    "valid_mapping_fraction": 1.0,
+    "observed_cell_area_km2": 28.76426222171076,
+    "unambiguous_cell_area_km2": 28.76426222171076,
+    "ambiguous_cells": 0
+  },
+  "burned_cells": 134,
+  "warnings": [
+    "Time series contains missing/QA-rejected composites; no interpolation applied"
+  ],
+  "repeat_seconds": 0.0317406710000796,
+  "repeat_same_job_and_attempt": true,
+  "reference_preserved": null
+}

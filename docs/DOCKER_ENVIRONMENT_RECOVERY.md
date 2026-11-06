@@ -1,3 +1,5 @@
+> **Verified follow-up, 2026-11-06:** The clean installation is running: four services, PostGIS 3.3, 22 public-schema tables. Both backend and worker passed real Earth Engine probes after private browser ADC login; FIRMS is connected. A new real Rhodes candidate produced persisted science and reused its cache. See [current verification](PHASE7_REAL_VERIFICATION.md). Earlier blocked-state notes below are historical.
+
 # Clean API-first environment recovery — 2026-11-06
 
 Status: Phase 0 incomplete. Do not pass the Phase 6.5/7 live-verification gates.

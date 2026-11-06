@@ -13,6 +13,6 @@ fi
 "${compose[@]}" config --quiet
 # A dedicated Compose project and explicit clean volume names isolate legacy storage.
 # Repeated starts reuse this installation; never remove its volumes.
-"${compose[@]}" up -d --build
+"${compose[@]}" up -d --build --wait --wait-timeout 180
 "${compose[@]}" ps
 docker system df
