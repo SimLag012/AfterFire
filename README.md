@@ -1,3 +1,5 @@
+> **Recovery audit (2026-11-06):** Docker/Compose are installed on the new Omarchy system, but the owner reports no Docker volumes and the configured ADC file is missing. Do not initialize empty production volumes as a replacement for the original archive. Follow [environment recovery](docs/DOCKER_ENVIRONMENT_RECOVERY.md) before startup. Historical live verification is not current-system verification.
+
 # AfterFire — The Life of a Forest After Fire
 *Understand the fire. Follow the recovery. Discover what happens next.*
 
