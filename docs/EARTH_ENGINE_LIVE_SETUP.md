@@ -1,3 +1,5 @@
+> **New OS, 2026-11-06:** The previous ADC was intentionally removed. Historical live results below do not verify this installation. Follow [clean setup](DOCKER_ENVIRONMENT_RECOVERY.md), preserve the existing Cloud project, and include `compose.clean.yaml` in every command for the new installation. Live science is pending fresh authentication.
+
 # Earth Engine live setup
 
 ## Current live follow-up

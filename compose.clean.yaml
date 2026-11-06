@@ -1,0 +1,28 @@
+# Dedicated clean installation; never aliases the legacy volumes.
+name: afterfire-clean
+services:
+  db:
+    ports: !override []
+  backend:
+    ports: !override
+      - "127.0.0.1:8000:8000"
+    environment: &clean-environment
+      DEMO_MODE: "false"
+      AFTERFIRE_API_FIRST: "true"
+      AFTERFIRE_EARTH_ENGINE_ENABLED: "true"
+      AFTERFIRE_SATELLITE_PROVIDER: earth_engine
+      AFTERFIRE_APPEEARS_SUBMISSION_ENABLED: "false"
+      AFTERFIRE_FULL_HDF_AUTO_DOWNLOAD: "false"
+      ALLOW_GLOBAL_DOWNLOADS: "false"
+      AFTERFIRE_ANALYSIS_CACHE_MAX_GB: "2"
+      AFTERFIRE_ANALYSIS_RESULTS_MAX_GB: "1"
+  analysis-worker:
+    environment: *clean-environment
+  frontend:
+    ports: !override
+      - "127.0.0.1:3000:3000"
+volumes:
+  pgdata:
+    name: afterfire-clean-pgdata
+  afterfire-cache:
+    name: afterfire-clean-cache

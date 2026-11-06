@@ -22,3 +22,12 @@ data/import-backups/
 *.db-journal
 *.db-wal
 *.db-shm
+
+# Satellite assets and private files never belong in build contexts.
+**/*.hdf
+**/*.h5
+**/*.tif
+**/*.tiff
+**/*.nc
+**/*.dump
+**/*.sql.gz

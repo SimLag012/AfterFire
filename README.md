@@ -1,4 +1,4 @@
-> **Recovery audit (2026-11-06):** Docker/Compose are installed on the new Omarchy system, but the owner reports no Docker volumes and the configured ADC file is missing. Do not initialize empty production volumes as a replacement for the original archive. Follow [environment recovery](docs/DOCKER_ENVIRONMENT_RECOVERY.md) before startup. Historical live verification is not current-system verification.
+> **Clean API-first installation (2026-11-06):** The old database/cache were intentionally deleted; no recovery or bulk reimport is required. Start a dedicated empty PostgreSQL/PostGIS environment with `sudo bash scripts/start_clean_environment.sh`. FIRMS on-demand is the Explorer default; Earth Engine requires private ADC setup. See [setup and current verification status](docs/DOCKER_ENVIRONMENT_RECOVERY.md).
 
 # AfterFire — The Life of a Forest After Fire
 *Understand the fire. Follow the recovery. Discover what happens next.*

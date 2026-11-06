@@ -4,3 +4,12 @@ dist
 .env.*
 .git
 npm-debug.log*
+
+# Satellite assets and private files never belong in build contexts.
+**/*.hdf
+**/*.h5
+**/*.tif
+**/*.tiff
+**/*.nc
+**/*.dump
+**/*.sql.gz

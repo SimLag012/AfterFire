@@ -76,15 +76,14 @@ export const ExplorerPage: React.FC = () => {
   const [drawingCircle, setDrawingCircle] = useState(false);
   const [viewport, setViewport] = useState(ITALY_BBOX);
   const [zoom, setZoom] = useState(5);
-  const [viewWest,viewSouth,viewEast,viewNorth]=viewport.split(',').map(Number);
-  const outsideItaly=viewWest>viewEast || viewEast<6.3 || viewWest>18.9 || viewNorth<35.3 || viewSouth>47.2;
-  const source=searchParams.get('source')==='online' ? 'online' : searchParams.get('source')==='archive' ? 'archive' : outsideItaly ? 'online' : 'archive';
+  const source=searchParams.get('source')==='archive' ? 'archive' : 'online';
 
   const centerLat = parseNumber(searchParams.get('lat'), NaN);
   const centerLon = parseNumber(searchParams.get('lon'), NaN);
   const radiusKm = parseNumber(searchParams.get('radius'), NaN);
-  const startDate = searchParams.get('start') ?? '';
-  const endDate = searchParams.get('end') ?? '';
+  const defaultRange = rangeForPeriod('7d');
+  const startDate = searchParams.get('start') ?? (source==='online' ? defaultRange.start : '');
+  const endDate = searchParams.get('end') ?? (source==='online' ? defaultRange.end : '');
   const requestedSensor = searchParams.get('sensor') ?? 'both';
   const sensor = ['MODIS', 'VIIRS', 'both'].includes(requestedSensor) ? requestedSensor : 'both';
   const scienceLayer=searchParams.get('science') || '';
@@ -294,7 +293,7 @@ export const ExplorerPage: React.FC = () => {
 
             <div className="space-y-3">
               <label className="block text-xs">Data source<select aria-label="Fire data source" value={source} onChange={e=>{updateParams({source:e.target.value});if(e.target.value==='online')choosePeriod('7d');}} className="mt-1 w-full rounded bg-dark-800 p-2"><option value="archive">Imported historical archive</option><option value="online">NASA FIRMS on demand</option></select></label>
-              <p className="text-[11px] text-slate-400">The local archive currently covers Italy. Other territories may not be imported; absence of records does not establish absence of fire. Online data needs a backend key and supports up to 7 days.</p>
+              <p className="text-[11px] text-slate-400">NASA FIRMS on demand supports bounded areas and up to 7 selected days, subject to provider coverage and a backend key. The optional local archive may be empty; missing records do not establish absence of fire.</p>
 
               <p className="text-xs font-semibold text-emerald-300">{hasCircle ? 'CIRCULAR AREA' : 'GLOBAL VIEWPORT'} — {selectedPeriod === 'all' ? 'ALL AVAILABLE DATES' : 'FILTERED DATES'}</p>
               <div className="flex items-center justify-between gap-2">
