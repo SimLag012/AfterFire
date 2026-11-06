@@ -6,10 +6,20 @@ import sys
 
 ASSIGNMENT = re.compile(rb"(?im)^[ \t]*(?:export[ \t]+)?[\"']?([A-Z][A-Z0-9_]*(?:KEY|TOKEN|PASSWORD|SECRET|USERNAME))[\"']?[ \t]*[:=][ \t]*[\"']?([^\s\"'#;,}]+)")
 TOKEN = re.compile(rb"(?:gh[pousr]_[A-Za-z0-9]{30,}|github_pat_[A-Za-z0-9_]{40,}|-----BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY-----)")
+PRIVATE_JSON = re.compile(rb'"(?:refresh_token|private_key|client_secret)"\s*:\s*"([^"\r\n]+)"')
 
 
 def findings(path, data):
     result = []
+    if re.search(r'(^|/)(?:application_default_credentials|[^/]*service-account[^/]*|[^/]*credentials[^/]*)\.json$', path, re.I):
+        result.append('private credential filename')
+    if re.search(r'\.(?:db|sqlite3?|hdf|h5|tiff?|nc|dump|sql\.gz)(?:-(?:wal|shm|journal))?$', path, re.I):
+        result.append('database or scientific payload must stay outside Git')
+    if len(data) > 10 * 1024**2:
+        result.append('file exceeds release limit of 10 MiB')
+    for match in PRIVATE_JSON.finditer(data):
+        if not match[1].lower().startswith((b'your_', b'example', b'placeholder', b'<', b'${')):
+            result.append('private JSON credential material')
     if TOKEN.search(data):
         result.append('credential or private key')
     for match in ASSIGNMENT.finditer(data):

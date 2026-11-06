@@ -2,8 +2,10 @@
 name: afterfire-clean
 services:
   db:
+    restart: unless-stopped
     ports: !override []
   backend:
+    restart: unless-stopped
     healthcheck:
       test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/openapi.json', timeout=3)"]
       interval: 5s
@@ -23,8 +25,10 @@ services:
       AFTERFIRE_ANALYSIS_CACHE_MAX_GB: "2"
       AFTERFIRE_ANALYSIS_RESULTS_MAX_GB: "1"
   analysis-worker:
+    restart: unless-stopped
     environment: *clean-environment
   frontend:
+    restart: unless-stopped
     depends_on:
       backend:
         condition: service_healthy

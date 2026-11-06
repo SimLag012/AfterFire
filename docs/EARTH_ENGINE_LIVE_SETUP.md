@@ -142,3 +142,8 @@ warnings, verify publication, recovery/reburn support, desktop/mobile and the
 second Analyze cache hit. Measure actual acquisition and processing separately.
 Until those checks pass, activation remains incomplete. Neither a configured
 project nor the historical 1.71 MiB estimate is evidence of real acquisition.
+
+
+## Release verification — 2026-11-06
+
+See [the current release record](FINAL_RELEASE_VERIFICATION.md) for newly executed multi-continent FIRMS/Earth Engine checks, strict QA and baseline evidence, cold/warm/cache measurements, 189 tests on each database, frontend verification and explicit remaining limits. Earlier measurements in this document remain historical; they were not newly revalidated against deleted HDF sources.

@@ -71,3 +71,12 @@ GitHub remote verification failed because HTTPS authentication is unavailable. N
 ## Verification performed for the clean configuration
 
 Compose validates with the clean overlay. Its resolved project, volumes, loopback ports and DEMO_MODE=false were checked without printing credentials. TypeScript compilation and Vite production build passed. FIRMS availability passed (12 products). All 186 SQLite regressions passed in 22.95 s in the isolated temporary test database, using Python 3.12.15. The sandbox blocked aiosqlite thread notifications even for SELECT 1; the same minimal query and suite passed outside the sandbox. Existing deprecation warnings remain (52,547); no test was changed. PostgreSQL tests, container schema/health, image/volume sizes, browser tests and live Earth Engine science remain pending. Localhost API/frontend were not reachable at the last check.
+
+
+## Verified release deployment — 2026-11-06
+
+The later [release record](FINAL_RELEASE_VERIFICATION.md) supersedes the earlier pending infrastructure checks above. Run `bash scripts/start_clean_environment.sh --earth-engine` from the repository, retaining the existing external ADC file configured by `.env`. Both overlays and secret mount are required for future recreations. The four clean services use `unless-stopped`; Docker is enabled at boot on the verified host. Repeating startup retains `afterfire-clean-pgdata` and `afterfire-clean-cache`. A manually stopped service remains stopped across daemon restarts until explicitly started. No reboot or destructive volume command was used.
+
+Owner-authorized Docker group membership is permanent and grants root-equivalent daemon access. Log in again for new processes to inherit it; the current session also has a temporary per-user socket ACL, which can disappear when the socket is recreated. Do not make the socket world-writable.
+
+If a provider fails, inspect redacted API/worker errors and retry; existing publications remain accessible. For a failed worker, restart only `analysis-worker` using the same three Compose files. Expired leases allow the worker to reclaim unfinished jobs with validated source reuse. Verify status/SSE before retrying a job. For database outages, restore database readiness first and allow the configured service restart policy to recover the processes. Never delete volumes, scientific results or production caches to improve a benchmark.

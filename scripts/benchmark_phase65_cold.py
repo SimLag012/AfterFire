@@ -5,6 +5,7 @@ import json
 import tempfile
 import time
 import resource
+import argparse
 from pathlib import Path
 from types import SimpleNamespace
 from datetime import timedelta
@@ -13,7 +14,11 @@ from app.services import post_fire_pipeline as pipeline
 from app.schemas.satellite_analysis import AnalysisConfiguration
 
 async def main():
-    event_id='event-4a728489ea44ea85eab6a978870e0b06'
+    parser=argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--event-id',default='event-4a728489ea44ea85eab6a978870e0b06')
+    parser.add_argument('--output',type=Path,default=Path('/tmp/phase65-cold.json'))
+    args=parser.parse_args()
+    event_id=args.event_id
     event,_=await pipeline.load_event(event_id)
     config=AnalysisConfiguration(pre_years=2,post_years=1,as_of=event.end_date+timedelta(days=366))
     root=tempfile.mkdtemp(prefix='afterfire-phase65-cold-')
@@ -37,8 +42,15 @@ async def main():
         'metrics':payload['metrics'],'burned_cells':len(payload['burned_area']['features']),'burned_area':payload['burned_area_summary'],
         'pngs_before_first_result':len(list(Path(root).rglob('*.png'))),'result_states':payload['result_states'],'warnings':payload['warnings'],
         'peak_rss_kib':resource.getrusage(resource.RUSAGE_SELF).ru_maxrss,'stages':stages}
-    Path('/tmp/phase65-cold.json').write_text(json.dumps(report,indent=2)+'\n')
-    Path('/tmp/phase65-cold-result.json').write_text(json.dumps(payload)+'\n')
+    # Re-run only in the same isolated cache; no production publication or eviction.
+    warm_start=time.perf_counter()
+    warm_payload,warm_state=await pipeline.run_pipeline(job,progress)
+    report['warm_seconds']=time.perf_counter()-warm_start
+    report['warm_state']=warm_state
+    report['warm_science_equal']=all(payload[key]==warm_payload[key] for key in ('observations','metrics','burned_area','burned_area_summary'))
+    assert report['warm_science_equal'], 'Warm replay changed scientific results'
+    args.output.write_text(json.dumps(report,indent=2)+'\n')
+    args.output.with_name(args.output.stem+'-result.json').write_text(json.dumps(payload)+'\n')
     print(json.dumps({k:v for k,v in report.items() if k!='stages'}),flush=True)
 
 if __name__=='__main__':asyncio.run(main())

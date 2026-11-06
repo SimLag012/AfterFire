@@ -48,3 +48,8 @@ See [measured performance and verification](ULTRA_FAST_ANALYSIS.md),
 [native batching](EARTH_ENGINE_BATCHING.md) and
 [on-demand visualization](LAZY_RASTER_GENERATION.md). Scientific formulas and QA
 thresholds are unchanged; native spatial consumers retain the original float32 contract.
+
+
+## Release verification — 2026-11-06
+
+See [the current release record](FINAL_RELEASE_VERIFICATION.md) for newly executed multi-continent FIRMS/Earth Engine checks, strict QA and baseline evidence, cold/warm/cache measurements, 189 tests on each database, frontend verification and explicit remaining limits. Earlier measurements in this document remain historical; they were not newly revalidated against deleted HDF sources.

@@ -38,6 +38,35 @@ async def test_product_dates_are_discovered_and_historical_requests_are_supporte
 
 
 @pytest.mark.asyncio
+async def test_mixed_satellite_coverage_reports_missing_dates(monkeypatch):
+    monkeypatch.setattr(service.GlobalFirms,'is_configured',classmethod(lambda cls:True))
+    async def status(cls):
+        return {'connected':True,'date_ranges':{
+            'MODIS_SP':{'min_date':'2020-01-01','max_date':'2020-01-03'},
+            'VIIRS_SNPP_SP':{'min_date':'2020-01-01','max_date':'2020-01-02'}},'message':'ok'}
+    monkeypatch.setattr(service.GlobalFirms,'check_connectivity',classmethod(status))
+    result=await service.coverage(date(2020,1,1),date(2020,1,3))
+    assert result['state']=='available' and result['complete'] is False
+    assert 'partially' in result['message']
+    assert {'family':'VIIRS_SNPP','date':'2020-01-03'} in result['missing_coverage']
+    modis=await service.coverage(date(2020,1,1),date(2020,1,3),'MODIS')
+    assert modis['complete'] is True and modis['missing_coverage']==[]
+
+
+@pytest.mark.asyncio
+async def test_malformed_provider_rows_are_explicit_not_empty_results(tmp_path,monkeypatch):
+    from app.providers.firms import FirmsProviderError
+    path=tmp_path/'invalid.csv'
+    path.write_text('latitude,longitude,acq_date,acq_time\ninvalid,28,2020-01-01,1200\n')
+    monkeypatch.setattr(FirmsProvider,'is_configured',classmethod(lambda cls:True))
+    async def cached(cls,*args):return path,0
+    monkeypatch.setattr(FirmsProvider,'_get_window_csv',classmethod(cached))
+    with pytest.raises(FirmsProviderError,match='query incomplete') as error:
+        await FirmsProvider.fetch_area_firms(27,35,29,37,source='MODIS_SP',start_date=date(2020,1,1),end_date=date(2020,1,1))
+    assert error.value.status_code==502
+
+
+@pytest.mark.asyncio
 async def test_snapshots_are_reproducible_and_only_selection_persists(tmp_path,monkeypatch):
     from app.db.database import init_db,AsyncSessionLocal
     from app.models.fire import FireDetection

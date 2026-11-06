@@ -40,11 +40,11 @@ export const DemoBanner: React.FC<DemoBannerProps> = ({
             REAL DATA ONLY
           </span>
           <span className="font-medium">
-            {detectionCount
+            {message || (detectionCount
               ? `Showing ${detectionCount.toLocaleString()} non-synthetic satellite observations.`
               : health?.firms_configured
                 ? 'Showing the local archive. Synthetic observations are excluded.'
-                : 'Showing the local archive. Configure FIRMS_MAP_KEY for recent API updates; historical CSV imports work separately.'}
+                : 'Showing the local archive. Configure FIRMS_MAP_KEY for recent API updates; historical CSV imports work separately.')}
           </span>
         </div>
         <Link to="/datasets" className="hover:text-emerald-100 underline flex items-center gap-1">

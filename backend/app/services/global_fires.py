@@ -95,12 +95,14 @@ async def coverage(start,end,sensor=None,satellite=None):
         raise HTTPException(422,'Satellite and sensor filters disagree')
     families=[family[satellite]] if satellite else ['MODIS'] if sensor=='MODIS' else ['VIIRS_SNPP','VIIRS_NOAA20','VIIRS_NOAA21'] if sensor=='VIIRS' else list(dict.fromkeys(family.values()))
     selections={}
+    missing_coverage=[]
     for item in families:
         cursor=start
         while cursor<=end:
             source=next((s for s in (item+'_SP',item+'_NRT') if s in status['date_ranges'] and
                 status['date_ranges'][s]['min_date']<=str(cursor)<=status['date_ranges'][s]['max_date']),None)
             if source:selections.setdefault(source,[]).append(cursor)
+            else:missing_coverage.append({'family':item,'date':str(cursor)})
             cursor+=timedelta(days=1)
     sources=[]
     for source,days in selections.items():
@@ -112,7 +114,10 @@ async def coverage(start,end,sensor=None,satellite=None):
     covered={str(start+timedelta(days=i)) for i in range((end-start).days+1)}
     supported={str(d) for days in selections.values() for d in days}
     ready=bool(sources) and covered<=supported
-    return {'state':'available' if ready else 'unsupported_period','message':'Live FIRMS data available' if ready else 'Selected period unsupported',
+    message=('Live FIRMS data partially available; some requested satellite dates are unsupported'
+             if missing_coverage else 'Live FIRMS data available') if ready else 'Selected period unsupported'
+    return {'state':'available' if ready else 'unsupported_period','message':message,
+        'complete':ready and not missing_coverage,'missing_coverage':missing_coverage,
         'sources':sources if ready else [],'date_ranges':status['date_ranges'],'version':VERSION,
         'checked_at':status.get('last_check'),'availability_ttl_seconds':300,
         'semantics':'Thermal detections and provisional candidates; no official perimeters or completeness guarantee'}

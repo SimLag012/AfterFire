@@ -18,3 +18,8 @@ Images occupy 2.696 GB shared total. Backend and worker tags each report 1.77 GB
 ## Remaining limits
 
 A single real historical event does not establish global coverage, p95 performance or exact equivalence to deleted historical HDFs. Recent-event, multi-continent, antimeridian live queries and full browser navigation matrix have not been rerun in this installation. Broad Explorer viewports require zooming within provider bounds; unsupported periods and provider outages must remain explicit. Some legacy navigation pages still point to preset area identifiers; use Explorer and selected candidate pages for the clean on-demand flow. Reburn was also verified for 2021-07-21–2024-07-22: 31.68 s, 314160 downloaded bytes, partial state, two observed episodes but zero repeated cells; classification insufficient_evidence. Ten months have incomplete cell mapping, no months entirely missing and no source failures. This does not establish recurrent burning or absence of recurrence. Full Phase 6.5/7 acceptance is not claimed.
+
+
+## Release verification — 2026-11-06
+
+See [the current release record](FINAL_RELEASE_VERIFICATION.md) for newly executed multi-continent FIRMS/Earth Engine checks, strict QA and baseline evidence, cold/warm/cache measurements, 189 tests on each database, frontend verification and explicit remaining limits. Earlier measurements in this document remain historical; they were not newly revalidated against deleted HDF sources.

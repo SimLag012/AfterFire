@@ -74,7 +74,8 @@ export const ExplorerPage: React.FC = () => {
   const colorMode=['sensor','date'].includes(searchParams.get('color') || '') ? searchParams.get('color') as 'sensor'|'date' : 'confidence';
   const opacity=Math.min(1,Math.max(0.1,parseNumber(searchParams.get('opacity'),0.85)));
   const [drawingCircle, setDrawingCircle] = useState(false);
-  const [viewport, setViewport] = useState(ITALY_BBOX);
+  // Request only the actual Leaflet viewport, including shared/saved views.
+  const [viewport, setViewport] = useState('');
   const [zoom, setZoom] = useState(5);
   const source=searchParams.get('source')==='archive' ? 'archive' : 'online';
 
@@ -90,11 +91,11 @@ export const ExplorerPage: React.FC = () => {
   const selectedEventId = searchParams.get('event') ?? undefined;
   const candidatePage = Math.max(1, Math.floor(parseNumber(searchParams.get('candidatePage'), 1)));
   const [focusedEvent, setFocusedEvent] = useState<import('../types').EventMapItem>();
-  const hasCircle = searchParams.has('lat') && searchParams.has('lon') && searchParams.has('radius')
+  const hasCircle = source==='archive' && searchParams.has('lat') && searchParams.has('lon') && searchParams.has('radius')
     && centerLat >= -90 && centerLat <= 90
     && centerLon >= -180 && centerLon <= 180
     && radiusKm > 0 && radiusKm <= 500;
-  const invalidCircle = ['lat', 'lon', 'radius'].some((key) => searchParams.has(key)) && !hasCircle;
+  const invalidCircle = source==='archive' && ['lat', 'lon', 'radius'].some((key) => searchParams.has(key)) && !hasCircle;
   const hasValidDates = isValidDate(startDate)
     && isValidDate(endDate)
     && (!startDate || !endDate || startDate <= endDate);
@@ -165,20 +166,20 @@ export const ExplorerPage: React.FC = () => {
       limit: PAGE_SIZE,
       offset: (candidatePage - 1) * PAGE_SIZE,
     }, signal),
-    enabled: source==='archive' && hasValidDates && !invalidCircle,
+    enabled: source==='archive' && hasValidViewport && hasValidDates && !invalidCircle,
   });
 
   const hotspotQuery=useQuery({
-    queryKey:['explorerHotspots',source,viewport,zoom,startDate,endDate,sensor,satellite,hasCircle,centerLat,centerLon,radiusKm,selectedPeriod],
+    queryKey:['explorerHotspots',source,viewport,startDate,endDate,sensor,satellite,hasCircle,hasCircle ? centerLat : null,hasCircle ? centerLon : null,hasCircle ? radiusKm : null,source==='archive' ? afterUtc : null],
     queryFn:({signal})=>apiClient.getExplorerHotspots({bbox:viewport,start_date:startDate || undefined,end_date:endDate || undefined,
       sensor:aggregateSensor,satellite,after_utc:source==='archive' ? afterUtc : undefined,...(source==='archive' ? circleParams : {})},source==='online',signal),
     enabled:fireVisible && hasValidViewport && hasValidDates && !invalidCircle && (source==='online' ? !!startDate && !!endDate : zoom>=10),
     retry:false, staleTime:60_000,
   });
-  const detections = (hotspotQuery.data?.detections ?? []).filter(d=>selectedPeriod!=='24h' || Date.parse(`${d.acq_date}T${d.acq_time.slice(0,2)}:${d.acq_time.slice(2,4)}:00Z`)>=Date.now()-86400000);
+  const detections = (hasValidDates && !invalidCircle ? hotspotQuery.data?.detections ?? [] : []).filter(d=>selectedPeriod!=='24h' || Date.parse(`${d.acq_date}T${d.acq_time.slice(0,2)}:${d.acq_time.slice(2,4)}:00Z`)>=Date.now()-86400000);
 
   const candidateData=source==='online' ? hotspotQuery.data && {...hotspotQuery.data,events:hotspotQuery.data.events ?? [],total_events:hotspotQuery.data.total_events ?? 0,total_detections:hotspotQuery.data.total_detections ?? 0,index_status:'ready'} : candidateQuery.data;
-  const eventCandidates = candidateData?.events ?? [];
+  const eventCandidates = hasValidDates && !invalidCircle ? candidateData?.events ?? [] : [];
   const scienceStatus=useQuery({queryKey:['satellite-status',selectedEventId],queryFn:({signal})=>satelliteApi.status(selectedEventId!,signal),enabled:!!selectedEventId && !!scienceLayer,retry:false});
   const scienceResult=useQuery({queryKey:['explorer-science',selectedEventId,scienceStatus.data?.result_job_id],queryFn:({signal})=>satelliteApi.result(selectedEventId!,scienceStatus.data?.result_job_id || undefined,signal),enabled:!!selectedEventId && !!scienceLayer && !!scienceStatus.data?.result_available,retry:false});
   const scienceObservations=scienceResult.data?.observations.filter(o=>o.index===scienceLayer && o.valid_pixels>0 && o.assets.length>0) || [];
@@ -246,7 +247,7 @@ export const ExplorerPage: React.FC = () => {
 
   return (
     <div className="afterfire-explorer flex flex-col bg-dark-950 text-slate-100">
-      <DemoBanner detectionCount={clusterQuery.data?.total_observations ?? 0} realDataOnly />
+      <DemoBanner detectionCount={source==='online' ? detections.length : clusterQuery.data?.total_observations ?? 0} message={source==='online' ? 'NASA FIRMS on demand · real thermal observations. Query status and coverage are shown on the map.' : undefined} realDataOnly />
       <div className="explorer-toolbar">
         <button aria-expanded={sidebarOpen} onClick={()=>setSidebarOpen(v=>!v)} className="explorer-tool">☰ <span>Fire data</span></button>
         <form onSubmit={findLocation} className="explorer-search">
@@ -292,7 +293,7 @@ export const ExplorerPage: React.FC = () => {
             </div>
 
             <div className="space-y-3">
-              <label className="block text-xs">Data source<select aria-label="Fire data source" value={source} onChange={e=>{updateParams({source:e.target.value});if(e.target.value==='online')choosePeriod('7d');}} className="mt-1 w-full rounded bg-dark-800 p-2"><option value="archive">Imported historical archive</option><option value="online">NASA FIRMS on demand</option></select></label>
+              <label className="block text-xs">Data source<select aria-label="Fire data source" value={source} onChange={e=>{const range=rangeForPeriod('7d');updateParams({source:e.target.value,...(e.target.value==='online' ? {period:'7d',start:range.start,end:range.end,lat:undefined,lon:undefined,radius:undefined} : {}),candidatePage:undefined,event:undefined});setDrawingCircle(false);}} className="mt-1 w-full rounded bg-dark-800 p-2"><option value="archive">Imported historical archive</option><option value="online">NASA FIRMS on demand</option></select></label>
               <p className="text-[11px] text-slate-400">NASA FIRMS on demand supports bounded areas and up to 7 selected days, subject to provider coverage and a backend key. The optional local archive may be empty; missing records do not establish absence of fire.</p>
 
               <p className="text-xs font-semibold text-emerald-300">{hasCircle ? 'CIRCULAR AREA' : 'GLOBAL VIEWPORT'} — {selectedPeriod === 'all' ? 'ALL AVAILABLE DATES' : 'FILTERED DATES'}</p>
@@ -310,7 +311,7 @@ export const ExplorerPage: React.FC = () => {
                   ['7d', 'Last 7 days'],
                   ['30d', 'Last 30 days'],
                   ['12mo', 'Last 12 months'],
-                ] as const).map(([period, label]) => (
+                ] as const).filter(([period])=>source==='archive' || (period!=='all' && period!=='30d' && period!=='12mo')).map(([period, label]) => (
                   <button
                     key={period}
                     type="button"
@@ -359,8 +360,8 @@ export const ExplorerPage: React.FC = () => {
                 </div>
               )}
               {!hasValidDates && <p role="alert" className="text-xs text-amber-300">Enter valid dates in chronological order.</p>}
-              {outsideArchive && <p role="status" className="text-xs text-amber-300">This date range is outside the currently imported real-observation archive.</p>}
-              {extendsBeyondArchive && !outsideArchive && <p role="status" className="text-xs text-amber-300">Part of this date range is outside the imported archive; absence of records is not evidence of no fire.</p>}
+              {source==='archive' && outsideArchive && <p role="status" className="text-xs text-amber-300">This date range is outside the currently imported real-observation archive.</p>}
+              {source==='archive' && extendsBeyondArchive && !outsideArchive && <p role="status" className="text-xs text-amber-300">Part of this date range is outside the imported archive; absence of records is not evidence of no fire.</p>}
 
               <label className="block text-xs text-slate-300">
                 Satellite instrument
@@ -380,6 +381,7 @@ export const ExplorerPage: React.FC = () => {
               </label>
 
               <label className="block text-xs">Satellite<select aria-label="Satellite platform" value={satellite || ''} onChange={e=>updateParams({satellite:e.target.value,sensor:undefined,candidatePage:undefined})} className="mt-1 w-full rounded bg-dark-800 p-2"><option value="">All available satellites</option>{['Terra','Aqua','S-NPP','NOAA-20','NOAA-21'].map(v=><option key={v} value={v}>{v.startsWith('Terra') || v==='Aqua' ? 'MODIS ' : 'VIIRS '}{v}</option>)}</select></label>
+              {source==='archive' && <>
               <div className="grid grid-cols-2 gap-2">
                 <label className="text-xs text-slate-300">
                   Center latitude
@@ -441,6 +443,8 @@ export const ExplorerPage: React.FC = () => {
                   Circle: {centerLat.toFixed(4)}, {centerLon.toFixed(4)} · radius {radiusKm.toFixed(1)} km
                 </p>
               )}
+              </>}
+              {source==='online' && <p className="text-xs text-slate-400">Area filter: visible map viewport. Zoom or pan to change the requested region.</p>}
             </div>
           </section>
 
@@ -570,12 +574,15 @@ export const ExplorerPage: React.FC = () => {
             {scienceObservations.length>0 && <label className="block py-2">Scientific composite (separate from FIRMS dates)<select aria-label="Scientific composite date" value={scienceObservation?.date || ''} onChange={e=>updateParams({scienceDate:e.target.value})} className="block bg-dark-800 p-1">{scienceObservations.map(o=><option key={o.date} value={o.date}>{o.date} → {o.period_end}</option>)}</select></label>}
 <p className="text-[11px] text-slate-400">Event-scoped products use persisted scientific results. Select a candidate to inspect availability; opening this panel acquires no satellite data.</p>
             {['Burned Area','NDVI','EVI','Vegetation Anomalies','Recovery Story','Recovery Intelligence','Persistent Zones','Reburn History','Recovery Gap'].map(name=><div key={name} className="border-t border-dark-700 py-2">{selectedEventId ? <Link to={`/events/${selectedEventId}?returnTo=${encodeURIComponent(returnTo)}${name.includes('Reburn') || name==='Recovery Gap' ? '&view=reburn' : ''}`}>{name} → Event analysis</Link> : <span className="text-slate-500">{name} · select event</span>}</div>)}
-            <p className="text-[11px] text-emerald-200">AOI / Search Circle: {hasCircle ? 'visible' : 'draw a circle in Fire data'}</p>
+            <p className="text-[11px] text-emerald-200">Area filter: {source==='online' ? 'visible viewport' : hasCircle ? 'search circle' : 'draw a circle in Fire data'}</p>
           </div>}
-          {hotspotQuery.isError && <div role="alert" className="explorer-map-status">{(hotspotQuery.error as {response?:{data?:{detail?:string}}}).response?.data?.detail || 'Hotspot request unavailable'}</div>}
-          {hotspotQuery.data?.truncated && <div role="status" className="explorer-map-status">Showing 2,000 observations. Narrow the viewport or date range; aggregates retain the archive overview.</div>}
-          {source==='online' && hotspotQuery.data?.coverage && <p role="status" className="explorer-map-status">{hotspotQuery.data.coverage.message} · provisional hotspot candidates</p>}
-          {source==='online' && !hotspotQuery.isError && <div role="status" className="explorer-map-status">{hotspotQuery.isFetching ? 'Requesting bounded NASA observations…' : `${detections.length} online observations in this viewport · not a completeness guarantee`}</div>}
+          <div className="explorer-map-status" aria-label="Observation query status">
+          {hotspotQuery.isError && <div role="alert" className="explorer-status-message">{(hotspotQuery.error as {response?:{data?:{detail?:string}}}).response?.data?.detail || 'Hotspot request unavailable'} <button className="underline" onClick={()=>hotspotQuery.refetch()}>Retry observations</button></div>}
+          {hotspotQuery.data?.truncated && <div role="status" className="explorer-status-message">Results are incomplete. Narrow the viewport or date range to retrieve all candidates.</div>}
+          {source==='online' && hotspotQuery.data?.coverage && <p role="status" className="explorer-status-message">{hotspotQuery.data.coverage.message} · provisional hotspot candidates</p>}
+          {source==='online' && fireVisible && hasValidDates && hotspotQuery.data && !hotspotQuery.isError && <div role="status" className="explorer-status-message">{hotspotQuery.isFetching ? 'Requesting bounded NASA observations…' : `${detections.length} online observations in this viewport · not a completeness guarantee`}</div>}
+
+          </div>
 
           <LeafletMap
             key={viewGeneration}

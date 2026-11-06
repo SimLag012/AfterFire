@@ -1,4 +1,6 @@
-> **Clean environment active (2026-11-06):** PostgreSQL/PostGIS, API, worker and frontend are running; FIRMS and Earth Engine are authenticated. Open http://localhost:3000/explorer and select a bounded area. A new real Rhodes analysis and cache reuse passed. See [current verification and limits](docs/PHASE7_REAL_VERIFICATION.md). For future starts use `sudo bash scripts/start_clean_environment.sh --earth-engine` to retain the read-only ADC mounts.
+> **Release verification (2026-11-06):** 189 SQLite + 189 PostgreSQL regressions pass. New real Jasper and Kangaroo Island worker publications and isolated Rhodes cold/warm analysis verified. [Measured results and remaining release limits](docs/FINAL_RELEASE_VERIFICATION.md) · [Global architecture](docs/GLOBAL_ON_DEMAND_ARCHITECTURE.md).
+
+> **Clean environment active (2026-11-06):** PostgreSQL/PostGIS, API, worker and frontend are running; FIRMS and Earth Engine are authenticated. Open http://localhost:3000/explorer and select a bounded area. A new real Rhodes analysis and cache reuse passed. See [current verification and limits](docs/PHASE7_REAL_VERIFICATION.md). For future starts use `bash scripts/start_clean_environment.sh --earth-engine` to retain the read-only ADC mounts.
 
 > **Clean API-first installation (2026-11-06):** The old database/cache were intentionally deleted; no recovery or bulk reimport is required. Start a dedicated empty PostgreSQL/PostGIS environment with `sudo bash scripts/start_clean_environment.sh`. FIRMS on-demand is the Explorer default; Earth Engine requires private ADC setup. See [setup and current verification status](docs/DOCKER_ENVIRONMENT_RECOVERY.md).
 
@@ -9,7 +11,7 @@
 [![FastAPI](https://img.shields.io/badge/Backend-FastAPI%20%2F%20Python-009688.svg)](https://fastapi.tiangolo.com/)
 [![React 18](https://img.shields.io/badge/Frontend-React%2018%20%2F%20TypeScript-61dafb.svg)](https://react.dev/)
 [![TailwindCSS](https://img.shields.io/badge/Style-Dark%20Cinematic%20Tailwind-38bdf8.svg)](https://tailwindcss.com/)
-[![Tests](https://img.shields.io/badge/Tests-Pytest%20Passing%20(9%2F9)-brightgreen.svg)]()
+[![Tests](https://img.shields.io/badge/Tests-Pytest%20189%20SQLite%20%2B%20189%20PostGIS-brightgreen.svg)]()
 
 An end-to-end scientific web application submitted for the **NASA Space Apps Challenge 2026**:
 **Harmonization of MODIS and VIIRS Hot Spots** with post-fire ecological recovery extension.
@@ -23,7 +25,7 @@ AfterFire reconstructs the complete environmental story of a territory before, d
 Rather than being another static map of fire markers, AfterFire addresses concrete scientific questions:
 - **Where and when was combustion activity detected?** Harmonizing NASA MODIS (1km) and VIIRS (375m) observations.
 - **What physical surface was burned?** Differentiating active point thermal hotspots from MODIS MCD64A1 500m pixel-mapped burned areas.
-- **What was the pre-fire baseline?** Calculating observed pre-fire mean vegetative reference values from MODIS MOD13Q1 250m 16-day composites.
+- **What was the pre-fire baseline?** Calculating observed pre-fire seasonal median reference values from MODIS MOD13Q1 250m 16-day composites.
 - **How did canopy greenness evolve after the event?** Quantifying drop magnitude, trajectory recovery quotients, and QA masking.
 - **Are there areas exhibiting delayed or truncated recovery?** Detecting recurring wildfires and compound disturbances before canopy restoration.
 - **How reliable are these conclusions?** Enforcing strict traceability, zero hallucinated figures, explicit remote-sensing limitations, and transparent demo vs live tagging.

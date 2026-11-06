@@ -353,7 +353,10 @@ class FirmsProvider:
                             "FIRMS returned an unrecognized CSV response for the requested region and dates."
                         )
                     for row in reader:
-                        parsed = cls.parse_csv_record(row, dataset_name=f"FIRMS_{source}")
+                        try:
+                            parsed = cls.parse_csv_record(row, dataset_name=f"FIRMS_{source}")
+                        except (ValueError, TypeError, AttributeError):
+                            raise FirmsProviderError('NASA FIRMS returned invalid detection metadata; query incomplete.', 502) from None
                         if (
                             window_start <= parsed["acq_date"] <= window_end
                             and min_lon <= parsed["longitude"] <= max_lon

@@ -73,3 +73,14 @@ backend/data/firms-italy/
 *.db-shm
 
 backend/data/import-backups/
+
+# Local build metadata, backup configurations and scientific payloads
+*.tsbuildinfo
+compose*.bak.*
+*.hdf
+*.h5
+*.tif
+*.tiff
+*.nc
+*.dump
+*.sql.gz
