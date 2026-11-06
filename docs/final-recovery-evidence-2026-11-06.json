@@ -1,0 +1,1540 @@
+{
+  "checked_at": "2026-11-06",
+  "initial_commit": "5d117cd",
+  "checkpoint": "b152975",
+  "tests": {
+    "sqlite": {
+      "passed": 192,
+      "seconds": 19.03
+    },
+    "postgresql_postgis": {
+      "passed": 192,
+      "seconds": 21.96
+    }
+  },
+  "science": {
+    "checked_at": "2026-11-06T12:21:54.038936+00:00",
+    "scope": "Existing real publications and retained raw bounded EE arrays; no acquisition",
+    "cases": [
+      {
+        "event": "global-d77c8ac8d89369a61e7125f78cfe2e76",
+        "job": "8553c3f357e4874558e228482e7298d4e162f7dbd7c27c8b1a793db059abf3fc",
+        "period": {
+          "start": "2021-07-21",
+          "end": "2024-07-22"
+        },
+        "event_period": {
+          "start": "2023-07-21",
+          "end": "2023-07-22"
+        },
+        "valid_observations": {
+          "NDVI": 64,
+          "EVI": 64
+        },
+        "baseline_points": {
+          "NDVI": 41,
+          "EVI": 41
+        },
+        "burned_cells_checked": 134,
+        "burned_area_summary": {
+          "available_granules": 3,
+          "valid_mapping_pixels": 642,
+          "mapping_pixels": 642,
+          "valid_mapping_fraction": 1.0,
+          "observed_cell_area_km2": 28.76426222171076,
+          "unambiguous_cell_area_km2": 28.76426222171076,
+          "ambiguous_cells": 0
+        },
+        "native_composites_checked": 136,
+        "raw_qa_pixel_checks": 72896,
+        "assessments": [
+          {
+            "index": "NDVI",
+            "assessment_id": "ef0bd2e2841ba6762f2219429b06cae04d7af21027b659fa49c48a539cd2fc47",
+            "classification": "below_reference",
+            "latest": {
+              "date": "2024-06-25",
+              "value": 0.29195000000000004,
+              "baseline": 0.49360000000000004,
+              "baseline_lower": 0.44360000000000005,
+              "baseline_upper": 0.5436000000000001,
+              "anomaly": -0.20165,
+              "valid_pixels": 536,
+              "valid_fraction": 1,
+              "baseline_n": 5,
+              "baseline_years": 2
+            },
+            "trend": {
+              "slope_per_year": 0.030176763950892922,
+              "direction": "increasing_anomaly",
+              "months": 12,
+              "method": "Theil\u2013Sen on calendar-month medians; descriptive, no independence assumption"
+            },
+            "persistent_periods": [
+              {
+                "start": "2023-07-28",
+                "end": "2023-11-01",
+                "duration_days": 96,
+                "observations": 7,
+                "median_anomaly": -0.21850000000000003
+              },
+              {
+                "start": "2023-12-03",
+                "end": "2024-06-25",
+                "duration_days": 205,
+                "observations": 14,
+                "median_anomaly": -0.200075
+              }
+            ],
+            "sustained_return": null,
+            "support": {
+              "expected_post_composites": 23,
+              "valid_post_composites": 22,
+              "baseline_supported_composites": 21,
+              "completeness": 0.9130434782608695,
+              "largest_valid_gap_days": 32,
+              "period": {
+                "start": "2023-07-28",
+                "end": "2024-06-25"
+              },
+              "median_valid_fraction": 0.9552238805970149,
+              "baseline_min_years": 2,
+              "evidence": "supported"
+            },
+            "spatial_cells_checked": 536,
+            "zones": 0
+          },
+          {
+            "index": "EVI",
+            "assessment_id": "ef0bd2e2841ba6762f2219429b06cae04d7af21027b659fa49c48a539cd2fc47",
+            "classification": "below_reference",
+            "latest": {
+              "date": "2024-06-25",
+              "value": 0.17265000000000003,
+              "baseline": 0.2846,
+              "baseline_lower": 0.23460000000000003,
+              "baseline_upper": 0.3346,
+              "anomaly": -0.11195,
+              "valid_pixels": 536,
+              "valid_fraction": 1,
+              "baseline_n": 5,
+              "baseline_years": 2
+            },
+            "trend": {
+              "slope_per_year": 0.05151162299465513,
+              "direction": "increasing_anomaly",
+              "months": 12,
+              "method": "Theil\u2013Sen on calendar-month medians; descriptive, no independence assumption"
+            },
+            "persistent_periods": [
+              {
+                "start": "2023-07-28",
+                "end": "2023-11-01",
+                "duration_days": 96,
+                "observations": 7,
+                "median_anomaly": -0.14742500000000003
+              },
+              {
+                "start": "2023-12-03",
+                "end": "2024-06-25",
+                "duration_days": 205,
+                "observations": 14,
+                "median_anomaly": -0.1239875
+              }
+            ],
+            "sustained_return": null,
+            "support": {
+              "expected_post_composites": 23,
+              "valid_post_composites": 22,
+              "baseline_supported_composites": 21,
+              "completeness": 0.9130434782608695,
+              "largest_valid_gap_days": 32,
+              "period": {
+                "start": "2023-07-28",
+                "end": "2024-06-25"
+              },
+              "median_valid_fraction": 0.9552238805970149,
+              "baseline_min_years": 2,
+              "evidence": "supported"
+            },
+            "spatial_cells_checked": 536,
+            "zones": 0
+          }
+        ],
+        "limitations": [
+          "MODIS 250/500 m mixed pixels; burned grid cells are not official fire perimeters.",
+          "Composite date is period start, not the exact pixel acquisition date.",
+          "Vegetation index near baseline does not demonstrate complete ecological recovery.",
+          "Intervening candidate fires can affect vegetation observations after the selected event."
+        ],
+        "warnings": [
+          "Time series contains missing/QA-rejected composites; no interpolation applied"
+        ]
+      },
+      {
+        "event": "global-89d60689aa0476eda132f1bee866ee8c",
+        "job": "0e7d0a2e669a0ec58e3b33ed94067be15b0e70b0939427418a48f35b8bcaec5f",
+        "period": {
+          "start": "2022-07-23",
+          "end": "2025-07-23"
+        },
+        "event_period": {
+          "start": "2024-07-23",
+          "end": "2024-07-23"
+        },
+        "valid_observations": {
+          "NDVI": 6,
+          "EVI": 6
+        },
+        "baseline_points": {
+          "NDVI": 0,
+          "EVI": 0
+        },
+        "burned_cells_checked": 32,
+        "burned_area_summary": {
+          "available_granules": 3,
+          "valid_mapping_pixels": 249,
+          "mapping_pixels": 249,
+          "valid_mapping_fraction": 1.0,
+          "observed_cell_area_km2": 6.869077545483166,
+          "unambiguous_cell_area_km2": 6.869077545483166,
+          "ambiguous_cells": 0
+        },
+        "native_composites_checked": 136,
+        "raw_qa_pixel_checks": 17408,
+        "assessments": [
+          {
+            "index": "NDVI",
+            "assessment_id": "e6394cdc33c7bb73f978d6ceea939c54c66b59939fc462ef365efe0dd15e6b1f",
+            "classification": "insufficient_data",
+            "latest": null,
+            "trend": {
+              "slope_per_year": null,
+              "direction": "insufficient_data",
+              "months": 0
+            },
+            "persistent_periods": [],
+            "sustained_return": null,
+            "support": {
+              "expected_post_composites": 23,
+              "valid_post_composites": 2,
+              "baseline_supported_composites": 0,
+              "completeness": 0.0,
+              "largest_valid_gap_days": null,
+              "period": null,
+              "median_valid_fraction": null,
+              "baseline_min_years": 0,
+              "evidence": "insufficient"
+            },
+            "spatial_cells_checked": 128,
+            "zones": 0
+          },
+          {
+            "index": "EVI",
+            "assessment_id": "e6394cdc33c7bb73f978d6ceea939c54c66b59939fc462ef365efe0dd15e6b1f",
+            "classification": "insufficient_data",
+            "latest": null,
+            "trend": {
+              "slope_per_year": null,
+              "direction": "insufficient_data",
+              "months": 0
+            },
+            "persistent_periods": [],
+            "sustained_return": null,
+            "support": {
+              "expected_post_composites": 23,
+              "valid_post_composites": 2,
+              "baseline_supported_composites": 0,
+              "completeness": 0.0,
+              "largest_valid_gap_days": null,
+              "period": null,
+              "median_valid_fraction": null,
+              "baseline_min_years": 0,
+              "evidence": "insufficient"
+            },
+            "spatial_cells_checked": 128,
+            "zones": 0
+          }
+        ],
+        "limitations": [
+          "MODIS 250/500 m mixed pixels; burned grid cells are not official fire perimeters.",
+          "Composite date is period start, not the exact pixel acquisition date.",
+          "Vegetation index near baseline does not demonstrate complete ecological recovery.",
+          "Intervening candidate fires can affect vegetation observations after the selected event."
+        ],
+        "warnings": [
+          "Insufficient pre-event seasonal reference or post-event observations",
+          "Time series contains missing/QA-rejected composites; no interpolation applied"
+        ]
+      },
+      {
+        "event": "global-b8c470958eecd0e05a07b897973848ea",
+        "job": "fb53ccb87ddb84d4e6277ce01fcb1f98da9a96e11ca004a0802765c6b13fef42",
+        "period": {
+          "start": "2018-01-02",
+          "end": "2021-01-03"
+        },
+        "event_period": {
+          "start": "2020-01-02",
+          "end": "2020-01-03"
+        },
+        "valid_observations": {
+          "NDVI": 56,
+          "EVI": 56
+        },
+        "baseline_points": {
+          "NDVI": 40,
+          "EVI": 40
+        },
+        "burned_cells_checked": 112,
+        "burned_area_summary": {
+          "available_granules": 4,
+          "valid_mapping_pixels": 448,
+          "mapping_pixels": 448,
+          "valid_mapping_fraction": 1.0,
+          "observed_cell_area_km2": 24.04177140919108,
+          "unambiguous_cell_area_km2": 24.04177140919108,
+          "ambiguous_cells": 0
+        },
+        "native_composites_checked": 136,
+        "raw_qa_pixel_checks": 60928,
+        "assessments": [
+          {
+            "index": "NDVI",
+            "assessment_id": "45a222cb4ab2e9f0eb6ac165e4e52dcf899419e960c8a90122ce008bfc3bff94",
+            "classification": "below_reference",
+            "latest": {
+              "date": "2020-12-18",
+              "value": 0.3603,
+              "baseline": 0.7020500000000001,
+              "baseline_lower": 0.65205,
+              "baseline_upper": 0.7520500000000001,
+              "anomaly": -0.34175000000000005,
+              "valid_pixels": 420,
+              "valid_fraction": 0.9375,
+              "baseline_n": 4,
+              "baseline_years": 2
+            },
+            "trend": {
+              "slope_per_year": 0.14659192964388182,
+              "direction": "increasing_anomaly",
+              "months": 12,
+              "method": "Theil\u2013Sen on calendar-month medians; descriptive, no independence assumption"
+            },
+            "persistent_periods": [
+              {
+                "start": "2020-01-17",
+                "end": "2020-03-05",
+                "duration_days": 48,
+                "observations": 4,
+                "median_anomaly": -0.48665
+              },
+              {
+                "start": "2020-06-25",
+                "end": "2020-07-27",
+                "duration_days": 32,
+                "observations": 3,
+                "median_anomaly": -0.33100000000000007
+              },
+              {
+                "start": "2020-08-28",
+                "end": "2020-09-29",
+                "duration_days": 32,
+                "observations": 3,
+                "median_anomaly": -0.342475
+              },
+              {
+                "start": "2020-10-31",
+                "end": "2020-12-18",
+                "duration_days": 48,
+                "observations": 4,
+                "median_anomaly": -0.34673750000000003
+              }
+            ],
+            "sustained_return": null,
+            "support": {
+              "expected_post_composites": 23,
+              "valid_post_composites": 17,
+              "baseline_supported_composites": 17,
+              "completeness": 0.7391304347826086,
+              "largest_valid_gap_days": 32,
+              "period": {
+                "start": "2020-01-17",
+                "end": "2020-12-18"
+              },
+              "median_valid_fraction": 0.9910714285714286,
+              "baseline_min_years": 2,
+              "evidence": "supported"
+            },
+            "spatial_cells_checked": 448,
+            "zones": 0
+          },
+          {
+            "index": "EVI",
+            "assessment_id": "45a222cb4ab2e9f0eb6ac165e4e52dcf899419e960c8a90122ce008bfc3bff94",
+            "classification": "below_reference",
+            "latest": {
+              "date": "2020-12-18",
+              "value": 0.1713,
+              "baseline": 0.32327500000000003,
+              "baseline_lower": 0.27327500000000005,
+              "baseline_upper": 0.373275,
+              "anomaly": -0.15197500000000003,
+              "valid_pixels": 420,
+              "valid_fraction": 0.9375,
+              "baseline_n": 4,
+              "baseline_years": 2
+            },
+            "trend": {
+              "slope_per_year": 0.12783956818590664,
+              "direction": "increasing_anomaly",
+              "months": 12,
+              "method": "Theil\u2013Sen on calendar-month medians; descriptive, no independence assumption"
+            },
+            "persistent_periods": [
+              {
+                "start": "2020-01-17",
+                "end": "2020-03-05",
+                "duration_days": 48,
+                "observations": 4,
+                "median_anomaly": -0.2491625
+              },
+              {
+                "start": "2020-06-25",
+                "end": "2020-07-27",
+                "duration_days": 32,
+                "observations": 3,
+                "median_anomaly": -0.241625
+              },
+              {
+                "start": "2020-08-28",
+                "end": "2020-09-29",
+                "duration_days": 32,
+                "observations": 3,
+                "median_anomaly": -0.18760000000000004
+              },
+              {
+                "start": "2020-10-31",
+                "end": "2020-12-18",
+                "duration_days": 48,
+                "observations": 4,
+                "median_anomaly": -0.14300000000000002
+              }
+            ],
+            "sustained_return": null,
+            "support": {
+              "expected_post_composites": 23,
+              "valid_post_composites": 17,
+              "baseline_supported_composites": 17,
+              "completeness": 0.7391304347826086,
+              "largest_valid_gap_days": 32,
+              "period": {
+                "start": "2020-01-17",
+                "end": "2020-12-18"
+              },
+              "median_valid_fraction": 0.9910714285714286,
+              "baseline_min_years": 2,
+              "evidence": "supported"
+            },
+            "spatial_cells_checked": 448,
+            "zones": 0
+          }
+        ],
+        "limitations": [
+          "MODIS 250/500 m mixed pixels; burned grid cells are not official fire perimeters.",
+          "Composite date is period start, not the exact pixel acquisition date.",
+          "Vegetation index near baseline does not demonstrate complete ecological recovery.",
+          "Intervening candidate fires can affect vegetation observations after the selected event."
+        ],
+        "warnings": [
+          "Time series contains missing/QA-rejected composites; no interpolation applied"
+        ]
+      },
+      {
+        "event": "global-51910cbfe4720638c1fce8630f452ce9",
+        "job": "9bc0e3c3ce20e8acca9d00b7e428a4addab82f75fb470e1df4f9b4425764dcc1",
+        "period": {
+          "start": "2010-08-01",
+          "end": "2021-08-31"
+        },
+        "event_period": {
+          "start": "2012-08-01",
+          "end": "2012-08-03"
+        },
+        "valid_observations": {
+          "NDVI": 0,
+          "EVI": 0
+        },
+        "baseline_points": {
+          "NDVI": 0,
+          "EVI": 0
+        },
+        "burned_cells_checked": 230,
+        "burned_area_summary": {
+          "available_granules": 8,
+          "valid_mapping_pixels": 1136,
+          "mapping_pixels": 1140,
+          "valid_mapping_fraction": 0.9964912280701754,
+          "observed_cell_area_km2": 49.371494858160254,
+          "unambiguous_cell_area_km2": 49.371494858160254,
+          "ambiguous_cells": 0
+        },
+        "native_composites_checked": 0,
+        "raw_qa_pixel_checks": 0,
+        "assessments": [],
+        "limitations": [
+          "MODIS 250/500 m mixed pixels; burned grid cells are not official fire perimeters.",
+          "Composite date is period start, not the exact pixel acquisition date.",
+          "Vegetation index near baseline does not demonstrate complete ecological recovery.",
+          "Intervening candidate fires can affect vegetation observations after the selected event."
+        ],
+        "warnings": [
+          "MOD13Q1.061 discovery unavailable: ValueError: Job exceeds configured granule limit (400); reduce analysis window",
+          "Insufficient pre-event seasonal reference or post-event observations",
+          "Time series contains missing/QA-rejected composites; no interpolation applied"
+        ]
+      }
+    ],
+    "hdf_downloads": 0,
+    "appeears_submissions": 0,
+    "reburn": [
+      {
+        "event": "global-d77c8ac8d89369a61e7125f78cfe2e76",
+        "job": "03c7ac152960408b9ed02dcf6530b301fce4be969e80bcf4322340839b238a71",
+        "summary": {
+          "observed_episodes": 2,
+          "observed_cells": 134,
+          "repeated_cells": 0,
+          "repeated_area_km2": 0.0,
+          "rejected_observations": 0,
+          "deduplicated_observations": 134,
+          "classification": "insufficient_evidence"
+        },
+        "sources_checked": 37,
+        "raw_observations_checked": 134,
+        "state": "partial",
+        "missing_months": [],
+        "recovery_gaps": [],
+        "source_failures": []
+      },
+      {
+        "event": "global-51910cbfe4720638c1fce8630f452ce9",
+        "job": "de1d34330bb4a457d1a6efb70d1e8c563e9b92982f4231ebb5258330c3f033ff",
+        "summary": {
+          "observed_episodes": 4,
+          "observed_cells": 230,
+          "repeated_cells": 228,
+          "repeated_area_km2": 48.94217751156756,
+          "rejected_observations": 0,
+          "deduplicated_observations": 458,
+          "classification": "repeated_burned_area_observations"
+        },
+        "sources_checked": 133,
+        "raw_observations_checked": 458,
+        "state": "partial",
+        "missing_months": [],
+        "recovery_gaps": [
+          {
+            "shared_cells": 226,
+            "shared_area_km2": 48.51286016497486,
+            "classification": "insufficient_observations",
+            "interval": {
+              "days": 3276,
+              "months": 107.63260025873221,
+              "years": 8.969383354894351,
+              "minimum_days": 3252,
+              "maximum_days": 3291
+            },
+            "index_support": {
+              "NDVI": {
+                "expected_post_composites": 204,
+                "valid_post_composites": 0,
+                "baseline_supported_composites": 0,
+                "completeness": 0.0,
+                "largest_valid_gap_days": null,
+                "period": null,
+                "median_valid_fraction": null,
+                "baseline_min_years": 0,
+                "evidence": "insufficient"
+              },
+              "EVI": {
+                "expected_post_composites": 204,
+                "valid_post_composites": 0,
+                "baseline_supported_composites": 0,
+                "completeness": 0.0,
+                "largest_valid_gap_days": null,
+                "period": null,
+                "median_valid_fraction": null,
+                "baseline_min_years": 0,
+                "evidence": "insufficient"
+              }
+            }
+          },
+          {
+            "shared_cells": 2,
+            "shared_area_km2": 0.4293173465926979,
+            "classification": "insufficient_observations",
+            "interval": {
+              "days": 3266,
+              "months": 107.30405141789359,
+              "years": 8.942004284824465,
+              "minimum_days": 3258,
+              "maximum_days": 3274
+            },
+            "index_support": {
+              "NDVI": {
+                "expected_post_composites": 204,
+                "valid_post_composites": 0,
+                "baseline_supported_composites": 0,
+                "completeness": 0.0,
+                "largest_valid_gap_days": null,
+                "period": null,
+                "median_valid_fraction": null,
+                "baseline_min_years": 0,
+                "evidence": "insufficient"
+              },
+              "EVI": {
+                "expected_post_composites": 204,
+                "valid_post_composites": 0,
+                "baseline_supported_composites": 0,
+                "completeness": 0.0,
+                "largest_valid_gap_days": null,
+                "period": null,
+                "median_valid_fraction": null,
+                "baseline_min_years": 0,
+                "evidence": "insufficient"
+              }
+            }
+          }
+        ],
+        "source_failures": []
+      }
+    ]
+  },
+  "global_queries": {
+    "checked_at": "2026-11-06T11:55:25.781164+00:00",
+    "cases": [
+      {
+        "name": "Italy",
+        "bbox": "14.7,37.1,15.4,37.8",
+        "start": "2021-08-01",
+        "end": "2021-08-03",
+        "source": "NASA FIRMS on demand",
+        "seconds": 0.7166712539992659,
+        "detections": 21,
+        "candidates": 2,
+        "truncated": false,
+        "coverage": {
+          "state": "available",
+          "message": "Live FIRMS data available",
+          "complete": true,
+          "missing_coverage": [],
+          "sources": [
+            {
+              "source": "MODIS_SP",
+              "start": "2021-08-01",
+              "end": "2021-08-03"
+            }
+          ],
+          "date_ranges": {
+            "MODIS_NRT": {
+              "min_date": "2026-09-01",
+              "max_date": "2026-11-06"
+            },
+            "MODIS_SP": {
+              "min_date": "2000-11-01",
+              "max_date": "2026-08-31"
+            },
+            "VIIRS_NOAA20_NRT": {
+              "min_date": "2026-08-01",
+              "max_date": "2026-11-06"
+            },
+            "VIIRS_NOAA20_SP": {
+              "min_date": "2018-04-01",
+              "max_date": "2026-07-31"
+            },
+            "VIIRS_NOAA21_NRT": {
+              "min_date": "2024-01-17",
+              "max_date": "2026-11-05"
+            },
+            "VIIRS_NOAA21_SP": {
+              "min_date": "2023-03-01",
+              "max_date": "2026-07-31"
+            },
+            "VIIRS_SNPP_NRT": {
+              "min_date": "2026-08-01",
+              "max_date": "2026-11-02"
+            },
+            "VIIRS_SNPP_SP": {
+              "min_date": "2012-01-20",
+              "max_date": "2026-07-31"
+            },
+            "LANDSAT_NRT": {
+              "min_date": "2022-06-20",
+              "max_date": "2026-11-06"
+            },
+            "GOES_NRT": {
+              "min_date": "2022-08-09",
+              "max_date": "2026-11-06"
+            },
+            "BA_MODIS": {
+              "min_date": "2000-11-01",
+              "max_date": "2026-08-01"
+            },
+            "BA_VIIRS": {
+              "min_date": "2012-03-01",
+              "max_date": "2026-08-01"
+            }
+          },
+          "version": "global-firms-1",
+          "checked_at": "2026-11-06T11:55:26.483388Z",
+          "availability_ttl_seconds": 300,
+          "semantics": "Thermal detections and provisional candidates; no official perimeters or completeness guarantee"
+        }
+      },
+      {
+        "name": "Rhodes",
+        "bbox": "27.92,36.14,27.98,36.20",
+        "start": "2023-07-20",
+        "end": "2023-07-22",
+        "source": "NASA FIRMS on demand",
+        "seconds": 0.027060202999564353,
+        "detections": 30,
+        "candidates": 1,
+        "truncated": false,
+        "coverage": {
+          "state": "available",
+          "message": "Live FIRMS data available",
+          "complete": true,
+          "missing_coverage": [],
+          "sources": [
+            {
+              "source": "MODIS_SP",
+              "start": "2023-07-20",
+              "end": "2023-07-22"
+            }
+          ],
+          "date_ranges": {
+            "MODIS_NRT": {
+              "min_date": "2026-09-01",
+              "max_date": "2026-11-06"
+            },
+            "MODIS_SP": {
+              "min_date": "2000-11-01",
+              "max_date": "2026-08-31"
+            },
+            "VIIRS_NOAA20_NRT": {
+              "min_date": "2026-08-01",
+              "max_date": "2026-11-06"
+            },
+            "VIIRS_NOAA20_SP": {
+              "min_date": "2018-04-01",
+              "max_date": "2026-07-31"
+            },
+            "VIIRS_NOAA21_NRT": {
+              "min_date": "2024-01-17",
+              "max_date": "2026-11-05"
+            },
+            "VIIRS_NOAA21_SP": {
+              "min_date": "2023-03-01",
+              "max_date": "2026-07-31"
+            },
+            "VIIRS_SNPP_NRT": {
+              "min_date": "2026-08-01",
+              "max_date": "2026-11-02"
+            },
+            "VIIRS_SNPP_SP": {
+              "min_date": "2012-01-20",
+              "max_date": "2026-07-31"
+            },
+            "LANDSAT_NRT": {
+              "min_date": "2022-06-20",
+              "max_date": "2026-11-06"
+            },
+            "GOES_NRT": {
+              "min_date": "2022-08-09",
+              "max_date": "2026-11-06"
+            },
+            "BA_MODIS": {
+              "min_date": "2000-11-01",
+              "max_date": "2026-08-01"
+            },
+            "BA_VIIRS": {
+              "min_date": "2012-03-01",
+              "max_date": "2026-08-01"
+            }
+          },
+          "version": "global-firms-1",
+          "checked_at": "2026-11-06T11:55:26.483388Z",
+          "availability_ttl_seconds": 300,
+          "semantics": "Thermal detections and provisional candidates; no official perimeters or completeness guarantee"
+        }
+      },
+      {
+        "name": "Jasper",
+        "bbox": "-118.2,52.75,-118.0,52.95",
+        "start": "2024-07-23",
+        "end": "2024-07-25",
+        "source": "NASA FIRMS on demand",
+        "seconds": 0.013069718000224384,
+        "detections": 11,
+        "candidates": 1,
+        "truncated": false,
+        "coverage": {
+          "state": "available",
+          "message": "Live FIRMS data available",
+          "complete": true,
+          "missing_coverage": [],
+          "sources": [
+            {
+              "source": "MODIS_SP",
+              "start": "2024-07-23",
+              "end": "2024-07-25"
+            }
+          ],
+          "date_ranges": {
+            "MODIS_NRT": {
+              "min_date": "2026-09-01",
+              "max_date": "2026-11-06"
+            },
+            "MODIS_SP": {
+              "min_date": "2000-11-01",
+              "max_date": "2026-08-31"
+            },
+            "VIIRS_NOAA20_NRT": {
+              "min_date": "2026-08-01",
+              "max_date": "2026-11-06"
+            },
+            "VIIRS_NOAA20_SP": {
+              "min_date": "2018-04-01",
+              "max_date": "2026-07-31"
+            },
+            "VIIRS_NOAA21_NRT": {
+              "min_date": "2024-01-17",
+              "max_date": "2026-11-05"
+            },
+            "VIIRS_NOAA21_SP": {
+              "min_date": "2023-03-01",
+              "max_date": "2026-07-31"
+            },
+            "VIIRS_SNPP_NRT": {
+              "min_date": "2026-08-01",
+              "max_date": "2026-11-02"
+            },
+            "VIIRS_SNPP_SP": {
+              "min_date": "2012-01-20",
+              "max_date": "2026-07-31"
+            },
+            "LANDSAT_NRT": {
+              "min_date": "2022-06-20",
+              "max_date": "2026-11-06"
+            },
+            "GOES_NRT": {
+              "min_date": "2022-08-09",
+              "max_date": "2026-11-06"
+            },
+            "BA_MODIS": {
+              "min_date": "2000-11-01",
+              "max_date": "2026-08-01"
+            },
+            "BA_VIIRS": {
+              "min_date": "2012-03-01",
+              "max_date": "2026-08-01"
+            }
+          },
+          "version": "global-firms-1",
+          "checked_at": "2026-11-06T11:55:26.483388Z",
+          "availability_ttl_seconds": 300,
+          "semantics": "Thermal detections and provisional candidates; no official perimeters or completeness guarantee"
+        }
+      },
+      {
+        "name": "Kangaroo",
+        "bbox": "136.75,-35.85,136.80,-35.80",
+        "start": "2020-01-02",
+        "end": "2020-01-04",
+        "source": "NASA FIRMS on demand",
+        "seconds": 0.011197077999895555,
+        "detections": 13,
+        "candidates": 1,
+        "truncated": false,
+        "coverage": {
+          "state": "available",
+          "message": "Live FIRMS data available",
+          "complete": true,
+          "missing_coverage": [],
+          "sources": [
+            {
+              "source": "MODIS_SP",
+              "start": "2020-01-02",
+              "end": "2020-01-04"
+            }
+          ],
+          "date_ranges": {
+            "MODIS_NRT": {
+              "min_date": "2026-09-01",
+              "max_date": "2026-11-06"
+            },
+            "MODIS_SP": {
+              "min_date": "2000-11-01",
+              "max_date": "2026-08-31"
+            },
+            "VIIRS_NOAA20_NRT": {
+              "min_date": "2026-08-01",
+              "max_date": "2026-11-06"
+            },
+            "VIIRS_NOAA20_SP": {
+              "min_date": "2018-04-01",
+              "max_date": "2026-07-31"
+            },
+            "VIIRS_NOAA21_NRT": {
+              "min_date": "2024-01-17",
+              "max_date": "2026-11-05"
+            },
+            "VIIRS_NOAA21_SP": {
+              "min_date": "2023-03-01",
+              "max_date": "2026-07-31"
+            },
+            "VIIRS_SNPP_NRT": {
+              "min_date": "2026-08-01",
+              "max_date": "2026-11-02"
+            },
+            "VIIRS_SNPP_SP": {
+              "min_date": "2012-01-20",
+              "max_date": "2026-07-31"
+            },
+            "LANDSAT_NRT": {
+              "min_date": "2022-06-20",
+              "max_date": "2026-11-06"
+            },
+            "GOES_NRT": {
+              "min_date": "2022-08-09",
+              "max_date": "2026-11-06"
+            },
+            "BA_MODIS": {
+              "min_date": "2000-11-01",
+              "max_date": "2026-08-01"
+            },
+            "BA_VIIRS": {
+              "min_date": "2012-03-01",
+              "max_date": "2026-08-01"
+            }
+          },
+          "version": "global-firms-1",
+          "checked_at": "2026-11-06T11:55:26.483388Z",
+          "availability_ttl_seconds": 300,
+          "semantics": "Thermal detections and provisional candidates; no official perimeters or completeness guarantee"
+        }
+      },
+      {
+        "name": "Ocean",
+        "bbox": "-140,0,-139,1",
+        "start": "2020-01-02",
+        "end": "2020-01-04",
+        "source": "NASA FIRMS on demand",
+        "seconds": 0.0058621759999368805,
+        "detections": 0,
+        "candidates": 0,
+        "truncated": false,
+        "coverage": {
+          "state": "available",
+          "message": "Live FIRMS data available",
+          "complete": true,
+          "missing_coverage": [],
+          "sources": [
+            {
+              "source": "MODIS_SP",
+              "start": "2020-01-02",
+              "end": "2020-01-04"
+            }
+          ],
+          "date_ranges": {
+            "MODIS_NRT": {
+              "min_date": "2026-09-01",
+              "max_date": "2026-11-06"
+            },
+            "MODIS_SP": {
+              "min_date": "2000-11-01",
+              "max_date": "2026-08-31"
+            },
+            "VIIRS_NOAA20_NRT": {
+              "min_date": "2026-08-01",
+              "max_date": "2026-11-06"
+            },
+            "VIIRS_NOAA20_SP": {
+              "min_date": "2018-04-01",
+              "max_date": "2026-07-31"
+            },
+            "VIIRS_NOAA21_NRT": {
+              "min_date": "2024-01-17",
+              "max_date": "2026-11-05"
+            },
+            "VIIRS_NOAA21_SP": {
+              "min_date": "2023-03-01",
+              "max_date": "2026-07-31"
+            },
+            "VIIRS_SNPP_NRT": {
+              "min_date": "2026-08-01",
+              "max_date": "2026-11-02"
+            },
+            "VIIRS_SNPP_SP": {
+              "min_date": "2012-01-20",
+              "max_date": "2026-07-31"
+            },
+            "LANDSAT_NRT": {
+              "min_date": "2022-06-20",
+              "max_date": "2026-11-06"
+            },
+            "GOES_NRT": {
+              "min_date": "2022-08-09",
+              "max_date": "2026-11-06"
+            },
+            "BA_MODIS": {
+              "min_date": "2000-11-01",
+              "max_date": "2026-08-01"
+            },
+            "BA_VIIRS": {
+              "min_date": "2012-03-01",
+              "max_date": "2026-08-01"
+            }
+          },
+          "version": "global-firms-1",
+          "checked_at": "2026-11-06T11:55:26.483388Z",
+          "availability_ttl_seconds": 300,
+          "semantics": "Thermal detections and provisional candidates; no official perimeters or completeness guarantee"
+        }
+      },
+      {
+        "name": "Antimeridian",
+        "bbox": "179,-11,-179,-9",
+        "start": "2020-01-02",
+        "end": "2020-01-04",
+        "source": "NASA FIRMS on demand",
+        "seconds": 0.0055061310004020925,
+        "detections": 0,
+        "candidates": 0,
+        "truncated": false,
+        "coverage": {
+          "state": "available",
+          "message": "Live FIRMS data available",
+          "complete": true,
+          "missing_coverage": [],
+          "sources": [
+            {
+              "source": "MODIS_SP",
+              "start": "2020-01-02",
+              "end": "2020-01-04"
+            }
+          ],
+          "date_ranges": {
+            "MODIS_NRT": {
+              "min_date": "2026-09-01",
+              "max_date": "2026-11-06"
+            },
+            "MODIS_SP": {
+              "min_date": "2000-11-01",
+              "max_date": "2026-08-31"
+            },
+            "VIIRS_NOAA20_NRT": {
+              "min_date": "2026-08-01",
+              "max_date": "2026-11-06"
+            },
+            "VIIRS_NOAA20_SP": {
+              "min_date": "2018-04-01",
+              "max_date": "2026-07-31"
+            },
+            "VIIRS_NOAA21_NRT": {
+              "min_date": "2024-01-17",
+              "max_date": "2026-11-05"
+            },
+            "VIIRS_NOAA21_SP": {
+              "min_date": "2023-03-01",
+              "max_date": "2026-07-31"
+            },
+            "VIIRS_SNPP_NRT": {
+              "min_date": "2026-08-01",
+              "max_date": "2026-11-02"
+            },
+            "VIIRS_SNPP_SP": {
+              "min_date": "2012-01-20",
+              "max_date": "2026-07-31"
+            },
+            "LANDSAT_NRT": {
+              "min_date": "2022-06-20",
+              "max_date": "2026-11-06"
+            },
+            "GOES_NRT": {
+              "min_date": "2022-08-09",
+              "max_date": "2026-11-06"
+            },
+            "BA_MODIS": {
+              "min_date": "2000-11-01",
+              "max_date": "2026-08-01"
+            },
+            "BA_VIIRS": {
+              "min_date": "2012-03-01",
+              "max_date": "2026-08-01"
+            }
+          },
+          "version": "global-firms-1",
+          "checked_at": "2026-11-06T11:55:26.483388Z",
+          "availability_ttl_seconds": 300,
+          "semantics": "Thermal detections and provisional candidates; no official perimeters or completeness guarantee"
+        }
+      },
+      {
+        "name": "HighLatitude",
+        "bbox": "20,79,21,80",
+        "start": "2020-01-02",
+        "end": "2020-01-04",
+        "source": "NASA FIRMS on demand",
+        "seconds": 0.0054715630003556726,
+        "detections": 0,
+        "candidates": 0,
+        "truncated": false,
+        "coverage": {
+          "state": "available",
+          "message": "Live FIRMS data available",
+          "complete": true,
+          "missing_coverage": [],
+          "sources": [
+            {
+              "source": "MODIS_SP",
+              "start": "2020-01-02",
+              "end": "2020-01-04"
+            }
+          ],
+          "date_ranges": {
+            "MODIS_NRT": {
+              "min_date": "2026-09-01",
+              "max_date": "2026-11-06"
+            },
+            "MODIS_SP": {
+              "min_date": "2000-11-01",
+              "max_date": "2026-08-31"
+            },
+            "VIIRS_NOAA20_NRT": {
+              "min_date": "2026-08-01",
+              "max_date": "2026-11-06"
+            },
+            "VIIRS_NOAA20_SP": {
+              "min_date": "2018-04-01",
+              "max_date": "2026-07-31"
+            },
+            "VIIRS_NOAA21_NRT": {
+              "min_date": "2024-01-17",
+              "max_date": "2026-11-05"
+            },
+            "VIIRS_NOAA21_SP": {
+              "min_date": "2023-03-01",
+              "max_date": "2026-07-31"
+            },
+            "VIIRS_SNPP_NRT": {
+              "min_date": "2026-08-01",
+              "max_date": "2026-11-02"
+            },
+            "VIIRS_SNPP_SP": {
+              "min_date": "2012-01-20",
+              "max_date": "2026-07-31"
+            },
+            "LANDSAT_NRT": {
+              "min_date": "2022-06-20",
+              "max_date": "2026-11-06"
+            },
+            "GOES_NRT": {
+              "min_date": "2022-08-09",
+              "max_date": "2026-11-06"
+            },
+            "BA_MODIS": {
+              "min_date": "2000-11-01",
+              "max_date": "2026-08-01"
+            },
+            "BA_VIIRS": {
+              "min_date": "2012-03-01",
+              "max_date": "2026-08-01"
+            }
+          },
+          "version": "global-firms-1",
+          "checked_at": "2026-11-06T11:55:26.483388Z",
+          "availability_ttl_seconds": 300,
+          "semantics": "Thermal detections and provisional candidates; no official perimeters or completeness guarantee"
+        }
+      }
+    ],
+    "scope": "Real bounded public APIs; existing deployment cache; no archive import or cold-cache claim",
+    "unsupported_period": {
+      "status": 422,
+      "detail": "Selected period unsupported"
+    }
+  },
+  "npm_before": {
+    "info": 0,
+    "low": 0,
+    "moderate": 3,
+    "high": 1,
+    "critical": 0,
+    "total": 4
+  },
+  "npm_after": {
+    "info": 0,
+    "low": 0,
+    "moderate": 0,
+    "high": 0,
+    "critical": 0,
+    "total": 0
+  },
+  "versions": {
+    "vite": "6.4.5",
+    "react_router_dom": "7.18.5",
+    "react": "18.3.1"
+  },
+  "persistence": {
+    "phase": "after",
+    "publications": [
+      {
+        "event": "global-d77c8ac8d89369a61e7125f78cfe2e76",
+        "job": "8553c3f357e4874558e228482e7298d4e162f7dbd7c27c8b1a793db059abf3fc",
+        "science_sha256": "9623bc82c79cdd8afa7cd68a1134b6e43153dff89a15fc4bc1280e95b268a08f",
+        "assessment": "ef0bd2e2841ba6762f2219429b06cae04d7af21027b659fa49c48a539cd2fc47",
+        "assessment_sha256": "71344f11dbd8169a97b9fb29656b7dcd3c99e811584d49bba27b10940b487e74",
+        "read_seconds": 0.12787313399985578,
+        "attempts": 1,
+        "state": "partial"
+      },
+      {
+        "event": "global-89d60689aa0476eda132f1bee866ee8c",
+        "job": "0e7d0a2e669a0ec58e3b33ed94067be15b0e70b0939427418a48f35b8bcaec5f",
+        "science_sha256": "25391bda02822f1fbadcb1d59bd5d3b92397013d92f4c4a7b67650028fd1f7ab",
+        "assessment": "e6394cdc33c7bb73f978d6ceea939c54c66b59939fc462ef365efe0dd15e6b1f",
+        "assessment_sha256": "ed8ec290571751a4e9873542bc6cc2b7703fa7cc22d3f405497f1f48116d7b07",
+        "read_seconds": 0.0587629649999144,
+        "attempts": 1,
+        "state": "partial"
+      },
+      {
+        "event": "global-b8c470958eecd0e05a07b897973848ea",
+        "job": "fb53ccb87ddb84d4e6277ce01fcb1f98da9a96e11ca004a0802765c6b13fef42",
+        "science_sha256": "c213ecd271bbdc9bd27d335ac75d479124be6696b308c6188cb2278c6f711652",
+        "assessment": "45a222cb4ab2e9f0eb6ac165e4e52dcf899419e960c8a90122ce008bfc3bff94",
+        "assessment_sha256": "ab12d924207ecffd5f2d126fa6be41c26cec0c220f97e735f1404a1a43f29db4",
+        "read_seconds": 0.07689688600021327,
+        "attempts": 1,
+        "state": "partial"
+      }
+    ],
+    "reburn_sha256": "ab35d372c0ca4833bc79b6307a82fe49f2d13402f46e58f5693d76fe4dea661e",
+    "persistence_verified": true
+  },
+  "browser_release": {
+    "explorer_desktop_overflow": false,
+    "initial_hotspot_requests": [
+      "http://127.0.0.1:3000/api/v1/global/hotspots?bbox=27.56264,35.93688,28.33717,36.40194&start_date=2023-07-20&end_date=2023-07-22&sensor=MODIS"
+    ],
+    "source_switch_atomic": true,
+    "selected_event_url": "http://127.0.0.1:3000/events/global-6c75f44c7f2e9a434486e8107a60adb2?returnTo=%2Fexplorer%3Fperiod%3Dcustom%26start%3D2023-07-20%26end%3D2023-07-22%26sensor%3DMODIS%26map%3D27.56264%252C35.93688%252C28.33717%252C36.40194%26z%3D11%26source%3Donline",
+    "cached_science_visible_seconds": 0.726574576,
+    "requested_frame_seconds": 0.35802690299999995,
+    "science_desktop_overflow": false,
+    "science_mobile_overflow": false,
+    "explorer_mobile_overflow": false,
+    "invalid_dates_clear_candidates": true,
+    "errors": []
+  },
+  "limitations": [
+    "All four satellite publications partial; original reference cases retain valid vegetation",
+    "Chips long vegetation catalog exceeds 400-granule bound; Recovery Gap insufficient_observations",
+    "Host restart externally observed with unchanged original result hashes; no controlled active-job interruption",
+    "Trusted loopback deployment; no public multi-user certification",
+    "No new controlled cold/warm A/B performance trial"
+  ],
+  "earth_engine_backend": {
+    "checked_at": "2026-11-06T11:55:05.290810+00:00",
+    "status": "live_probe_passed",
+    "authentication_verified": true,
+    "decoded_array_bytes": 6240,
+    "explicit_api_operations": 12,
+    "hdf_downloads": 0,
+    "appeears_submissions": 0,
+    "hdf_equivalence_verified": false
+  },
+  "earth_engine_worker": {
+    "checked_at": "2026-11-06T11:55:15.432939+00:00",
+    "status": "live_probe_passed",
+    "authentication_verified": true,
+    "decoded_array_bytes": 6240,
+    "explicit_api_operations": 12,
+    "hdf_downloads": 0,
+    "appeears_submissions": 0,
+    "hdf_equivalence_verified": false
+  },
+  "persistence_after_external_restart": {
+    "phase": "after",
+    "publications": [
+      {
+        "event": "global-d77c8ac8d89369a61e7125f78cfe2e76",
+        "job": "8553c3f357e4874558e228482e7298d4e162f7dbd7c27c8b1a793db059abf3fc",
+        "science_sha256": "9623bc82c79cdd8afa7cd68a1134b6e43153dff89a15fc4bc1280e95b268a08f",
+        "assessment": "ef0bd2e2841ba6762f2219429b06cae04d7af21027b659fa49c48a539cd2fc47",
+        "assessment_sha256": "71344f11dbd8169a97b9fb29656b7dcd3c99e811584d49bba27b10940b487e74",
+        "read_seconds": 0.07139951900001051,
+        "attempts": 1,
+        "state": "partial"
+      },
+      {
+        "event": "global-89d60689aa0476eda132f1bee866ee8c",
+        "job": "0e7d0a2e669a0ec58e3b33ed94067be15b0e70b0939427418a48f35b8bcaec5f",
+        "science_sha256": "25391bda02822f1fbadcb1d59bd5d3b92397013d92f4c4a7b67650028fd1f7ab",
+        "assessment": "e6394cdc33c7bb73f978d6ceea939c54c66b59939fc462ef365efe0dd15e6b1f",
+        "assessment_sha256": "ed8ec290571751a4e9873542bc6cc2b7703fa7cc22d3f405497f1f48116d7b07",
+        "read_seconds": 0.03382841399997005,
+        "attempts": 1,
+        "state": "partial"
+      },
+      {
+        "event": "global-b8c470958eecd0e05a07b897973848ea",
+        "job": "fb53ccb87ddb84d4e6277ce01fcb1f98da9a96e11ca004a0802765c6b13fef42",
+        "science_sha256": "c213ecd271bbdc9bd27d335ac75d479124be6696b308c6188cb2278c6f711652",
+        "assessment": "45a222cb4ab2e9f0eb6ac165e4e52dcf899419e960c8a90122ce008bfc3bff94",
+        "assessment_sha256": "ab12d924207ecffd5f2d126fa6be41c26cec0c220f97e735f1404a1a43f29db4",
+        "read_seconds": 0.03717037999996364,
+        "attempts": 1,
+        "state": "partial"
+      }
+    ],
+    "reburn_sha256": "ab35d372c0ca4833bc79b6307a82fe49f2d13402f46e58f5693d76fe4dea661e",
+    "persistence_verified": true
+  },
+  "external_restart": {
+    "observed_at": "2026-11-06T12:43:24Z",
+    "host_uptime_minutes": 5,
+    "agent_initiated": false,
+    "controlled_active_job_interruption": false,
+    "original_publication_hashes_unchanged": true
+  },
+  "browser_recovery": {
+    "checked_at": "2026-11-06T12:47:55.582Z",
+    "views": [
+      {
+        "viewport": {
+          "width": 1440,
+          "height": 1050
+        },
+        "home_overflow": false,
+        "library_events": 3,
+        "library_overflow": false,
+        "trajectory_rendered": true,
+        "cell_rows": 69,
+        "cell_id": "Native cell 25820:97216 \u00b7 2023-07-28",
+        "cell_api_matches_table": true,
+        "cell_overflow": false,
+        "comparison_url": "http://127.0.0.1:3000/compare?assessment=ef0bd2e2841ba6762f2219429b06cae04d7af21027b659fa49c48a539cd2fc47&assessment=45a222cb4ab2e9f0eb6ac165e4e52dcf899419e960c8a90122ce008bfc3bff94",
+        "comparison_overflow": false,
+        "comparison_reload": true,
+        "errors": []
+      },
+      {
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "home_overflow": false,
+        "library_events": 3,
+        "library_overflow": false,
+        "trajectory_rendered": true,
+        "cell_rows": 69,
+        "cell_id": "Native cell 25820:97216 \u00b7 2023-07-28",
+        "cell_api_matches_table": true,
+        "cell_overflow": false,
+        "comparison_url": "http://127.0.0.1:3000/compare?assessment=ef0bd2e2841ba6762f2219429b06cae04d7af21027b659fa49c48a539cd2fc47&assessment=45a222cb4ab2e9f0eb6ac165e4e52dcf899419e960c8a90122ce008bfc3bff94",
+        "comparison_overflow": false,
+        "comparison_reload": true,
+        "errors": []
+      }
+    ]
+  },
+  "browser_positive_reburn": {
+    "checked_at": "2026-11-06T12:45:48.876Z",
+    "event": "global-51910cbfe4720638c1fce8630f452ce9",
+    "views": [
+      {
+        "viewport": {
+          "width": 1440,
+          "height": 1050
+        },
+        "repeated_cells": 228,
+        "shared_gap_cells": 226,
+        "gap": "insufficient_observations",
+        "cell": "11980:20931",
+        "overflow": false,
+        "errors": []
+      },
+      {
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "repeated_cells": 228,
+        "shared_gap_cells": 226,
+        "gap": "insufficient_observations",
+        "cell": "11980:20931",
+        "overflow": false,
+        "errors": []
+      }
+    ]
+  },
+  "independent_reburn_current": {
+    "checked_at": "2026-11-06T12:43:30.149896+00:00",
+    "scope": "Existing real publications and retained raw bounded EE arrays; no acquisition",
+    "cases": [],
+    "hdf_downloads": 0,
+    "appeears_submissions": 0,
+    "reburn": [
+      {
+        "event": "global-d77c8ac8d89369a61e7125f78cfe2e76",
+        "job": "03c7ac152960408b9ed02dcf6530b301fce4be969e80bcf4322340839b238a71",
+        "summary": {
+          "observed_episodes": 2,
+          "observed_cells": 134,
+          "repeated_cells": 0,
+          "repeated_area_km2": 0.0,
+          "rejected_observations": 0,
+          "deduplicated_observations": 134,
+          "classification": "insufficient_evidence"
+        },
+        "sources_checked": 37,
+        "raw_observations_checked": 134,
+        "state": "partial",
+        "missing_months": [],
+        "recovery_gaps": [],
+        "source_failures": []
+      },
+      {
+        "event": "global-51910cbfe4720638c1fce8630f452ce9",
+        "job": "de1d34330bb4a457d1a6efb70d1e8c563e9b92982f4231ebb5258330c3f033ff",
+        "summary": {
+          "observed_episodes": 4,
+          "observed_cells": 230,
+          "repeated_cells": 228,
+          "repeated_area_km2": 48.94217751156756,
+          "rejected_observations": 0,
+          "deduplicated_observations": 458,
+          "classification": "repeated_burned_area_observations"
+        },
+        "sources_checked": 133,
+        "raw_observations_checked": 458,
+        "state": "partial",
+        "missing_months": [],
+        "recovery_gaps": [
+          {
+            "shared_cells": 226,
+            "shared_area_km2": 48.51286016497486,
+            "classification": "insufficient_observations",
+            "interval": {
+              "days": 3276,
+              "months": 107.63260025873221,
+              "years": 8.969383354894351,
+              "minimum_days": 3252,
+              "maximum_days": 3291
+            },
+            "index_support": {
+              "NDVI": {
+                "expected_post_composites": 204,
+                "valid_post_composites": 0,
+                "baseline_supported_composites": 0,
+                "completeness": 0.0,
+                "largest_valid_gap_days": null,
+                "period": null,
+                "median_valid_fraction": null,
+                "baseline_min_years": 0,
+                "evidence": "insufficient"
+              },
+              "EVI": {
+                "expected_post_composites": 204,
+                "valid_post_composites": 0,
+                "baseline_supported_composites": 0,
+                "completeness": 0.0,
+                "largest_valid_gap_days": null,
+                "period": null,
+                "median_valid_fraction": null,
+                "baseline_min_years": 0,
+                "evidence": "insufficient"
+              }
+            }
+          },
+          {
+            "shared_cells": 2,
+            "shared_area_km2": 0.4293173465926979,
+            "classification": "insufficient_observations",
+            "interval": {
+              "days": 3266,
+              "months": 107.30405141789359,
+              "years": 8.942004284824465,
+              "minimum_days": 3258,
+              "maximum_days": 3274
+            },
+            "index_support": {
+              "NDVI": {
+                "expected_post_composites": 204,
+                "valid_post_composites": 0,
+                "baseline_supported_composites": 0,
+                "completeness": 0.0,
+                "largest_valid_gap_days": null,
+                "period": null,
+                "median_valid_fraction": null,
+                "baseline_min_years": 0,
+                "evidence": "insufficient"
+              },
+              "EVI": {
+                "expected_post_composites": 204,
+                "valid_post_composites": 0,
+                "baseline_supported_composites": 0,
+                "completeness": 0.0,
+                "largest_valid_gap_days": null,
+                "period": null,
+                "median_valid_fraction": null,
+                "baseline_min_years": 0,
+                "evidence": "insufficient"
+              }
+            }
+          }
+        ],
+        "source_failures": []
+      }
+    ]
+  },
+  "storage_snapshot": {
+    "database": "32 MB",
+    "satellite_cache": "16 MiB",
+    "docker_volumes": "374.9 MB",
+    "docker_images": "2.696 GB",
+    "build_cache": "2.51 GB",
+    "prune_performed": false
+  },
+  "post_restart_earth_engine": {
+    "backend": {
+      "checked_at": "2026-11-06T12:48:50.220442+00:00",
+      "status": "live_probe_passed",
+      "authentication_verified": true,
+      "decoded_array_bytes": 6240,
+      "explicit_api_operations": 12,
+      "hdf_downloads": 0,
+      "appeears_submissions": 0
+    },
+    "analysis-worker": {
+      "checked_at": "2026-11-06T12:48:52.095307+00:00",
+      "status": "live_probe_passed",
+      "authentication_verified": true,
+      "decoded_array_bytes": 6240,
+      "explicit_api_operations": 12,
+      "hdf_downloads": 0,
+      "appeears_submissions": 0
+    }
+  },
+  "delivery": {
+    "checkpoint_remote": "b152975",
+    "release_push": "blocked_by_automatic_approval_review",
+    "requested_target": "SimLag012/AfterFire:main",
+    "local_review_branch": "audit/recovery-final-20261106",
+    "reason": "Automatic review did not accept the attachment authorization as trusted authorization for shared-main publication. Direct user confirmation requested; no bypass attempted."
+  }
+}

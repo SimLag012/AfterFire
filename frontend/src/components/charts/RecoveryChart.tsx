@@ -218,12 +218,12 @@ export const SatelliteRecoveryChart: React.FC<{
         <ReferenceArea x1={Date.parse(eventStart)} x2={Date.parse(eventEnd)+86400000} fill="#f97316" fillOpacity={0.18} />
         {recurrenceDates.map(d=><ReferenceLine key={d} x={Date.parse(d)} stroke="#fb7185" strokeDasharray="4 4" />)}
         <ReferenceLine x={Date.parse(selectedDate)} stroke="#fbbf24" />
-        <Line dataKey="baseline" name="Seasonal median" stroke="#38bdf8" dot={false} connectNulls={false} />
-        <Line dataKey="baseline_lower" name="Reference lower band" stroke="#64748b" strokeDasharray="3 3" dot={false} connectNulls={false} />
-        <Line dataKey="baseline_upper" name="Reference upper band" stroke="#64748b" strokeDasharray="3 3" dot={false} connectNulls={false} />
+        <Line isAnimationActive={false} dataKey="baseline" name="Seasonal median" stroke="#38bdf8" dot={false} connectNulls={false} />
+        <Line isAnimationActive={false} dataKey="baseline_lower" name="Reference lower band" stroke="#64748b" strokeDasharray="3 3" dot={false} connectNulls={false} />
+        <Line isAnimationActive={false} dataKey="baseline_upper" name="Reference upper band" stroke="#64748b" strokeDasharray="3 3" dot={false} connectNulls={false} />
         <YAxis yAxisId="anomaly" orientation="right" domain={[-1.2,1.2]} tick={{fill:'#fbbf24',fontSize:10}} width={35} />
-        <Line yAxisId="anomaly" dataKey="anomaly" name="Anomaly Δ (right axis)" stroke="#fbbf24" dot={false} connectNulls={false} />
-        <Line dataKey="value" name={observations[0]?.index ?? 'Vegetation'} stroke="#34d399" dot={{r:2}} connectNulls={false} />
+        <Line isAnimationActive={false} yAxisId="anomaly" dataKey="anomaly" name="Anomaly Δ (right axis)" stroke="#fbbf24" dot={false} connectNulls={false} />
+        <Line isAnimationActive={false} dataKey="value" name={observations[0]?.index ?? 'Vegetation'} stroke="#34d399" dot={{r:2}} connectNulls={false} />
       </ComposedChart>
     </ResponsiveContainer>
   </div>;

@@ -1,8 +1,4 @@
-> **Release verification (2026-11-06):** 189 SQLite + 189 PostgreSQL regressions pass. New real Jasper and Kangaroo Island worker publications and isolated Rhodes cold/warm analysis verified. [Measured results and remaining release limits](docs/FINAL_RELEASE_VERIFICATION.md) · [Global architecture](docs/GLOBAL_ON_DEMAND_ARCHITECTURE.md).
-
-> **Clean environment active (2026-11-06):** PostgreSQL/PostGIS, API, worker and frontend are running; FIRMS and Earth Engine are authenticated. Open http://localhost:3000/explorer and select a bounded area. A new real Rhodes analysis and cache reuse passed. See [current verification and limits](docs/PHASE7_REAL_VERIFICATION.md). For future starts use `bash scripts/start_clean_environment.sh --earth-engine` to retain the read-only ADC mounts.
-
-> **Clean API-first installation (2026-11-06):** The old database/cache were intentionally deleted; no recovery or bulk reimport is required. Start a dedicated empty PostgreSQL/PostGIS environment with `sudo bash scripts/start_clean_environment.sh`. FIRMS on-demand is the Explorer default; Earth Engine requires private ADC setup. See [setup and current verification status](docs/DOCKER_ENVIRONMENT_RECOVERY.md).
+> **Final recovery audit — 6 November 2026:** 192 SQLite and 192 PostgreSQL/PostGIS tests pass. Home and Recovery open real observation windows and published event assessments; native-cell histories and seasonal event comparisons are connected. See [requirements coverage](docs/ORIGINAL_REQUIREMENTS_AUDIT.md), [independent science](docs/POST_FIRE_RECOVERY_VALIDATION.md), [browser checks](docs/RECOVERY_UX_VERIFICATION.md) and [final report and limits](docs/FINAL_FUNCTIONAL_VERIFICATION.md).
 
 # AfterFire — The Life of a Forest After Fire
 *Understand the fire. Follow the recovery. Discover what happens next.*
@@ -11,7 +7,7 @@
 [![FastAPI](https://img.shields.io/badge/Backend-FastAPI%20%2F%20Python-009688.svg)](https://fastapi.tiangolo.com/)
 [![React 18](https://img.shields.io/badge/Frontend-React%2018%20%2F%20TypeScript-61dafb.svg)](https://react.dev/)
 [![TailwindCSS](https://img.shields.io/badge/Style-Dark%20Cinematic%20Tailwind-38bdf8.svg)](https://tailwindcss.com/)
-[![Tests](https://img.shields.io/badge/Tests-Pytest%20189%20SQLite%20%2B%20189%20PostGIS-brightgreen.svg)]()
+[![Tests](https://img.shields.io/badge/Tests-Pytest%20192%20SQLite%20%2B%20192%20PostGIS-brightgreen.svg)]()
 
 An end-to-end scientific web application submitted for the **NASA Space Apps Challenge 2026**:
 **Harmonization of MODIS and VIIRS Hot Spots** with post-fire ecological recovery extension.
@@ -93,17 +89,13 @@ MODIS (1km nominal nadir) and VIIRS (375m I-band) differ fundamentally in pixel 
 - Groups observations into multi-sensor activity calendars without double-counting physical fire perimeters.
 - Implements greedy spatiotemporal proximity grouping (7km / 3-day max temporal gap) to infer candidate disturbance events.
 
-### 3.2 Pre-Fire Baseline & Recovery Trajectory Engine
-- **Multi-Year Seasonal Baseline**: Uses 16-day MODIS MOD13Q1 NDVI composite observations prior to the fire disturbance to calculate baseline mean ($\mu$) and standard deviation ($\sigma$).
-- **Disturbance Trough**: Identifies post-fire minimum composite value and computes disturbance drop magnitude and percentage.
-- **Recovery Quotient**:
-  $$\text{Recovery \%} = \frac{\text{NDVI}_{\text{latest}} - \text{NDVI}_{\text{trough}}}{\text{NDVI}_{\text{baseline}} - \text{NDVI}_{\text{trough}}} \times 100$$
-- **Qualitative Status Classification**:
-  - `Substantially Recovered` ($\ge 90\%$)
-  - `Partial Recovery` ($60\% - 89\%$)
-  - `Stagnant / Slow Recovery` ($< 60\%$)
-- **QA Bitmask Filtering**: Uses 16-bit MOD13Q1 QA words to exclude cloud, snow/ice, and heavy aerosol contamination.
-- **Explicit Limitations**: Documents that spectral greenness reflects chlorophyll absorption, not climax biodiversity, soil carbon, or age structure.
+### 3.2 Seasonal post-fire vegetation evidence
+
+The supported event workflow starts in [Explorer](http://localhost:3000/explorer) or the [published Recovery Stories](http://localhost:3000/recovery). FIRMS candidates lead to bounded MOD13Q1.061 and MCD64A1.061 analyses through Earth Engine. Hotspots and their provisional buffer are distinct from QA-screened native mapped burned cells.
+
+For each NDVI/EVI composite, the reference uses wholly pre-fire observations within ±24 seasonal days, at least three observations from two years. Baseline = median; reference half-band = `max(0.05, 1.4826 × MAD)`; anomaly = observed − baseline. Missing values stay null. Descriptive trend, initial impact, latest supported anomaly, sustained return, historical negative periods and native-cell support are separate indicators. There is no recovery score or claim of full ecological restoration. See [methodology](docs/RECOVERY_ASSESSMENT_METHODOLOGY.md).
+
+Legacy area reports remain accessible and explicitly identify their older non-seasonal mean/quotient method. They are not the event Recovery Story or the event comparison methodology.
 
 ### 3.3 Multiple Wildfire Recurrence & Interrupted Regrowth
 - Tracks return intervals between consecutive events on the same territory.
@@ -120,8 +112,8 @@ MODIS (1km nominal nadir) and VIIRS (375m I-band) differ fundamentally in pixel 
 ### Option A: Local Development (Fastest, zero-setup)
 
 #### 1. Prerequisites
-- Python 3.10+
-- Node.js 18+ and npm
+- Python 3.12+
+- Node.js 20+ and npm (Router 7 requires Node 20+)
 
 #### 2. Backend Setup
 ```bash
@@ -137,7 +129,7 @@ The backend initializes the database and seeds calibrated synthetic study cases 
 FIRMS MAP key to retrieve observations. The Explorer hides synthetic presets and only
 displays real observations, grouped into zoom-dependent map clusters.
 
-The Explorer opens on Italy and defaults to all available dates in the local archive.
+The Explorer opens on Italy and defaults to bounded online FIRMS observations. Select archive mode explicitly to inspect locally imported history.
 For complete Italy ingestion, resumable annual downloads, API backfill and indexing, see [backend/README.md](backend/README.md).
 The map remains globally navigable; its Italian starting view is not a geographic
 restriction on map movement or area searches. An optional WGS84 circle can be drawn

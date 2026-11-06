@@ -42,7 +42,10 @@
 
 ---
 
-## 3. Post-Fire Canopy Recovery Trajectory Engine
+## 3. Historical area-level recovery engine
+
+**Legacy scope only.** Sections 3–4 describe the original area-level engine retained for compatibility. They do not define the supported event Recovery Story, Intelligence or comparison. The event workflow below uses strict QA and a seasonal median/MAD, with no recovery quotient. See [current audit](POST_FIRE_RECOVERY_VALIDATION.md) and [assessment methodology](RECOVERY_ASSESSMENT_METHODOLOGY.md).
+
 
 ### 3.1 Pre-Fire Multi-Year Baseline
 The implemented baseline is the mean and standard deviation of valid pre-fire
@@ -130,7 +133,7 @@ Later candidates must start after the selected event's last detection and have a
 
 ```mermaid
 flowchart LR
-  Native[Native HDF4 bands] --> QA[Range + detailed QA + pixel reliability]
+  Native[Native MODIS Collection 6.1 bands via bounded APIs or retained verified sources] --> QA[Range + detailed QA + pixel reliability]
   QA --> Area[Identical event analysis geometry]
   Area --> Median[Spatial medians and explicit gaps]
   Median --> Reference[Pre-event seasonal median / MAD]
@@ -182,3 +185,7 @@ thresholds are unchanged; native spatial consumers retain the original float32 c
 ## Release verification — 2026-11-06
 
 See [the current release record](FINAL_RELEASE_VERIFICATION.md) for newly executed multi-continent FIRMS/Earth Engine checks, strict QA and baseline evidence, cold/warm/cache measurements, 189 tests on each database, frontend verification and explicit remaining limits. Earlier measurements in this document remain historical; they were not newly revalidated against deleted HDF sources.
+
+## Final audit — 6 November 2026
+
+[Independent validation](POST_FIRE_RECOVERY_VALIDATION.md) recomputes raw QA, source scaling, native cell areas, seasonal references and trend/persistence from the current three publications. Historical HDF equivalence reports remain historical: deleted HDF files were not reacquired. Home no longer presents fixed synthetic recovery percentages, Compare uses only seasonal event assessments, and native-cell histories are connected to Recovery Intelligence. [Requirements matrix](ORIGINAL_REQUIREMENTS_AUDIT.md).

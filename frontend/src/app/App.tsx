@@ -6,6 +6,7 @@ import { Footer } from '../components/layout/Footer';
 const HomePage = lazy(() => import('../pages/HomePage').then(m => ({default: m.HomePage})));
 const ExplorerPage = lazy(() => import('../pages/ExplorerPage').then(m => ({default: m.ExplorerPage})));
 const TerritoryPage = lazy(() => import('../pages/TerritoryPage').then(m => ({default: m.TerritoryPage})));
+const RecoveryLibraryPage = lazy(() => import('../pages/RecoveryLibraryPage').then(m => ({default: m.RecoveryLibraryPage})));
 const RecoveryPage = lazy(() => import('../pages/RecoveryPage').then(m => ({default: m.RecoveryPage})));
 const RecurrencePage = lazy(() => import('../pages/RecurrencePage').then(m => ({default: m.RecurrencePage})));
 const ComparePage = lazy(() => import('../pages/ComparePage').then(m => ({default: m.ComparePage})));
@@ -35,6 +36,7 @@ export const App: React.FC = () => {
               <Route path="/explorer" element={<ExplorerPage />} />
               <Route path="/events/:eventId" element={<EventAnalysisPage />} />
               <Route path="/territory/:areaId" element={<TerritoryPage />} />
+              <Route path="/recovery" element={<RecoveryLibraryPage />} />
               <Route path="/recovery/:areaId" element={<RecoveryPage />} />
               <Route path="/recurrence" element={<RecurrencePage />} />
               <Route path="/events/:eventId/reburn" element={<RecurrencePage />} />

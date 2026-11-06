@@ -5,36 +5,15 @@ import { DemoBanner } from '../components/common/DemoBanner';
 
 export const HomePage: React.FC = () => {
   const presets = [
-    {
-      id: 'rhodes-greece-2023',
-      title: 'Rhodes Island Wildfire (2023)',
-      country: 'Greece',
-      biome: 'Mediterranean Pine Forest',
-      drop: '-73.8%',
-      status: 'Partial Recovery (64%)',
-      desc: 'Heatwave Cerberus severe blaze in southern Rhodes pine and maquis ecosystems.',
-      date: 'July 2023',
-    },
-    {
-      id: 'jasper-canada-2024',
-      title: 'Jasper National Park Complex (2024)',
-      country: 'Canada',
-      biome: 'Boreal & Montane Conifer',
-      drop: '-80.5%',
-      status: 'Early Regrowth Phase',
-      desc: 'High-severity pyrocumulonimbus fire run across the Athabasca River valley.',
-      date: 'July-August 2024',
-    },
-    {
-      id: 'kangaroo-island-2020',
-      title: 'Kangaroo Island Multi-Fire (2020)',
-      country: 'Australia',
-      biome: 'Temperate Eucalyptus & Mallee',
-      drop: '-81.2%',
-      status: 'Compound Disturbance Study',
-      desc: 'Black Summer compound re-burn crisis with multi-year epicormic regrowth trajectory.',
-      date: 'Dec 2019 - Jan 2020',
-    },
+    {id:'rhodes', title:'Rhodes, Greece — July 2023', country:'Greece', date:'20–22 July 2023',
+      query:'period=custom&start=2023-07-20&end=2023-07-22&sensor=MODIS&map=27.92,36.14,27.98,36.20&z=11',
+      desc:'Explore bounded real FIRMS observations and open a candidate to inspect its published vegetation evidence.'},
+    {id:'jasper', title:'Jasper, Canada — July 2024', country:'Canada', date:'23–25 July 2024',
+      query:'period=custom&start=2024-07-23&end=2024-07-25&sensor=MODIS&map=-118.2,52.75,-118.0,52.95&z=10',
+      desc:'Sparse or missing seasonal references remain explicit. Available observations do not guarantee a supported recovery indicator.'},
+    {id:'kangaroo', title:'Kangaroo Island, Australia — January 2020', country:'Australia', date:'2–4 January 2020',
+      query:'period=custom&start=2020-01-02&end=2020-01-04&sensor=MODIS&map=136.75,-35.85,136.80,-35.80&z=11',
+      desc:'Inspect a local candidate, native mapped burned cells and seasonal NDVI/EVI anomalies. This viewport is not the entire disaster extent.'},
   ];
 
   return (
@@ -79,7 +58,7 @@ export const HomePage: React.FC = () => {
                 <ArrowRight className="w-4 h-4" />
               </Link>
               <Link
-                to="/recovery/rhodes-greece-2023"
+                to="/recovery"
                 className="flex items-center space-x-2 px-6 py-3.5 rounded-xl bg-dark-800 hover:bg-dark-700 text-slate-200 font-semibold text-sm border border-dark-700 transition-all hover:border-slate-500"
               >
                 <Activity className="w-4 h-4 text-emerald-400" />
@@ -123,12 +102,12 @@ export const HomePage: React.FC = () => {
                 <span className="text-xs font-mono uppercase text-emerald-400 font-bold">Phase 3</span>
                 <span className="text-xs text-slate-400">Trajectory & Recurrence</span>
               </div>
-              <h3 className="text-lg font-bold text-white">Ecological Recovery</h3>
+              <h3 className="text-lg font-bold text-white">Vegetation after fire</h3>
               <p className="text-xs text-slate-400 leading-relaxed">
-                Tracks canopy greenness return relative to pre-fire baseline, flags stalled regeneration, and identifies compounding re-burn risks before recovery.
+                Tracks observed NDVI/EVI relative to pre-fire seasonal references, shows persistent anomalies and checks mapped evidence of repeated burning.
               </p>
               <div className="pt-2 text-[11px] font-mono text-emerald-300 bg-emerald-950/40 p-2 rounded border border-emerald-800/40">
-                Recovery Quotient & Status Metric
+                Seasonal anomalies, trend & observation support
               </div>
             </div>
           </div>
@@ -139,8 +118,8 @@ export const HomePage: React.FC = () => {
       <section className="py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
         <div className="flex flex-wrap items-center justify-between gap-4 mb-8">
           <div>
-            <h2 className="text-2xl font-bold text-white">Calibrated Historical Study Cases</h2>
-            <p className="text-xs text-slate-400 mt-1">Select a verified real-world territory to explore its full fire and recovery chronology</p>
+            <h2 className="text-2xl font-bold text-white">Explore historical observations</h2>
+            <p className="text-xs text-slate-400 mt-1">Choose a bounded satellite observation window, then inspect a real candidate and its available recovery evidence</p>
           </div>
           <Link to="/explorer" className="text-xs text-accent-fire hover:underline flex items-center gap-1 font-semibold">
             View on Interactive Map <ArrowRight className="w-3.5 h-3.5" />
@@ -158,29 +137,22 @@ export const HomePage: React.FC = () => {
                   <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-dark-800 text-slate-300 border border-dark-700">
                     {p.country} • {p.date}
                   </span>
-                  <span className="text-xs font-bold text-accent-fire">{p.drop}</span>
+
                 </div>
                 <h3 className="text-base font-bold text-white">{p.title}</h3>
                 <p className="text-xs text-slate-400 leading-relaxed">{p.desc}</p>
-                <div className="text-xs text-slate-300 flex items-center justify-between border-t border-dark-800 pt-3">
-                  <span className="text-slate-500">Ecosystem:</span>
-                  <span className="font-medium text-slate-200">{p.biome}</span>
-                </div>
-                <div className="text-xs text-slate-300 flex items-center justify-between">
-                  <span className="text-slate-500">Recovery Status:</span>
-                  <span className="font-semibold text-emerald-400">{p.status}</span>
-                </div>
+
               </div>
 
               <div className="pt-5 mt-4 border-t border-dark-800 flex items-center gap-2">
                 <Link
-                  to={`/territory/${p.id}`}
+                  to={`/explorer?${p.query}`}
                   className="flex-1 text-center py-2 px-3 rounded-lg bg-dark-800 hover:bg-dark-700 text-xs font-medium text-slate-200 transition-colors"
                 >
-                  Timeline
+                  Explore observations
                 </Link>
                 <Link
-                  to={`/recovery/${p.id}`}
+                  to="/recovery"
                   className="flex-1 text-center py-2 px-3 rounded-lg bg-accent-fire/15 hover:bg-accent-fire/25 text-accent-fire text-xs font-semibold border border-accent-fire/30 transition-colors"
                 >
                   Recovery

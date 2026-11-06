@@ -8,3 +8,5 @@ export interface CellProperties {valid_fraction?:number;id:string;grid:number[];
 export interface RecoveryMap extends FeatureCollection<Geometry,CellProperties> {zones:Feature[];native_resolution_m:number;coverage_cells:number;sufficient_cells:number;missing_assets:string[];classification_period:{start:string;end:string}}
 export interface AssessmentOption {parameters:{post_start?:string|null;post_end?:string|null};version:string;assessment_id:string;event_id:string;name:string;created_at:string}
 export interface RecoveryComparison {id:string;status:string;index:string;common_horizon_months:number;common_start_months:number;common_duration_months:number;reasons:string[];normalization:string;limitations:string[];events:{event_id:string;event_period:{start:string;end:string};observed_burned_area_km2:number|null;metric:RecoveryMetric;points:RecoveryPoint[]}[]}
+
+export interface RecoveryCell extends Feature<Geometry, CellProperties & {series:RecoveryPoint[]}> {}

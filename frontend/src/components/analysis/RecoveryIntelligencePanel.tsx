@@ -1,9 +1,11 @@
+import L from 'leaflet';
 import React,{useEffect,useState} from 'react';
 import {Link} from 'react-router-dom';
 import {useMutation,useQuery,useQueryClient} from '@tanstack/react-query';
 import {MapContainer,GeoJSON} from 'react-leaflet';
 import {SatelliteBasemap} from '../map/SatelliteBasemap';
 import {recoveryApi} from '../../api/recovery';
+import {ResponsiveContainer,LineChart,Line,XAxis,YAxis,CartesianGrid,Tooltip,Legend,ReferenceLine} from 'recharts';
 import type {CellProperties} from '../../types/recovery';
 const fmt=(n:number|null|undefined)=>n==null?'Unavailable':n.toFixed(4);
 const colors={negative:'#ef7657',neutral:'#ded9c4',positive:'#41b8bb',missing:'#8b879b'};
@@ -32,11 +34,14 @@ export function RecoveryIntelligencePanel({eventId,sourceJobId,index,selectedDat
   const data=result.data;
   const map=useQuery({queryKey:['recovery-map',eventId,data?.job_id,index,selectedDate],queryFn:()=>recoveryApi.map(eventId,data!.job_id,index,selectedDate),enabled:!!data,retry:false});
   useEffect(()=>setCell(null),[selectedDate,index,layer,data?.job_id]);
+  const cellHistory=useQuery({queryKey:['recovery-cell',eventId,data?.job_id,index,cell?.id],
+    queryFn:()=>recoveryApi.cell(eventId,data!.job_id,index,cell!.id),enabled:!!data&&!!cell,retry:false});
+  const cellCentre=cellHistory.data?L.geoJSON(cellHistory.data).getBounds().getCenter():null;
   const metric=data?.indices[index];
   const busy=!!status.data&&!['completed','failed'].includes(status.data.state);
   function color(p:CellProperties){
     if(layer==='reliability') return p.completeness>=.7?'#49b6a3':p.completeness>0?'#e5b963':colors.missing;
-    if(layer==='persistence') return p.classification==='insufficient_data'?colors.missing:p.classification==='persistent_negative_anomaly'?colors.negative:colors.neutral;
+    if(layer==='persistence') return p.classification==='insufficient_data'?colors.missing:['persistent_negative_anomaly','below_reference'].includes(p.classification)?colors.negative:p.classification==='above_reference'?colors.positive:colors.neutral;
     const value=layer==='trend'?p.trend_per_year:p.anomaly;
     return value==null?colors.missing:value<-.05?colors.negative:value>.05?colors.positive:colors.neutral;
   }
@@ -70,10 +75,21 @@ export function RecoveryIntelligencePanel({eventId,sourceJobId,index,selectedDat
           {map.data&&zones&&<GeoJSON key={`${data.job_id}-${index}-zones`} data={{type:'FeatureCollection',features:map.data.zones} as import('geojson').FeatureCollection} interactive={false} style={{color:'#ffdb87',weight:3,fillOpacity:0}}/>}
         </MapContainer></div>
         {map.isFetching&&<p role="status" className="text-sm">Loading {index} spatial evidence for {selectedDate}…</p>}
-        {map.data&&<p className="text-xs text-slate-400">{layer==='reliability'?'Teal: ≥70% supported · amber: limited · grey: no supported observations':layer==='persistence'?'Warm: persistent negative · neutral: other supported evidence · grey: insufficient data':'Warm: <−0.05 · neutral: −0.05 to +0.05 · teal: >+0.05 · grey: nodata'}{layer==='trend'?' index units/year':''}. Yellow outlines: ≥{data.parameters.min_cluster_cells} four-neighbour persistent cells. {map.data.sufficient_cells}/{map.data.coverage_cells} cells with sufficient evidence. Cells follow native raster footprints; no interpolation.</p>}
+        {map.data&&<p className="text-xs text-slate-400">{layer==='reliability'?'Teal: ≥70% supported · amber: limited · grey: no supported observations':layer==='persistence'?'Warm: below reference (including persistent negative) · neutral: within reference · teal: above reference · grey: insufficient data':'Warm: <−0.05 · neutral: −0.05 to +0.05 · teal: >+0.05 · grey: nodata'}{layer==='trend'?' index units/year':''}. Yellow outlines: ≥{data.parameters.min_cluster_cells} four-neighbour persistent cells. {map.data.sufficient_cells}/{map.data.coverage_cells} cells with sufficient evidence. Cells follow native raster footprints; no interpolation.</p>}
         {!!map.data?.missing_assets.length&&<p role="alert">{map.data.missing_assets.length} scientific assets are unavailable; spatial results are partial.</p>}
       </>
-      {cell&&<article aria-label="Selected recovery cell" className="rounded border border-teal-800 p-3 text-sm"><h3>Native cell {cell.id} · {cell.date}</h3><p>Value {fmt(cell.value)} · pixel baseline {fmt(cell.baseline)} · anomaly {fmt(cell.anomaly)}</p><p>{cell.classification} · supported coverage {(cell.completeness*100).toFixed(1)}% · persistent duration {cell.persistent_days} days · observed footprint {cell.area_km2.toFixed(4)} km²</p><p>Reference: {cell.baseline_n??'see assessment'} composites / {cell.baseline_years??'see assessment'} years. Selected-cell QA: {cell.valid_fraction==null?'unavailable':cell.valid_fraction>0?'valid':'missing or rejected'}. Blue outline: analysis geometry; orange: associated burned cells.</p></article>}
+      {cell&&<article aria-label="Selected recovery cell" className="rounded border border-teal-800 p-3 text-sm"><h3>Native cell {cell.id} · {cell.date}</h3><p>Value {fmt(cell.value)} · pixel baseline {fmt(cell.baseline)} · anomaly {fmt(cell.anomaly)}</p><p>{cell.classification} · supported coverage {(cell.completeness*100).toFixed(1)}% · persistent duration {cell.persistent_days} days · observed footprint {cell.area_km2.toFixed(4)} km²</p><p>Reference: {cell.baseline_n??'see assessment'} composites / {cell.baseline_years??'see assessment'} years. Selected-cell QA: {cell.valid_fraction==null?'unavailable':cell.valid_fraction>0?'valid':'missing or rejected'}. Blue outline: analysis geometry; orange: associated burned cells.</p>
+        {cellCentre&&<p>Footprint centre (WGS84, approximate): {cellCentre.lat.toFixed(5)}°, {cellCentre.lng.toFixed(5)}°</p>}
+        <p>Native grid row {cell.grid[0]}, column {cell.grid[1]} · NASA MOD13Q1.061 · strict source QA · dimensionless {index}.</p>
+        {cellHistory.isFetching&&<p role="status">Loading native cell history…</p>}
+        {cellHistory.isError&&<p role="alert">Cell history unavailable. Select the cell again to retry.</p>}
+        {cellHistory.data&&<>
+          <div className="h-64" aria-label="Selected cell vegetation history"><ResponsiveContainer width="100%" height="100%"><LineChart data={cellHistory.data.properties.series} margin={{top:10,right:20,left:0,bottom:15}}><CartesianGrid stroke="#334155"/><XAxis dataKey="date" tick={{fontSize:10}} minTickGap={55}/><YAxis domain={['auto','auto']} width={45}/><Tooltip formatter={(value:unknown)=>typeof value==='number'?value.toFixed(4):String(value)} contentStyle={{background:'#0f172a',borderColor:'#334155',fontSize:12}} labelStyle={{color:'#e2e8f0'}}/><Legend/><ReferenceLine x={selectedDate} stroke="#ffffff"/>
+            <Line dataKey="value" name={index} stroke="#34d399" dot={{r:1}} connectNulls={false} isAnimationActive={false}/><Line dataKey="baseline" name="Cell seasonal median" stroke="#fbbf24" dot={false} connectNulls={false} isAnimationActive={false}/><Line dataKey="anomaly" name="Cell seasonal anomaly" stroke="#38bdf8" dot={false} connectNulls={false} isAnimationActive={false}/>
+          </LineChart></ResponsiveContainer></div>
+          <details><summary>Observed dates, reference support and gaps</summary><div className="max-h-64 overflow-auto"><table className="w-full text-xs"><caption>Native cell history · {index} · null values remain unavailable</caption><thead><tr><th>Date</th><th>Observed</th><th>Baseline</th><th>Anomaly</th><th>Refs / years</th></tr></thead><tbody>{cellHistory.data.properties.series.map(p=><tr key={p.date}><td>{p.date}</td><td>{fmt(p.value)}</td><td>{fmt(p.baseline)}</td><td>{fmt(p.anomaly)}</td><td>{p.baseline_n??0} / {p.baseline_years??0}</td></tr>)}</tbody></table></div></details>
+        </>}
+      </article>}
       <div className="flex flex-wrap gap-3">{data.raster_assets?.filter(a=>a.index===index).map(a=><a key={a.name} className="text-xs text-teal-300 underline" href={`/api/v1/events/${encodeURIComponent(eventId)}/recovery-assessment/assets/${data.job_id}/${a.name}`}>Download native recovery GeoTIFF ({a.bands} bands)</a>)}</div>
       <details><summary>Methods and limits</summary>{data.limitations.map(l=><p key={l} className="text-xs text-slate-400">{l}</p>)}</details>
     </>}

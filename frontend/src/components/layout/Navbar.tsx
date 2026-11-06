@@ -16,10 +16,9 @@ export const Navbar: React.FC = () => {
 
   const navLinks = [
     { to: '/explorer', label: 'Explorer', icon: Compass },
-    { to: '/recovery/rhodes-greece-2023', label: 'Recovery', icon: Activity },
+    { to: '/recovery', label: 'Recovery', icon: Activity },
     { to: '/recurrence', label: 'Recurring Fires', icon: Repeat },
     { to: '/compare', label: 'Compare', icon: GitCompare },
-    { to: '/report/rhodes-greece-2023', label: 'Reports', icon: FileText },
     { to: '/datasets', label: 'Datasets', icon: Database },
   ];
 

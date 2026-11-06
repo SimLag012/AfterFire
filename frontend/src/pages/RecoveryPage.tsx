@@ -45,6 +45,7 @@ export const RecoveryPage: React.FC = () => {
       <DemoBanner area={area} />
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 w-full space-y-8">
+        <p role="note" className="rounded border border-amber-700 p-3 text-sm text-amber-200">Legacy area report: these mean-based summaries do not use the seasonal event methodology. For supported NDVI/EVI anomalies, native-cell evidence and observation gaps, <Link className="underline" to="/recovery">open published Recovery Stories</Link>.</p>
         {/* Header & Territory Switcher */}
         <div className="flex flex-wrap items-center justify-between gap-4 border-b border-dark-800 pb-5">
           <div className="space-y-1">

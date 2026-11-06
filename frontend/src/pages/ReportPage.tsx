@@ -55,6 +55,7 @@ export const ReportPage: React.FC = () => {
 
       {/* Main Report Document Sheet */}
       <main className="max-w-4xl mx-auto w-full px-6 py-8 print:p-0">
+        <p role="note" className="rounded border border-amber-700 p-3 text-sm text-amber-200">Legacy area report: these mean-based summaries do not use the seasonal event methodology. For supported NDVI/EVI anomalies, native-cell evidence and observation gaps, <Link className="underline" to="/recovery">open published Recovery Stories</Link>.</p>
         <div className="bg-dark-900 border border-dark-800 rounded-2xl p-8 sm:p-12 shadow-2xl space-y-8 print:border-none print:shadow-none print:bg-white print:p-0">
           {/* Header */}
           <div className="border-b-2 border-dark-700 print:border-slate-800 pb-6 space-y-2">

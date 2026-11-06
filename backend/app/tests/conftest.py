@@ -12,7 +12,13 @@ if _postgres_test_url:
     os.environ['DATABASE_URL'] = _postgres_test_url
 else:
     os.environ['DATABASE_URL'] = f'sqlite+aiosqlite:///{_test_directory}/tests.db'
+# Provider unit tests opt in explicitly; never inherit the deployment's live credentials.
 os.environ['FIRMS_MAP_KEY'] = ''
+os.environ['AFTERFIRE_EARTH_ENGINE_ENABLED'] = 'false'
+os.environ['AFTERFIRE_EE_PROJECT_ID'] = ''
+os.environ['AFTERFIRE_SATELLITE_PROVIDER'] = 'auto'
+for _credential in ('EARTHDATA_USERNAME', 'EARTHDATA_PASSWORD', 'EARTHDATA_TOKEN', 'LLM_API_KEY'):
+    os.environ[_credential] = ''
 os.environ['AFTERFIRE_APPEEARS_ENABLED'] = 'false'
 atexit.register(shutil.rmtree, _test_directory, ignore_errors=True)
 

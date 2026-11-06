@@ -268,9 +268,20 @@ def analysis_tiles(geometry):
     native = project(geometry,WGS84,SINUSOIDAL)
     x0,y0,x1,y1 = native.bounds
     from shapely.geometry import box
-    return [f'h{h:02d}v{v:02d}' for h in range(max(0,int((x0-X_MIN)//TILE_SIZE)),min(35,int((x1-X_MIN)//TILE_SIZE))+1)
-            for v in range(max(0,int((Y_MAX-y1)//TILE_SIZE)),min(17,int((Y_MAX-y0)//TILE_SIZE))+1)
-            if geometry.bounds[2]-geometry.bounds[0]<=180 or native.intersects(box(X_MIN+h*TILE_SIZE,Y_MAX-(v+1)*TILE_SIZE,X_MIN+(h+1)*TILE_SIZE,Y_MAX-v*TILE_SIZE))]
+    # Whole native-cell unions can end exactly on a tile edge. A WGS84 round
+    # trip adds sub-micrometre noise: snap tile-coordinate bounds only within
+    # 1e-10 tile (~0.1 mm), then use a half-open extent. Touching an adjacent
+    # tile is not scientific pixel support and must not trigger acquisition.
+    def snapped(value):
+        nearest=round(value)
+        return nearest if abs(value-nearest)<1e-10 else value
+    h0=max(0,math.floor(snapped((x0-X_MIN)/TILE_SIZE)))
+    h1=min(35,math.ceil(snapped((x1-X_MIN)/TILE_SIZE))-1)
+    v0=max(0,math.floor(snapped((Y_MAX-y1)/TILE_SIZE)))
+    v1=min(17,math.ceil(snapped((Y_MAX-y0)/TILE_SIZE))-1)
+    return [f'h{h:02d}v{v:02d}' for h in range(h0,h1+1) for v in range(v0,v1+1)
+            if native.intersection(box(X_MIN+h*TILE_SIZE,Y_MAX-(v+1)*TILE_SIZE,
+                X_MIN+(h+1)*TILE_SIZE,Y_MAX-v*TILE_SIZE)).area>0]
 
 
 def expected_pixels(geometry, size=4800, include_grid=False):

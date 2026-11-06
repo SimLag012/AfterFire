@@ -98,6 +98,8 @@ async def request_analysis(event_id:str,request:AnalysisRequest=AnalysisRequest(
             from app.analysis.modis_science import event_territory
             from app.providers.satellite_availability import availability
             _,detections=await load_event(event_id)
+            if not detections:
+                raise HTTPException(422,'Event has no linked FIRMS observations; select a supported candidate')
             _,geometry=event_territory([(d.longitude,d.latitude) for d in detections],request.configuration.buffer_m)
             try:
                 from app.analysis.modis_science import geographic_bounds
