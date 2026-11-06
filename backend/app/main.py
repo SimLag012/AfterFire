@@ -67,6 +67,8 @@ app.include_router(analysis_router, prefix=settings.API_V1_STR, tags=["Geographi
 app.include_router(events_router, prefix=settings.API_V1_STR, tags=["Candidate Fire Events"])
 app.include_router(italy_router, prefix=settings.API_V1_STR, tags=["Italy Data Coverage"])
 app.include_router(explorer_router, prefix=settings.API_V1_STR, tags=["Observation Explorer"])
+from app.api.routes.global_fires import router as global_fires_router
+app.include_router(global_fires_router, prefix=settings.API_V1_STR, tags=["Global on-demand FIRMS"])
 
 app.include_router(event_analysis_router, prefix=settings.API_V1_STR, tags=["Post-fire satellite analysis"])
 

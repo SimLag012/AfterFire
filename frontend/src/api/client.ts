@@ -172,6 +172,7 @@ export const apiClient = {
   },
 
   getEvent: async (eventId: string, signal?: AbortSignal): Promise<EventDetailResponse> => {
+    if(eventId.startsWith('global-')) await api.post(`/global/events/${encodeURIComponent(eventId)}/select`,undefined,{signal});
     const res = await api.get(`/events/${encodeURIComponent(eventId)}`, { signal });
     return res.data;
   },
@@ -181,8 +182,8 @@ export const apiClient = {
     return res.data;
   },
 
-  getExplorerHotspots: async (params: Record<string, string | number | undefined>, online: boolean, signal?: AbortSignal): Promise<{detections: FireDetection[]; truncated: boolean}> => {
-    const res = await api.get(online ? '/explorer/recent' : '/explorer/hotspots', { params, signal });
+  getExplorerHotspots: async (params: Record<string, string | number | undefined>, online: boolean, signal?: AbortSignal): Promise<{detections: FireDetection[]; truncated: boolean; events?: EventSearchResponse['events']; total_events?:number; total_detections?:number; coverage?:{state:string;message:string}}> => {
+    const res = await api.get(online ? '/global/hotspots' : '/explorer/hotspots', { params, signal });
     return res.data;
   },
   searchLocations: async (q: string): Promise<{results: {name:string;lat:number;lon:number}[];attribution:string}> => {

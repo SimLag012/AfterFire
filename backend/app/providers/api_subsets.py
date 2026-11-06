@@ -69,8 +69,11 @@ def _subset_window(product, tile_name, geometry):
     size = GRID_DIMENSIONS[product]
     tile = tile_transform(tile_name,size)
     # Preserve whole burned cells used by the downstream vegetation selection.
-    native = project(geometry,WGS84,SINUSOIDAL).buffer(500).envelope
     x0,y0=tile*(0,0); x1,y1=tile*(size,size)
+    native = project(geometry,WGS84,SINUSOIDAL)
+    if geometry.bounds[2]-geometry.bounds[0]>180:
+        native=native.intersection(box(x0-500,y1-500,x1+500,y0+500))
+    native=native.buffer(500).envelope
     native=native.intersection(box(x0,y1,x1,y0))
     if native.is_empty: raise ProviderUnavailable('missing_data','AOI does not intersect the catalog tile')
     w=from_bounds(*native.bounds,transform=tile)

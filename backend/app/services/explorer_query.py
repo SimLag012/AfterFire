@@ -63,11 +63,13 @@ def observation_filters(bbox: str, start_date: date | None, end_date: date | Non
     return conditions
 
 
+SATELLITE_ALIASES={'Terra':['Terra','T'],'Aqua':['Aqua','A'],'S-NPP':['Suomi-NPP','S-NPP','N','SNPP'],
+    'NOAA-20':['NOAA-20','NOAA20','J1','N20','1'],'NOAA-21':['NOAA-21','NOAA21','J2','N21']}
+
+
 def satellite_filter(value):
-    aliases={'Terra':['Terra','T'],'Aqua':['Aqua','A'],'S-NPP':['Suomi-NPP','S-NPP','N','SNPP'],
-             'NOAA-20':['NOAA-20','NOAA20','J1'],'NOAA-21':['NOAA-21','NOAA21','J2']}
-    if value not in aliases: raise HTTPException(422,'Unknown satellite')
-    return D.satellite.in_(aliases[value])
+    if value not in SATELLITE_ALIASES: raise HTTPException(422,'Unknown satellite')
+    return D.satellite.in_(SATELLITE_ALIASES[value])
 
 
 def after_utc_filter(cutoff):

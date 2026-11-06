@@ -9,7 +9,7 @@ from datetime import date, datetime, timedelta
 
 import numpy as np
 import httpx
-from sqlalchemy import select
+from sqlalchemy import select, or_, and_
 from shapely.geometry import shape, mapping
 from shapely.ops import unary_union
 
@@ -50,6 +50,8 @@ async def nearby_candidates(event, geometry, end, buffer_m=1000):
     from app.analysis.modis_science import project, WGS84, SINUSOIDAL
     search_area=project(project(geometry,WGS84,SINUSOIDAL).buffer(buffer_m*1.5),SINUSOIDAL,WGS84)
     west,south,east,north = search_area.bounds
+    from app.analysis.modis_science import geographic_bounds
+    bounds=geographic_bounds(search_area)
     async with AsyncSessionLocal() as db:
         # Bound with SQL, then test actual metre-buffered hotspot footprint intersection below.
         rows = (await db.execute(select(FireEventCandidate,FireDetection.longitude,FireDetection.latitude)
@@ -57,8 +59,8 @@ async def nearby_candidates(event, geometry, end, buffer_m=1000):
             .join(FireDetection,FireDetection.id==FireEventDetection.detection_id)
             .where(FireEventCandidate.id!=event.id,FireEventCandidate.is_synthetic_demo!='true',
                    FireEventCandidate.start_date<=end,FireEventCandidate.end_date>=event.start_date-timedelta(days=120),
-                   FireDetection.longitude>=west,FireDetection.longitude<=east,
-                   FireDetection.latitude>=south,FireDetection.latitude<=north)
+                   or_(*(and_(FireDetection.longitude>=w,FireDetection.longitude<=e,
+                      FireDetection.latitude>=s,FireDetection.latitude<=n) for w,s,e,n in bounds)))
             .limit(100001))).all()
     if len(rows)>100000:
         raise ValueError('Too many neighbouring detections to assess geographic ambiguity safely')
@@ -139,7 +141,11 @@ async def run_pipeline(job, progress):
                                min(config.as_of,event.end_date+timedelta(days=31+config.burn_tolerance_days))),
                               ('MOD13Q1',before-timedelta(days=15),after)]:
         try:
-            catalogs[product] = await discover(product,provisional.bounds,start,end,settings.AFTERFIRE_ANALYSIS_MAX_GRANULES)
+            if provisional.bounds[2]-provisional.bounds[0]>180:
+                from app.providers.modis_catalog import discover_geometry
+                catalogs[product]=await discover_geometry(product,provisional,start,end,settings.AFTERFIRE_ANALYSIS_MAX_GRANULES)
+            else:
+                catalogs[product] = await discover(product,provisional.bounds,start,end,settings.AFTERFIRE_ANALYSIS_MAX_GRANULES)
             tiles = set(analysis_tiles(provisional))
             catalogs[product] = [r for r in catalogs[product] if r['tile'] in tiles]
             if product=='MOD13Q1':
@@ -508,7 +514,11 @@ async def preflight(event_id, config, progress=None):
     tiles=set(analysis_tiles(geometry))
     async def catalog(product, first, last):
         clock = time.monotonic()
-        found = await discover(product,geometry.bounds,first,last,settings.AFTERFIRE_ANALYSIS_MAX_GRANULES)
+        if geometry.bounds[2]-geometry.bounds[0]>180:
+            from app.providers.modis_catalog import discover_geometry
+            found=await discover_geometry(product,geometry,first,last,settings.AFTERFIRE_ANALYSIS_MAX_GRANULES)
+        else:
+            found = await discover(product,geometry.bounds,first,last,settings.AFTERFIRE_ANALYSIS_MAX_GRANULES)
         timings[product+'_catalog_seconds'] = round(time.monotonic()-clock,4)
         return [r for r in found if r['tile'] in tiles and (product!='MOD13Q1' or (date.fromisoformat(r['period']['start'])>=before and date.fromisoformat(r['period']['end'])<=after))]
     batches = await asyncio.gather(catalog('MCD64A1', start-timedelta(days=31+config.burn_tolerance_days),

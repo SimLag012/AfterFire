@@ -10,7 +10,10 @@ async def availability(bounds, event_end, as_of):
         def query():
             client=ApiSubsetProvider()
             ee=client.initialize()
-            area=ee.Geometry.Rectangle(list(bounds),geodesic=False)
+            if len(bounds)==2:
+                area=ee.Geometry.MultiPolygon([[[[w,s],[e,s],[e,n],[w,n],[w,s]]] for w,s,e,n in bounds],geodesic=False)
+            else:
+                area=ee.Geometry.Rectangle(list(bounds),geodesic=False)
             fields={}
             for product in ('MOD13Q1','MCD64A1'):
                 collection=ee.ImageCollection('MODIS/061/'+product).filterBounds(area)

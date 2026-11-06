@@ -189,7 +189,7 @@ class FirmsProvider:
         Parses and standardizes a single row from a FIRMS CSV download or API response.
         Preserves original fields while creating normalized attributes.
         """
-        instrument = row.get("instrument", "").strip().upper() or "MODIS"
+        instrument = row.get("instrument", "").strip().upper() or ("VIIRS" if "VIIRS" in dataset_name else "MODIS")
         satellite = row.get("satellite", "").strip() or "Unknown"
         
         lat = float(row.get("latitude", 0.0))

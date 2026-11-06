@@ -11,7 +11,7 @@ from pathlib import Path
 import numpy as np
 import rasterio
 from shapely.geometry import shape, mapping, Point
-from sqlalchemy import select, update
+from sqlalchemy import select, update, or_, and_
 from sqlalchemy.exc import IntegrityError
 from app.analysis.reburn import VERSION, ReburnParameters, ReburnDetectionEngine, RecoveryGapEngine, vegetation_history, cumulative_segments, add_mapping_coverage, identity
 from app.analysis.modis_science import granule_identity, read_subset, analysis_tiles, SINUSOIDAL, tile_transform, project, WGS84
@@ -208,13 +208,15 @@ def read_vegetation(payload, cutoff=None):
 
 async def historical_candidates(db, geometry, parameters):
     west,south,east,north=geometry.bounds
+    from app.analysis.modis_science import geographic_bounds
+    bounds=geographic_bounds(geometry)
     stmt=select(FireEventCandidate.id,FireEventCandidate.start_date,FireEventCandidate.end_date,
         FireDetection.longitude,FireDetection.latitude).join(FireEventDetection,FireEventDetection.event_id==FireEventCandidate.id).join(
         FireDetection,FireDetection.id==FireEventDetection.detection_id).where(
         FireEventCandidate.is_synthetic_demo!='true',FireEventCandidate.end_date>=parameters.start,
-        FireEventCandidate.start_date<=parameters.end,FireDetection.longitude>=west,FireDetection.longitude<=east,
-        FireDetection.latitude>=south,FireDetection.latitude<=north)
-    if db.get_bind().dialect.name=='postgresql':
+        FireEventCandidate.start_date<=parameters.end,
+        or_(*(and_(FireDetection.longitude>=w,FireDetection.longitude<=e,FireDetection.latitude>=s,FireDetection.latitude<=n) for w,s,e,n in bounds)))
+    if db.get_bind().dialect.name=='postgresql' and len(bounds)==1:
         from sqlalchemy import func, literal_column
         # Same indexed geography expression as the FIRMS explorer.
         point = literal_column('ST_SetSRID(ST_MakePoint(fire_detections.longitude, fire_detections.latitude),4326)::geography')
@@ -245,7 +247,11 @@ async def acquire_history(geometry, parameters, progress):
     from app.services.acquisition_plan import build_plan
     from app.schemas.satellite_analysis import AnalysisConfiguration
     from app.analysis.modis_science import validate_source
-    records=await discover('MCD64A1',geometry.bounds,parameters.start,parameters.end,settings.AFTERFIRE_ANALYSIS_MAX_GRANULES)
+    if geometry.bounds[2]-geometry.bounds[0]>180:
+        from app.providers.modis_catalog import discover_geometry
+        records=await discover_geometry('MCD64A1',geometry,parameters.start,parameters.end,settings.AFTERFIRE_ANALYSIS_MAX_GRANULES)
+    else:
+        records=await discover('MCD64A1',geometry.bounds,parameters.start,parameters.end,settings.AFTERFIRE_ANALYSIS_MAX_GRANULES)
     records=[r for r in records if r['tile'] in analysis_tiles(geometry)]
     if len(records)>settings.AFTERFIRE_ANALYSIS_MAX_GRANULES:raise ValueError('Historical acquisition source limit exceeded')
     async with AsyncSessionLocal() as db:
@@ -266,9 +272,16 @@ async def acquire_history(geometry, parameters, progress):
         nonlocal downloaded
         downloaded+=count
         if downloaded>budget:raise ValueError('Historical API acquisition byte budget exhausted')
+    prefetched={}
+    missing=[r for r in records if plan['record_providers'].get(r['id'])=='api']
+    if missing:
+        await progress('processing',0,phase='api_subset',current_operation='Acquiring bounded historical native batches',provider='Google Earth Engine')
+        async with DOWNLOAD_SEMAPHORE:
+            prefetched=await cache_io(client.acquire_many,missing,geometry,budget,transfer)
     for n,record in enumerate(records):
         checked=await cache_io(cached_source,record)
-        if checked:path,meta=checked
+        if record['id'] in prefetched:path,meta,_=prefetched[record['id']]
+        elif checked:path,meta=checked
         else:
             await progress('processing',0,phase='api_subset',current_operation='Acquiring native historical API pixels',provider='Google Earth Engine',current_file=record['original_id'])
             async with DOWNLOAD_SEMAPHORE:

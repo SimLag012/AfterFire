@@ -150,3 +150,11 @@ async def discover(product, bbox, start, end, limit, client=None):
     return await metadata({'provider': CMR, 'product': product, 'version': '061',
         'bbox': list(bbox), 'start': str(start), 'end': str(end), 'limit': limit, 'parser': 1},
         lambda: _discover(product, bbox, start, end, limit), recent=(date.today()-end).days < 60)
+
+
+async def discover_geometry(product,geometry,start,end,limit):
+    from app.analysis.modis_science import geographic_bounds
+    groups=await asyncio.gather(*(discover(product,bounds,start,end,limit) for bounds in geographic_bounds(geometry)))
+    records={r['id']:r for group in groups for r in group}
+    if len(records)>limit:raise ValueError('Combined regional granule limit exceeded')
+    return list(records.values())

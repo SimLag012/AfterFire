@@ -46,18 +46,41 @@ def tile_transform(tile, size):
 
 
 def project(geom, source, target):
-    return transform(Transformer.from_crs(source, target, always_xy=True).transform, geom)
+    result=transform(Transformer.from_crs(source, target, always_xy=True).transform, geom)
+    if target==WGS84 and not result.is_empty and result.bounds[2]-result.bounds[0]>180:
+        return wrap_dateline(result)
+    return result
+
+
+def wrap_dateline(geometry):
+    from shapely.geometry import box
+    from shapely.affinity import translate
+    from shapely.ops import unary_union
+    unwrapped=transform(lambda x,y:(np.where(np.asarray(x)<0,np.asarray(x)+360,x),y),geometry)
+    west=unwrapped.intersection(box(-180,-90,180,90))
+    east=translate(unwrapped.intersection(box(180,-90,540,90)),xoff=-360)
+    return unary_union([part for part in (west,east) if not part.is_empty])
+
+
+def geographic_bounds(geometry):
+    if geometry.bounds[2]-geometry.bounds[0]<=180:return [geometry.bounds]
+    from shapely.geometry import box
+    return [part.bounds for part in (geometry.intersection(box(-180,-90,0,90)),
+        geometry.intersection(box(0,-90,180,90))) if not part.is_empty]
 
 
 def event_territory(points, buffer_m):
     if not points:
         raise ValueError("Event has no linked FIRMS observations")
     footprint = MultiPoint(points).convex_hull
+    dateline=footprint.bounds[2]-footprint.bounds[0]>180
+    if dateline:
+        footprint=MultiPoint([(lon+360 if lon<0 else lon,lat) for lon,lat in points]).convex_hull
     # Local azimuthal equidistant buffer in metres, never a geographic degree buffer.
     center = footprint.centroid
     local = CRS.from_proj4(f"+proj=aeqd +lat_0={center.y} +lon_0={center.x} +datum=WGS84 +units=m")
     area = project(project(footprint, WGS84, local).buffer(buffer_m), local, WGS84)
-    return footprint, area
+    return wrap_dateline(footprint) if dateline else footprint, area
 
 
 def area_km2(geometry):
@@ -244,8 +267,10 @@ def recurrence_state(start, end, next_start, observations):
 def analysis_tiles(geometry):
     native = project(geometry,WGS84,SINUSOIDAL)
     x0,y0,x1,y1 = native.bounds
+    from shapely.geometry import box
     return [f'h{h:02d}v{v:02d}' for h in range(max(0,int((x0-X_MIN)//TILE_SIZE)),min(35,int((x1-X_MIN)//TILE_SIZE))+1)
-            for v in range(max(0,int((Y_MAX-y1)//TILE_SIZE)),min(17,int((Y_MAX-y0)//TILE_SIZE))+1)]
+            for v in range(max(0,int((Y_MAX-y1)//TILE_SIZE)),min(17,int((Y_MAX-y0)//TILE_SIZE))+1)
+            if geometry.bounds[2]-geometry.bounds[0]<=180 or native.intersects(box(X_MIN+h*TILE_SIZE,Y_MAX-(v+1)*TILE_SIZE,X_MIN+(h+1)*TILE_SIZE,Y_MAX-v*TILE_SIZE))]
 
 
 def expected_pixels(geometry, size=4800, include_grid=False):

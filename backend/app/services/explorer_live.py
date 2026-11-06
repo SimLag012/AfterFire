@@ -48,8 +48,8 @@ async def recent(bbox,start,end,sensor,satellite):
                 if len(rows)>10000:raise HTTPException(413,'Online response too dense; narrow the area or interval')
         except FirmsProviderError as exc:raise HTTPException(exc.status_code,str(exc)) from None
         if satellite:
-            aliases={'Terra':['Terra','T'],'Aqua':['Aqua','A'],'S-NPP':['Suomi-NPP','S-NPP','N','SNPP'],'NOAA-20':['NOAA-20','NOAA20','J1'],'NOAA-21':['NOAA-21','NOAA21','J2']}
-            rows=[r for r in rows if r['satellite'] in aliases[satellite]]
+            from app.services.explorer_query import SATELLITE_ALIASES
+            rows=[r for r in rows if r['satellite'] in SATELLITE_ALIASES[satellite]]
         return save(key,{'detections':[FireDetectionResponse.model_validate(x).model_dump(mode='json') for x in rows[:2000]],'truncated':len(rows)>2000,'source':'NASA FIRMS online','limit':2000})
 
 

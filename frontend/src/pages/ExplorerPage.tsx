@@ -65,7 +65,6 @@ export const ExplorerPage: React.FC = () => {
   const [viewGeneration,setViewGeneration]=useState(0);
   const timer=useRef<ReturnType<typeof setTimeout>>();
   useEffect(()=>()=>clearTimeout(timer.current),[]);
-  const source=searchParams.get('source')==='online' ? 'online' : 'archive';
   const satellite=searchParams.get('satellite') || undefined;
   const fireVisible=searchParams.get('fire')!=='off';
   const candidatesVisible=searchParams.get('candidates')!=='off';
@@ -77,6 +76,9 @@ export const ExplorerPage: React.FC = () => {
   const [drawingCircle, setDrawingCircle] = useState(false);
   const [viewport, setViewport] = useState(ITALY_BBOX);
   const [zoom, setZoom] = useState(5);
+  const [viewWest,viewSouth,viewEast,viewNorth]=viewport.split(',').map(Number);
+  const outsideItaly=viewWest>viewEast || viewEast<6.3 || viewWest>18.9 || viewNorth<35.3 || viewSouth>47.2;
+  const source=searchParams.get('source')==='online' ? 'online' : searchParams.get('source')==='archive' ? 'archive' : outsideItaly ? 'online' : 'archive';
 
   const centerLat = parseNumber(searchParams.get('lat'), NaN);
   const centerLon = parseNumber(searchParams.get('lon'), NaN);
@@ -164,7 +166,7 @@ export const ExplorerPage: React.FC = () => {
       limit: PAGE_SIZE,
       offset: (candidatePage - 1) * PAGE_SIZE,
     }, signal),
-    enabled: hasValidDates && !invalidCircle,
+    enabled: source==='archive' && hasValidDates && !invalidCircle,
   });
 
   const hotspotQuery=useQuery({
@@ -176,16 +178,17 @@ export const ExplorerPage: React.FC = () => {
   });
   const detections = (hotspotQuery.data?.detections ?? []).filter(d=>selectedPeriod!=='24h' || Date.parse(`${d.acq_date}T${d.acq_time.slice(0,2)}:${d.acq_time.slice(2,4)}:00Z`)>=Date.now()-86400000);
 
-  const eventCandidates = candidateQuery.data?.events ?? [];
+  const candidateData=source==='online' ? hotspotQuery.data && {...hotspotQuery.data,events:hotspotQuery.data.events ?? [],total_events:hotspotQuery.data.total_events ?? 0,total_detections:hotspotQuery.data.total_detections ?? 0,index_status:'ready'} : candidateQuery.data;
+  const eventCandidates = candidateData?.events ?? [];
   const scienceStatus=useQuery({queryKey:['satellite-status',selectedEventId],queryFn:({signal})=>satelliteApi.status(selectedEventId!,signal),enabled:!!selectedEventId && !!scienceLayer,retry:false});
   const scienceResult=useQuery({queryKey:['explorer-science',selectedEventId,scienceStatus.data?.result_job_id],queryFn:({signal})=>satelliteApi.result(selectedEventId!,scienceStatus.data?.result_job_id || undefined,signal),enabled:!!selectedEventId && !!scienceLayer && !!scienceStatus.data?.result_available,retry:false});
   const scienceObservations=scienceResult.data?.observations.filter(o=>o.index===scienceLayer && o.valid_pixels>0 && o.assets.length>0) || [];
   const scienceObservation=scienceObservations.find(o=>o.date===searchParams.get('scienceDate')) || scienceObservations[scienceObservations.length-1];
 
-  const totalEvents = candidateQuery.data?.total_events ?? 0;
+  const totalEvents = candidateData?.total_events ?? 0;
   const totalCandidatePages = Math.max(1, Math.ceil(totalEvents / PAGE_SIZE));
-  const visibleCandidates = eventCandidates;
-  const mapCoverage = clusterQuery.data?.data_coverage ?? clusterQuery.data?.coverage;
+  const visibleCandidates = source==='online' ? eventCandidates.slice((candidatePage-1)*PAGE_SIZE,candidatePage*PAGE_SIZE) : eventCandidates;
+  const mapCoverage = source==='archive' ? clusterQuery.data?.data_coverage ?? clusterQuery.data?.coverage : undefined;
   const returnTo = `${location.pathname}${location.search}`;
   const visibleLayers = useMemo(() => ({
     modis: sensor !== 'VIIRS',
@@ -202,6 +205,8 @@ export const ExplorerPage: React.FC = () => {
     (startDate && archiveStart && startDate < archiveStart)
     || (endDate && archiveEnd && endDate > archiveEnd),
   );
+
+  useEffect(()=>{if(source==='online' && !startDate && !endDate){const range=rangeForPeriod('7d');updateParams({period:'7d',start:range.start,end:range.end});}},[source,startDate,endDate,updateParams]);
 
   const choosePeriod = (period: Period) => {
     if (period === 'all') {
@@ -288,7 +293,7 @@ export const ExplorerPage: React.FC = () => {
             </div>
 
             <div className="space-y-3">
-              <label className="block text-xs">Data source<select aria-label="Fire data source" value={source} onChange={e=>{updateParams({source:e.target.value});if(e.target.value==='online')choosePeriod('7d');}} className="mt-1 w-full rounded bg-dark-800 p-2"><option value="archive">Imported historical archive</option><option value="online">Recent NASA FIRMS online</option></select></label>
+              <label className="block text-xs">Data source<select aria-label="Fire data source" value={source} onChange={e=>{updateParams({source:e.target.value});if(e.target.value==='online')choosePeriod('7d');}} className="mt-1 w-full rounded bg-dark-800 p-2"><option value="archive">Imported historical archive</option><option value="online">NASA FIRMS on demand</option></select></label>
               <p className="text-[11px] text-slate-400">The local archive currently covers Italy. Other territories may not be imported; absence of records does not establish absence of fire. Online data needs a backend key and supports up to 7 days.</p>
 
               <p className="text-xs font-semibold text-emerald-300">{hasCircle ? 'CIRCULAR AREA' : 'GLOBAL VIEWPORT'} — {selectedPeriod === 'all' ? 'ALL AVAILABLE DATES' : 'FILTERED DATES'}</p>
@@ -467,24 +472,24 @@ export const ExplorerPage: React.FC = () => {
           <section className="min-h-48 rounded-xl border border-dark-700 bg-dark-900 p-4">
             <div className="flex items-center justify-between gap-2 border-b border-dark-700 pb-2">
               <h2 className="font-semibold">Algorithmic candidate events</h2>
-              {candidateQuery.data && (
+              {candidateData && (
                 <span className="text-[11px] text-slate-400">
-                  {totalEvents.toLocaleString()} candidates · {candidateQuery.data.total_detections.toLocaleString()} observations
+                  {totalEvents.toLocaleString()} candidates · {candidateData.total_detections.toLocaleString()} observations
                 </span>
               )}
             </div>
-            {candidateQuery.isFetching && <p role="status" className="py-3 text-xs text-slate-400">Searching candidates…</p>}
-            {candidateQuery.isError && <p role="alert" className="py-3 text-xs text-red-300">Could not load candidate events. Narrow the date range or viewport and retry.</p>}
-            {candidateQuery.data?.truncated && (
+            {(source==='online' ? hotspotQuery.isFetching : candidateQuery.isFetching) && <p role="status" className="py-3 text-xs text-slate-400">Searching candidates…</p>}
+            {(source==='online' ? hotspotQuery.isError : candidateQuery.isError) && <p role="alert" className="py-3 text-xs text-red-300">Could not load candidate events. Narrow the date range or viewport and retry.</p>}
+            {candidateData?.truncated && (
               <p role="status" className="mt-3 rounded border border-amber-800 bg-amber-950/40 p-2 text-xs text-amber-200">
                 The candidate index is incomplete. Inspect Data Coverage before interpreting these results.
               </p>
             )}
-            {candidateQuery.data && eventCandidates.length === 0 && (
+            {candidateData && eventCandidates.length === 0 && (
               <p className="py-4 text-xs text-slate-400">
-                {candidateQuery.data.total_detections === 0
-                  ? 'No data available in the current local archive for this area and period.'
-                  : candidateQuery.data.index_status !== 'ready'
+                {candidateData.total_detections === 0
+                  ? source==='online' ? 'No thermal detections returned for this supported area and period; completeness is not guaranteed.' : 'No data available in the current local archive for this area and period.'
+                  : candidateData.index_status !== 'ready'
                     ? 'Observations are available; the candidate index has not been built. Run the archive indexing command described in Data Coverage.'
                     : 'Observations were found, but none formed a candidate event under the event-grouping rules.'}
               </p>
@@ -545,7 +550,7 @@ export const ExplorerPage: React.FC = () => {
                 </button>
               </div>
             )}
-            {candidateQuery.data && (
+            {candidateData && (
               <p className="mt-3 border-t border-dark-700 pt-2 text-[10px] leading-relaxed text-slate-500">
                 Candidate events are algorithmic groupings of real observations, not official fire perimeters or verified burned area.
               </p>
@@ -570,7 +575,8 @@ export const ExplorerPage: React.FC = () => {
           </div>}
           {hotspotQuery.isError && <div role="alert" className="explorer-map-status">{(hotspotQuery.error as {response?:{data?:{detail?:string}}}).response?.data?.detail || 'Hotspot request unavailable'}</div>}
           {hotspotQuery.data?.truncated && <div role="status" className="explorer-map-status">Showing 2,000 observations. Narrow the viewport or date range; aggregates retain the archive overview.</div>}
-          {source==='online' && !hotspotQuery.isError && <div role="status" className="explorer-map-status">{hotspotQuery.isFetching ? 'Requesting recent NASA observations…' : `${detections.length} online observations in this viewport · not a completeness guarantee`}</div>}
+          {source==='online' && hotspotQuery.data?.coverage && <p role="status" className="explorer-map-status">{hotspotQuery.data.coverage.message} · provisional hotspot candidates</p>}
+          {source==='online' && !hotspotQuery.isError && <div role="status" className="explorer-map-status">{hotspotQuery.isFetching ? 'Requesting bounded NASA observations…' : `${detections.length} online observations in this viewport · not a completeness guarantee`}</div>}
 
           <LeafletMap
             key={viewGeneration}

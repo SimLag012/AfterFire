@@ -100,7 +100,9 @@ async def request_analysis(event_id:str,request:AnalysisRequest=AnalysisRequest(
             _,detections=await load_event(event_id)
             _,geometry=event_territory([(d.longitude,d.latitude) for d in detections],request.configuration.buffer_m)
             try:
-                support=await availability(geometry.bounds,max(d.acq_date for d in detections),request.configuration.as_of)
+                from app.analysis.modis_science import geographic_bounds
+                bounds=geographic_bounds(geometry)
+                support=await availability(bounds if len(bounds)>1 else bounds[0],max(d.acq_date for d in detections),request.configuration.as_of)
             except ProviderUnavailable as exc:
                 raise HTTPException(503,str(exc)) from None
             if support['recovery_analysis']=='observations_pending':
