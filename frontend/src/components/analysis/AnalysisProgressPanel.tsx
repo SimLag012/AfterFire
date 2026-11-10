@@ -12,13 +12,16 @@ const duration = (seconds?: number | null) => seconds == null ? 'Unknown' : [
 
 export function AnalysisProgressPanel({job,disconnected}: {job: SatelliteJob; disconnected: boolean}) {
   const total = job.files_total;
+  const complete = job.result_available && ['completed','partial'].includes(job.state);
+  const phaseProgress = job.phase_progress_percent;
+  const stage = job.phase_label || (job.state==='queued' ? 'Waiting for worker' : job.state==='failed' ? 'Analysis interrupted' : job.state==='fetching' ? 'Retrieving observations' : 'Preparing results');
   return <div className="min-w-0 space-y-4" aria-label="Live analysis progress">
     <div className="flex flex-wrap justify-between gap-2" role="status" aria-live="polite">
-      <strong>{job.state === 'partial' ? 'Partial results — see quality notices' : job.state} · {job.progress}%</strong>
+      <strong>{complete ? job.state==='partial' ? 'Published with quality notices' : 'Complete' : stage}</strong>
       <span className="text-sm text-slate-400">{disconnected ? 'Reconnecting…' : 'Server status'}</span>
     </div>
-    <progress className="h-3 w-full accent-emerald-400" value={job.progress} max={100} aria-label="Analysis progress" />
-    <div><h3 className="font-semibold text-emerald-300">{job.phase_label ?? (job.state === 'queued' ? 'Waiting for worker' : 'Detailed telemetry unavailable for this earlier run')}</h3>
+    <progress className="h-3 w-full accent-emerald-400" value={complete ? 100 : phaseProgress ?? undefined} max={100} aria-label="Current phase progress" />
+    <div>
       <p className="text-sm text-slate-300">{job.current_operation}</p>
       {job.worker_health && ['fetching','processing'].includes(job.state) && <p className="text-sm">Worker: {job.worker_health} · last activity {duration(job.last_activity_age_seconds)} ago · heartbeat {duration(job.heartbeat_age_seconds)} ago</p>}
       {['no_progress','heartbeat_missing','lease_expired'].includes(job.worker_health ?? '') && <p role="alert" className="text-amber-300">{job.worker_health==='no_progress' ? 'No operation progress detected; worker heartbeat alone does not confirm NASA progress.' : 'No worker activity detected; the saved job will resume after lease recovery.'}</p>}
@@ -30,7 +33,7 @@ export function AnalysisProgressPanel({job,disconnected}: {job: SatelliteJob; di
         {job.completed_phases?.includes(p.id) ? '✓' : job.phase === p.id ? '●' : '○'} {p.label}
       </li>)}
     </ol>
-    <dl className="grid grid-cols-2 gap-4 rounded-lg bg-dark-950 p-3 text-sm lg:grid-cols-3">
+    <details><summary>Transfer and worker details</summary><dl className="grid grid-cols-2 gap-4 rounded-lg bg-dark-950 p-3 text-sm lg:grid-cols-3">
       {[
         ['Provider',job.provider ?? 'Verified source cache / selected strategy'],
         ['API requests completed',String(job.api_requests_completed ?? 0)],
@@ -49,7 +52,7 @@ export function AnalysisProgressPanel({job,disconnected}: {job: SatelliteJob; di
         ['Elapsed', duration(job.elapsed_seconds)],
         ['Estimated remaining', job.estimated_remaining_seconds == null ? 'Remaining time unknown' : `~${duration(job.estimated_remaining_seconds)}`],
       ].map(([label,value]) => <div key={label} className="min-w-0"><dt className="text-xs text-slate-400">{label}</dt><dd className="break-words font-mono">{value}</dd></div>)}
-    </dl>
+    </dl></details>
     {job.byte_measurement && <p className="text-xs text-slate-400">Transfer measurement: {job.byte_measurement}</p>}
     {(job.files_failed || job.granules_failed) ? <p className="text-sm text-amber-300">File failures: {job.files_failed ?? 0} · Processing failures: {job.granules_failed ?? 0}</p> : null}
     <details className="text-xs text-slate-400"><summary>Technical details</summary>

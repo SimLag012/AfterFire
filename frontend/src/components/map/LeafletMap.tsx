@@ -21,6 +21,7 @@ interface LeafletMapProps {
   scientificResult?: SatelliteResult;
   scientificObservation?: SatelliteObservation;
   showScientificBurned?: boolean;
+  observationBounds?: [[number,number],[number,number]];
   initialZoom?: number;
   initialBounds?: [[number,number],[number,number]];
   focusPosition?: [number,number];
@@ -279,9 +280,7 @@ function ThermalDetectionClusters({
       key,
       detections: group,
       events: Array.from(new Map(group.flatMap((item) => eventByDetection.get(item.id) ?? []).map((event) => [event.id, event])).values()),
-      hasSelectedEvent: group.some((item) => events.some(
-        (event) => event.id === selectedEventId && event.detection_ids.includes(item.id),
-      )),
+      hasSelectedEvent: !!selectedEventId && group.some(item => eventByDetection.get(item.id)?.some(event => event.id === selectedEventId)),
       center: [
         group.reduce((sum, detection) => sum + detection.latitude, 0) / group.length,
         group.reduce((sum, detection) => sum + detection.longitude, 0) / group.length,
@@ -465,6 +464,7 @@ export const LeafletMap: React.FC<LeafletMapProps> = ({
   selectionBounds,
   selectionEnabled = false,
   onBoundsSelected,
+  observationBounds,
   onViewportChange,
   selectedEventId,
   selectionCircle,
@@ -501,6 +501,7 @@ export const LeafletMap: React.FC<LeafletMapProps> = ({
         worldCopyJump
       >
         <MapViewController bounds={selectionBounds || bounds || initialBounds || ITALY_BOUNDS} maxZoom={initialBounds ? 19 : area || selectionBounds ? 13 : 7} restore={!!initialBounds} restoreZoom={initialZoom} />
+        {observationBounds && <Rectangle bounds={observationBounds} interactive={false} pathOptions={{color:"#d6e6e1", weight:1, dashArray:"5 6", fill:false}} />}
         <SearchFocus position={focusPosition} />
         <CircleViewController circle={selectionCircle} />
         <CandidateFocus event={focusedEvent} returnTo={returnTo} />

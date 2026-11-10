@@ -58,8 +58,13 @@ export function ReburnIntelligencePanel({eventId,sourceJobId,period}:{eventId:st
  const episodes=result?.episodes??[];
  const a=selectedEpisode||episodes[0]?.id;
  const aPosition=episodes.findIndex(e=>e.id===a);
- const b=nextEpisode||episodes[aPosition+1]?.id;
+ const sharedPair=result?.recovery_gaps.find(g=>g.episode_a===a && g.shared_cells.length>0 && g.interval.minimum_days>0);
+ const b=nextEpisode||sharedPair?.episode_b||episodes[aPosition+1]?.id;
  const gap=result?.recovery_gaps.find(g=>g.episode_a===a&&g.episode_b===b);
+ const evidence = result?.supplemental_vegetation;
+ const validation = evidence && a===evidence.result.episode_a && b===evidence.result.episode_b ? evidence : undefined;
+ const firstBurn = episodes.find(e=>e.id===a);
+ const nextBurn = episodes.find(e=>e.id===b);
  const series=(cellId?(cell.data?.vegetation?.[index]??[]):(result?.cumulative.series[index]??[])).map(p=>({...p,time:Date.parse(p.date)}));
  const current=series.find(p=>p.date===selectedDate);
  const bounds=result?L.geoJSON({type:'Feature',properties:{},geometry:result.analysis_geometry} as GeoJSON.Feature).getBounds():null;
@@ -79,7 +84,8 @@ export function ReburnIntelligencePanel({eventId,sourceJobId,period}:{eventId:st
    <p className="text-sm text-slate-400">A · FIRMS thermal hotspots → B · algorithmic candidates → C · QA-screened MCD64A1 burned cells. Only repeated observations of the same native cells support observed repeat burning.</p>
    <Link className="text-emerald-300 underline" to={`/events/${eventId}`}>Return to Recovery Story</Link>
   </header>
-  <div className="flex flex-wrap gap-4 text-sm">
+  <details className="rounded-lg border border-dark-700 p-3"><summary className="cursor-pointer">History period and acquisition settings</summary>
+  <div className="mt-3 flex flex-wrap gap-4 text-sm">
    <label>History from <input aria-label="Reburn history from" type="date" min="2000-11-01" max={end} value={start} onChange={e=>{setEdited(true);setStart(e.target.value);preflight.reset();}} className="bg-dark-800 p-1"/></label>
    <label>History through <input aria-label="Reburn history through" type="date" min={start} max={new Date().toISOString().slice(0,10)} value={end} onChange={e=>{setEdited(true);setEnd(e.target.value);preflight.reset();}} className="bg-dark-800 p-1"/></label>
    <label>Episode separation (days) <input aria-label="Episode separation days" type="number" min={1} max={180} value={separation} onChange={e=>{setEdited(true);setSeparation(+e.target.value);}} className="w-16 bg-dark-800 p-1"/></label>
@@ -92,13 +98,16 @@ export function ReburnIntelligencePanel({eventId,sourceJobId,period}:{eventId:st
    <button className="rounded bg-emerald-700 px-4 py-2 disabled:opacity-50" disabled={request.isPending||active.has(job?.state??'')||start>end} onClick={()=>request.mutate()}>{acquire?'Acquire & analyze history':'Analyze cached history'}</button>
   </div>
   {preflight.data&&<p role="status" className="text-sm">{preflight.data.cached_source_candidates} cached source candidates · {number(preflight.data.available_quota_bytes/1024**3,2)} GiB quota available · new network bytes: {preflight.data.network_bytes==null?'unknown until NASA bundle is ready':preflight.data.network_bytes}. Integrity and coverage are checked by the worker.</p>}
+  </details>
   {(preflight.isError||request.isError||job?.state==='failed')&&<p role="alert" className="text-red-300">{job?.error??String(preflight.error??request.error)}</p>}
   {active.has(job?.state??'')&&<div role="status" aria-live="polite" className="text-sm"><p>{job?.current_operation??'Queued for historical analysis'} · {number(job?.elapsed_seconds,0)} s</p><p>{job?.files_validated??0} files validated · {number((job?.bytes_downloaded??0)/1024**2,2)} MiB transferred · {job?.cells_processed??0} cells processed. Progress remains indeterminate until work units are known.</p></div>}
   {resultQuery.isLoading&&<p role="status">Loading published history…</p>}
   {resultQuery.isError&&<p role="alert">Published history unavailable. Retry after checking the analysis status.</p>}
-  {!result&&!active.has(job?.state??'')&&<p>No history published for this event. Analyze cached data or explicitly acquire the missing interval.</p>}
+  {status.isLoading&&<p role="status">Checking for a saved history…</p>}
+  {status.isError&&<p role="alert">Unable to retrieve history status. <button onClick={()=>status.refetch()}>Retry</button></p>}
+  {job?.state==='not_requested'&&<p>No history published for this event. Analyze cached data or explicitly acquire the missing interval.</p>}
   {result&&<>
-   <div className="grid gap-3 sm:grid-cols-4" aria-label="Repeated Burning Summary">
+   <div className="grid gap-3 text-sm text-slate-300 sm:grid-cols-4" aria-label="Repeated Burning Summary">
     <p>{human(result.summary.classification)}</p><p>{result.summary.observed_episodes} observed episodes</p>
     <p>{result.summary.repeated_cells} repeated cells · {number(result.summary.repeated_area_km2,2)} km²</p>
     <p>{result.coverage.requested_months.length-result.coverage.missing_months.length}/{result.coverage.requested_months.length} months with some QA-valid mapping</p>
@@ -116,16 +125,42 @@ export function ReburnIntelligencePanel({eventId,sourceJobId,period}:{eventId:st
     <button disabled={aPosition>=episodes.length-1} onClick={()=>selectEpisode(episodes[aPosition+1].id)}>Next episode →</button>
    </div>}
    <article aria-label="Recovery Gap" className={panel}><h3 className="font-semibold">Recovery Gap</h3>
-    {gap?<><p>{human(gap.classification)}</p><p>{gap.interval.days} nominal days ({number(gap.interval.years,2)} years) · plausible separation {gap.interval.minimum_days}–{gap.interval.maximum_days} days · common observed cells {gap.shared_cells.length} ({number(gap.shared_area_km2,2)} km²)</p>
-     <div className="grid gap-3 sm:grid-cols-2">{['NDVI','EVI'].map(name=><div key={name}><strong>{name}: {human(gap.indices[name]?.classification)}</strong><p>Last pre-reburn anomaly {number(gap.indices[name]?.last_pre_reburn?.anomaly)} · age {gap.indices[name]?.last_observation_age_days??'unavailable'} days</p><p>Supported return {gap.indices[name]?.return_to_reference?.start??'not demonstrated'} · persistent negative sequences {gap.indices[name]?.persistent_negative_periods.length??0}</p></div>)}</div>
-    </>:<p>Insufficient evidence for this pair: two distinct episodes with shared observed cells are required.</p>}
-    <p className="text-xs text-slate-400">Absence of demonstrated return does not demonstrate ecological non-recovery. NDVI/EVI changes do not establish causation.</p>
+    {gap&&firstBurn&&nextBurn?<div className="space-y-3">
+     <h4 className="text-xl font-semibold">{validation ? 'Chips to Dixie · the same ground burned again' : 'What changed between these fires?'}</h4>
+     <ol className="grid gap-3 sm:grid-cols-3">
+      <li className="rounded-lg border-l-2 border-amber-400 bg-dark-950 p-3"><strong>First burn</strong><p>{firstBurn.start} – {firstBurn.end}</p></li>
+      <li className="rounded-lg border-l-2 border-emerald-400 bg-dark-950 p-3"><strong>{number(gap.interval.years,2)} years between burns</strong><p>{gap.shared_cells.length} shared burned cells · {number(gap.shared_area_km2,2)} km²</p></li>
+      <li className="rounded-lg border-l-2 border-orange-400 bg-dark-950 p-3"><strong>Second burn</strong><p>{nextBurn.start} – {nextBurn.end}</p></li>
+     </ol>
+     {validation&&<section aria-label="Chips/Dixie vegetation validation" className="space-y-2">
+      <h5 className="font-semibold text-emerald-300">Vegetation greenness returned to its seasonal range before the second fire</h5>
+      <p>{validation.dates.length} MOD13Q1.061 composites cover the interval and its pre-fire reference. NDVI and EVI both show a sustained return across the shared area.</p>
+      <div className="grid gap-3 sm:grid-cols-2">{Object.entries(validation.result.indices).map(([name,metrics])=>{
+       const last=metrics.last_pre_reburn;
+       const first=metrics.first_post_observation;
+       if(!last)return null;
+       return <div className="space-y-1 rounded-lg bg-dark-950 p-3 text-sm" key={name}>
+        <h6 className="font-semibold">{name}</h6>
+        {first&&<p>{first.date} · first post-fire observation was {number(Math.abs(first.anomaly))} {first.anomaly<0?'below':'above'} its seasonal median.</p>}
+        <p>{metrics.return_to_reference?.start} – {metrics.return_to_reference?.end} · first sustained return to range.</p>
+        <p>{last.date} – {last.period_end} · last composite before reburn: observed {number(last.value)}, seasonal median {number(last.baseline)}, difference {number(last.anomaly)}.</p>
+        <details><summary className="cursor-pointer text-slate-300">Observation support for {name}</summary><p>{last.valid_pixels}/{last.expected_pixels} native pixels passed QA in the last composite. Reference from {last.baseline_n} composites across {last.baseline_years} years. {metrics.reliability.baseline_supported_composites}/{metrics.reliability.expected_post_composites} post-fire composites support comparison with the seasonal baseline. Longest gap between valid observations: {metrics.reliability.largest_valid_gap_days} days.</p></details>
+       </div>;})}</div>
+      <p className="text-sm text-slate-400">Greenness is measured across these cells together. Forest structure, species composition and individual cell trajectories can differ.</p>
+     </section>}
+     <details open={validation?undefined:true}><summary className="cursor-pointer">{validation?'Original burned-area job and uncertainty':'Vegetation evidence and uncertainty'}</summary>
+      <p>{human(gap.classification)}</p>
+      <p>{gap.interval.days} nominal days · plausible separation {gap.interval.minimum_days}–{gap.interval.maximum_days} days · common observed cells {gap.shared_cells.length}.</p>
+      {validation&&<p>The original history lacked sufficient vegetation observations. The additional analysis used Earth Engine on the exact same episode pair, cells and seasonal assessment settings.</p>}
+      <div className="grid gap-3 sm:grid-cols-2">{['NDVI','EVI'].map(name=><div key={name}><strong>{name}: {human(gap.indices[name]?.classification)}</strong><p>Last pre-reburn anomaly {number(gap.indices[name]?.last_pre_reburn?.anomaly)} · age {gap.indices[name]?.last_observation_age_days??'unavailable'} days</p></div>)}</div>
+     </details>
+    </div>:<p>Two distinct episodes with shared observed cells are needed to assess the interval.</p>}
    </article>
    <div className="flex flex-wrap gap-4 text-sm"><label>Vegetation index <select aria-label="Reburn vegetation index" className="bg-dark-800" value={index} onChange={e=>setIndex(e.target.value)}><option>NDVI</option><option>EVI</option></select></label>
     <label>Map layer <select aria-label="Reburn map layer" value={layer} onChange={e=>setLayer(e.target.value)} className="bg-dark-800"><option value="count">Observed episode count</option><option value="last">Last observed burn</option><option value="interval">Time between burns</option><option value="gap">Recovery Gap</option><option value="coverage">Observation coverage</option></select></label>
     <label>Composite <select aria-label="Reburn observation date" value={series.some(p=>p.date===selectedDate)?selectedDate:''} className="bg-dark-800" onChange={e=>setSelectedDate(e.target.value)}><option value="">Select composite</option>{series.map(p=><option key={p.date} value={p.date}>{p.date}</option>)}</select></label>
    </div>
-   {mapQuery.data&&<label className="block text-sm">Burned cell <select aria-label="Reburn burned cell" className="ml-2 bg-dark-800" value={cellId} onChange={e=>setCellId(e.target.value)}><option value="">Territory series</option>{mapQuery.data.features.map(f=><option key={f.properties.id} value={f.properties.id}>{f.properties.id} · {f.properties.episode_count} observed episodes</option>)}</select></label>}
+   {mapQuery.data&&<label className="block text-sm">Burned cell <select aria-label="Reburn burned cell" className="mt-1 max-w-full bg-dark-800" value={cellId} onChange={e=>setCellId(e.target.value)}><option value="">Territory series</option>{mapQuery.data.features.map(f=><option key={f.properties.id} value={f.properties.id}>{f.properties.id} · {f.properties.episode_count} observed episodes</option>)}</select></label>}
    {mapQuery.isError&&<p role="alert">Reburn map could not be loaded.</p>}
    {bounds&&<div className="h-[380px] overflow-hidden rounded-lg" aria-label="Spatial Reburn Map"><MapContainer key={result.job_id} bounds={bounds} className="h-full w-full" scrollWheelZoom={false}>
     <SatelliteBasemap/>{mapQuery.data&&<GeoJSON key={`${result.job_id}:${layer}:${a}:${b}:${cellId}`} data={mapQuery.data} style={f=>style(f as ReburnCell)} onEachFeature={(f,l)=>{
@@ -150,7 +185,7 @@ export function ReburnIntelligencePanel({eventId,sourceJobId,period}:{eventId:st
     </LineChart></ResponsiveContainer></div>:<p>Insufficient spatial vegetation observations; no values are interpolated.</p>}
    </figure>
    <p className="text-xs text-slate-400">Grey chart bands mark missing/QA-rejected composites; orange bands are burn-date uncertainty. Red bands on the territory series mark supported persistent negative-anomaly periods.</p>
-   {result.cumulative.segments?.length>0&&<div className="overflow-x-auto" aria-label="Cumulative segment indicators"><h3 className="font-semibold">Observed territory · cumulative segment indicators</h3><table className="w-full text-left text-xs"><thead><tr><th>Interval</th><th>Index / support</th><th>Anomaly median / minimum</th><th>Trend per year</th><th>Persistent sequences</th></tr></thead><tbody>{result.cumulative.segments.flatMap((segment,i)=>['NDVI','EVI'].map(name=><tr key={i+name} className="border-t border-dark-700"><td className="p-2">{human(segment.kind)}<span className="block">{segment.start??'source start'} → {segment.end??'source end'}</span></td><td className="p-2">{name} {segment.indices[name]?.supported??0}/{segment.indices[name]?.observations??0}<span className="block">Missing/rejected: {segment.indices[name]?.missing_or_rejected??0}</span></td><td className="p-2">{number(segment.indices[name]?.median_anomaly)} / {number(segment.indices[name]?.minimum_anomaly)}</td><td className="p-2">{number(segment.indices[name]?.trend.slope_per_year)}<span className="block">{human(segment.indices[name]?.trend.direction)}</span></td><td className="p-2">{segment.indices[name]?.persistent_negative_periods.length??0}</td></tr>))}</tbody></table></div>}
+   {result.cumulative.segments?.length>0&&<div className="overflow-x-auto" aria-label="Cumulative segment indicators"><h3 className="font-semibold">Observed territory · cumulative segment indicators</h3><table className="w-full text-left text-xs"><thead><tr><th>Interval</th><th>Index / support</th><th>Anomaly median / minimum</th><th>Trend per year</th><th>Persistent sequences</th></tr></thead><tbody>{result.cumulative.segments.flatMap((segment,i)=>['NDVI','EVI'].map(name=><tr key={i+name} className="border-t border-dark-700"><td className="p-2">{human(segment.kind)}<span className="block">{segment.start??'source start'} → {segment.end??'source end'}</span></td><td className="p-2">{name} {segment.indices[name]?.supported??0}/{segment.indices[name]?.observations??0}<span className="block">Missing/rejected: {segment.indices[name]?.missing_or_rejected??0}</span></td><td className="p-2">{number(segment.indices[name]?.median_anomaly)} / {number(segment.indices[name]?.minimum_anomaly)}</td><td className="p-2">{number(segment.indices[name]?.trend?.slope_per_year)}<span className="block">{human(segment.indices[name]?.trend?.direction)}</span></td><td className="p-2">{segment.indices[name]?.persistent_negative_periods.length??0}</td></tr>))}</tbody></table></div>}
    <details><summary>Scientific confidence, coverage & provenance</summary><p>{result.provenance.length} validated source records · {result.source_job_id}</p><ul className="list-disc pl-5">{result.limitations.map(text=><li key={text}>{text}</li>)}</ul><p className="break-words text-xs">Missing months: {result.coverage.missing_months.join(', ')||'none'}.</p></details>
   </>}
  </section>;

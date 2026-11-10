@@ -1,7 +1,9 @@
+import L from 'leaflet';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Link, useLocation, useSearchParams } from 'react-router-dom';
 import { CalendarDays, CircleDot, Crosshair, Layers3, RotateCcw } from 'lucide-react';
+import { hasLocalObservations, loadObservations } from '../api/observationCache';
 import { satelliteApi } from '../api/satellite';
 import { apiClient } from '../api/client';
 import { DemoBanner } from '../components/common/DemoBanner';
@@ -91,14 +93,16 @@ export const ExplorerPage: React.FC = () => {
   const selectedEventId = searchParams.get('event') ?? undefined;
   const candidatePage = Math.max(1, Math.floor(parseNumber(searchParams.get('candidatePage'), 1)));
   const [focusedEvent, setFocusedEvent] = useState<import('../types').EventMapItem>();
-  const hasCircle = source==='archive' && searchParams.has('lat') && searchParams.has('lon') && searchParams.has('radius')
+  const hasCircle = searchParams.has('lat') && searchParams.has('lon') && searchParams.has('radius')
     && centerLat >= -90 && centerLat <= 90
     && centerLon >= -180 && centerLon <= 180
     && radiusKm > 0 && radiusKm <= 500;
-  const invalidCircle = source==='archive' && ['lat', 'lon', 'radius'].some((key) => searchParams.has(key)) && !hasCircle;
+  const invalidCircle = ['lat', 'lon', 'radius'].some((key) => searchParams.has(key)) && !hasCircle;
   const hasValidDates = isValidDate(startDate)
     && isValidDate(endDate)
     && (!startDate || !endDate || startDate <= endDate);
+  const supportedDates = source === 'archive' || (endDate <= dateOnly(new Date())
+    && Date.parse(endDate) - Date.parse(startDate) <= 6 * 86400000);
   const selectedPeriod: Period = searchParams.get('period') === 'today'
     || searchParams.get('period') === '24h'
     || searchParams.get('period') === '7d'
@@ -106,11 +110,30 @@ export const ExplorerPage: React.FC = () => {
     || searchParams.get('period') === '12mo'
     || searchParams.get('period') === 'custom'
     ? searchParams.get('period') as Period
-    : (startDate || endDate) ? 'custom' : 'all';
+    : source === 'online' && !searchParams.has('start') && !searchParams.has('end') ? '7d' : (startDate || endDate) ? 'custom' : 'all';
   const afterUtc=useMemo(()=>selectedPeriod==='24h' ? new Date(Date.now()-86400000).toISOString() : undefined,[selectedPeriod,startDate,endDate]);
   const validBbox = viewport.split(',').length === 4 && viewport.split(',').every((part) => Number.isFinite(Number(part)));
   const [west, south, east, north] = viewport.split(',').map(Number);
   const hasValidViewport = validBbox && west !== east && south < north;
+
+  const longitudeSpan = east > west ? east - west : 360 + east - west;
+  const tooWide = hasValidViewport && (longitudeSpan > 30 || north - south > 30);
+  // fitBounds includes different margins on wide monitors and portrait phones.
+  const italyOverview = west <= 6.3 && east >= 18.9 && south <= 35.3 && north >= 47.2
+    && Math.abs((east + west) / 2 - 12.6) < 1 && zoom >= 3 && zoom <= 6;
+  const circleCenter = hasCircle ? L.latLng(centerLat, centerLon) : undefined;
+  const bounds = circleCenter?.toBounds(radiusKm * 2000);
+  const wrap = (longitude: number) => ((longitude + 180) % 360 + 360) % 360 - 180;
+  const circleBox = bounds && [wrap(bounds.getWest()), Math.max(-90,bounds.getSouth()), wrap(bounds.getEast()), Math.min(90,bounds.getNorth())].map(v => v.toFixed(6)).join(',');
+  // Wide regional views use a stable, reusable window around the visible center.
+  const centerX = wrap(west + longitudeSpan / 2);
+  const centerY = Math.round((north + south) / 2);
+  const regionalOverview = !italyOverview && zoom >= 4 && (longitudeSpan > 16 || north - south > 16);
+  const regionalBox = [wrap(Math.round(centerX)-6), Math.max(-90,centerY-6),
+    wrap(Math.round(centerX)+6), Math.min(90,centerY+6)].join(',');
+  const outlinedBox = italyOverview ? ITALY_BBOX : regionalOverview ? regionalBox : undefined;
+  const onlineBounds = circleBox || outlinedBox || (tooWide ? '' : viewport);
+  const queryBounds = source === 'online' ? onlineBounds : viewport;
 
   const updateParams = useCallback((updates: Record<string, string | undefined>) => {
     // Debounced map events must merge into the current URL, not an older render's filters.
@@ -126,6 +149,7 @@ export const ExplorerPage: React.FC = () => {
   const coverageQuery = useQuery({
     queryKey: ['italyArchiveCoverage'],
     queryFn: ({ signal }) => apiClient.getItalyCoverage(signal),
+    enabled: source === 'archive',
     staleTime: 60_000,
   });
   const archive = coverageQuery.data;
@@ -169,16 +193,37 @@ export const ExplorerPage: React.FC = () => {
     enabled: source==='archive' && hasValidViewport && hasValidDates && !invalidCircle,
   });
 
+  const refine=useRef(false);
   const hotspotQuery=useQuery({
-    queryKey:['explorerHotspots',source,viewport,startDate,endDate,sensor,satellite,hasCircle,hasCircle ? centerLat : null,hasCircle ? centerLon : null,hasCircle ? radiusKm : null,source==='archive' ? afterUtc : null],
-    queryFn:({signal})=>apiClient.getExplorerHotspots({bbox:viewport,start_date:startDate || undefined,end_date:endDate || undefined,
-      sensor:aggregateSensor,satellite,after_utc:source==='archive' ? afterUtc : undefined,...(source==='archive' ? circleParams : {})},source==='online',signal),
-    enabled:fireVisible && hasValidViewport && hasValidDates && !invalidCircle && (source==='online' ? !!startDate && !!endDate : zoom>=10),
-    retry:false, staleTime:60_000,
+    queryKey:['explorerHotspots',source,queryBounds,startDate,endDate,sensor,satellite,hasCircle,hasCircle ? centerLat : null,hasCircle ? centerLon : null,hasCircle ? radiusKm : null,source==='archive' ? afterUtc : null],
+    queryFn:({signal})=>source==='online' ? loadObservations({bbox:queryBounds,start_date:startDate,end_date:endDate,sensor:aggregateSensor,satellite},refine.current,signal) : apiClient.getExplorerHotspots({bbox:queryBounds,start_date:startDate || undefined,end_date:endDate || undefined,
+      sensor:aggregateSensor,satellite,after_utc:source==='archive' ? afterUtc : undefined,...(source==='archive' ? circleParams : {})},false,signal),
+    enabled:(fireVisible || (source==='online' && candidatesVisible)) && supportedDates && !!queryBounds && hasValidViewport && hasValidDates && !invalidCircle && (source==='online' ? !!startDate && !!endDate : zoom>=10),
+    placeholderData:(previous,query)=>query?.queryKey[1]===source && query.queryKey[3]===startDate && query.queryKey[4]===endDate && query.queryKey[5]===sensor && query.queryKey[6]===satellite ? previous : undefined,
+    retry:(attempt,error)=>attempt===0 && (error as {response?:{status?:number}}).response?.status===429,
+    retryDelay:(_attempt,error)=>{
+      const hint=(error as {response?:{headers?:Record<string,string>}}).response?.headers?.['retry-after'];
+      if(!hint) return 60000;
+      const delay=/^\d+$/.test(hint) ? Number(hint)*1000 : Date.parse(hint)-Date.now();
+      return Number.isFinite(delay) ? Math.max(1000,delay) : 60000;
+    }, staleTime:60_000,
   });
-  const detections = (hasValidDates && !invalidCircle ? hotspotQuery.data?.detections ?? [] : []).filter(d=>selectedPeriod!=='24h' || Date.parse(`${d.acq_date}T${d.acq_time.slice(0,2)}:${d.acq_time.slice(2,4)}:00Z`)>=Date.now()-86400000);
+  const hotspotStatus = (hotspotQuery.error as {response?:{status?:number}} | null)?.response?.status;
+  useEffect(() => {
+    if (hotspotStatus === 413 && source === 'online' && italyOverview && !hasCircle
+      && !searchParams.has('start') && !searchParams.has('end')) {
+      const today = dateOnly(new Date());
+      updateParams({period:'today', start:today, end:today, candidatePage:undefined});
+      setNotice('The seven-day overview exceeded the record limit. Showing today (UTC).');
+    }
+  }, [hotspotStatus, source, italyOverview, hasCircle, searchParams, updateParams]);
+  const detections = (hasValidDates && !invalidCircle ? hotspotQuery.data?.detections ?? [] : []).filter(d=>source !== 'online' || !circleCenter || circleCenter.distanceTo([d.latitude,d.longitude]) <= radiusKm * 1000).filter(d=>selectedPeriod!=='24h' || Date.parse(`${d.acq_date}T${d.acq_time.slice(0,2)}:${d.acq_time.slice(2,4)}:00Z`)>=Date.now()-86400000);
 
-  const candidateData=source==='online' ? hotspotQuery.data && {...hotspotQuery.data,events:hotspotQuery.data.events ?? [],total_events:hotspotQuery.data.total_events ?? 0,total_detections:hotspotQuery.data.total_detections ?? 0,index_status:'ready'} : candidateQuery.data;
+  const matchingIds = new Set(detections.map(d => d.candidate_event_id));
+  const onlineEvents = (hotspotQuery.data?.events ?? []).filter(event =>
+    (!circleCenter || circleCenter.distanceTo([event.center_lat,event.center_lon]) <= radiusKm * 1000)
+    && (selectedPeriod !== '24h' || matchingIds.has(event.id)));
+  const candidateData=source==='online' ? hotspotQuery.data && {...hotspotQuery.data,events:onlineEvents,total_events:onlineEvents.length,total_detections:detections.length,index_status:'ready'} : candidateQuery.data;
   const eventCandidates = hasValidDates && !invalidCircle ? candidateData?.events ?? [] : [];
   const scienceStatus=useQuery({queryKey:['satellite-status',selectedEventId],queryFn:({signal})=>satelliteApi.status(selectedEventId!,signal),enabled:!!selectedEventId && !!scienceLayer,retry:false});
   const scienceResult=useQuery({queryKey:['explorer-science',selectedEventId,scienceStatus.data?.result_job_id],queryFn:({signal})=>satelliteApi.result(selectedEventId!,scienceStatus.data?.result_job_id || undefined,signal),enabled:!!selectedEventId && !!scienceLayer && !!scienceStatus.data?.result_available,retry:false});
@@ -189,7 +234,7 @@ export const ExplorerPage: React.FC = () => {
   const totalCandidatePages = Math.max(1, Math.ceil(totalEvents / PAGE_SIZE));
   const visibleCandidates = source==='online' ? eventCandidates.slice((candidatePage-1)*PAGE_SIZE,candidatePage*PAGE_SIZE) : eventCandidates;
   const mapCoverage = source==='archive' ? clusterQuery.data?.data_coverage ?? clusterQuery.data?.coverage : undefined;
-  const returnTo = `${location.pathname}${location.search}`;
+  const returnTo = `/explorer${location.search}`;
   const visibleLayers = useMemo(() => ({
     modis: sensor !== 'VIIRS',
     viirs: sensor !== 'MODIS',
@@ -221,14 +266,18 @@ export const ExplorerPage: React.FC = () => {
     updateParams({ period, start: range.start, end: range.end, candidatePage: undefined, event: undefined });
   };
 
+  const firstViewport=useRef(true);
   const onViewportChange = useCallback((bbox: string, nextZoom: number) => {
     clearTimeout(timer.current);
+    const covered=source==='online' && hasValidDates && supportedDates && hasLocalObservations({bbox,start_date:startDate,end_date:endDate,sensor:aggregateSensor,satellite});
+    const delay=firstViewport.current || covered ? 0 : 350;
     timer.current=setTimeout(()=>{
+      firstViewport.current=false;
       setViewport(current=>current===bbox ? current : bbox);
       setZoom(current=>current===nextZoom ? current : nextZoom);
       updateParams({map:bbox,z:String(nextZoom)});
-    },300);
-  }, [updateParams]);
+    },delay);
+  }, [updateParams,source,hasValidDates,supportedDates,startDate,endDate,aggregateSensor,satellite]);
   const shiftPeriod=(direction:number)=>{
     const start=startDate || archiveEnd || dateOnly(new Date());
     const end=endDate || start;
@@ -273,7 +322,7 @@ export const ExplorerPage: React.FC = () => {
               are fetched separately and are not official fire perimeters.
             </p>
 
-            <div className="mb-4 rounded-lg border border-dark-700 bg-dark-950/70 p-3">
+            {source === 'archive' && <div className="mb-4 rounded-lg border border-dark-700 bg-dark-950/70 p-3">
               <h2 className="text-xs font-semibold text-slate-200">Imported archive in Italy</h2>
               {coverageQuery.isLoading && <p className="mt-2 text-[11px] text-slate-400">Loading database coverage…</p>}
               {coverageQuery.isError && <p role="alert" className="mt-2 text-[11px] text-amber-300">Archive coverage status is unavailable.</p>}
@@ -290,7 +339,7 @@ export const ExplorerPage: React.FC = () => {
                   </p>
                 </>
               )}
-            </div>
+            </div>}
 
             <div className="space-y-3">
               <label className="block text-xs">Data source<select aria-label="Fire data source" value={source} onChange={e=>{const range=rangeForPeriod('7d');updateParams({source:e.target.value,...(e.target.value==='online' ? {period:'7d',start:range.start,end:range.end,lat:undefined,lon:undefined,radius:undefined} : {}),candidatePage:undefined,event:undefined});setDrawingCircle(false);}} className="mt-1 w-full rounded bg-dark-800 p-2"><option value="archive">Imported historical archive</option><option value="online">NASA FIRMS on demand</option></select></label>
@@ -359,6 +408,7 @@ export const ExplorerPage: React.FC = () => {
                   </label>
                 </div>
               )}
+              {hasValidDates && !supportedDates && <p role="alert" className="text-xs text-amber-300">Select up to seven days ending today or earlier.</p>}
               {!hasValidDates && <p role="alert" className="text-xs text-amber-300">Enter valid dates in chronological order.</p>}
               {source==='archive' && outsideArchive && <p role="status" className="text-xs text-amber-300">This date range is outside the currently imported real-observation archive.</p>}
               {source==='archive' && extendsBeyondArchive && !outsideArchive && <p role="status" className="text-xs text-amber-300">Part of this date range is outside the imported archive; absence of records is not evidence of no fire.</p>}
@@ -369,6 +419,7 @@ export const ExplorerPage: React.FC = () => {
                   value={sensor}
                   onChange={(event) => updateParams({
                     sensor: event.target.value === 'both' ? undefined : event.target.value,
+                    satellite: undefined,
                     candidatePage: undefined,
                     event: undefined,
                   })}
@@ -381,7 +432,7 @@ export const ExplorerPage: React.FC = () => {
               </label>
 
               <label className="block text-xs">Satellite<select aria-label="Satellite platform" value={satellite || ''} onChange={e=>updateParams({satellite:e.target.value,sensor:undefined,candidatePage:undefined})} className="mt-1 w-full rounded bg-dark-800 p-2"><option value="">All available satellites</option>{['Terra','Aqua','S-NPP','NOAA-20','NOAA-21'].map(v=><option key={v} value={v}>{v.startsWith('Terra') || v==='Aqua' ? 'MODIS ' : 'VIIRS '}{v}</option>)}</select></label>
-              {source==='archive' && <>
+              <>
               <div className="grid grid-cols-2 gap-2">
                 <label className="text-xs text-slate-300">
                   Center latitude
@@ -443,12 +494,12 @@ export const ExplorerPage: React.FC = () => {
                   Circle: {centerLat.toFixed(4)}, {centerLon.toFixed(4)} · radius {radiusKm.toFixed(1)} km
                 </p>
               )}
-              </>}
-              {source==='online' && <p className="text-xs text-slate-400">Area filter: visible map viewport. Zoom or pan to change the requested region.</p>}
+              </>
+              {source==='online' && <p className="text-xs text-slate-400">{hasCircle ? 'Shows observations and candidate centers inside the circle. Candidate totals describe the whole grouping.' : outlinedBox ? 'Query area: outlined region.' : 'Query area: visible map viewport.'}</p>}
             </div>
           </section>
 
-          <section className="rounded-xl border border-dark-700 bg-dark-900 p-4">
+          {source === 'archive' && <section className="rounded-xl border border-dark-700 bg-dark-900 p-4">
             <div className="flex items-center justify-between gap-2 border-b border-dark-700 pb-2">
               <h2 className="font-semibold">Map aggregates</h2>
               <span className="text-[11px] text-slate-400">
@@ -470,7 +521,7 @@ export const ExplorerPage: React.FC = () => {
             <p className="mt-2 text-[10px] text-slate-500">
               Aggregate markers are visual-only groups, not scientific event candidates.
             </p>
-          </section>
+          </section>}
 
           <section className="min-h-48 rounded-xl border border-dark-700 bg-dark-900 p-4">
             <div className="flex items-center justify-between gap-2 border-b border-dark-700 pb-2">
@@ -574,13 +625,17 @@ export const ExplorerPage: React.FC = () => {
             {scienceObservations.length>0 && <label className="block py-2">Scientific composite (separate from FIRMS dates)<select aria-label="Scientific composite date" value={scienceObservation?.date || ''} onChange={e=>updateParams({scienceDate:e.target.value})} className="block bg-dark-800 p-1">{scienceObservations.map(o=><option key={o.date} value={o.date}>{o.date} → {o.period_end}</option>)}</select></label>}
 <p className="text-[11px] text-slate-400">Event-scoped products use persisted scientific results. Select a candidate to inspect availability; opening this panel acquires no satellite data.</p>
             {['Burned Area','NDVI','EVI','Vegetation Anomalies','Recovery Story','Recovery Intelligence','Persistent Zones','Reburn History','Recovery Gap'].map(name=><div key={name} className="border-t border-dark-700 py-2">{selectedEventId ? <Link to={`/events/${selectedEventId}?returnTo=${encodeURIComponent(returnTo)}${name.includes('Reburn') || name==='Recovery Gap' ? '&view=reburn' : ''}`}>{name} → Event analysis</Link> : <span className="text-slate-500">{name} · select event</span>}</div>)}
-            <p className="text-[11px] text-emerald-200">Area filter: {source==='online' ? 'visible viewport' : hasCircle ? 'search circle' : 'draw a circle in Fire data'}</p>
+            <p className="text-[11px] text-emerald-200">Area filter: {hasCircle ? 'search circle' : 'visible viewport'}</p>
           </div>}
           <div className="explorer-map-status" aria-label="Observation query status">
+          {source === 'online' && !hasCircle && tooWide && !outlinedBox && <p role="status" className="explorer-status-message">Zoom in to search a region up to 30° wide and high.</p>}
+          {hotspotQuery.isFetching && <p role="status" className="explorer-status-message">{hotspotQuery.failureCount ? 'Request limit reached. Waiting to retry…' : 'Updating satellite observations…'}</p>}
           {hotspotQuery.isError && <div role="alert" className="explorer-status-message">{(hotspotQuery.error as {response?:{data?:{detail?:string}}}).response?.data?.detail || 'Hotspot request unavailable'} <button className="underline" onClick={()=>hotspotQuery.refetch()}>Retry observations</button></div>}
-          {hotspotQuery.data?.truncated && <div role="status" className="explorer-status-message">Results are incomplete. Narrow the viewport or date range to retrieve all candidates.</div>}
-          {source==='online' && hotspotQuery.data?.coverage && <p role="status" className="explorer-status-message">{hotspotQuery.data.coverage.message} · provisional hotspot candidates</p>}
-          {source==='online' && fireVisible && hasValidDates && hotspotQuery.data && !hotspotQuery.isError && <div role="status" className="explorer-status-message">{hotspotQuery.isFetching ? 'Requesting bounded NASA observations…' : `${detections.length} online observations in this viewport · not a completeness guarantee`}</div>}
+          {hotspotQuery.data?.truncated && <div role="status" className="explorer-status-message">Partial acquisition. <button className="underline" disabled={hotspotQuery.isFetching} onClick={async()=>{refine.current=true;try{await hotspotQuery.refetch();}finally{refine.current=false;}}}>Load more of this area</button></div>}
+          {source==='online' && hotspotQuery.data && hasValidDates && <details className="explorer-status-message">
+            <summary>{detections.length} online observations · {hasCircle ? 'search circle' : outlinedBox ? 'outlined area' : 'visible area'}{hotspotQuery.data.coverage?.state === 'cached' && ' · cached'}{hotspotQuery.data.coverage?.message.includes('partially') && ' · partial coverage'}</summary>
+            <p>{hotspotQuery.data.coverage?.message}. Candidate totals describe their original acquisition window.</p>
+          </details>}
 
           </div>
 
@@ -594,6 +649,7 @@ export const ExplorerPage: React.FC = () => {
             showScientificBurned={scienceLayer==='burned'}
             initialBounds={initialBounds}
             initialZoom={initialZoom}
+            observationBounds={source === 'online' && !hasCircle && outlinedBox ? parseViewBounds(outlinedBox) : undefined}
             focusPosition={focusPosition}
             colorMode={colorMode}
             opacity={opacity}
@@ -625,7 +681,7 @@ export const ExplorerPage: React.FC = () => {
               setDrawingCircle(false);
             }}
           />
-          <div className="explorer-legend"><strong>FIRE OBSERVATIONS</strong><span>{colorMode==='sensor' ? '● Orange: MODIS · ● Blue: VIIRS' : colorMode==='date' ? 'Date colors · exact UTC date in popup' : '● Red: high · ● Amber: nominal · ● Yellow: low'}</span><small>Marker size is symbolic; it is not burned area. Aggregates show counts.</small>{candidatesVisible && <small>Green rings: algorithmic candidates, not official perimeters.</small>}{scienceObservation && <small>{scienceLayer}: −0.2 brown → 1 green · {scienceObservation.date} – {scienceObservation.period_end} · QA rejected transparent</small>}<small>Basemap: {terrain ? 'terrain' : 'satellite'} context · dates vary</small></div>
+          <div className="explorer-legend"><details><summary>Fire observation legend</summary><span>{colorMode==='sensor' ? '● Orange: MODIS · ● Blue: VIIRS' : colorMode==='date' ? 'Date colors · exact UTC date in popup' : '● Red: high · ● Amber: nominal · ● Yellow: low'}</span><small>Marker size is symbolic; it is not burned area. Aggregates show counts.</small>{candidatesVisible && <small>Green rings: algorithmic candidates, not official perimeters.</small>}{scienceObservation && <small>{scienceLayer}: −0.2 brown → 1 green · {scienceObservation.date} – {scienceObservation.period_end} · QA rejected transparent</small>}<small>Basemap: {terrain ? 'terrain' : 'satellite'} context · dates vary</small></details></div>
         </section>
       </main>
       <div className="explorer-timeline" aria-label="Fire observation timeline">

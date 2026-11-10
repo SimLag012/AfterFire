@@ -4,12 +4,14 @@ import contextlib
 import logging
 import signal
 import os
+from sqlalchemy.exc import OperationalError
+from app.services.analysis_retry import retry_delay
 
 from app.core.config import settings
 from app.db.database import init_db,engine
 import app.models  # register all metadata, including event satellite tables
-from app.services.analysis_jobs import claim_job,renew,publish,fail
-from app.services.post_fire_pipeline import run_pipeline
+from app.services.analysis_jobs import claim_job,renew,publish,fail,defer_retry,INSUFFICIENT
+from app.services.post_fire_pipeline import run_pipeline, InsufficientObservations
 
 log=logging.getLogger(__name__)
 
@@ -17,7 +19,10 @@ log=logging.getLogger(__name__)
 async def heartbeat(job):
     while True:
         await asyncio.sleep(20)
-        await renew(job)
+        try:
+            await renew(job)
+        except (OperationalError, OSError):
+            log.warning('Heartbeat database connection interrupted for job %s', job.id)
 
 
 async def process(job):
@@ -36,7 +41,17 @@ async def process(job):
             await execute_assessment(job, progress)
         else:
             payload,state=await run_pipeline(job,progress)
-            await publish(job,payload,state)
+            for attempt in range(3):
+                try:
+                    await publish(job,payload,state)
+                    break
+                except OperationalError:
+                    if attempt == 2:
+                        raise
+                    # The transaction rolled back. Reuse the computed payload in memory.
+                    await asyncio.sleep(2 ** attempt)
+    except InsufficientObservations as exc:
+        await fail(job, str(exc), state=INSUFFICIENT)
     except asyncio.CancelledError:
         # Do not mark failed: expired lease resumes after restart, reusing committed sources.
         raise
@@ -46,7 +61,11 @@ async def process(job):
         log.error('Analysis job %s failed: %s',job.id,type(exc).__name__)
         with contextlib.suppress(RuntimeError):
             await progress.persist()
-        await fail(job,safe)
+        delay = retry_delay(exc, job.attempts)
+        if delay is not None:
+            await defer_retry(job, delay)
+        else:
+            await fail(job,safe)
     finally:
         beat.cancel()
         with contextlib.suppress(asyncio.CancelledError,RuntimeError):
@@ -55,11 +74,16 @@ async def process(job):
 
 async def lane():
     while True:
-        job=await claim_job()
-        if job:
-            await process(job)
-        else:
-            await asyncio.sleep(3)
+        try:
+            job = await claim_job()
+            if job:
+                await process(job)
+            else:
+                await asyncio.sleep(3)
+        except (OperationalError, OSError):
+            # If the DB was unavailable while releasing a job, its lease remains recoverable.
+            log.warning('Worker database connection interrupted; reconnecting')
+            await asyncio.sleep(5)
 
 
 async def main():

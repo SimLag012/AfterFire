@@ -1,4 +1,5 @@
 import L from 'leaflet';
+import axios from 'axios';
 import React,{useEffect,useState} from 'react';
 import {Link} from 'react-router-dom';
 import {useMutation,useQuery,useQueryClient} from '@tanstack/react-query';
@@ -15,11 +16,16 @@ export function RecoveryIntelligencePanel({eventId,sourceJobId,index,selectedDat
   const [assessmentId,setAssessmentId]=useState('');
   const [periodStart,setPeriodStart]=useState('');
   const [periodEnd,setPeriodEnd]=useState('');
-  const [layer,setLayer]=useState('anomaly');
+  const [layer,setLayer]=useState('persistence');
   const [visible,setVisible]=useState(true);
   const [zones,setZones]=useState(true);
   const [cell,setCell]=useState<CellProperties|null>(null);
   const result=useQuery({queryKey:['recovery',eventId,sourceJobId,assessmentId],queryFn:()=>recoveryApi.result(eventId,sourceJobId,assessmentId),retry:false});
+  const missing=axios.isAxiosError(result.error) && [404,409].includes(result.error.response?.status ?? 0);
+  const initialAssessment=useQuery({queryKey:['open-assessment',eventId,sourceJobId],queryFn:()=>recoveryApi.request(eventId,sourceJobId),enabled:missing && !jobId && !assessmentId,staleTime:Infinity,retry:false});
+  useEffect(()=>{
+    if(missing && initialAssessment.data && !jobId)setJobId(initialAssessment.data.id);
+  },[missing,initialAssessment.data,jobId]);
   const start=useMutation({mutationFn:()=>recoveryApi.request(eventId,sourceJobId,{...(periodStart?{post_start:periodStart}:{}),...(periodEnd?{post_end:periodEnd}:{})}),onSuccess:j=>{setJobId(j.id);sessionStorage.setItem('assessment:'+sourceJobId,j.id);}});
   useEffect(()=>{setJobId(sessionStorage.getItem('assessment:'+sourceJobId)||'');setAssessmentId('');},[sourceJobId]);
   const status=useQuery({queryKey:['recovery-status',eventId,jobId],queryFn:()=>recoveryApi.status(eventId,jobId),enabled:!!jobId,
@@ -41,30 +47,23 @@ export function RecoveryIntelligencePanel({eventId,sourceJobId,index,selectedDat
   const busy=!!status.data&&!['completed','failed'].includes(status.data.state);
   function color(p:CellProperties){
     if(layer==='reliability') return p.completeness>=.7?'#49b6a3':p.completeness>0?'#e5b963':colors.missing;
-    if(layer==='persistence') return p.classification==='insufficient_data'?colors.missing:['persistent_negative_anomaly','below_reference'].includes(p.classification)?colors.negative:p.classification==='above_reference'?colors.positive:colors.neutral;
+    if(layer==='persistence') return ['persistent_negative_anomaly','below_reference'].includes(p.classification)?colors.negative:p.classification==='above_reference'?colors.positive:p.classification==='within_reference'?colors.neutral:colors.missing;
     const value=layer==='trend'?p.trend_per_year:p.anomaly;
     return value==null?colors.missing:value<-.05?colors.negative:value>.05?colors.positive:colors.neutral;
   }
   return <section aria-label="Recovery Intelligence" className="space-y-4 rounded-xl border border-teal-800 bg-dark-900 p-4">
     <div className="flex flex-wrap items-center justify-between gap-3"><h2 className="text-xl font-semibold">Recovery Intelligence · {index}</h2><Link className="text-teal-300 underline" to={`/compare?event=${encodeURIComponent(eventId)}`}>Compare Recovery →</Link></div>
     <p className="text-sm text-slate-400">Observed seasonal evidence from published NASA measurements. No new satellite downloads are needed.</p>
-    <div className="flex flex-wrap gap-3 text-sm"><label>Assessment from <input aria-label="Assessment from" type="date" className="bg-dark-800" value={periodStart} onChange={e=>setPeriodStart(e.target.value)}/></label><label>Assessment through <input aria-label="Assessment through" type="date" className="bg-dark-800" value={periodEnd} onChange={e=>setPeriodEnd(e.target.value)}/></label><span>Leave empty for the full published interval. Compute to apply.</span></div>
-    <button className="rounded bg-teal-800 px-4 py-2 disabled:opacity-50" disabled={busy||start.isPending} onClick={()=>start.mutate()}>{data?'Recheck assessment cache':'Compute Recovery Intelligence'}</button>
+    <details><summary>Change assessment interval</summary><div className="flex flex-wrap gap-3 text-sm"><label>Assessment from <input aria-label="Assessment from" type="date" className="bg-dark-800" value={periodStart} onChange={e=>setPeriodStart(e.target.value)}/></label><label>Assessment through <input aria-label="Assessment through" type="date" className="bg-dark-800" value={periodEnd} onChange={e=>setPeriodEnd(e.target.value)}/></label><span>Leave empty for the full published interval.</span></div>
+    <button className="rounded bg-teal-800 px-4 py-2 disabled:opacity-50" disabled={busy||start.isPending} onClick={()=>start.mutate()}>Apply assessment interval</button></details>
     {(busy||status.data?.state==='failed')&&<p role="status">{status.data?.operation} · {status.data?.progress}% {status.data?.error}</p>}
     {start.isError&&<p role="alert">Assessment could not be requested. Retry after satellite observations are published.</p>}
-    {result.isError&&!busy&&<p className="text-sm">No published assessment for this source yet. Compute it using the button above.</p>}
+    {(initialAssessment.isError || (result.isError&&!missing)) && <p role="alert">Could not load territory evidence. <button onClick={()=>missing?initialAssessment.refetch():result.refetch()}>Retry</button></p>}
+    {missing && !initialAssessment.isError && status.data?.state!=='failed' && <p role="status">Preparing the territory assessment from published satellite observations…</p>}
     {data&&metric&&<>
-      <p className="text-sm">Assessment interval: {data.period.start}–{data.period.end}</p>
-      <p className="text-sm">{data.version} · source {data.source_job_id.slice(0,12)} · {metric.classification.replace(/_/g,' ')} · evidence: {metric.reliability.evidence}</p>
-      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-        <article className="rounded bg-dark-950 p-3"><h3>Initial observed change</h3><p>{fmt(metric.first_post_observation?.anomaly)} · {metric.first_post_observation?.date??'No valid post-event composite'}</p><p className="text-xs text-slate-400">Minimum value in first {metric.initial_window_days} days: {fmt(metric.initial_minimum?.value)} ({metric.initial_minimum?.date??'unavailable'})</p></article>
-        <article className="rounded bg-dark-950 p-3"><h3>Latest supported anomaly</h3><p>{fmt(metric.latest?.anomaly)} · {metric.latest?.date??'Unavailable'}</p><p className="text-xs text-slate-400">Observed − pre-event seasonal median</p></article>
-        <article className="rounded bg-dark-950 p-3"><h3>Descriptive trend</h3><p>{fmt(metric.trend.slope_per_year)} / year</p><p className="text-xs text-slate-400">{metric.trend.direction.replace(/_/g,' ')} · {metric.trend.months} monthly medians</p></article>
-        <article className="rounded bg-dark-950 p-3"><h3>Observation support</h3><p>{metric.reliability.baseline_supported_composites}/{metric.reliability.expected_post_composites} composites</p><p className="text-xs text-slate-400">Completeness {(metric.reliability.completeness*100).toFixed(1)}% · largest valid gap {metric.reliability.largest_valid_gap_days??'unknown'} days</p></article>
-      </div>
-      <p className="text-sm">{metric.persistent_negative_periods.length} observed persistent negative periods · first sustained return: {metric.return_to_reference?.start??'Not observed with sufficient support'}{!data.ndvi_evi_concordant?' · NDVI/EVI classifications differ.':''}</p>
-      <details><summary>Persistence evidence and scientific insights</summary>{metric.persistent_negative_periods.map(p=><p key={p.start}>{p.start}–{p.end}: {p.observations} composites, {p.duration_days} days, median anomaly {fmt(p.median_anomaly)}</p>)}{data.insights.map(i=><p key={i.text}>{i.text}</p>)}</details>
-      <div className="flex flex-wrap gap-4 text-sm"><label><input type="checkbox" checked={visible} onChange={e=>setVisible(e.target.checked)}/> Show scientific cells</label><label>Recovery layer <select aria-label="Recovery layer" className="bg-dark-800" value={layer} onChange={e=>setLayer(e.target.value)}><option value="anomaly">Seasonal anomaly</option><option value="persistence">Persistent anomaly</option><option value="trend">Recovery trend</option><option value="reliability">Data reliability</option></select></label><label><input type="checkbox" checked={zones} onChange={e=>setZones(e.target.checked)}/> Persistent vegetation anomaly zones</label></div>
+      <h3 className="text-lg font-semibold">Territory recovery map</h3>
+      <p className="text-sm">Select a cell to follow its vegetation history. The period classification compares supported observations with the pre-fire seasonal range.</p>
+      <div className="flex flex-wrap gap-4 text-sm"><label><input type="checkbox" checked={visible} onChange={e=>setVisible(e.target.checked)}/> Show scientific cells</label><label>Recovery layer <select aria-label="Recovery layer" className="bg-dark-800" value={layer} onChange={e=>setLayer(e.target.value)}><option value="anomaly">Seasonal anomaly</option><option value="persistence">Seasonal reference classification</option><option value="trend">Recovery trend</option><option value="reliability">Data reliability</option></select></label><label><input type="checkbox" checked={zones} onChange={e=>setZones(e.target.checked)}/> Persistent vegetation anomaly zones</label></div>
       <p className="text-sm">{layer==='anomaly'?`Selected composite: ${selectedDate}`:`Assessment period: ${data.period.start}–${data.period.end}`} · same index and date as Recovery Story · {map.data?.native_resolution_m?.toFixed(2)??'231.66'} m native cells (nominal 250 m)</p>
       {map.isError&&<p role="alert">Spatial evidence unavailable. Retry the assessment.</p>}
       <>
@@ -90,6 +89,18 @@ export function RecoveryIntelligencePanel({eventId,sourceJobId,index,selectedDat
           <details><summary>Observed dates, reference support and gaps</summary><div className="max-h-64 overflow-auto"><table className="w-full text-xs"><caption>Native cell history · {index} · null values remain unavailable</caption><thead><tr><th>Date</th><th>Observed</th><th>Baseline</th><th>Anomaly</th><th>Refs / years</th></tr></thead><tbody>{cellHistory.data.properties.series.map(p=><tr key={p.date}><td>{p.date}</td><td>{fmt(p.value)}</td><td>{fmt(p.baseline)}</td><td>{fmt(p.anomaly)}</td><td>{p.baseline_n??0} / {p.baseline_years??0}</td></tr>)}</tbody></table></div></details>
         </>}
       </article>}
+      <details><summary>Seasonal evidence and observation support</summary>
+      <p className="text-sm">Assessment interval: {data.period.start}–{data.period.end}</p>
+      <p className="text-sm">{data.version} · source {data.source_job_id.slice(0,12)} · {metric.classification.replace(/_/g,' ')} · evidence: {metric.reliability.evidence}</p>
+      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+        <article className="rounded bg-dark-950 p-3"><h3>Initial observed change</h3><p>{fmt(metric.first_post_observation?.anomaly)} · {metric.first_post_observation?.date??'No valid post-event composite'}</p><p className="text-xs text-slate-400">Minimum value in first {metric.initial_window_days} days: {fmt(metric.initial_minimum?.value)} ({metric.initial_minimum?.date??'unavailable'})</p></article>
+        <article className="rounded bg-dark-950 p-3"><h3>Latest supported anomaly</h3><p>{fmt(metric.latest?.anomaly)} · {metric.latest?.date??'Unavailable'}</p><p className="text-xs text-slate-400">Observed − pre-event seasonal median</p></article>
+        <article className="rounded bg-dark-950 p-3"><h3>Descriptive trend</h3><p>{fmt(metric.trend.slope_per_year)} / year</p><p className="text-xs text-slate-400">{metric.trend.direction.replace(/_/g,' ')} · {metric.trend.months} monthly medians</p></article>
+        <article className="rounded bg-dark-950 p-3"><h3>Observation support</h3><p>{metric.reliability.baseline_supported_composites}/{metric.reliability.expected_post_composites} composites</p><p className="text-xs text-slate-400">Completeness {(metric.reliability.completeness*100).toFixed(1)}% · largest valid gap {metric.reliability.largest_valid_gap_days??'unknown'} days</p></article>
+      </div>
+      <p className="text-sm">{metric.persistent_negative_periods.length} observed persistent negative periods · first sustained return: {metric.return_to_reference?.start??'Not observed with sufficient support'}{!data.ndvi_evi_concordant?' · NDVI/EVI classifications differ.':''}</p>
+      <details><summary>Persistence evidence and scientific insights</summary>{metric.persistent_negative_periods.map(p=><p key={p.start}>{p.start}–{p.end}: {p.observations} composites, {p.duration_days} days, median anomaly {fmt(p.median_anomaly)}</p>)}{data.insights.map(i=><p key={i.text}>{i.text}</p>)}</details>
+      </details>
       <div className="flex flex-wrap gap-3">{data.raster_assets?.filter(a=>a.index===index).map(a=><a key={a.name} className="text-xs text-teal-300 underline" href={`/api/v1/events/${encodeURIComponent(eventId)}/recovery-assessment/assets/${data.job_id}/${a.name}`}>Download native recovery GeoTIFF ({a.bands} bands)</a>)}</div>
       <details><summary>Methods and limits</summary>{data.limitations.map(l=><p key={l} className="text-xs text-slate-400">{l}</p>)}</details>
     </>}

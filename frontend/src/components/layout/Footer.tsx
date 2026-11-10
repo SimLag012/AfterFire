@@ -33,7 +33,7 @@ export const Footer: React.FC = () => {
               <li><Link to="/recovery" className="hover:text-white transition-colors">Recovery Explorer</Link></li>
               <li><Link to="/recurrence" className="hover:text-white transition-colors">Recurring Fires</Link></li>
               <li><Link to="/compare" className="hover:text-white transition-colors">Territory Comparison</Link></li>
-              <li><Link to="/recovery" className="hover:text-white transition-colors">Published Recovery Stories</Link></li>
+              <li><Link to="/about" className="hover:text-white transition-colors">About AfterFire & historical cases</Link></li>
               <li><Link to="/datasets" className="hover:text-white transition-colors">NASA Datasets & Status</Link></li>
             </ul>
           </div>

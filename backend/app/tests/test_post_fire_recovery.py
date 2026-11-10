@@ -387,3 +387,67 @@ async def test_full_pipeline_with_controlled_native_rasters(tmp_path,monkeypatch
     incomplete=next(o for o in payload['observations'] if o['date']=='2021-07-28' and o['index']=='NDVI')
     assert incomplete['value'] is None and incomplete['quality']=='incomplete_period' and not incomplete['granule_ids']
     assert state=='partial'  # intentionally absent composites remain null, never interpolated
+
+
+@pytest.mark.asyncio
+async def test_worker_retries_publication_without_repeating_pipeline(monkeypatch):
+    from sqlalchemy.exc import OperationalError
+    from app.jobs import analysis_worker as worker
+    from unittest.mock import AsyncMock
+
+    payload = {'job_id': 'same-result'}
+    run = AsyncMock(return_value=(payload, 'completed'))
+    publish = AsyncMock(side_effect=[OperationalError('publish', None, Exception()), None])
+    monkeypatch.setattr(worker, 'run_pipeline', run)
+    monkeypatch.setattr(worker, 'publish', publish)
+    job = SimpleNamespace(id='isolated', engine_version='test-engine', attempts=1)
+    await worker.process(job)
+    run.assert_awaited_once()
+    assert [call.args for call in publish.await_args_list] == [(job, payload, 'completed')] * 2
+
+
+def test_provider_retry_policy():
+    import httpx
+    from app.providers.api_subsets import ApiSubsetProvider, ProviderUnavailable, earth_engine_error
+    from app.services.analysis_retry import retry_delay
+    with pytest.raises(ProviderUnavailable) as limited:
+        ApiSubsetProvider._status(429, {'Retry-After': '180'})
+    assert retry_delay(limited.value, 1) == 180
+    assert retry_delay(limited.value, 3) is None
+    assert retry_delay(earth_engine_error(TimeoutError()), 1) == 15
+    assert retry_delay(httpx.ReadError('interrupted stream'), 2) == 30
+    assert retry_delay(ProviderUnavailable('authentication', 'provider refused access'), 1) is None
+
+
+@pytest.mark.asyncio
+async def test_deferred_job_survives_restart_and_waits_out_provider_limit():
+    from app.db.database import init_db, AsyncSessionLocal
+    from app.models.event import FireEventCandidate
+    from app.models.satellite_analysis import EventAnalysisJob
+    from app.services.analysis_jobs import enqueue, claim_job, defer_retry, fail
+    await init_db()
+    async with AsyncSessionLocal() as db:
+        event=FireEventCandidate(id='retry-worker-test',area_id='global',name='Test',
+            start_date=date(2020,7,1),end_date=date(2020,7,3),duration_days=3,detection_count=2)
+        db.add(event)
+        await db.commit()
+        saved = await enqueue(db,event.id,AnalysisConfiguration())
+    first = await claim_job()
+    assert first.id == saved.id
+    await defer_retry(first, 180)
+    assert await claim_job() is None
+    async with AsyncSessionLocal() as db:
+        record = await db.get(EventAnalysisJob, saved.id)
+        assert record.owner is None and record.state == 'queued'
+        assert (record.lease_until-datetime.utcnow()).total_seconds() > 175
+        record.lease_until = datetime.utcnow()-timedelta(seconds=1)
+        await db.commit()
+    second = await claim_job()
+    assert second.owner != first.owner and second.attempts == 2
+    from app.services.analysis_jobs import INSUFFICIENT
+    from app.api.routes.event_analysis import durable_status
+    await fail(second, 'No usable observations', state=INSUFFICIENT)
+    async with AsyncSessionLocal() as db:
+        final = await durable_status(db, await db.get(EventAnalysisJob, second.id))
+        assert final['state'] == 'insufficient_observations'
+        assert final['error'] is None

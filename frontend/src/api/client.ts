@@ -53,7 +53,7 @@ export const apiClient = {
 
   // Health & Status
   getHealth: async (): Promise<SystemStatus> => {
-    const res = await api.get('/health');
+    const res = await api.get('/health', {params:{probe:false}});
     return res.data;
   },
 
@@ -183,7 +183,7 @@ export const apiClient = {
   },
 
   getExplorerHotspots: async (params: Record<string, string | number | undefined>, online: boolean, signal?: AbortSignal): Promise<{detections: FireDetection[]; truncated: boolean; events?: EventSearchResponse['events']; total_events?:number; total_detections?:number; coverage?:{state:string;message:string}}> => {
-    const res = await api.get(online ? '/global/hotspots' : '/explorer/hotspots', { params, signal });
+    const res = await api.get(online ? '/global/hotspots' : '/explorer/hotspots', { params, signal, timeout: online ? 85000 : 30000 });
     return res.data;
   },
   searchLocations: async (q: string): Promise<{results: {name:string;lat:number;lon:number}[];attribution:string}> => {

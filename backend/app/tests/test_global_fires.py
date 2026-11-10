@@ -80,6 +80,22 @@ async def test_snapshots_are_reproducible_and_only_selection_persists(tmp_path,m
     monkeypatch.setattr(service.GlobalFirms,'fetch_area_firms',classmethod(fetch))
     first=await service.hotspots('27,35,29,37',date(2021,8,1),date(2021,8,1),'MODIS')
     second=await service.hotspots('27,35,29,37',date(2021,8,1),date(2021,8,1),'MODIS')
+    for start,end,satellite in [(date(2021,8,1),date(2021,7,31),None),
+                                 (date(2021,8,1),date(2021,8,1),'Unknown'),
+                                 (date(2021,8,1),date(2021,8,1),'NOAA-20')]:
+        with pytest.raises(HTTPException) as rejected:
+            await service.hotspots('27,35,29,37',start,end,'MODIS',satellite)
+        assert rejected.value.status_code==422
+    async def outage(*args):
+        raise HTTPException(503, 'Provider unavailable')
+    monkeypatch.setattr(service,'fetch_observations',outage)
+    replay=await service.hotspots('27,35,29,37',date(2021,8,1),date(2021,8,1),'MODIS')
+    assert replay['events']==first['events'] and replay['coverage']['state']=='cached'
+    subset=await service.hotspots('27.9,35.9,28.1,36.2',date(2021,8,1),date(2021,8,1),'MODIS')
+    assert subset['coverage']['state']=='cached' and len(subset['detections'])==3
+    with pytest.raises(HTTPException) as unmatched:
+        await service.hotspots('27,35,29,37',date(2021,8,1),date(2021,8,1),'VIIRS')
+    assert unmatched.value.status_code==503
     event=first['events'][0]
     assert event==second['events'][0] and len(event['detection_ids'])==3
     assert event['geometry_status']=='provisional_hotspot_candidate'
@@ -118,3 +134,22 @@ async def test_csv_cache_deduplicates_and_expires_recent_data(tmp_path,monkeypat
     assert len(calls)==1 and sorted([first[1],second[1]])==[0,7]
     os.utime(first[0],(time.time()-400,time.time()-400))
     assert (await service.GlobalFirms._get_window_csv(*args))[1]==7 and len(calls)==2
+
+
+@pytest.mark.asyncio
+async def test_dense_csv_allows_explicit_partial_map_only(tmp_path, monkeypatch):
+    from app.providers.firms import FirmsProviderError
+    path = tmp_path / 'dense.csv'
+    path.write_text('latitude,longitude,acq_date,acq_time\n' + '36,28,2021-08-01,1200\n' * 4)
+
+    async def cached(cls, *args):
+        return path, 0
+
+    monkeypatch.setattr(FirmsProvider, 'is_configured', classmethod(lambda cls: True))
+    monkeypatch.setattr(FirmsProvider, '_get_window_csv', classmethod(cached))
+    options = dict(start_date=date(2021,8,1), end_date=date(2021,8,1), max_records=2)
+    rows = await FirmsProvider.fetch_area_firms(27,35,29,37,allow_partial=True,**options)
+    assert len(rows) == 3  # one sentinel beyond the map limit
+    with pytest.raises(FirmsProviderError) as error:
+        await FirmsProvider.fetch_area_firms(27,35,29,37,**options)
+    assert error.value.status_code == 413

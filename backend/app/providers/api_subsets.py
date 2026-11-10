@@ -16,6 +16,7 @@ from rasterio.windows import Window, from_bounds, transform as window_transform
 from shapely.geometry import mapping, box
 
 from app.core.config import settings
+from app.services.analysis_retry import retry_after_seconds
 from app.analysis.modis_science import GRID_DIMENSIONS, SINUSOIDAL, WGS84, project, tile_transform
 from app.providers.appeears import LAYERS
 from app.services.satellite_cache import cache_root, file_lock, ensure_space
@@ -27,9 +28,41 @@ FILL = {'MOD13Q1': [-3000,-3000,65535,-1], 'MCD64A1': [0,255,0,0,0]}
 
 
 class ProviderUnavailable(ValueError):
-    def __init__(self, code, detail):
+    def __init__(self, code, detail, retry_after=0):
+        self.retry_after = retry_after
         self.code = code
         super().__init__(f'{code}: {detail}')
+
+
+def earth_engine_error(exc):
+    """Classify SDK errors without persisting raw provider text or authenticated URLs."""
+    response = getattr(exc, 'resp', None)
+    code = str(getattr(response, 'status', None) or getattr(exc, 'code', ''))
+    detail = str(exc).lower()
+    if code == '429' or any(term in detail for term in ('quota', 'too many requests')):
+        reason = 'rate_limited'
+    elif code in ('401', '403') or any(term in detail for term in ('credential', 'permission', 'authorize', 'not registered')):
+        reason = 'authentication'
+    elif isinstance(exc, TimeoutError) or any(term in detail for term in ('timeout', 'timed out', 'deadline')):
+        reason = 'timeout'
+    elif code in ('500', '502', '503', '504') or isinstance(exc, ConnectionError) or 'connection reset' in detail:
+        reason = 'temporary_provider_error'
+    elif 'band' in detail and 'not' in detail:
+        reason = 'band_unavailable'
+    elif any(term in detail for term in ('not found', 'does not exist')):
+        reason = 'missing_data'
+    else:
+        reason = 'provider_error'
+    headers = response if hasattr(response, 'get') else {}
+    delay = retry_after_seconds(headers.get('retry-after') or headers.get('Retry-After'))
+    message = {
+        'rate_limited': 'Earth Engine quota exceeded. Validated subsets are retained.',
+        'authentication': 'Check project registration, API enablement and identity permissions.',
+        'band_unavailable': 'The requested observation band is unavailable.',
+        'missing_data': 'The requested image is unavailable.',
+        'timeout': 'Earth Engine timed out. Validated subsets are retained.',
+    }.get(reason, 'Earth Engine could not complete the request. Validated subsets are retained.')
+    return ProviderUnavailable(reason, message + ' See docs/EARTH_ENGINE_LIVE_SETUP.md', delay)
 
 
 def ornl_batches(dates):
@@ -151,7 +184,7 @@ class ApiSubsetProvider:
                         'endDate':batch[-1],'kmAboveBelow':km,'kmLeftRight':km}
                 payload=bytearray()
                 with client.stream('GET',ORNL+'/'+product+'/subset',params=params) as response:
-                    self._status(response.status_code)
+                    self._status(response.status_code, response.headers)
                     for chunk in response.iter_bytes():
                         transferred(len(chunk)); payload.extend(chunk)
                         if len(payload)>settings.AFTERFIRE_API_MAX_RESPONSE_MB*1024**2:
@@ -160,10 +193,12 @@ class ApiSubsetProvider:
         return result
 
     @staticmethod
-    def _status(code):
+    def _status(code, headers=None):
+        delay = retry_after_seconds((headers or {}).get('Retry-After'))
         if code in (401,403): raise ProviderUnavailable('authentication','Provider rejected credentials/project access')
-        if code==429: raise ProviderUnavailable('rate_limited','Provider quota reached; retry later')
+        if code==429: raise ProviderUnavailable('rate_limited','Provider quota reached; retry later', delay)
         if code==404: raise ProviderUnavailable('missing_data','Requested dataset/date is unavailable')
+        if code in (408,500,502,503,504): raise ProviderUnavailable('temporary_provider_error',f'Provider returned HTTP {code}', delay)
         if code!=200: raise ProviderUnavailable('provider_error',f'Provider returned HTTP {code}')
 
     def _earth_engine(self, record, win, affine):
@@ -198,16 +233,7 @@ class ApiSubsetProvider:
         except ImportError:
             raise ProviderUnavailable('provider_not_configured','Install earthengine-api and configure application default credentials') from None
         except Exception as exc:
-            # Provider exception strings may contain authentication details: never propagate them.
-            code=str(getattr(exc,'code','')); detail=str(exc).lower()
-            reason=('rate_limited' if code=='429' or any(t in detail for t in ('quota','too many requests')) else
-                    'authentication' if code in ('401','403') or any(t in detail for t in ('credential','permission','authorize','not registered')) else
-                    'timeout' if any(t in detail for t in ('timeout','timed out','deadline')) else
-                    'band_unavailable' if 'band' in detail and 'not' in detail else
-                    'missing_data' if any(t in detail for t in ('not found','does not exist')) else 'provider_error')
-            message = ('Earth Engine quota exceeded; valid cached subsets are retained. Retry later.' if reason=='rate_limited' else
-                       'Earth Engine request failed; check project registration, API enablement and identity permissions. See docs/EARTH_ENGINE_LIVE_SETUP.md')
-            raise ProviderUnavailable(reason,message) from None
+            raise earth_engine_error(exc) from None
 
     def acquire(self, record, geometry, budget, transferred):
         key,spec=cache_identity(record,geometry); folder=cache_root()/'api-subsets'/key
@@ -361,12 +387,7 @@ class ApiSubsetProvider:
                         arrays,count=self._earth_engine_batch(missing,win,affine)
                     except ProviderUnavailable:raise
                     except Exception as exc:
-                        code=str(getattr(exc,'code',''))
-                        detail=str(exc).lower()
-                        reason=('rate_limited' if code=='429' or any(t in detail for t in ('quota','too many requests')) else
-                            'authentication' if code in ('401','403') or any(t in detail for t in ('credential','permission','authorize','not registered')) else
-                            'timeout' if any(t in detail for t in ('timeout','timed out','deadline')) else 'provider_error')
-                        raise ProviderUnavailable(reason,'Earth Engine batch failed; validated cache retained') from None
+                        raise earth_engine_error(exc) from None
                     transferred(count);budget-=count
                     # One conservative reservation under the same cross-process lock for the whole batch.
                     with file_lock(cache_root()/'quota.lock'):

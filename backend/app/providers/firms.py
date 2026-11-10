@@ -17,9 +17,10 @@ _cache_locks: Dict[str, asyncio.Lock] = {}
 
 
 class FirmsProviderError(Exception):
-    def __init__(self, message: str, status_code: int = 502):
+    def __init__(self, message: str, status_code: int = 502, retry_after: str | None = None):
         super().__init__(message)
         self.status_code = status_code
+        self.retry_after = retry_after
 
 
 class FirmsProvider:
@@ -283,6 +284,7 @@ class FirmsProvider:
         end_date: Optional[date] = None,
         max_records: Optional[int] = None,
         response_byte_limit: Optional[int] = None,
+        allow_partial: bool = False,
     ) -> List[Dict[str, Any]]:
         """
         Calls NASA FIRMS Area API:
@@ -364,6 +366,9 @@ class FirmsProvider:
                         ):
                             records.append(parsed)
                             if max_records is not None and len(records)>max_records:
+                                if allow_partial:
+                                    # One extra row signals truncation to the bounded map caller.
+                                    return records
                                 raise FirmsProviderError('FIRMS record limit reached; narrow the area or period.',413)
             finally:
                 if not settings.DATA_CACHE_ENABLED:
@@ -455,7 +460,11 @@ class FirmsProvider:
                                         "NASA FIRMS rejected the configured MAP_KEY (authentication/authorization failure).",
                                         502,
                                     )
-                                if response.status_code == 429 or response.status_code >= 500:
+                                if response.status_code == 429:
+                                    retry = response.headers.get('Retry-After', '')
+                                    wait = f' Retry after {retry} seconds.' if retry.isdigit() else ' Retry later.'
+                                    raise FirmsProviderError('NASA FIRMS rate limit (HTTP 429).' + wait, 429, retry or None)
+                                if response.status_code >= 500:
                                     if attempt < 2:
                                         retry_after = response.headers.get("Retry-After")
                                         delay = min(float(retry_after), 10.0) if retry_after and retry_after.isdigit() else 0.5 * (2 ** attempt)
@@ -504,6 +513,11 @@ class FirmsProvider:
                                     "Could not connect to NASA FIRMS after three attempts.", 502
                                 ) from exc
                             await asyncio.sleep(0.5 * (2 ** attempt))
+            # FIRMS can return a text error with HTTP 200. Only cache observation CSVs.
+            with temp_path.open('r', encoding='utf-8-sig', newline='') as stream:
+                header = next(csv.reader(stream), [])
+            if not {'latitude', 'longitude', 'acq_date', 'acq_time'}.issubset(header):
+                raise FirmsProviderError('NASA FIRMS returned an unexpected response for this source and date range.')
             if cache_result:
                 temp_path.replace(destination)
                 return destination, downloaded

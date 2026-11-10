@@ -495,3 +495,19 @@ def test_invalid_burn_uncertainty_is_unknown_not_valid_zero_burn(tmp_path,monkey
         assert observations==[] and failures==[]
         assert coverage['expected_aoi_cells']==1
         assert bool(coverage['per_cell_months']['10000:45000'])==mapped
+
+
+def test_chips_evidence_survives_equivalent_publication_only():
+    from copy import deepcopy
+    from app.api.routes.reburn import chips_evidence, supplemental_vegetation
+
+    verified = chips_evidence()
+    gap = deepcopy(verified['result'])
+    publication = {'event_id':verified['event'], 'job_id':'later-publication',
+                   'source_job_id':verified['source_job'], 'parameters':verified['parameters'],
+                   'recovery_gaps':[gap]}
+    assert supplemental_vegetation(publication) is verified
+    assert supplemental_vegetation({**publication, 'source_job_id':'different'}) is None
+    assert supplemental_vegetation({**publication, 'parameters':{}}) is None
+    gap['shared_cells'].pop()
+    assert supplemental_vegetation(publication) is None

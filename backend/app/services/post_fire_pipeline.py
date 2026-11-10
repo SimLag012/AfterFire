@@ -1,4 +1,5 @@
 """On-demand event pipeline. Discovery and acquisition are bounded; partial failures stay explicit."""
+from app.services.analysis_retry import retry_delay
 from app.services.satellite_cache import cache_io
 import asyncio
 import calendar
@@ -25,6 +26,13 @@ from app.analysis.modis_science import (granule_identity, event_territory, area_
     burned_cells, vegetation_subset, seasonal_metrics, recurrence_state, expected_pixels, analysis_tiles, validate_source)
 from app.services.satellite_cache import cache_root, acquire, active_cache, prune_sources, cached_source
 from app.services.satellite_rasters import defer_raster
+
+LEGACY_NO_OBSERVATIONS = 'No valid scientific observations; source acquisition does not constitute a successful analysis'
+
+
+class InsufficientObservations(ValueError):
+    """Acquisition finished, but the data cannot support a scientific assessment."""
+
 
 VI_LAYERS = ['250m 16 days NDVI','250m 16 days EVI','250m 16 days VI Quality','250m 16 days pixel reliability']
 BA_LAYERS = ['Burn Date','Burn Date Uncertainty','QA']
@@ -136,6 +144,7 @@ async def run_pipeline(job, progress):
         consumed_bytes=progress.data.get('bytes_downloaded_previous_attempts',0)
     await report('discovering', 'Searching NASA catalog')
     catalogs = {}
+    discovery_failed = False
     # Both product searches independently fail into explicit partial status.
     for product,start,end in [('MCD64A1',event.start_date-timedelta(days=31+config.burn_tolerance_days),
                                min(config.as_of,event.end_date+timedelta(days=31+config.burn_tolerance_days))),
@@ -154,6 +163,9 @@ async def run_pipeline(job, progress):
             if not catalogs[product]:
                 warnings.append(f'{product}.061: no available granules in CMR for requested region/period')
         except (httpx.HTTPError,ValueError,KeyError,RuntimeError) as exc:
+            if retry_delay(exc, 1) is not None:
+                raise
+            discovery_failed = True
             warnings.append(f'{product}.061 discovery unavailable: {type(exc).__name__}: {str(exc)[:250]}')
             catalogs[product]=[]
     all_records = catalogs['MCD64A1']+catalogs['MOD13Q1']
@@ -338,6 +350,10 @@ async def run_pipeline(job, progress):
                 telemetry['granules_failed'] += 1
                 await report('burned_area', 'Burned-area granule failed', record)
                 # Quota errors stop the job; provider or raster errors allow a transparent partial result.
+                if isinstance(exc, httpx.TransportError):
+                    raise ProviderUnavailable('temporary_provider_error', 'Connection to the observation provider was interrupted.') from None
+                if retry_delay(exc, 1) is not None:
+                    raise
                 if isinstance(exc,EarthdataAuthenticationError):
                     raise
                 if isinstance(exc,ProviderUnavailable) and exc.code in ('authentication','provider_not_configured','rate_limited','request_budget','timeout'):
@@ -404,6 +420,10 @@ async def run_pipeline(job, progress):
                 if not any(g['id'] == record['id'] for g in provenance):
                     telemetry['files_failed'] += 1
                 await report('vegetation', 'Vegetation granule failed', record)
+                if isinstance(exc, httpx.TransportError):
+                    raise ProviderUnavailable('temporary_provider_error', 'Connection to the observation provider was interrupted.') from None
+                if retry_delay(exc, 1) is not None:
+                    raise
                 if isinstance(exc,EarthdataAuthenticationError):
                     raise
                 if isinstance(exc,ProviderUnavailable) and exc.code in ('authentication','provider_not_configured','rate_limited','request_budget','timeout'):
@@ -437,6 +457,11 @@ async def run_pipeline(job, progress):
                     'quality':'incomplete_period' if end>after else 'strict_good_land' if value is not None else 'missing_or_insufficient_coverage',
                     'product':'MOD13Q1','version':'061','resolution_m':250,'scale_factor':0.0001,
                     'granule_ids':g['granules'] if g else [],'assets':g['assets'] if g else []})
+    if not cells and not any(o['value'] is not None for o in observations):
+        if discovery_failed or telemetry['granules_failed']:
+            raise ValueError('Source discovery or processing failed before valid observations could be established')
+        raise InsufficientObservations('No valid scientific observations. No associated burned cells were mapped '
+            'and no vegetation composite met the coverage and quality requirements for this territory.')
     observations=seasonal_metrics(observations,event.start_date,event.end_date,config)
     await progress('processing', 93, phase='indicators', current_operation='Computing anomalies and recovery indicators')
     recurrence=[]
@@ -484,8 +509,6 @@ async def run_pipeline(job, progress):
             'Composite date is period start, not the exact pixel acquisition date.',
             'Vegetation index near baseline does not demonstrate complete ecological recovery.',
             'Intervening candidate fires can affect vegetation observations after the selected event.']}
-    if not cells and not any(o['value'] is not None for o in observations):
-        raise ValueError('No valid scientific observations; source acquisition does not constitute a successful analysis')
     await progress('processing', 97, phase='publishing', current_operation='Saving scientific results and verifying publication')
     return payload, 'partial' if warnings else 'completed'
 

@@ -11,7 +11,8 @@ from app.models.satellite_analysis import EventAnalysisJob,EventAnalysisResult,E
 from app.schemas.satellite_analysis import ENGINE_VERSION
 
 ACTIVE=('queued','fetching','processing')
-TERMINAL=('completed','partial','failed')
+INSUFFICIENT = 'insufficient_data'  # The durable state column is VARCHAR(24).
+TERMINAL=('completed','partial','failed',INSUFFICIENT)
 
 
 def job_identity(event_id,configuration):
@@ -70,7 +71,7 @@ async def latest_job(db,event_id,job_id=None):
 
 async def claim_job():
     now=datetime.utcnow()
-    eligible=or_(EventAnalysisJob.state=='queued',and_(EventAnalysisJob.state.in_(('fetching','processing')),EventAnalysisJob.lease_until<now))
+    eligible=or_(and_(EventAnalysisJob.state=='queued',or_(EventAnalysisJob.lease_until.is_(None),EventAnalysisJob.lease_until<=now)),and_(EventAnalysisJob.state.in_(('fetching','processing')),EventAnalysisJob.lease_until<now))
     async with AsyncSessionLocal() as db:
         stmt=select(EventAnalysisJob).where(eligible).order_by(EventAnalysisJob.created_at).limit(1)
         if db.get_bind().dialect.name=='postgresql':
@@ -145,10 +146,12 @@ async def publish(job,payload,state):
         await db.commit()
 
 
-async def fail(job,error):
+async def fail(job,error,state='failed'):
+    if state not in ('failed', INSUFFICIENT):
+        raise ValueError('Invalid terminal state')
     async with AsyncSessionLocal() as db:
         fence = await db.execute(update(EventAnalysisJob).where(EventAnalysisJob.id==job.id,EventAnalysisJob.owner==job.owner,EventAnalysisJob.state.in_(ACTIVE))
-            .values(state='failed',error=error[:1000],lease_until=None,updated_at=datetime.utcnow()))
+            .values(state=state,error=error[:1000],lease_until=None,updated_at=datetime.utcnow()))
         if not fence.rowcount:
             await db.rollback()
             return
@@ -157,4 +160,21 @@ async def fail(job,error):
             from app.services.analysis_progress import stamp
             telemetry.payload = {**telemetry.payload, 'finished_at': stamp(),
                 'download_speed_bytes_per_second': None, 'estimated_remaining_seconds': None}
+        await db.commit()
+
+async def defer_retry(job, delay):
+    """Release the lane while preserving the earliest allowed retry and source telemetry."""
+    now = datetime.utcnow()
+    resume_at = now + timedelta(seconds=delay)
+    async with AsyncSessionLocal() as db:
+        fence = await db.execute(update(EventAnalysisJob).where(
+            EventAnalysisJob.id == job.id, EventAnalysisJob.owner == job.owner,
+            EventAnalysisJob.state.in_(('fetching', 'processing')),
+        ).values(state='queued', owner=None, lease_until=resume_at, updated_at=now))
+        if fence.rowcount:
+            row = await db.get(EventAnalysisProgress, job.id)
+            if row:
+                row.payload = {**row.payload, 'phase_label': 'Waiting to retry',
+                    'retry_at': resume_at.isoformat()+'Z',
+                    'current_operation': 'Temporary interruption. Validated satellite data will be reused.'}
         await db.commit()

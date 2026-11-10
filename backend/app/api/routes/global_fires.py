@@ -10,13 +10,13 @@ router=APIRouter(prefix='/global')
 _clients=OrderedDict()
 
 
-def rate_limit(request):
-    key=request.client.host if request.client else 'local'
+def rate_limit(request, operation='observations'):
+    key=(request.client.host if request.client else 'local', operation)
     now=time.monotonic();times=_clients.setdefault(key,deque())
     _clients.move_to_end(key)
     while len(_clients)>256:_clients.popitem(last=False)
     while times and times[0]<now-60:times.popleft()
-    if len(times)>=20:raise HTTPException(429,'Global request limit reached; retry after one minute')
+    if len(times)>=20:raise HTTPException(429,'AfterFire local request limit reached. Retry after one minute.',headers={'Retry-After':'60'})
     times.append(now)
 
 
@@ -40,5 +40,5 @@ async def detail(event_id:str):
 
 @router.post('/events/{event_id}/select')
 async def select(event_id:str,request:Request,db:AsyncSession=Depends(get_db)):
-    rate_limit(request)
+    rate_limit(request, 'selection')
     return await service.persist_candidate(db,event_id)

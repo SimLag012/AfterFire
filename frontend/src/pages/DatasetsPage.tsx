@@ -22,8 +22,8 @@ export const DatasetsPage: React.FC = () => {
   });
 
   const { data: health } = useQuery({
-    queryKey: ['systemHealth'],
-    queryFn: apiClient.getHealth,
+    queryKey: ['providerStatus'],
+    queryFn: apiClient.getStatus,
     staleTime: 30000,
   });
 

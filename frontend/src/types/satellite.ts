@@ -11,7 +11,7 @@ export interface SatelliteObservation {
 export interface SatelliteJob {
   availability?: {message:string;burned_area_mapping:string;recovery_analysis:string;latest_dates:Record<string,string|null>};
   provider?: string; api_requests_completed?: number; api_dates_total?: number; byte_measurement?: string;
-  id?: string; result_job_id?: string | null; state: 'not_requested' | 'observations_pending' | 'queued' | 'fetching' | 'processing' | 'completed' | 'partial' | 'failed';
+  id?: string; result_job_id?: string | null; state: 'not_requested' | 'insufficient_observations' | 'observations_pending' | 'queued' | 'fetching' | 'processing' | 'completed' | 'partial' | 'failed';
   progress: number; error?: string; result_available: boolean; configuration?: Record<string,unknown>;
   appeears_submission_enabled?: boolean; worker_health?: string; last_activity_at?: string; operation_started_at?: string; last_activity_age_seconds?: number | null; heartbeat_age_seconds?: number;
   updated_at?: string; attempts?: number; started_at?: string; finished_at?: string;

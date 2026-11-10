@@ -23,7 +23,7 @@ export const Navbar: React.FC = () => {
   ];
 
   const isActive = (path: string) => {
-    if (path === '/explorer') return location.pathname.startsWith('/explorer') || location.pathname.startsWith('/territory');
+    if (path === '/explorer') return location.pathname === '/' || location.pathname.startsWith('/explorer') || location.pathname.startsWith('/territory');
     if (path.startsWith('/recovery')) return location.pathname.startsWith('/recovery');
     if (path.startsWith('/recurrence')) return location.pathname.startsWith('/recurrence');
     if (path.startsWith('/report')) return location.pathname.startsWith('/report');
@@ -114,7 +114,7 @@ export const Navbar: React.FC = () => {
               >
                 <span className="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>
                 <span className="font-mono text-[11px] text-slate-300">
-                  {health ? 'REAL DATA · UNAVAILABLE' : 'CONNECTING...'}
+                  {health?.effective_status==='real_on_demand' ? 'REAL DATA · ON DEMAND' : health ? 'REAL DATA · UNAVAILABLE' : 'CONNECTING...'}
                 </span>
               </div>
             )}

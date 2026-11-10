@@ -8,8 +8,20 @@ from app.providers.api_subsets import configured_provider
 router = APIRouter()
 
 
-async def build_system_status() -> Dict[str, Any]:
-    firms_info = await FirmsProvider.check_connectivity(force=False)
+async def build_system_status(probe: bool = True) -> Dict[str, Any]:
+    if probe:
+        firms_info = await FirmsProvider.check_connectivity(force=False)
+    else:
+        from app.services.global_fires import GlobalFirms
+        from datetime import datetime, timedelta
+        # Background UI health reads must never contact a satellite provider.
+        firms_info = next((provider._cached_connectivity for provider in (GlobalFirms, FirmsProvider)
+            if provider._cached_connectivity and provider._connectivity_checked_at and
+            datetime.utcnow()-provider._connectivity_checked_at < timedelta(seconds=300)), None)
+        if firms_info is None:
+            firms_info = dict(configured=FirmsProvider.is_configured(), connected=False, status='not_checked',
+                message='Connectivity will be checked when observations are requested.',
+                available_products=[], last_check=None, last_retrieval=None)
     earthdata_configured = bool(settings.EARTHDATA_USERNAME and settings.EARTHDATA_PASSWORD)
     ai_analyst_configured = bool(settings.LLM_API_KEY)
 
@@ -22,6 +34,9 @@ async def build_system_status() -> Dict[str, Any]:
         if not firms_info["configured"]:
             effective_status = "real_unconfigured"
             effective_message = "Real-data mode active, but FIRMS_MAP_KEY is missing. Configure FIRMS_MAP_KEY in .env for live satellite retrieval."
+        elif firms_info["status"] == "not_checked":
+            effective_status = "real_on_demand"
+            effective_message = firms_info["message"]
         elif firms_info["status"] == "connected":
             effective_status = "real_connected"
             effective_message = "Real-data mode active and NASA FIRMS API is connected and verified operational."
@@ -109,8 +124,8 @@ async def build_system_status() -> Dict[str, Any]:
 
 
 @router.get("/health")
-async def health_check():
-    return await build_system_status()
+async def health_check(probe: bool = True):
+    return await build_system_status(probe)
 
 
 @router.get("/status")

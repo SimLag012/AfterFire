@@ -1,4 +1,5 @@
-> **Final recovery audit — 6 November 2026:** 192 SQLite and 192 PostgreSQL/PostGIS tests pass. Home and Recovery open real observation windows and published event assessments; native-cell histories and seasonal event comparisons are connected. See [requirements coverage](docs/ORIGINAL_REQUIREMENTS_AUDIT.md), [independent science](docs/POST_FIRE_RECOVERY_VALIDATION.md), [browser checks](docs/RECOVERY_UX_VERIFICATION.md) and [final report and limits](docs/FINAL_FUNCTIONAL_VERIFICATION.md).
+> **Release verification, 10 November 2026.** The Explorer reuses local FIRMS coverage; opening an event loads its saved Recovery Story or requests one analysis. The [requirements matrix](docs/ORIGINAL_REQUIREMENTS_AUDIT.md) records the browser scenarios, timings, database regressions and scientific limits.
+
 
 # AfterFire — The Life of a Forest After Fire
 *Understand the fire. Follow the recovery. Discover what happens next.*
@@ -7,7 +8,7 @@
 [![FastAPI](https://img.shields.io/badge/Backend-FastAPI%20%2F%20Python-009688.svg)](https://fastapi.tiangolo.com/)
 [![React 18](https://img.shields.io/badge/Frontend-React%2018%20%2F%20TypeScript-61dafb.svg)](https://react.dev/)
 [![TailwindCSS](https://img.shields.io/badge/Style-Dark%20Cinematic%20Tailwind-38bdf8.svg)](https://tailwindcss.com/)
-[![Tests](https://img.shields.io/badge/Tests-Pytest%20192%20SQLite%20%2B%20192%20PostGIS-brightgreen.svg)]()
+[![Tests](https://img.shields.io/badge/Tests-Pytest%20197%20SQLite%20%2B%20197%20PostGIS-brightgreen.svg)]()
 
 An end-to-end scientific web application submitted for the **NASA Space Apps Challenge 2026**:
 **Harmonization of MODIS and VIIRS Hot Spots** with post-fire ecological recovery extension.
@@ -22,7 +23,7 @@ Rather than being another static map of fire markers, AfterFire addresses concre
 - **Where and when was combustion activity detected?** Harmonizing NASA MODIS (1km) and VIIRS (375m) observations.
 - **What physical surface was burned?** Differentiating active point thermal hotspots from MODIS MCD64A1 500m pixel-mapped burned areas.
 - **What was the pre-fire baseline?** Calculating observed pre-fire seasonal median reference values from MODIS MOD13Q1 250m 16-day composites.
-- **How did canopy greenness evolve after the event?** Quantifying drop magnitude, trajectory recovery quotients, and QA masking.
+- **How did canopy greenness evolve after the event?** Quantifying drop magnitude, seasonal anomalies and sustained returns to the reference band, and QA masking.
 - **Are there areas exhibiting delayed or truncated recovery?** Detecting recurring wildfires and compound disturbances before canopy restoration.
 - **How reliable are these conclusions?** Enforcing strict traceability, zero hallucinated figures, explicit remote-sensing limitations, and transparent demo vs live tagging.
 
@@ -156,14 +157,11 @@ globally and filtered afterward.
 The Explorer's optional **Draw circle** search is independent of the configured
 analysis bounding box used for provider downloads. Users can pan and zoom globally,
 draw or clear a circular area, and return to the Italy view without changing their
-date or sensor filters. A circle search is evaluated against the local archive only;
-it does not trigger a global download. The separate analysis workflow continues to
+date or sensor filters. Online circle searches request the enclosing rectangle and show observations and candidate centers inside the radius. Archive mode uses the local spatial query. The separate analysis workflow continues to
 use the configured bounding box and date interval to constrain provider retrieval.
 
 The current automated remote downloader supports NASA FIRMS active-fire feeds
-(MODIS and VIIRS Suomi-NPP, NOAA-20 and NOAA-21; standard and NRT feeds). MCD64A1 and MOD13Q1 are currently parsed/imported
-products; AfterFire does not claim to automatically retrieve them or apply source
-side region/date filtering to their global granules. FIRMS NRT availability is
+(MODIS and VIIRS Suomi-NPP, NOAA-20 and NOAA-21; standard and NRT feeds). The event workflow retrieves bounded MCD64A1 and MOD13Q1 native-grid subsets through Earth Engine when configured. FIRMS NRT availability is
 provider-controlled, so a valid historical date range may still be rejected by
 NASA; the API reports provider failures instead of silently substituting data.
 See the [NASA FIRMS API documentation](https://firms.modaps.eosdis.nasa.gov/api/)

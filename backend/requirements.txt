@@ -20,7 +20,7 @@ rasterio>=1.4,<2
 pyproj>=3.6,<4
 pyhdf>=0.11,<1
 earthaccess>=0.14,<1
-Pillow>=10,<13
+Pillow>=13.0.0,<14
 
 # Optional at runtime: initialized only when explicitly configured.
 earthengine-api>=1.6,<2

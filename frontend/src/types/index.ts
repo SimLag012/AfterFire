@@ -491,7 +491,7 @@ export interface SystemStatus {
   version: string;
   demo_mode: boolean;
   app_mode: 'demo' | 'real';
-  effective_status: 'demo' | 'real_connected' | 'real_unconfigured' | 'real_auth_failed' | 'real_unavailable';
+  effective_status: 'demo' | 'real_connected' | 'real_on_demand' | 'real_unconfigured' | 'real_auth_failed' | 'real_unavailable';
   message: string;
   firms_configured: boolean;
   earthdata_configured: boolean;

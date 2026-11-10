@@ -27,9 +27,20 @@ def status_payload(job,result=None,telemetry=None):
     if job is None:
         return {'state':'not_requested','progress':0,'result_available':False}
     from app.services.analysis_progress import progress_payload
+    from app.services.post_fire_pipeline import LEGACY_NO_OBSERVATIONS
+    # Earlier workers used a generic failure for this exact scientific outcome.
+    from app.services.analysis_jobs import INSUFFICIENT
+    insufficient = job.state in (INSUFFICIENT, 'insufficient_observations') or (
+        job.state == 'failed' and job.error == LEGACY_NO_OBSERVATIONS and
+        telemetry and telemetry.get('granules_processed', 0) > 0 and
+        telemetry.get('granules_failed') == 0 and telemetry.get('files_failed') == 0)
+    outcome = {'state': 'insufficient_observations', 'status': 'insufficient_observations',
+        'worker_health': 'insufficient_observations', 'error': None,
+        'phase_label': 'Insufficient satellite observations', 'current_operation': None,
+        'warning': 'No associated burned cells or vegetation composites with sufficient valid coverage were found.'} if insufficient else {}
     return {**progress_payload(job,telemetry), 'id':job.id,'event_id':job.event_id,'state':job.state,'progress':job.progress,'error':job.error,
         'configuration':job.configuration,'engine_version':job.engine_version,'attempts':job.attempts,
-        'created_at':job.created_at.isoformat()+'Z','result_available':result is not None}
+        'created_at':job.created_at.isoformat()+'Z','result_available':result is not None, **outcome}
 
 
 async def durable_status(db, job):
@@ -92,6 +103,10 @@ async def request_analysis(event_id:str,request:AnalysisRequest=AnalysisRequest(
         raise HTTPException(422,'as_of precedes event end')
     saved=await enqueue(db,event_id,request.configuration,False,create=False)
     if (not saved or request.retry) and not request.historical_context:
+        if request.configuration.as_of == event.end_date:
+            return {'state':'observations_pending','progress':0,'result_available':False,
+                'availability':{'burned_area_mapping':'not_checked','recovery_analysis':'observations_pending',
+                    'message':'The observation window ends on the last day of the fire. No post-fire composite can be evaluated yet.'}}
         from app.providers.api_subsets import configured_provider, ProviderUnavailable
         if configured_provider()[0]=='earth_engine':
             from app.services.post_fire_pipeline import load_event
@@ -141,7 +156,7 @@ async def analysis_stream(event_id: str, job_id: str):
                 previous = encoded
             else:
                 yield ': keepalive\n\n'
-            if job.state in ('completed', 'partial', 'failed'):
+            if payload['state'] in ('completed', 'partial', 'failed', 'insufficient_observations'):
                 return
             await asyncio.sleep(1)
     return StreamingResponse(events(), media_type='text/event-stream',

@@ -32,7 +32,8 @@ export const App: React.FC = () => {
           <Navbar />
           <div className="flex-1">
             <Suspense fallback={<p role="status" aria-live="polite" className="p-8">Loading page…</p>}><Routes>
-              <Route path="/" element={<HomePage />} />
+              <Route path="/" element={<ExplorerPage />} />
+              <Route path="/about" element={<HomePage />} />
               <Route path="/explorer" element={<ExplorerPage />} />
               <Route path="/events/:eventId" element={<EventAnalysisPage />} />
               <Route path="/territory/:areaId" element={<TerritoryPage />} />

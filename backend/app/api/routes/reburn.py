@@ -1,5 +1,7 @@
 import asyncio
 import json
+from functools import lru_cache
+from pathlib import Path
 from datetime import date
 from fastapi import APIRouter, Depends, HTTPException, Query
 from fastapi.responses import StreamingResponse
@@ -69,7 +71,9 @@ async def status(event_id:str,job_id:str|None=None,db:AsyncSession=Depends(get_d
     stmt=select(EventAnalysisJob).where(EventAnalysisJob.event_id==event_id,EventAnalysisJob.engine_version.like('reburn-%'))
     if job_id: stmt=stmt.where(EventAnalysisJob.id==job_id)
     row=(await db.execute(stmt.order_by(EventAnalysisJob.created_at.desc()).limit(1))).scalar_one_or_none()
-    if not row: raise HTTPException(404,'Reburn job not found')
+    if not row:
+        if job_id: raise HTTPException(404,'Reburn job not found')
+        return {'id':None,'state':'not_requested','progress':0,'error':None}
     telemetry=await db.get(EventAnalysisProgress,row.id)
     return {**progress_payload(row,telemetry.payload if telemetry else None),
         'id':row.id,'state':row.state,'progress':row.progress,'error':row.error}
@@ -83,10 +87,34 @@ async def history_for(db,event_id,job_id=None):
     return row.payload
 
 
+@lru_cache(maxsize=1)
+def chips_evidence():
+    path = Path(__file__).resolve().parents[2] / 'analysis/evidence/chips_vegetation.json'
+    return json.loads(path.read_text(encoding='utf-8'))
+
+
+def supplemental_vegetation(payload):
+    # Republishing an identical episode pair can change the enclosing job ID.
+    # Episode IDs hash the native grids, burn dates, uncertainty and algorithm.
+    if payload['event_id'] != 'global-51910cbfe4720638c1fce8630f452ce9':
+        return None
+    evidence = chips_evidence()
+    if payload['source_job_id'] != evidence['source_job'] or payload['parameters'] != evidence['parameters']:
+        return None
+    verified = evidence['result']
+    for gap in payload['recovery_gaps']:
+        if (gap['episode_a'] == verified['episode_a'] and gap['episode_b'] == verified['episode_b']
+                and set(gap['shared_cells']) == set(verified['shared_cells'])
+                and gap['interval'] == verified['interval']):
+            return evidence
+    return None
+
+
 @router.get('/events/{event_id}/reburn-analysis/result', response_model=ReburnResult)
 async def result(event_id:str,job_id:str|None=None,db:AsyncSession=Depends(get_db)):
     payload=await history_for(db,event_id,job_id)
-    return {k:v for k,v in payload.items() if k not in ('map','cell_histories')}
+    return {**{k:v for k,v in payload.items() if k not in ('map','cell_histories')},
+            'supplemental_vegetation':supplemental_vegetation(payload)}
 
 
 @router.get('/events/{event_id}/reburn-history')
@@ -115,7 +143,11 @@ async def cell(event_id:str,cell_id:str,job_id:str|None=None,db:AsyncSession=Dep
 @router.get('/events/{event_id}/recovery-gap')
 async def recovery_gap(event_id:str,job_id:str|None=None,episode_a:str|None=None,episode_b:str|None=None,db:AsyncSession=Depends(get_db)):
     payload=await history_for(db,event_id,job_id)
-    return {'job_id':payload['job_id'],'assessments':[g for g in payload['recovery_gaps']
+    evidence = supplemental_vegetation(payload)
+    if evidence and ((episode_a and episode_a != evidence['result']['episode_a']) or
+                     (episode_b and episode_b != evidence['result']['episode_b'])):
+        evidence = None
+    return {'job_id':payload['job_id'],'supplemental_vegetation':evidence,'assessments':[g for g in payload['recovery_gaps']
         if (episode_a is None or g['episode_a']==episode_a) and (episode_b is None or g['episode_b']==episode_b)],
         'limitations':payload['limitations']}
 

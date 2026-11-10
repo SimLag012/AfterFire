@@ -16,7 +16,7 @@ try{
  await page.getByRole('link',{name:'Analyze candidate',exact:true}).first().waitFor();
  assert.equal(await page.getByLabel('Fire data source',{exact:true}).inputValue(),'online');
  assert.equal(await page.getByRole('button',{name:'Last 30 days',exact:true}).count(),0);
- assert.equal(await page.getByRole('button',{name:'Draw / edit circle',exact:true}).count(),0);
+ await page.getByRole('button',{name:'Draw / edit circle',exact:true}).waitFor();
  report.explorer_desktop_overflow=await overflow();
  await page.screenshot({path:output+'-explorer-desktop.png',fullPage:true});
  const initialRequests=[...requests];
@@ -31,7 +31,7 @@ try{
  await page.getByLabel('To',{exact:true}).fill('2023-07-22');
  await page.getByRole('link',{name:'Analyze candidate',exact:true}).first().waitFor();
  await page.getByRole('link',{name:'Analyze candidate',exact:true}).first().click();
- await page.getByRole('heading',{name:'Satellite Recovery Story',exact:true}).waitFor();
+ await page.getByText('Satellite Recovery Story',{exact:true}).waitFor();
  report.selected_event_url=page.url();
  // Viewport boundaries can change candidate membership and therefore its identity.
  // Open the exact independently published fixture-free event for science QA.
@@ -39,7 +39,7 @@ try{
  await page.goto(base+'/events/'+(process.env.AF_SCIENCE_EVENT || 'global-d77c8ac8d89369a61e7125f78cfe2e76'));
  await page.getByText(/Cached scientific analysis/).waitFor();
  report.cached_science_visible_seconds=(performance.now()-savedStart)/1000;
- await page.getByRole('button',{name:'Recheck assessment cache',exact:true}).waitFor();
+ await page.getByRole('heading',{name:'Territory recovery map',exact:true}).waitFor();
  const frameStart=performance.now();
  await page.getByRole('button',{name:'3. Immediate Post-Fire',exact:true}).click();
  await page.waitForFunction(()=>[...document.querySelectorAll('img.leaflet-image-layer')].some(i=>i.complete&&i.naturalWidth>0));
@@ -53,7 +53,7 @@ try{
  await page.screenshot({path:output+'-science-desktop.png',fullPage:true});
  await page.setViewportSize({width:390,height:844});
  await page.reload();await page.getByText(/Cached scientific analysis/).waitFor();
- await page.getByRole('button',{name:'Recheck assessment cache',exact:true}).waitFor();
+ await page.getByRole('heading',{name:'Territory recovery map',exact:true}).waitFor();
  report.science_mobile_overflow=await overflow();
  await page.screenshot({path:output+'-science-mobile.png',fullPage:true});
  await page.goto(base+'/explorer?period=custom&start=2023-07-20&end=2023-07-22&sensor=MODIS&map=27.92,36.14,27.98,36.20&z=11');

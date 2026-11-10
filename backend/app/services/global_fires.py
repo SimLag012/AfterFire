@@ -5,10 +5,12 @@ import gzip
 import hashlib
 import json
 import os
+import sqlite3
+from contextlib import closing
 import time
 import math
 from collections import deque
-from datetime import date, timedelta
+from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 
 from fastapi import HTTPException
@@ -44,7 +46,7 @@ def trim():
         except BlockingIOError:return
         files=sorted([p for p in root().iterdir() if p.suffix in ('.csv','.gz')],key=lambda p:p.stat().st_mtime)
         used=sum(p.stat().st_size for p in files)
-        while files and (len(files)>128 or used>_MAX_BYTES):
+        while files and (len(files)>2048 or used>_MAX_BYTES):
             path=files.pop(0);used-=path.stat().st_size;path.unlink(missing_ok=True)
 
 
@@ -73,7 +75,7 @@ class GlobalFirms(FirmsProvider):
                     return target,0
                 now=time.monotonic()
                 while _transactions and _transactions[0]<now-60:_transactions.popleft()
-                if len(_transactions)>=16:raise FirmsProviderError('Global FIRMS request budget reached; retry after one minute',429)
+                if len(_transactions)>=16:raise FirmsProviderError('AfterFire local FIRMS request budget reached. Retry after one minute.',429)
                 _transactions.append(now)
                 result=await cls._download_window(target,bbox,source,start_date,end_date,remaining_bytes,True)
                 trim()
@@ -81,18 +83,23 @@ class GlobalFirms(FirmsProvider):
             finally:fcntl.flock(lock,fcntl.LOCK_UN)
 
 
-async def coverage(start,end,sensor=None,satellite=None):
+def validate_filters(start,end,sensor,satellite):
     if start>end or (end-start).days>6 or end>date.today():
         raise HTTPException(422,'Select 1–7 days, ending no later than today; each NASA request uses at most 5 days')
-    if satellite:satellite_filter(satellite)
+    if satellite:
+        satellite_filter(satellite)
+        if sensor and ((satellite in ('Terra','Aqua')) != (sensor == 'MODIS')):
+            raise HTTPException(422,'Satellite and sensor filters disagree')
+
+
+async def coverage(start,end,sensor=None,satellite=None):
+    validate_filters(start,end,sensor,satellite)
     if not GlobalFirms.is_configured():
         return {'state':'unconfigured','message':'Live FIRMS data unavailable — API key not configured','sources':[]}
     status=await GlobalFirms.check_connectivity()
     if not status['connected']:
         return {'state':'unavailable','message':status['message'],'sources':[]}
     family={'Terra':'MODIS','Aqua':'MODIS','S-NPP':'VIIRS_SNPP','NOAA-20':'VIIRS_NOAA20','NOAA-21':'VIIRS_NOAA21'}
-    if satellite and sensor and (family[satellite].startswith('MODIS')!=(sensor=='MODIS')):
-        raise HTTPException(422,'Satellite and sensor filters disagree')
     families=[family[satellite]] if satellite else ['MODIS'] if sensor=='MODIS' else ['VIIRS_SNPP','VIIRS_NOAA20','VIIRS_NOAA21'] if sensor=='VIIRS' else list(dict.fromkeys(family.values()))
     selections={}
     missing_coverage=[]
@@ -111,9 +118,7 @@ async def coverage(start,end,sensor=None,satellite=None):
             if day is not None and day==last+timedelta(days=1):last=day;continue
             sources.append({'source':source,'start':str(first),'end':str(last)})
             first=last=day
-    covered={str(start+timedelta(days=i)) for i in range((end-start).days+1)}
-    supported={str(d) for days in selections.values() for d in days}
-    ready=bool(sources) and covered<=supported
+    ready=bool(sources)
     message=('Live FIRMS data partially available; some requested satellite dates are unsupported'
              if missing_coverage else 'Live FIRMS data available') if ready else 'Selected period unsupported'
     return {'state':'available' if ready else 'unsupported_period','message':message,
@@ -136,19 +141,21 @@ def snapshot(event_id):
         raise HTTPException(404,'Candidate snapshot expired; repeat the bounded viewport query') from None
 
 
-async def hotspots(bbox,start,end,sensor=None,satellite=None):
-    boxes=split_bbox(bbox)
+async def fetch_observations(boxes,start,end,sensor,satellite):
     support=await coverage(start,end,sensor,satellite)
     if support['state']!='available':
         raise HTTPException(503 if support['state'] in ('unconfigured','unavailable') else 422,support['message'])
     records={}
     revisions={}
+    limited=False
     try:
         for part in boxes:
             for selection in support['sources']:
+                remaining=2000-len(records)
                 rows=await GlobalFirms.fetch_area_firms(*part,source=selection['source'],start_date=date.fromisoformat(selection['start']),
-                    end_date=date.fromisoformat(selection['end']),max_records=2000-len(records),response_byte_limit=4*1024**2)
-                for row in rows:
+                    end_date=date.fromisoformat(selection['end']),max_records=remaining,allow_partial=True,response_byte_limit=4*1024**2)
+                limited=len(rows)>remaining
+                for row in rows[:remaining]:
                     if any(value is not None and not math.isfinite(value) for name,value in row.items()
                            if name in ('frp','scan','track','brightness','bright_t31','confidence_pct')):
                         raise HTTPException(502,'NASA returned invalid numeric detection metadata')
@@ -162,9 +169,91 @@ async def hotspots(bbox,start,end,sensor=None,satellite=None):
                     if physical not in revisions or priority>revisions[physical]:
                         revisions[physical]=priority
                         records[physical]={**row,'id':identity,'area_id':VERSION}
+                if limited:
+                    break
+            if limited:
+                break
     except FirmsProviderError as exc:
-        raise HTTPException(exc.status_code,str(exc)) from None
-    rows=list(records.values())
+        headers = {'Retry-After': exc.retry_after or '60'} if exc.status_code == 429 else None
+        raise HTTPException(exc.status_code,str(exc),headers=headers) from None
+    if limited:
+        support={**support,'complete':False,'record_limit_reached':True,
+                 'message':'Showing the first 2,000 FIRMS records in product and date order. Narrow the area or period for complete candidate grouping.'}
+    return list(records.values()), support
+
+
+def fresh_view(boxes, start, end, sensor, satellite):
+    if len(boxes) != 1:
+        return None
+    w, s, e, n = boxes[0]
+    with closing(sqlite3.connect(root()/'coverage.sqlite')) as index:
+        index.execute("""CREATE TABLE IF NOT EXISTS windows (
+            name TEXT PRIMARY KEY, west REAL, south REAL, east REAL, north REAL,
+            start TEXT, end TEXT, sensor TEXT, satellite TEXT, expires REAL, limited INTEGER)""")
+        options = index.execute("""SELECT name FROM windows WHERE west<=? AND south<=?
+            AND east>=? AND north>=? AND start<=? AND end>=? AND expires>?
+            AND (sensor='' OR sensor=?) AND (satellite='' OR satellite=?)
+            AND (limited=0 OR (west=? AND south=? AND east=? AND north=?
+            AND start=? AND end=? AND sensor=? AND satellite=?))
+            ORDER BY (east-west)*(north-south), expires DESC LIMIT 8""",
+            (w,s,e,n,str(start),str(end),time.time(),sensor or '',satellite or '',
+             w,s,e,n,str(start),str(end),sensor or '',satellite or '')).fetchall()
+    for (name,) in options:
+        try:
+            with gzip.open(root()/name,'rt') as source:
+                saved = json.load(source)
+        except (OSError,ValueError):
+            continue
+        rows = [r for r in saved['rows'] if w<=r['longitude']<=e and s<=r['latitude']<=n
+                and str(start)<=r['acq_date']<=str(end)
+                and (not sensor or r['instrument']==sensor)
+                and (not satellite or r['satellite'] in SATELLITE_ALIASES[satellite])]
+        return rows, {**saved['support'], 'state':'cached'}
+    return None
+
+
+def index_view(path, boxes, start, end, sensor, satellite, support):
+    if len(boxes) != 1:
+        return
+    recent = end >= date.today()-timedelta(days=90)
+    with closing(sqlite3.connect(root()/'coverage.sqlite')) as index, index:
+        index.execute('DELETE FROM windows WHERE expires<=?', (time.time(),))
+        index.execute("""INSERT OR REPLACE INTO windows VALUES (?,?,?,?,?,?,?,?,?,?,?)""",
+            (path.name,*boxes[0],str(start),str(end),sensor or '',satellite or '',
+             time.time()+(300 if recent else 30*86400),int(bool(support.get('record_limit_reached')))))
+        index.execute("""DELETE FROM windows WHERE rowid IN
+            (SELECT rowid FROM windows ORDER BY rowid DESC LIMIT -1 OFFSET 256)""")
+
+
+async def hotspots(bbox,start,end,sensor=None,satellite=None):
+    boxes = split_bbox(bbox)
+    validate_filters(start,end,sensor,satellite)
+    identity = json.dumps([VERSION, boxes, str(start), str(end), sensor, satellite])
+    path = root() / ('view-' + hashlib.sha256(identity.encode()).hexdigest() + '.gz')
+    cached = fresh_view(boxes, start, end, sensor, satellite)
+    try:
+        rows, support = cached or await fetch_observations(boxes, start, end, sensor, satellite)
+    except HTTPException as exc:
+        if exc.status_code not in (429, 502, 503, 504):
+            raise
+        try:
+            with gzip.open(path, 'rt') as stream:
+                previous = json.load(stream)
+            if time.time() - previous['saved_at'] > 86400:
+                raise ValueError('expired')
+        except (OSError, ValueError, KeyError):
+            raise exc from None
+        rows = previous['rows']
+        stamp = datetime.fromtimestamp(previous['saved_at'], timezone.utc).isoformat(timespec='minutes')
+        support = {**previous['support'], 'state': 'cached',
+                   'message': f"Cached observations from {stamp}. Refresh failed: {exc.detail}"}
+    if not cached and support.get('state') != 'cached':
+        with file_lock(root()/'snapshots.lock'):
+            temporary = path.with_suffix('.gz.part')
+            with gzip.open(temporary, 'wt') as target:
+                json.dump({'saved_at':time.time(), 'support':support, 'rows':rows}, target, default=str)
+            os.replace(temporary, path)
+            index_view(path, boxes, start, end, sensor, satellite, support)
     candidates=HarmonizationEngine.cluster_candidate_events(VERSION+':7km:3d',rows)
     events=candidates[:100]
     grouped={r['id']:r for r in rows}
@@ -184,7 +273,7 @@ async def hotspots(bbox,start,end,sensor=None,satellite=None):
     with file_lock(root()/'snapshots.lock'):trim()
     from app.schemas.fire import FireDetectionResponse
     output={'detections':[{**FireDetectionResponse.model_validate(r).model_dump(mode='json'),'candidate_event_id':links.get(r['id'])} for r in rows],
-        'events':events,'total_events':len(events),'total_detections':len(rows),'truncated':len(candidates)>len(events),'limit':2000,'coverage':support,
+        'events':events,'total_events':len(events),'total_detections':len(rows),'truncated':bool(support.get('record_limit_reached')) or len(candidates)>len(events),'limit':2000,'coverage':support,
         'source':'NASA FIRMS on demand','candidate_scope':'Bounded viewport/period snapshot; membership can change at query boundaries'}
     if len(json.dumps(output).encode())>4*1024**2:
         raise HTTPException(413,'Global response limit reached; narrow the area or interval')

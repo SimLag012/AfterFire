@@ -16,6 +16,7 @@ try{
  await page.getByRole('button',{name:'Reburn History',exact:true}).click();
  await panel().getByRole('heading',{name:'Reburn History & Recovery Gap',exact:true}).waitFor();
  // A bounded cached analysis makes no remote submission.
+ await panel().getByText('History period and acquisition settings',{exact:true}).click();
  await page.getByLabel('Reburn history from',{exact:true}).fill('2021-07-01');
  await page.getByLabel('Reburn history through',{exact:true}).fill('2021-09-30');
  await panel().getByRole('button',{name:'Reburn preflight',exact:true}).click();
@@ -56,6 +57,7 @@ try{
  // Real cached-only missing-coverage case: zero means unknown, never an unburned claim.
  await page.goto(`http://localhost:3000/events/${event}/reburn`);
  await panel().getByText(/Published interval:/).waitFor({timeout:60000});
+ await panel().getByText('History period and acquisition settings',{exact:true}).click();
  await page.getByLabel('Reburn history from',{exact:true}).fill('2020-01-01');
  await page.getByLabel('Reburn history through',{exact:true}).fill('2020-12-31');
  await panel().getByRole('button',{name:'Analyze cached history',exact:true}).click({timeout:240000});

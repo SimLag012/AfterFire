@@ -12,7 +12,7 @@ try{
   const errors=[];page.on('pageerror',e=>errors.push(e.message));
   const view={viewport};report.views.push(view);
   const overflow=()=>page.evaluate(()=>document.documentElement.scrollWidth>innerWidth);
-  await page.goto(base+'/');await page.getByRole('heading',{name:'Explore historical observations',exact:true}).waitFor();
+  await page.goto(base+'/about');await page.getByRole('heading',{name:'Explore historical observations',exact:true}).waitFor();
   assert.equal(await page.getByText('Partial Recovery (64%)',{exact:true}).count(),0);
   assert.equal(await page.getByText('Recovery Quotient & Status Metric',{exact:true}).count(),0);
   view.home_overflow=await overflow();
@@ -32,7 +32,7 @@ try{
   view.trajectory_rendered=true;
   await trajectory.screenshot({path:output+'-trajectory-'+viewport.width+'.png'});
   const panel=page.getByRole('region',{name:'Recovery Intelligence',exact:true});
-  await panel.getByRole('button',{name:'Recheck assessment cache',exact:true}).waitFor();
+  await panel.getByRole('heading',{name:'Territory recovery map',exact:true}).waitFor();
   const paths=panel.locator('path.leaflet-interactive');await paths.first().waitFor();
   await paths.first().scrollIntoViewIfNeeded();await paths.first().click({force:true});
   const selected=page.getByRole('article',{name:'Selected recovery cell',exact:true});
