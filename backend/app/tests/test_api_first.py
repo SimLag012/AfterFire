@@ -1,5 +1,5 @@
 """Scientific adapters and safety boundaries; no remote tasks or HDF downloads."""
-from datetime import date
+from datetime import date, datetime, timedelta, timezone
 from types import SimpleNamespace
 import json
 import numpy as np
@@ -75,8 +75,12 @@ async def test_live_key_is_not_exposed_or_used_when_unconfigured(monkeypatch):
     from app.services.explorer_live import recent
     from fastapi import HTTPException
     monkeypatch.setattr(settings,'FIRMS_MAP_KEY','')
-    with pytest.raises(HTTPException) as exc:await recent('14,36,16,38',date.today(),date.today(),None,None)
-    assert exc.value.status_code==503 and 'MAP_KEY' in exc.value.detail
+    cutoff = datetime.now(timezone.utc).date() - timedelta(days=30)
+    with pytest.raises(HTTPException) as invalid:
+        await recent('14,36,16,38', cutoff, cutoff + timedelta(days=1), None, None)
+    assert invalid.value.status_code == 422
+    with pytest.raises(HTTPException) as exc:await recent('14,36,16,38',cutoff,cutoff,None,None)
+    assert exc.value.status_code==503 and 'key' in exc.value.detail.lower()
 
 
 def test_request_budget_is_enforced_before_extra_requests(monkeypatch):

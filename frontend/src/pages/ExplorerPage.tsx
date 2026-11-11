@@ -37,11 +37,11 @@ const isValidDate = (value: string): boolean => {
 
 const dateOnly = (value: Date): string => value.toISOString().slice(0, 10);
 
-function rangeForPeriod(period: Exclude<Period, 'all' | 'custom'>, minDate?: string | null, maxDate?: string | null) {
-  const end = dateOnly(new Date());
+const daysAgo = (days: number) => dateOnly(new Date(Date.now() - days * 86400000));
+
+function rangeForPeriod(period: Exclude<Period, 'all' | 'custom'>, end = daysAgo(30)) {
   const endValue = new Date(`${end}T00:00:00.000Z`);
   const startValue = new Date(endValue);
-  if (period === '24h') startValue.setUTCDate(startValue.getUTCDate() - 1);
   if (period === '7d') startValue.setUTCDate(startValue.getUTCDate() - 6);
   if (period === '30d') startValue.setUTCDate(startValue.getUTCDate() - 29);
   if (period === '12mo') startValue.setUTCFullYear(startValue.getUTCFullYear() - 1);
@@ -84,9 +84,18 @@ export const ExplorerPage: React.FC = () => {
   const centerLat = parseNumber(searchParams.get('lat'), NaN);
   const centerLon = parseNumber(searchParams.get('lon'), NaN);
   const radiusKm = parseNumber(searchParams.get('radius'), NaN);
-  const defaultRange = rangeForPeriod('7d');
-  const startDate = searchParams.get('start') ?? (source==='online' ? defaultRange.start : '');
-  const endDate = searchParams.get('end') ?? (source==='online' ? defaultRange.end : '');
+  const [cutoff, setCutoff] = useState(() => daysAgo(30));
+  useEffect(() => {
+    const timer = window.setInterval(() => setCutoff(daysAgo(30)), 60000);
+    return () => window.clearInterval(timer);
+  }, []);
+  const defaultRange = rangeForPeriod('today', daysAgo(120));
+  const requestedStart = searchParams.get('start');
+  const requestedEnd = searchParams.get('end');
+  const legacyRecent = [requestedStart, requestedEnd].some(value => value && isValidDate(value) && value > cutoff);
+  const startDate = legacyRecent && requestedStart && requestedStart > cutoff
+    ? rangeForPeriod('7d', cutoff).start : requestedStart ?? (source === 'online' ? defaultRange.start : '');
+  const endDate = legacyRecent ? cutoff : requestedEnd ?? (source === 'online' ? defaultRange.end : cutoff);
   const requestedSensor = searchParams.get('sensor') ?? 'both';
   const sensor = ['MODIS', 'VIIRS', 'both'].includes(requestedSensor) ? requestedSensor : 'both';
   const scienceLayer=searchParams.get('science') || '';
@@ -101,8 +110,7 @@ export const ExplorerPage: React.FC = () => {
   const hasValidDates = isValidDate(startDate)
     && isValidDate(endDate)
     && (!startDate || !endDate || startDate <= endDate);
-  const supportedDates = source === 'archive' || (endDate <= dateOnly(new Date())
-    && Date.parse(endDate) - Date.parse(startDate) <= 6 * 86400000);
+  const supportedDates = endDate <= cutoff;
   const selectedPeriod: Period = searchParams.get('period') === 'today'
     || searchParams.get('period') === '24h'
     || searchParams.get('period') === '7d'
@@ -110,8 +118,8 @@ export const ExplorerPage: React.FC = () => {
     || searchParams.get('period') === '12mo'
     || searchParams.get('period') === 'custom'
     ? searchParams.get('period') as Period
-    : source === 'online' && !searchParams.has('start') && !searchParams.has('end') ? '7d' : (startDate || endDate) ? 'custom' : 'all';
-  const afterUtc=useMemo(()=>selectedPeriod==='24h' ? new Date(Date.now()-86400000).toISOString() : undefined,[selectedPeriod,startDate,endDate]);
+    : source === 'online' || requestedStart || requestedEnd ? 'custom' : 'all';
+  const afterUtc = selectedPeriod === '24h' && endDate ? endDate + 'T00:00:00Z' : undefined;
   const validBbox = viewport.split(',').length === 4 && viewport.split(',').every((part) => Number.isFinite(Number(part)));
   const [west, south, east, north] = viewport.split(',').map(Number);
   const hasValidViewport = validBbox && west !== east && south < north;
@@ -208,16 +216,9 @@ export const ExplorerPage: React.FC = () => {
       return Number.isFinite(delay) ? Math.max(1000,delay) : 60000;
     }, staleTime:60_000,
   });
-  const hotspotStatus = (hotspotQuery.error as {response?:{status?:number}} | null)?.response?.status;
-  useEffect(() => {
-    if (hotspotStatus === 413 && source === 'online' && italyOverview && !hasCircle
-      && !searchParams.has('start') && !searchParams.has('end')) {
-      const today = dateOnly(new Date());
-      updateParams({period:'today', start:today, end:today, candidatePage:undefined});
-      setNotice('The seven-day overview exceeded the record limit. Showing today (UTC).');
-    }
-  }, [hotspotStatus, source, italyOverview, hasCircle, searchParams, updateParams]);
-  const detections = (hasValidDates && !invalidCircle ? hotspotQuery.data?.detections ?? [] : []).filter(d=>source !== 'online' || !circleCenter || circleCenter.distanceTo([d.latitude,d.longitude]) <= radiusKm * 1000).filter(d=>selectedPeriod!=='24h' || Date.parse(`${d.acq_date}T${d.acq_time.slice(0,2)}:${d.acq_time.slice(2,4)}:00Z`)>=Date.now()-86400000);
+  const detections = (hasValidDates && !invalidCircle ? hotspotQuery.data?.detections ?? [] : [])
+    .filter(d => d.acq_date <= cutoff && (!afterUtc || d.acq_date === endDate))
+    .filter(d => source !== 'online' || !circleCenter || circleCenter.distanceTo([d.latitude,d.longitude]) <= radiusKm * 1000);
 
   const matchingIds = new Set(detections.map(d => d.candidate_event_id));
   const onlineEvents = (hotspotQuery.data?.events ?? []).filter(event =>
@@ -251,7 +252,15 @@ export const ExplorerPage: React.FC = () => {
     || (endDate && archiveEnd && endDate > archiveEnd),
   );
 
-  useEffect(()=>{if(source==='online' && !startDate && !endDate){const range=rangeForPeriod('7d');updateParams({period:'7d',start:range.start,end:range.end});}},[source,startDate,endDate,updateParams]);
+  useEffect(() => {
+    if (legacyRecent || (source === 'online' && (!requestedStart || !requestedEnd))) {
+      const next = new URLSearchParams(searchParams);
+      next.set('start', startDate);
+      next.set('end', endDate);
+      next.set('period', legacyRecent ? 'custom' : selectedPeriod);
+      setSearchParams(next, { replace: true });
+    }
+  }, [legacyRecent, source, requestedStart, requestedEnd, startDate, endDate, selectedPeriod, searchParams, setSearchParams]);
 
   const choosePeriod = (period: Period) => {
     if (period === 'all') {
@@ -262,7 +271,7 @@ export const ExplorerPage: React.FC = () => {
       updateParams({ period: 'custom', candidatePage: undefined, event: undefined });
       return;
     }
-    const range = rangeForPeriod(period, archiveStart, archiveEnd);
+    const range = rangeForPeriod(period, cutoff);
     updateParams({ period, start: range.start, end: range.end, candidatePage: undefined, event: undefined });
   };
 
@@ -279,10 +288,11 @@ export const ExplorerPage: React.FC = () => {
     },delay);
   }, [updateParams,source,hasValidDates,supportedDates,startDate,endDate,aggregateSensor,satellite]);
   const shiftPeriod=(direction:number)=>{
-    const start=startDate || archiveEnd || dateOnly(new Date());
+    const start=startDate || endDate || cutoff;
     const end=endDate || start;
     const days=Math.round((Date.parse(end)-Date.parse(start))/86400000)+1;
-    const shifted=(value:string)=>dateOnly(new Date(Date.parse(value)+direction*days*86400000));
+    const offset = Math.min(direction * days * 86400000, Date.parse(cutoff) - Date.parse(end));
+    const shifted=(value:string)=>dateOnly(new Date(Date.parse(value)+offset));
     updateParams({period:'custom',start:shifted(start),end:shifted(end),candidatePage:undefined});
   };
   const findLocation=async(event:React.FormEvent)=>{
@@ -355,8 +365,7 @@ export const ExplorerPage: React.FC = () => {
               <div className="grid grid-cols-2 gap-2">
                 {([
                   ['all', 'Historical archive'],
-                  ['today', 'Today (UTC)'],
-                  ['24h', 'Last 24 hours'],
+                  ['today', 'Latest eligible day'],
                   ['7d', 'Last 7 days'],
                   ['30d', 'Last 30 days'],
                   ['12mo', 'Last 12 months'],
@@ -389,8 +398,7 @@ export const ExplorerPage: React.FC = () => {
                   <label className="text-xs text-slate-300">
                     <span className="flex items-center gap-1"><CalendarDays className="h-3 w-3" /> From</span>
                     <input
-                      type="date"
-
+                      type="date" max={endDate || cutoff}
                       value={startDate}
                       onChange={(event) => updateParams({ period: 'custom', start: event.target.value, candidatePage: undefined, event: undefined })}
                       className="mt-1 w-full rounded border border-dark-700 bg-dark-950 px-1 py-1.5 text-white"
@@ -399,8 +407,7 @@ export const ExplorerPage: React.FC = () => {
                   <label className="text-xs text-slate-300">
                     <span className="flex items-center gap-1"><CalendarDays className="h-3 w-3" /> To</span>
                     <input
-                      type="date"
-
+                      type="date" min={startDate} max={cutoff}
                       value={endDate}
                       onChange={(event) => updateParams({ period: 'custom', end: event.target.value, candidatePage: undefined, event: undefined })}
                       className="mt-1 w-full rounded border border-dark-700 bg-dark-950 px-1 py-1.5 text-white"
@@ -408,7 +415,7 @@ export const ExplorerPage: React.FC = () => {
                   </label>
                 </div>
               )}
-              {hasValidDates && !supportedDates && <p role="alert" className="text-xs text-amber-300">Select up to seven days ending today or earlier.</p>}
+              {hasValidDates && !supportedDates && <p role="alert" className="text-xs text-amber-300">Select dates on or before {cutoff} UTC.</p>}
               {!hasValidDates && <p role="alert" className="text-xs text-amber-300">Enter valid dates in chronological order.</p>}
               {source==='archive' && outsideArchive && <p role="status" className="text-xs text-amber-300">This date range is outside the currently imported real-observation archive.</p>}
               {source==='archive' && extendsBeyondArchive && !outsideArchive && <p role="status" className="text-xs text-amber-300">Part of this date range is outside the imported archive; absence of records is not evidence of no fire.</p>}
@@ -687,7 +694,7 @@ export const ExplorerPage: React.FC = () => {
       <div className="explorer-timeline" aria-label="Fire observation timeline">
         <button onClick={()=>shiftPeriod(-1)} disabled={!hasValidDates}>◀ Previous period</button>
         <span><strong>FIRMS observations · UTC</strong><br/>{startDate || archiveStart || 'Archive start'} → {endDate || archiveEnd || 'Latest imported date'}</span>
-        <button onClick={()=>shiftPeriod(1)} disabled={!hasValidDates || (endDate || '')>=dateOnly(new Date())}>Next period ▶</button>
+        <button onClick={()=>shiftPeriod(1)} disabled={!hasValidDates || endDate >= cutoff}>Next period ▶</button>
       </div>
     </div>
   );

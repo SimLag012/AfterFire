@@ -1,6 +1,6 @@
 """Shared database filters for display clusters and indexed candidate lists."""
 import math
-from datetime import date
+from datetime import date, datetime, timedelta, timezone
 
 from fastapi import HTTPException
 from sqlalchemy import case, func, or_
@@ -8,6 +8,15 @@ from sqlalchemy import case, func, or_
 from app.models.fire import FireDetection as D
 
 EARTH_RADIUS_KM = 6371.0088
+
+
+def historical_end(start: date | None, end: date | None) -> date:
+    cutoff = datetime.now(timezone.utc).date() - timedelta(days=30)
+    if (end and end > cutoff) or (start and start > cutoff):
+        raise HTTPException(422, f'Fire discovery is available through {cutoff} UTC.')
+    if start and end and start > end:
+        raise HTTPException(422, 'start_date must be on or before end_date.')
+    return end or cutoff
 
 
 def validate_bbox(value: str) -> tuple[float, float, float, float]:
@@ -29,8 +38,7 @@ def observation_filters(bbox: str, start_date: date | None, end_date: date | Non
     west, south, east, north = validate_bbox(bbox)
     if sum(x is not None for x in (center_lat, center_lon, radius_km)) not in (0, 3):
         raise HTTPException(422, 'center_lat, center_lon, and radius_km must be supplied together.')
-    if start_date and end_date and start_date > end_date:
-        raise HTTPException(422, 'start_date must be on or before end_date.')
+    end_date = historical_end(start_date, end_date)
     conditions = [D.latitude >= south, D.latitude <= north,
                   or_(D.is_synthetic_demo.is_(None), D.is_synthetic_demo != 'true')]
     if west < east:

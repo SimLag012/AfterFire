@@ -17,7 +17,7 @@ from fastapi import HTTPException
 from app.core.config import settings
 from app.providers.firms import FirmsProvider, FirmsProviderError
 from app.services.satellite_cache import file_lock
-from app.services.explorer_query import validate_bbox, satellite_filter, SATELLITE_ALIASES
+from app.services.explorer_query import historical_end, validate_bbox, satellite_filter, SATELLITE_ALIASES
 from app.analysis.harmonization import HarmonizationEngine
 
 VERSION='global-firms-1'
@@ -84,8 +84,9 @@ class GlobalFirms(FirmsProvider):
 
 
 def validate_filters(start,end,sensor,satellite):
-    if start>end or (end-start).days>6 or end>date.today():
-        raise HTTPException(422,'Select 1–7 days, ending no later than today; each NASA request uses at most 5 days')
+    historical_end(start, end)
+    if (end-start).days>6:
+        raise HTTPException(422,'Select 1–7 days, each NASA request uses at most 5 days')
     if satellite:
         satellite_filter(satellite)
         if sensor and ((satellite in ('Terra','Aqua')) != (sensor == 'MODIS')):

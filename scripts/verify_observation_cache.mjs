@@ -17,6 +17,9 @@ try{
     assert.equal(res.status(),200,await res.text().then(s=>s.slice(0,150)));
     const data=await res.json();
     assert(data.detections.length>0 && !data.truncated,'Italy must provide a reusable, populated observation window');
+    const cutoff = new Date(Date.now() - 30 * 86400000).toISOString().slice(0,10);
+    assert(new URL(res.url()).searchParams.get('end_date') <= cutoff);
+    assert(data.detections.every(row => row.acq_date <= cutoff));
     const marker=page.locator('.fire-detection-cluster').first();
     await marker.waitFor();
     const initialMs=Math.round(performance.now()-start);
@@ -57,6 +60,12 @@ try{
     assert.equal(requests.length,count,'Covered pan/zoom and reload should generate zero hotspot HTTP requests');
     assert.deepEqual(errors,[]);
     console.log(JSON.stringify({width,observations:data.total_detections,candidates:data.events.length,initialProfileMs:initialMs,persistedViewMs:firstCachedMs,interactionMs:interactions,subsetDate:seed.acq_date,subsetSensor:seed.instrument,initialHotspotRequests:count,coveredPanZoomRefreshRequests:requests.length-count,errors}));
+    const today = new Date().toISOString().slice(0,10);
+    await page.goto(base + '/?period=custom&start=' + today + '&end=' + today);
+    await page.waitForFunction(day => new URLSearchParams(location.search).get('end') === day, cutoff);
+    await page.reload();
+    await page.waitForFunction(day => new URLSearchParams(location.search).get('end') === day, cutoff);
+    assert(requests.every(url => new URL(url).searchParams.get('end_date') <= cutoff));
     await page.close();
   }
 }finally{await browser.close();}

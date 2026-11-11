@@ -88,7 +88,7 @@ function missing(f:Filters, rows:Entry[]) {
     }
     for(const group of groups.values()){
       const key=group.box.join(',')+group.platforms.join(','), last=previous.get(key);
-      if(last && Date.parse(last.end)===d-dayMs) last.end=date;
+      if(last && Date.parse(last.end)===d-dayMs && d-Date.parse(last.start)<7*dayMs) last.end=date;
       else {const window={...group,start:date,end:date};windows.push(window);previous.set(key,window);}
     }
   }
