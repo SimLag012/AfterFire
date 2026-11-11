@@ -1,0 +1,74 @@
+{
+  "browser": "Codex in-app Chromium",
+  "api_stubs": false,
+  "verified_after_frontend_build": true,
+  "cases": [
+    {
+      "event_id": "global-8ab308b435230781004c8e0d80c7dba6",
+      "viewport": [
+        390,
+        844
+      ],
+      "overflow": false,
+      "scene_rows": 12,
+      "distinct_scene_ids_visible": true,
+      "dnbr_display": "0.039",
+      "area_km2_display": "13.61",
+      "mapped_cells_display": 0,
+      "valid_post_modis_display": 0,
+      "supported_cells_display": "9/255",
+      "native_download_bands": 156,
+      "real_rgb_previews": [
+        {
+          "date": "2026-07-13",
+          "width": 512,
+          "loaded": true
+        },
+        {
+          "date": "2026-07-18",
+          "width": 512,
+          "loaded": true
+        }
+      ],
+      "cell_scope_explanation": true
+    },
+    {
+      "event_id": "global-75e84782b376558619c389da8e6fc716",
+      "viewport": [
+        1440,
+        1000
+      ],
+      "overflow": false,
+      "area_km2_display": "30.05",
+      "mapped_cells_display": 140,
+      "valid_post_ndvi_display": 12,
+      "valid_post_evi_display": 12,
+      "supported_cells_display": "560/560",
+      "timeline_rendered": true,
+      "evi_post_latest_display": ".354",
+      "evi_post_date_display": "2025-07-28",
+      "evi_seasonal_reference_display": ".401",
+      "evi_anomaly_display": "-.047"
+    },
+    {
+      "event_id": "global-51910cbfe4720638c1fce8630f452ce9",
+      "view": "reburn",
+      "viewport": [
+        1440,
+        1000
+      ],
+      "overflow": false,
+      "observed_episodes": 4,
+      "repeated_cells": 228,
+      "repeated_area_km2_display": "48.94",
+      "mapping_months": "133/133",
+      "gap_shared_cells": 226,
+      "gap_shared_area_km2_display": "48.51",
+      "gap_years_display": "8.97",
+      "modis_composites_display": 251,
+      "ndvi_evi_sustained_return_displayed": true,
+      "ecological_limit_visible": true
+    }
+  ],
+  "fallback": "Chrome DevTools unavailable because Chrome stable executable is missing; real browser checks performed with the in-app browser."
+}

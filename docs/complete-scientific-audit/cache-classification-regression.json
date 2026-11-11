@@ -1,0 +1,23 @@
+{
+  "before": {
+    "sources": 0,
+    "subsets": 0,
+    "results": 0,
+    "processed": 0,
+    "temporary": 0,
+    "metadata": 2050,
+    "quarantine": 0
+  },
+  "after": {
+    "sources": 0,
+    "subsets": 2048,
+    "results": 0,
+    "processed": 0,
+    "temporary": 0,
+    "metadata": 2,
+    "quarantine": 0
+  },
+  "dry_run_native_eligible": true,
+  "manifest_preserved": true,
+  "source_preserved": true
+}

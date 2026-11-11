@@ -109,13 +109,20 @@ def check_metrics(metric, parameters, end):
     return len(samples)
 
 
-async def verify(output, only_reburn=False):
+async def verify(output, only_reburn=False, event_ids=None):
     report = {'checked_at': datetime.now(timezone.utc).isoformat(), 'scope':'Existing real publications and retained raw bounded EE arrays; no acquisition',
               'cases':[], 'hdf_downloads':0, 'appeears_submissions':0}
     async with AsyncSessionLocal() as db:
-        sources = [] if only_reburn else (await db.execute(select(EventAnalysisResult))).scalars().all()
-        assessments = (await db.execute(select(RecoveryAssessmentRecord))).scalars().all()
-        histories = (await db.execute(select(ReburnHistoryRecord))).scalars().all()
+        sources_query=select(EventAnalysisResult)
+        assessments_query=select(RecoveryAssessmentRecord)
+        histories_query=select(ReburnHistoryRecord)
+        if event_ids:
+            sources_query=sources_query.where(EventAnalysisResult.event_id.in_(event_ids))
+            assessments_query=assessments_query.where(RecoveryAssessmentRecord.event_id.in_(event_ids))
+            histories_query=histories_query.where(ReburnHistoryRecord.event_id.in_(event_ids))
+        sources = [] if only_reburn else (await db.execute(sources_query)).scalars().all()
+        assessments = (await db.execute(assessments_query)).scalars().all()
+        histories = (await db.execute(histories_query)).scalars().all()
         history_sources = {g.id:g.local_path for g in (await db.execute(select(SatelliteGranule))).scalars().all()}
     report['reburn'] = []
     for history in histories:
@@ -262,5 +269,6 @@ if __name__=='__main__':
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--output',type=Path,default=Path('/tmp/afterfire-independent-recovery.json'))
     parser.add_argument('--only-reburn',action='store_true',help='Validate raw histories without repeating vegetation publication checks')
+    parser.add_argument('--event-id',action='append',default=[],help='Restrict the independent raw verification to these event IDs')
     args=parser.parse_args()
-    asyncio.run(verify(args.output,args.only_reburn))
+    asyncio.run(verify(args.output,args.only_reburn,args.event_id))
