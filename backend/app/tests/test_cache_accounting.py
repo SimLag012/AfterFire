@@ -179,3 +179,22 @@ def test_valid_source_is_not_reacquired_when_optional_evidence_cannot_fit(root,m
     cached,actual,downloaded=acquire(record,NoDownload(),1000)
     assert cached==path and actual==meta and downloaded==0
     assert path.read_bytes()==data and not list((root/'integrity').glob('*.json'))
+
+
+def test_api_admission_includes_large_geometry_metadata(root,monkeypatch):
+    import numpy as np
+    from shapely.geometry import Point
+    from app.providers.api_subsets import ApiSubsetProvider,cache_identity,subset_window
+    from app.providers.appeears import LAYERS
+    monkeypatch.setattr(settings,'AFTERFIRE_ANALYSIS_CACHE_MAX_GB',100_000/1024**3)
+    geometry=Point(15,37).buffer(.001,quad_segs=5000)
+    record={'id':'metadata-bound','product':'MOD13Q1','version':'061','tile':'h19v05',
+            'original_id':'MOD13Q1.A2020225.h19v05.061.2021001000000.hdf',
+            'period':{'start':'2020-08-12'}}
+    key,spec=cache_identity(record,geometry);win,affine=subset_window(record,geometry)
+    arrays={name:np.zeros((int(win.height),int(win.width)),dtype='int32') for name in LAYERS['MOD13Q1']}
+    assert sum(a.nbytes for a in arrays.values())+65536<100_000
+    with pytest.raises(ValueError,match='quota'):
+        ApiSubsetProvider()._publish(record,geometry,arrays,sum(a.nbytes for a in arrays.values()),win,affine,key,spec,root/'api-subsets'/key)
+    assert ledger.usage(root)[0]==0
+    assert not list(root.rglob('native.tif')) and not list(root.rglob('source.json'))

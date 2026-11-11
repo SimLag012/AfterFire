@@ -254,7 +254,10 @@ class ApiSubsetProvider:
 
     def _publish(self, record, geometry, arrays, count, win, affine, key, spec, folder, reserved=False):
         estimate = sum(a.nbytes for a in arrays.values())
-        with (nullcontext() if reserved else mutation(cache_root(),[folder],estimate+65536,temporary=True)):
+        # Geometry/provenance are not bounded by raster pixel count. Reserve their
+        # serialized size too; 64 KiB remains the independent GeoTIFF/header bound.
+        metadata_bound=len(json.dumps(mapping(geometry)).encode())+len(json.dumps(spec).encode())+8192
+        with (nullcontext() if reserved else mutation(cache_root(),[folder],estimate+65536+metadata_bound,temporary=True)):
             folder.mkdir(parents=True,exist_ok=True)
             names=LAYERS[record['product']]
             if set(arrays)!=set(names):
@@ -391,7 +394,9 @@ class ApiSubsetProvider:
                         raise earth_engine_error(exc) from None
                     transferred(count);budget-=count
                     # One conservative reservation under the same cross-process lock for the whole batch.
-                    with mutation(cache_root(),[cache_root()/'api-subsets'/cache_identity(r,geometry)[0] for r in missing],count+65536*len(missing),temporary=True):
+                    geometry_bytes=len(json.dumps(mapping(geometry)).encode())
+                    metadata_bound=sum(geometry_bytes+len(json.dumps(cache_identity(r,geometry)[1]).encode())+8192 for r in missing)
+                    with mutation(cache_root(),[cache_root()/'api-subsets'/cache_identity(r,geometry)[0] for r in missing],count+65536*len(missing)+metadata_bound,temporary=True):
                         for r,values in zip(missing,arrays):
                             key,spec=cache_identity(r,geometry)
                             acquired[r['id']]=self._publish(r,geometry,values,per_date,win,affine,key,spec,cache_root()/'api-subsets'/key,reserved=True)
