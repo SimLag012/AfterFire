@@ -1,0 +1,94 @@
+{
+  "cases": [
+    {
+      "event_id": "global-3667e91d235a57ea33ce2a9dea557a0a",
+      "desktop": {
+        "width": 1440,
+        "overflow": false,
+        "dated_previews": [
+          {
+            "alt": "Quality-screened true-colour candidate territory 2026-07-11",
+            "loaded": true
+          },
+          {
+            "alt": "Quality-screened true-colour candidate territory 2026-07-16",
+            "loaded": true
+          }
+        ]
+      },
+      "recovery_chart_absent": true,
+      "mobile": {
+        "width": 390,
+        "overflow": false
+      }
+    },
+    {
+      "event_id": "global-66cbb1d3ab8865c663719a9cf3287fd6",
+      "desktop": {
+        "width": 1440,
+        "overflow": false
+      },
+      "mobile": {
+        "width": 390,
+        "overflow": false
+      }
+    },
+    {
+      "event_id": "global-f7cb018c137015e862c46477265634b4",
+      "desktop": {
+        "width": 1440,
+        "overflow": false
+      },
+      "mobile": {
+        "width": 390,
+        "overflow": false
+      },
+      "dated_previews": [
+        {
+          "alt": "Quality-screened true-colour candidate territory 2019-09-12",
+          "loaded": true
+        },
+        {
+          "alt": "Quality-screened true-colour candidate territory 2019-09-27",
+          "loaded": true
+        }
+      ],
+      "recovery_intelligence_ready": true
+    },
+    {
+      "event_id": "global-08360dbf12a89d9e290d4efbcf07adfa",
+      "recovered_from_insufficient": true,
+      "desktop": {
+        "overflow": false
+      },
+      "dated_previews": [
+        {
+          "alt": "Quality-screened true-colour candidate territory 2023-05-17",
+          "loaded": true
+        },
+        {
+          "alt": "Quality-screened true-colour candidate territory 2023-05-27",
+          "loaded": true
+        }
+      ],
+      "mobile": {
+        "overflow": false
+      }
+    }
+  ],
+  "explorer_selection": "http://localhost:3000/events/global-66cbb1d3ab8865c663719a9cf3287fd6?returnTo=%2Fexplorer%3Fperiod%3Dcustom%26start%3D2024-08-20%26end%3D2024-08-22%26sensor%3DMODIS%26map%3D-62.96608%252C-11.31107%252C-62.19566%252C-10.77935%26z%3D11%26event%3Dglobal-66cbb1d3ab8865c663719a9cf3287fd6",
+  "modis_mobile_selection": "2024-09-29",
+  "console": [],
+  "final_console": [
+    {
+      "level": "error",
+      "message": "TypeError: Cannot read properties of undefined (reading '_leaflet_pos')\n    at Pt (http://localhost:3000/assets/SatelliteBasemap-haf8WcBZ.js:4:22059)\n    at e._getMapPanePos (http://localhost:3000/assets/SatelliteBasemap-haf8WcBZ.js:4:44224)\n    at e._getNewPixelOrigin (http://localhost:3000/assets/SatelliteBasemap-haf8WcBZ.js:4:44588)\n    at e._move (http://localhost:3000/assets/SatelliteBasemap-haf8WcBZ.js:4:40916)\n    at e._onZoomTransitionEnd (http://localhost:3000/assets/SatelliteBasemap-haf8WcBZ.js:4:48238)",
+      "timestamp": "2026-11-11T12:52:04.700Z",
+      "url": "http://localhost:3000/assets/SatelliteBasemap-haf8WcBZ.js"
+    }
+  ],
+  "final_partial_page": {
+    "overflow": false,
+    "no_unsupported_modis_chart": true
+  }
+}

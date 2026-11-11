@@ -1,0 +1,1738 @@
+{
+  "event_id": "global-3667e91d235a57ea33ce2a9dea557a0a",
+  "job_id": "5ed8473a74743e8fa166b269d28926ce319b73e625b995fe43d7dee4a8d8e388",
+  "engine_version": "modis-recovery-3.1.0",
+  "result_states": {
+    "scientific_summary": "candidate_vegetation_supported",
+    "native_spatial": "unavailable",
+    "visual_assets": "on_demand"
+  },
+  "event_period": {
+    "start": "2026-07-14",
+    "end": "2026-07-14"
+  },
+  "period": {
+    "start": "2023-07-14",
+    "end": "2026-11-11"
+  },
+  "configuration": {
+    "pre_years": 3,
+    "post_years": 10,
+    "as_of": "2026-11-11",
+    "acquisition": "auto",
+    "buffer_m": 1000,
+    "burn_tolerance_days": 3,
+    "seasonal_window_days": 24,
+    "min_baseline_years": 2,
+    "min_valid_fraction": 0.5
+  },
+  "hotspot_footprint": {
+    "type": "Polygon",
+    "coordinates": [
+      [
+        [
+          9.11725,
+          41.13648
+        ],
+        [
+          9.11314,
+          41.13893
+        ],
+        [
+          9.11694,
+          41.14077
+        ],
+        [
+          9.12149,
+          41.13989
+        ],
+        [
+          9.12131,
+          41.13953
+        ],
+        [
+          9.11725,
+          41.13648
+        ]
+      ]
+    ]
+  },
+  "analysis_geometry": {
+    "type": "Polygon",
+    "coordinates": [
+      [
+        [
+          9.125644470404039,
+          41.130092613280965
+        ],
+        [
+          9.124789923514346,
+          41.12950991338376
+        ],
+        [
+          9.123865001113337,
+          41.128992286306044
+        ],
+        [
+          9.122878337615889,
+          41.12854456339389
+        ],
+        [
+          9.121839143111124,
+          41.12817092344241
+        ],
+        [
+          9.120757117447779,
+          41.12787485373357
+        ],
+        [
+          9.119642359773078,
+          41.127659117523876
+        ],
+        [
+          9.118505274365848,
+          41.127525728283906
+        ],
+        [
+          9.117356473638514,
+          41.12747593092846
+        ],
+        [
+          9.116206679208158,
+          41.12751019021179
+        ],
+        [
+          9.115066621954606,
+          41.127628186395185
+        ],
+        [
+          9.1139469419926,
+          41.127828818227584
+        ],
+        [
+          9.112858089485872,
+          41.1281102132111
+        ],
+        [
+          9.111810227223442,
+          41.1284697450566
+        ],
+        [
+          9.110813135862186,
+          41.128904058167045
+        ],
+        [
+          9.109876122715699,
+          41.12940909892178
+        ],
+        [
+          9.105766289731728,
+          41.131858838861575
+        ],
+        [
+          9.10486748639852,
+          41.13245207965432
+        ],
+        [
+          9.104051683915094,
+          41.13311033122772
+        ],
+        [
+          9.103327070220955,
+          41.13382698900731
+        ],
+        [
+          9.102700919024324,
+          41.134594862177536
+        ],
+        [
+          9.10217951674991,
+          41.13540624578014
+        ],
+        [
+          9.101768099358797,
+          41.13625299797805
+        ],
+        [
+          9.101470799677985,
+          41.13712662171146
+        ],
+        [
+          9.101290605773068,
+          41.138018349929396
+        ],
+        [
+          9.101229330787739,
+          41.13891923354294
+        ],
+        [
+          9.10128759455974,
+          41.139820231218906
+        ],
+        [
+          9.101464817205212,
+          41.14071230011362
+        ],
+        [
+          9.101759224743622,
+          41.14158648663655
+        ],
+        [
+          9.102167866714662,
+          41.142434016332544
+        ],
+        [
+          9.102686645617736,
+          41.143246381979644
+        ],
+        [
+          9.10331035788559,
+          41.14401542901701
+        ],
+        [
+          9.104032745986785,
+          41.14473343744373
+        ],
+        [
+          9.104846561138984,
+          41.14539319936412
+        ],
+        [
+          9.10574363600735,
+          41.145988091398756
+        ],
+        [
+          9.106714966660391,
+          41.1465121412316
+        ],
+        [
+          9.110515224744585,
+          41.148352350738016
+        ],
+        [
+          9.111575431704654,
+          41.14880956088512
+        ],
+        [
+          9.112691983167409,
+          41.149182352737256
+        ],
+        [
+          9.113853152656475,
+          41.1494668108144
+        ],
+        [
+          9.115046744525504,
+          41.14965994737326
+        ],
+        [
+          9.116260222180953,
+          41.14975973382435
+        ],
+        [
+          9.117480839907053,
+          41.14976512206437
+        ],
+        [
+          9.1186957769005,
+          41.149676055497956
+        ],
+        [
+          9.119892272098667,
+          41.149493469633
+        ],
+        [
+          9.124442835605553,
+          41.14861335434594
+        ],
+        [
+          9.125568164375956,
+          41.14835023472571
+        ],
+        [
+          9.126653601999253,
+          41.148004382049606
+        ],
+        [
+          9.1276885319062,
+          41.14757917928393
+        ],
+        [
+          9.128662832112719,
+          41.14707878548772
+        ],
+        [
+          9.129566974291356,
+          41.14650809508836
+        ],
+        [
+          9.130392117005739,
+          41.14587268996067
+        ],
+        [
+          9.131130192193764,
+          41.14517878478036
+        ],
+        [
+          9.131773984052694,
+          41.14443316618914
+        ],
+        [
+          9.132317199554858,
+          41.14364312636862
+        ],
+        [
+          9.132754529906169,
+          41.14281639167551
+        ],
+        [
+          9.133081702349198,
+          41.14196104703798
+        ],
+        [
+          9.133295521808705,
+          41.14108545685499
+        ],
+        [
+          9.133393901977358,
+          41.140198183173496
+        ],
+        [
+          9.133375885543865,
+          41.13930790194535
+        ],
+        [
+          9.133241653372478,
+          41.13842331818351
+        ],
+        [
+          9.13299252255107,
+          41.137553080847475
+        ],
+        [
+          9.132630933334108,
+          41.136705698290385
+        ],
+        [
+          9.13245088112963,
+          41.136345715502955
+        ],
+        [
+          9.131938366579046,
+          41.13546606306545
+        ],
+        [
+          9.13130476096386,
+          41.13463272299315
+        ],
+        [
+          9.130557287383438,
+          41.13385518953553
+        ],
+        [
+          9.129704465345945,
+          41.13314232081691
+        ],
+        [
+          9.125644470404039,
+          41.130092613280965
+        ]
+      ]
+    ]
+  },
+  "analysis_area_source": "provisional_hotspot_buffer",
+  "analysis_area_km2": 5.038254944956993,
+  "burned_area": {
+    "type": "FeatureCollection",
+    "features": []
+  },
+  "burned_area_summary": {
+    "available_granules": 3,
+    "valid_mapping_pixels": 54,
+    "mapping_pixels": 75,
+    "valid_mapping_fraction": 0.72,
+    "observed_cell_area_km2": 0,
+    "unambiguous_cell_area_km2": 0,
+    "ambiguous_cells": 0
+  },
+  "candidate_geometry": {
+    "type": "Polygon",
+    "coordinates": [
+      [
+        [
+          9.125644470404039,
+          41.130092613280965
+        ],
+        [
+          9.124789923514346,
+          41.12950991338376
+        ],
+        [
+          9.123865001113337,
+          41.128992286306044
+        ],
+        [
+          9.122878337615889,
+          41.12854456339389
+        ],
+        [
+          9.121839143111124,
+          41.12817092344241
+        ],
+        [
+          9.120757117447779,
+          41.12787485373357
+        ],
+        [
+          9.119642359773078,
+          41.127659117523876
+        ],
+        [
+          9.118505274365848,
+          41.127525728283906
+        ],
+        [
+          9.117356473638514,
+          41.12747593092846
+        ],
+        [
+          9.116206679208158,
+          41.12751019021179
+        ],
+        [
+          9.115066621954606,
+          41.127628186395185
+        ],
+        [
+          9.1139469419926,
+          41.127828818227584
+        ],
+        [
+          9.112858089485872,
+          41.1281102132111
+        ],
+        [
+          9.111810227223442,
+          41.1284697450566
+        ],
+        [
+          9.110813135862186,
+          41.128904058167045
+        ],
+        [
+          9.109876122715699,
+          41.12940909892178
+        ],
+        [
+          9.105766289731728,
+          41.131858838861575
+        ],
+        [
+          9.10486748639852,
+          41.13245207965432
+        ],
+        [
+          9.104051683915094,
+          41.13311033122772
+        ],
+        [
+          9.103327070220955,
+          41.13382698900731
+        ],
+        [
+          9.102700919024324,
+          41.134594862177536
+        ],
+        [
+          9.10217951674991,
+          41.13540624578014
+        ],
+        [
+          9.101768099358797,
+          41.13625299797805
+        ],
+        [
+          9.101470799677985,
+          41.13712662171146
+        ],
+        [
+          9.101290605773068,
+          41.138018349929396
+        ],
+        [
+          9.101229330787739,
+          41.13891923354294
+        ],
+        [
+          9.10128759455974,
+          41.139820231218906
+        ],
+        [
+          9.101464817205212,
+          41.14071230011362
+        ],
+        [
+          9.101759224743622,
+          41.14158648663655
+        ],
+        [
+          9.102167866714662,
+          41.142434016332544
+        ],
+        [
+          9.102686645617736,
+          41.143246381979644
+        ],
+        [
+          9.10331035788559,
+          41.14401542901701
+        ],
+        [
+          9.104032745986785,
+          41.14473343744373
+        ],
+        [
+          9.104846561138984,
+          41.14539319936412
+        ],
+        [
+          9.10574363600735,
+          41.145988091398756
+        ],
+        [
+          9.106714966660391,
+          41.1465121412316
+        ],
+        [
+          9.110515224744585,
+          41.148352350738016
+        ],
+        [
+          9.111575431704654,
+          41.14880956088512
+        ],
+        [
+          9.112691983167409,
+          41.149182352737256
+        ],
+        [
+          9.113853152656475,
+          41.1494668108144
+        ],
+        [
+          9.115046744525504,
+          41.14965994737326
+        ],
+        [
+          9.116260222180953,
+          41.14975973382435
+        ],
+        [
+          9.117480839907053,
+          41.14976512206437
+        ],
+        [
+          9.1186957769005,
+          41.149676055497956
+        ],
+        [
+          9.119892272098667,
+          41.149493469633
+        ],
+        [
+          9.124442835605553,
+          41.14861335434594
+        ],
+        [
+          9.125568164375956,
+          41.14835023472571
+        ],
+        [
+          9.126653601999253,
+          41.148004382049606
+        ],
+        [
+          9.1276885319062,
+          41.14757917928393
+        ],
+        [
+          9.128662832112719,
+          41.14707878548772
+        ],
+        [
+          9.129566974291356,
+          41.14650809508836
+        ],
+        [
+          9.130392117005739,
+          41.14587268996067
+        ],
+        [
+          9.131130192193764,
+          41.14517878478036
+        ],
+        [
+          9.131773984052694,
+          41.14443316618914
+        ],
+        [
+          9.132317199554858,
+          41.14364312636862
+        ],
+        [
+          9.132754529906169,
+          41.14281639167551
+        ],
+        [
+          9.133081702349198,
+          41.14196104703798
+        ],
+        [
+          9.133295521808705,
+          41.14108545685499
+        ],
+        [
+          9.133393901977358,
+          41.140198183173496
+        ],
+        [
+          9.133375885543865,
+          41.13930790194535
+        ],
+        [
+          9.133241653372478,
+          41.13842331818351
+        ],
+        [
+          9.13299252255107,
+          41.137553080847475
+        ],
+        [
+          9.132630933334108,
+          41.136705698290385
+        ],
+        [
+          9.13245088112963,
+          41.136345715502955
+        ],
+        [
+          9.131938366579046,
+          41.13546606306545
+        ],
+        [
+          9.13130476096386,
+          41.13463272299315
+        ],
+        [
+          9.130557287383438,
+          41.13385518953553
+        ],
+        [
+          9.129704465345945,
+          41.13314232081691
+        ],
+        [
+          9.125644470404039,
+          41.130092613280965
+        ]
+      ]
+    ]
+  },
+  "candidate_area_km2": 5.038254944956993,
+  "diagnostics": {
+    "reasons": [
+      {
+        "code": "no_associated_mapped_burn",
+        "message": "No uniquely associated quality-screened MCD64A1 burned cells were mapped. Small or mixed burns can be missed at 500 m; thermal hotspots alone do not confirm burning."
+      },
+      {
+        "code": "qa_or_coverage",
+        "message": "150 MODIS index observations failed strict QA or minimum spatial coverage; rejected pixels may include clouds, snow, water or poor retrievals."
+      },
+      {
+        "code": "incomplete_pre_post",
+        "message": "MODIS does not provide valid observations on both sides of the event in this interval."
+      }
+    ],
+    "candidate_area_km2": 5.038254944956993,
+    "buffer_m": 1000,
+    "geometry_method": "FIRMS convex hull buffered in local azimuthal equidistant CRS; fixed before source inspection",
+    "modis_tiles_products": {
+      "MCD64A1": 3,
+      "MOD13Q1": 75
+    },
+    "modis_expected_vegetation_centres": 95,
+    "mapped_burned_cells": 0,
+    "unambiguous_burned_cells": 0,
+    "mapping_valid_pixels": 54,
+    "mapping_total_pixels": 75,
+    "vegetation_index_observations": 152,
+    "vegetation_valid_index_observations": 0,
+    "vegetation_qa_rejected_index_observations": 150,
+    "vegetation_valid_pixels": 198,
+    "vegetation_total_pixels": 14440,
+    "acquisition_failures": 0,
+    "optical_status": "vegetation_observed"
+  },
+  "scientific_support": {
+    "category": "candidate_vegetation_supported",
+    "analysis_scope": "candidate_area_vegetation_analysis",
+    "burn_confirmation": "unconfirmed_thermal_candidate",
+    "modis_pre_post_supported": false,
+    "optical_pre_post_supported": true,
+    "recovery_baseline_supported": false
+  },
+  "high_resolution": {
+    "status": "vegetation_observed",
+    "catalog": {
+      "HLS_L30": {
+        "post_ids": [
+          "NASA/HLS/HLSL30/v002/T32TML_20260721T100525",
+          "NASA/HLS/HLSL30/v002/T32TNL_20260721T100525",
+          "NASA/HLS/HLSL30/v002/T32TML_20260729T100520",
+          "NASA/HLS/HLSL30/v002/T32TNL_20260729T100520",
+          "NASA/HLS/HLSL30/v002/T32TML_20260806T100532",
+          "NASA/HLS/HLSL30/v002/T32TNL_20260806T100532"
+        ],
+        "pre_ids": [
+          "NASA/HLS/HLSL30/v002/T32TML_20260713T100509",
+          "NASA/HLS/HLSL30/v002/T32TNL_20260713T100509",
+          "NASA/HLS/HLSL30/v002/T32TML_20260705T100515",
+          "NASA/HLS/HLSL30/v002/T32TNL_20260705T100515",
+          "NASA/HLS/HLSL30/v002/T32TML_20260627T100504",
+          "NASA/HLS/HLSL30/v002/T32TNL_20260627T100504"
+        ]
+      },
+      "HLS_S30": {
+        "post_ids": [
+          "NASA/HLS/HLSS30/v002/T32TML_20260718T100701",
+          "NASA/HLS/HLSS30/v002/T32TNL_20260718T100701",
+          "NASA/HLS/HLSS30/v002/T32TML_20260719T101601",
+          "NASA/HLS/HLSS30/v002/T32TNL_20260719T101601",
+          "NASA/HLS/HLSS30/v002/T32TML_20260721T100559",
+          "NASA/HLS/HLSS30/v002/T32TNL_20260721T100559"
+        ],
+        "pre_ids": [
+          "NASA/HLS/HLSS30/v002/T32TML_20260711T102041",
+          "NASA/HLS/HLSS30/v002/T32TNL_20260711T102041",
+          "NASA/HLS/HLSS30/v002/T32TML_20260711T100549",
+          "NASA/HLS/HLSS30/v002/T32TNL_20260711T100549",
+          "NASA/HLS/HLSS30/v002/T32TML_20260709T101601",
+          "NASA/HLS/HLSS30/v002/T32TNL_20260709T101601"
+        ]
+      },
+      "Landsat_5": {
+        "post_ids": [],
+        "pre_ids": []
+      },
+      "Landsat_7": {
+        "post_ids": [],
+        "pre_ids": []
+      },
+      "Landsat_8": {
+        "post_ids": [
+          "LANDSAT/LC08/C02/T1_L2/LC08_193031_20260729",
+          "LANDSAT/LC08/C02/T1_L2/LC08_193032_20260729",
+          "LANDSAT/LC08/C02/T1_L2/LC08_193031_20260814",
+          "LANDSAT/LC08/C02/T1_L2/LC08_193032_20260814",
+          "LANDSAT/LC08/C02/T1_L2/LC08_193031_20260830",
+          "LANDSAT/LC08/C02/T1_L2/LC08_193032_20260830"
+        ],
+        "pre_ids": [
+          "LANDSAT/LC08/C02/T1_L2/LC08_193032_20260713",
+          "LANDSAT/LC08/C02/T1_L2/LC08_193031_20260713",
+          "LANDSAT/LC08/C02/T1_L2/LC08_193032_20260627",
+          "LANDSAT/LC08/C02/T1_L2/LC08_193031_20260627",
+          "LANDSAT/LC08/C02/T1_L2/LC08_193032_20260611",
+          "LANDSAT/LC08/C02/T1_L2/LC08_193031_20260611"
+        ]
+      },
+      "Landsat_9": {
+        "post_ids": [
+          "LANDSAT/LC09/C02/T1_L2/LC09_193031_20260721",
+          "LANDSAT/LC09/C02/T1_L2/LC09_193032_20260721",
+          "LANDSAT/LC09/C02/T1_L2/LC09_193031_20260806",
+          "LANDSAT/LC09/C02/T1_L2/LC09_193032_20260806",
+          "LANDSAT/LC09/C02/T1_L2/LC09_193031_20260822",
+          "LANDSAT/LC09/C02/T1_L2/LC09_193032_20260822"
+        ],
+        "pre_ids": [
+          "LANDSAT/LC09/C02/T1_L2/LC09_193032_20260705",
+          "LANDSAT/LC09/C02/T1_L2/LC09_193031_20260705",
+          "LANDSAT/LC09/C02/T1_L2/LC09_193032_20260619",
+          "LANDSAT/LC09/C02/T1_L2/LC09_193031_20260619",
+          "LANDSAT/LC09/C02/T1_L2/LC09_193032_20260603",
+          "LANDSAT/LC09/C02/T1_L2/LC09_193031_20260603"
+        ]
+      },
+      "Sentinel_2": {
+        "post_ids": [
+          "COPERNICUS/S2_SR_HARMONIZED/20260716T100601_20260716T101753_T32TNL",
+          "COPERNICUS/S2_SR_HARMONIZED/20260716T100601_20260716T101753_T32TML",
+          "COPERNICUS/S2_SR_HARMONIZED/20260718T100701_20260718T101359_T32TNL",
+          "COPERNICUS/S2_SR_HARMONIZED/20260718T100701_20260718T101359_T32TML",
+          "COPERNICUS/S2_SR_HARMONIZED/20260719T101601_20260719T101759_T32TNL",
+          "COPERNICUS/S2_SR_HARMONIZED/20260719T101601_20260719T101759_T32TML"
+        ],
+        "pre_ids": [
+          "COPERNICUS/S2_SR_HARMONIZED/20260711T102041_20260711T102742_T32TML",
+          "COPERNICUS/S2_SR_HARMONIZED/20260711T102041_20260711T102742_T32TNL",
+          "COPERNICUS/S2_SR_HARMONIZED/20260711T100549_20260711T101652_T32TML",
+          "COPERNICUS/S2_SR_HARMONIZED/20260711T100549_20260711T101652_T32TNL",
+          "COPERNICUS/S2_SR_HARMONIZED/20260709T101601_20260709T101746_T32TML",
+          "COPERNICUS/S2_SR_HARMONIZED/20260709T101601_20260709T101746_T32TNL"
+        ]
+      }
+    },
+    "attempts": [
+      {
+        "source": "Sentinel_2",
+        "scenes_checked": 12,
+        "supported_scenes": 5
+      }
+    ],
+    "observations": [
+      {
+        "id": "COPERNICUS/S2_SR_HARMONIZED/20260711T102041_20260711T102742_T32TML",
+        "date": "2026-07-11",
+        "phase": "pre",
+        "source": "Sentinel_2",
+        "collection": "COPERNICUS/S2_SR_HARMONIZED",
+        "indices": {
+          "NDVI": {
+            "value": null,
+            "valid_pixels": 0,
+            "total_pixels": 50419,
+            "valid_fraction": 0.0,
+            "reason": "qa_rejected_or_incomplete_spatial_coverage"
+          },
+          "EVI": {
+            "value": null,
+            "valid_pixels": 0,
+            "total_pixels": 50419,
+            "valid_fraction": 0.0,
+            "reason": "qa_rejected_or_incomplete_spatial_coverage"
+          },
+          "NBR": {
+            "value": null,
+            "valid_pixels": 0,
+            "total_pixels": 12607,
+            "valid_fraction": 0.0,
+            "reason": "qa_rejected_or_incomplete_spatial_coverage"
+          }
+        },
+        "resolution_m": 20,
+        "projection": {
+          "type": "Projection",
+          "crs": "EPSG:32632",
+          "transform": [
+            20,
+            0,
+            399960,
+            0,
+            -20,
+            4600020
+          ]
+        }
+      },
+      {
+        "id": "COPERNICUS/S2_SR_HARMONIZED/20260711T102041_20260711T102742_T32TNL",
+        "date": "2026-07-11",
+        "phase": "pre",
+        "source": "Sentinel_2",
+        "collection": "COPERNICUS/S2_SR_HARMONIZED",
+        "indices": {
+          "NDVI": {
+            "value": null,
+            "valid_pixels": 0,
+            "total_pixels": 50419,
+            "valid_fraction": 0.0,
+            "reason": "qa_rejected_or_incomplete_spatial_coverage"
+          },
+          "EVI": {
+            "value": null,
+            "valid_pixels": 0,
+            "total_pixels": 50419,
+            "valid_fraction": 0.0,
+            "reason": "qa_rejected_or_incomplete_spatial_coverage"
+          },
+          "NBR": {
+            "value": null,
+            "valid_pixels": 0,
+            "total_pixels": 12607,
+            "valid_fraction": 0.0,
+            "reason": "qa_rejected_or_incomplete_spatial_coverage"
+          }
+        },
+        "resolution_m": 20,
+        "projection": {
+          "type": "Projection",
+          "crs": "EPSG:32632",
+          "transform": [
+            20,
+            0,
+            499980,
+            0,
+            -20,
+            4600020
+          ]
+        }
+      },
+      {
+        "id": "COPERNICUS/S2_SR_HARMONIZED/20260711T100549_20260711T101652_T32TML",
+        "date": "2026-07-11",
+        "phase": "pre",
+        "source": "Sentinel_2",
+        "collection": "COPERNICUS/S2_SR_HARMONIZED",
+        "indices": {
+          "NDVI": {
+            "value": null,
+            "valid_pixels": 6951,
+            "total_pixels": 50419,
+            "valid_fraction": 0.1378646938654079,
+            "reason": "qa_rejected_or_incomplete_spatial_coverage"
+          },
+          "EVI": {
+            "value": null,
+            "valid_pixels": 6951,
+            "total_pixels": 50419,
+            "valid_fraction": 0.1378646938654079,
+            "reason": "qa_rejected_or_incomplete_spatial_coverage"
+          },
+          "NBR": {
+            "value": null,
+            "valid_pixels": 1738,
+            "total_pixels": 12607,
+            "valid_fraction": 0.13785991909256762,
+            "reason": "qa_rejected_or_incomplete_spatial_coverage"
+          }
+        },
+        "resolution_m": 20,
+        "projection": {
+          "type": "Projection",
+          "crs": "EPSG:32632",
+          "transform": [
+            20,
+            0,
+            399960,
+            0,
+            -20,
+            4600020
+          ]
+        }
+      },
+      {
+        "id": "COPERNICUS/S2_SR_HARMONIZED/20260711T100549_20260711T101652_T32TNL",
+        "date": "2026-07-11",
+        "phase": "pre",
+        "source": "Sentinel_2",
+        "collection": "COPERNICUS/S2_SR_HARMONIZED",
+        "indices": {
+          "NDVI": {
+            "value": 0.6057030273529578,
+            "valid_pixels": 30584,
+            "total_pixels": 50419,
+            "valid_fraction": 0.6065967194906682,
+            "reason": "available"
+          },
+          "EVI": {
+            "value": 0.40244047789132426,
+            "valid_pixels": 30584,
+            "total_pixels": 50419,
+            "valid_fraction": 0.6065967194906682,
+            "reason": "available"
+          },
+          "NBR": {
+            "value": 0.41052845341193633,
+            "valid_pixels": 7654,
+            "total_pixels": 12607,
+            "valid_fraction": 0.6071230268898231,
+            "reason": "available"
+          }
+        },
+        "resolution_m": 20,
+        "projection": {
+          "type": "Projection",
+          "crs": "EPSG:32632",
+          "transform": [
+            20,
+            0,
+            499980,
+            0,
+            -20,
+            4600020
+          ]
+        }
+      },
+      {
+        "id": "COPERNICUS/S2_SR_HARMONIZED/20260709T101601_20260709T101746_T32TML",
+        "date": "2026-07-09",
+        "phase": "pre",
+        "source": "Sentinel_2",
+        "collection": "COPERNICUS/S2_SR_HARMONIZED",
+        "indices": {
+          "NDVI": {
+            "value": null,
+            "valid_pixels": 6983,
+            "total_pixels": 50419,
+            "valid_fraction": 0.1384993752355263,
+            "reason": "qa_rejected_or_incomplete_spatial_coverage"
+          },
+          "EVI": {
+            "value": null,
+            "valid_pixels": 6983,
+            "total_pixels": 50419,
+            "valid_fraction": 0.1384993752355263,
+            "reason": "qa_rejected_or_incomplete_spatial_coverage"
+          },
+          "NBR": {
+            "value": null,
+            "valid_pixels": 1746,
+            "total_pixels": 12607,
+            "valid_fraction": 0.13849448718965654,
+            "reason": "qa_rejected_or_incomplete_spatial_coverage"
+          }
+        },
+        "resolution_m": 20,
+        "projection": {
+          "type": "Projection",
+          "crs": "EPSG:32632",
+          "transform": [
+            20,
+            0,
+            399960,
+            0,
+            -20,
+            4600020
+          ]
+        }
+      },
+      {
+        "id": "COPERNICUS/S2_SR_HARMONIZED/20260709T101601_20260709T101746_T32TNL",
+        "date": "2026-07-09",
+        "phase": "pre",
+        "source": "Sentinel_2",
+        "collection": "COPERNICUS/S2_SR_HARMONIZED",
+        "indices": {
+          "NDVI": {
+            "value": 0.6367881524359289,
+            "valid_pixels": 30600,
+            "total_pixels": 50419,
+            "valid_fraction": 0.6069140601757274,
+            "reason": "available"
+          },
+          "EVI": {
+            "value": 0.3555796379399479,
+            "valid_pixels": 30600,
+            "total_pixels": 50419,
+            "valid_fraction": 0.6069140601757274,
+            "reason": "available"
+          },
+          "NBR": {
+            "value": 0.43976373044093486,
+            "valid_pixels": 7659,
+            "total_pixels": 12607,
+            "valid_fraction": 0.6075196319505037,
+            "reason": "available"
+          }
+        },
+        "resolution_m": 20,
+        "projection": {
+          "type": "Projection",
+          "crs": "EPSG:32632",
+          "transform": [
+            20,
+            0,
+            499980,
+            0,
+            -20,
+            4600020
+          ]
+        }
+      },
+      {
+        "id": "COPERNICUS/S2_SR_HARMONIZED/20260716T100601_20260716T101753_T32TNL",
+        "date": "2026-07-16",
+        "phase": "post",
+        "source": "Sentinel_2",
+        "collection": "COPERNICUS/S2_SR_HARMONIZED",
+        "indices": {
+          "NDVI": {
+            "value": 0.558618204380264,
+            "valid_pixels": 30434,
+            "total_pixels": 50419,
+            "valid_fraction": 0.6036216505682381,
+            "reason": "available"
+          },
+          "EVI": {
+            "value": 0.3242955230008513,
+            "valid_pixels": 30434,
+            "total_pixels": 50419,
+            "valid_fraction": 0.6036216505682381,
+            "reason": "available"
+          },
+          "NBR": {
+            "value": 0.36927362974817673,
+            "valid_pixels": 7616,
+            "total_pixels": 12607,
+            "valid_fraction": 0.6041088284286508,
+            "reason": "available"
+          }
+        },
+        "resolution_m": 20,
+        "projection": {
+          "type": "Projection",
+          "crs": "EPSG:32632",
+          "transform": [
+            20,
+            0,
+            499980,
+            0,
+            -20,
+            4600020
+          ]
+        }
+      },
+      {
+        "id": "COPERNICUS/S2_SR_HARMONIZED/20260716T100601_20260716T101753_T32TML",
+        "date": "2026-07-16",
+        "phase": "post",
+        "source": "Sentinel_2",
+        "collection": "COPERNICUS/S2_SR_HARMONIZED",
+        "indices": {
+          "NDVI": {
+            "value": null,
+            "valid_pixels": 6923,
+            "total_pixels": 50419,
+            "valid_fraction": 0.13730934766655428,
+            "reason": "qa_rejected_or_incomplete_spatial_coverage"
+          },
+          "EVI": {
+            "value": null,
+            "valid_pixels": 6923,
+            "total_pixels": 50419,
+            "valid_fraction": 0.13730934766655428,
+            "reason": "qa_rejected_or_incomplete_spatial_coverage"
+          },
+          "NBR": {
+            "value": null,
+            "valid_pixels": 1731,
+            "total_pixels": 12607,
+            "valid_fraction": 0.13730467200761481,
+            "reason": "qa_rejected_or_incomplete_spatial_coverage"
+          }
+        },
+        "resolution_m": 20,
+        "projection": {
+          "type": "Projection",
+          "crs": "EPSG:32632",
+          "transform": [
+            20,
+            0,
+            399960,
+            0,
+            -20,
+            4600020
+          ]
+        }
+      },
+      {
+        "id": "COPERNICUS/S2_SR_HARMONIZED/20260718T100701_20260718T101359_T32TNL",
+        "date": "2026-07-18",
+        "phase": "post",
+        "source": "Sentinel_2",
+        "collection": "COPERNICUS/S2_SR_HARMONIZED",
+        "indices": {
+          "NDVI": {
+            "value": 0.5663855198916876,
+            "valid_pixels": 30503,
+            "total_pixels": 50419,
+            "valid_fraction": 0.604990182272556,
+            "reason": "available"
+          },
+          "EVI": {
+            "value": 0.31649382651288666,
+            "valid_pixels": 30503,
+            "total_pixels": 50419,
+            "valid_fraction": 0.604990182272556,
+            "reason": "available"
+          },
+          "NBR": {
+            "value": 0.37284850013316306,
+            "valid_pixels": 7634,
+            "total_pixels": 12607,
+            "valid_fraction": 0.6055366066471009,
+            "reason": "available"
+          }
+        },
+        "resolution_m": 20,
+        "projection": {
+          "type": "Projection",
+          "crs": "EPSG:32632",
+          "transform": [
+            20,
+            0,
+            499980,
+            0,
+            -20,
+            4600020
+          ]
+        }
+      },
+      {
+        "id": "COPERNICUS/S2_SR_HARMONIZED/20260718T100701_20260718T101359_T32TML",
+        "date": "2026-07-18",
+        "phase": "post",
+        "source": "Sentinel_2",
+        "collection": "COPERNICUS/S2_SR_HARMONIZED",
+        "indices": {
+          "NDVI": {
+            "value": null,
+            "valid_pixels": 6942,
+            "total_pixels": 50419,
+            "valid_fraction": 0.13768618973006208,
+            "reason": "qa_rejected_or_incomplete_spatial_coverage"
+          },
+          "EVI": {
+            "value": null,
+            "valid_pixels": 6942,
+            "total_pixels": 50419,
+            "valid_fraction": 0.13768618973006208,
+            "reason": "qa_rejected_or_incomplete_spatial_coverage"
+          },
+          "NBR": {
+            "value": null,
+            "valid_pixels": 1736,
+            "total_pixels": 12607,
+            "valid_fraction": 0.13770127706829538,
+            "reason": "qa_rejected_or_incomplete_spatial_coverage"
+          }
+        },
+        "resolution_m": 20,
+        "projection": {
+          "type": "Projection",
+          "crs": "EPSG:32632",
+          "transform": [
+            20,
+            0,
+            399960,
+            0,
+            -20,
+            4600020
+          ]
+        }
+      },
+      {
+        "id": "COPERNICUS/S2_SR_HARMONIZED/20260719T101601_20260719T101759_T32TNL",
+        "date": "2026-07-19",
+        "phase": "post",
+        "source": "Sentinel_2",
+        "collection": "COPERNICUS/S2_SR_HARMONIZED",
+        "indices": {
+          "NDVI": {
+            "value": 0.5292840723100581,
+            "valid_pixels": 30539,
+            "total_pixels": 50419,
+            "valid_fraction": 0.6057041988139392,
+            "reason": "available"
+          },
+          "EVI": {
+            "value": 0.2910011027143922,
+            "valid_pixels": 30539,
+            "total_pixels": 50419,
+            "valid_fraction": 0.6057041988139392,
+            "reason": "available"
+          },
+          "NBR": {
+            "value": 0.369193550683779,
+            "valid_pixels": 7643,
+            "total_pixels": 12607,
+            "valid_fraction": 0.6062504957563258,
+            "reason": "available"
+          }
+        },
+        "resolution_m": 20,
+        "projection": {
+          "type": "Projection",
+          "crs": "EPSG:32632",
+          "transform": [
+            20,
+            0,
+            499980,
+            0,
+            -20,
+            4600020
+          ]
+        }
+      },
+      {
+        "id": "COPERNICUS/S2_SR_HARMONIZED/20260719T101601_20260719T101759_T32TML",
+        "date": "2026-07-19",
+        "phase": "post",
+        "source": "Sentinel_2",
+        "collection": "COPERNICUS/S2_SR_HARMONIZED",
+        "indices": {
+          "NDVI": {
+            "value": null,
+            "valid_pixels": 6919,
+            "total_pixels": 50419,
+            "valid_fraction": 0.13723001249528946,
+            "reason": "qa_rejected_or_incomplete_spatial_coverage"
+          },
+          "EVI": {
+            "value": null,
+            "valid_pixels": 6919,
+            "total_pixels": 50419,
+            "valid_fraction": 0.13723001249528946,
+            "reason": "qa_rejected_or_incomplete_spatial_coverage"
+          },
+          "NBR": {
+            "value": null,
+            "valid_pixels": 1730,
+            "total_pixels": 12607,
+            "valid_fraction": 0.1372253509954787,
+            "reason": "qa_rejected_or_incomplete_spatial_coverage"
+          }
+        },
+        "resolution_m": 20,
+        "projection": {
+          "type": "Projection",
+          "crs": "EPSG:32632",
+          "transform": [
+            20,
+            0,
+            399960,
+            0,
+            -20,
+            4600020
+          ]
+        }
+      }
+    ],
+    "analysis_scope": "candidate_area",
+    "geometry": {
+      "type": "Polygon",
+      "coordinates": [
+        [
+          [
+            9.125644470404039,
+            41.130092613280965
+          ],
+          [
+            9.124789923514346,
+            41.12950991338376
+          ],
+          [
+            9.123865001113337,
+            41.128992286306044
+          ],
+          [
+            9.122878337615889,
+            41.12854456339389
+          ],
+          [
+            9.121839143111124,
+            41.12817092344241
+          ],
+          [
+            9.120757117447779,
+            41.12787485373357
+          ],
+          [
+            9.119642359773078,
+            41.127659117523876
+          ],
+          [
+            9.118505274365848,
+            41.127525728283906
+          ],
+          [
+            9.117356473638514,
+            41.12747593092846
+          ],
+          [
+            9.116206679208158,
+            41.12751019021179
+          ],
+          [
+            9.115066621954606,
+            41.127628186395185
+          ],
+          [
+            9.1139469419926,
+            41.127828818227584
+          ],
+          [
+            9.112858089485872,
+            41.1281102132111
+          ],
+          [
+            9.111810227223442,
+            41.1284697450566
+          ],
+          [
+            9.110813135862186,
+            41.128904058167045
+          ],
+          [
+            9.109876122715699,
+            41.12940909892178
+          ],
+          [
+            9.105766289731728,
+            41.131858838861575
+          ],
+          [
+            9.10486748639852,
+            41.13245207965432
+          ],
+          [
+            9.104051683915094,
+            41.13311033122772
+          ],
+          [
+            9.103327070220955,
+            41.13382698900731
+          ],
+          [
+            9.102700919024324,
+            41.134594862177536
+          ],
+          [
+            9.10217951674991,
+            41.13540624578014
+          ],
+          [
+            9.101768099358797,
+            41.13625299797805
+          ],
+          [
+            9.101470799677985,
+            41.13712662171146
+          ],
+          [
+            9.101290605773068,
+            41.138018349929396
+          ],
+          [
+            9.101229330787739,
+            41.13891923354294
+          ],
+          [
+            9.10128759455974,
+            41.139820231218906
+          ],
+          [
+            9.101464817205212,
+            41.14071230011362
+          ],
+          [
+            9.101759224743622,
+            41.14158648663655
+          ],
+          [
+            9.102167866714662,
+            41.142434016332544
+          ],
+          [
+            9.102686645617736,
+            41.143246381979644
+          ],
+          [
+            9.10331035788559,
+            41.14401542901701
+          ],
+          [
+            9.104032745986785,
+            41.14473343744373
+          ],
+          [
+            9.104846561138984,
+            41.14539319936412
+          ],
+          [
+            9.10574363600735,
+            41.145988091398756
+          ],
+          [
+            9.106714966660391,
+            41.1465121412316
+          ],
+          [
+            9.110515224744585,
+            41.148352350738016
+          ],
+          [
+            9.111575431704654,
+            41.14880956088512
+          ],
+          [
+            9.112691983167409,
+            41.149182352737256
+          ],
+          [
+            9.113853152656475,
+            41.1494668108144
+          ],
+          [
+            9.115046744525504,
+            41.14965994737326
+          ],
+          [
+            9.116260222180953,
+            41.14975973382435
+          ],
+          [
+            9.117480839907053,
+            41.14976512206437
+          ],
+          [
+            9.1186957769005,
+            41.149676055497956
+          ],
+          [
+            9.119892272098667,
+            41.149493469633
+          ],
+          [
+            9.124442835605553,
+            41.14861335434594
+          ],
+          [
+            9.125568164375956,
+            41.14835023472571
+          ],
+          [
+            9.126653601999253,
+            41.148004382049606
+          ],
+          [
+            9.1276885319062,
+            41.14757917928393
+          ],
+          [
+            9.128662832112719,
+            41.14707878548772
+          ],
+          [
+            9.129566974291356,
+            41.14650809508836
+          ],
+          [
+            9.130392117005739,
+            41.14587268996067
+          ],
+          [
+            9.131130192193764,
+            41.14517878478036
+          ],
+          [
+            9.131773984052694,
+            41.14443316618914
+          ],
+          [
+            9.132317199554858,
+            41.14364312636862
+          ],
+          [
+            9.132754529906169,
+            41.14281639167551
+          ],
+          [
+            9.133081702349198,
+            41.14196104703798
+          ],
+          [
+            9.133295521808705,
+            41.14108545685499
+          ],
+          [
+            9.133393901977358,
+            41.140198183173496
+          ],
+          [
+            9.133375885543865,
+            41.13930790194535
+          ],
+          [
+            9.133241653372478,
+            41.13842331818351
+          ],
+          [
+            9.13299252255107,
+            41.137553080847475
+          ],
+          [
+            9.132630933334108,
+            41.136705698290385
+          ],
+          [
+            9.13245088112963,
+            41.136345715502955
+          ],
+          [
+            9.131938366579046,
+            41.13546606306545
+          ],
+          [
+            9.13130476096386,
+            41.13463272299315
+          ],
+          [
+            9.130557287383438,
+            41.13385518953553
+          ],
+          [
+            9.129704465345945,
+            41.13314232081691
+          ],
+          [
+            9.125644470404039,
+            41.130092613280965
+          ]
+        ]
+      ]
+    },
+    "temporal_window_days": 90,
+    "minimum_valid_fraction": 0.5,
+    "burned_area_confirmed": false,
+    "spectral_change": {
+      "dnbr": -0.011552983394551393,
+      "joint_valid_fraction": 0.6033949393194257,
+      "independently_validated": false,
+      "interpretation": "Observed spectral change only; clouds, phenology, harvest and moisture can confound attribution. No burn severity or confirmed burn classification."
+    },
+    "method_version": "optical-evidence-2",
+    "wire_bytes": null,
+    "selected_source": "Sentinel_2",
+    "before": {
+      "id": "COPERNICUS/S2_SR_HARMONIZED/20260711T100549_20260711T101652_T32TNL",
+      "date": "2026-07-11",
+      "phase": "pre",
+      "source": "Sentinel_2",
+      "collection": "COPERNICUS/S2_SR_HARMONIZED",
+      "indices": {
+        "NDVI": {
+          "value": 0.6057030273529578,
+          "valid_pixels": 30584,
+          "total_pixels": 50419,
+          "valid_fraction": 0.6065967194906682,
+          "reason": "available"
+        },
+        "EVI": {
+          "value": 0.40244047789132426,
+          "valid_pixels": 30584,
+          "total_pixels": 50419,
+          "valid_fraction": 0.6065967194906682,
+          "reason": "available"
+        },
+        "NBR": {
+          "value": 0.41052845341193633,
+          "valid_pixels": 7654,
+          "total_pixels": 12607,
+          "valid_fraction": 0.6071230268898231,
+          "reason": "available"
+        }
+      },
+      "resolution_m": 20,
+      "projection": {
+        "type": "Projection",
+        "crs": "EPSG:32632",
+        "transform": [
+          20,
+          0,
+          499980,
+          0,
+          -20,
+          4600020
+        ]
+      }
+    },
+    "after": {
+      "id": "COPERNICUS/S2_SR_HARMONIZED/20260716T100601_20260716T101753_T32TNL",
+      "date": "2026-07-16",
+      "phase": "post",
+      "source": "Sentinel_2",
+      "collection": "COPERNICUS/S2_SR_HARMONIZED",
+      "indices": {
+        "NDVI": {
+          "value": 0.558618204380264,
+          "valid_pixels": 30434,
+          "total_pixels": 50419,
+          "valid_fraction": 0.6036216505682381,
+          "reason": "available"
+        },
+        "EVI": {
+          "value": 0.3242955230008513,
+          "valid_pixels": 30434,
+          "total_pixels": 50419,
+          "valid_fraction": 0.6036216505682381,
+          "reason": "available"
+        },
+        "NBR": {
+          "value": 0.36927362974817673,
+          "valid_pixels": 7616,
+          "total_pixels": 12607,
+          "valid_fraction": 0.6041088284286508,
+          "reason": "available"
+        }
+      },
+      "resolution_m": 20,
+      "projection": {
+        "type": "Projection",
+        "crs": "EPSG:32632",
+        "transform": [
+          20,
+          0,
+          499980,
+          0,
+          -20,
+          4600020
+        ]
+      }
+    },
+    "explicit_requests": 3,
+    "response_json_bytes": 8168,
+    "elapsed_seconds": 16.304,
+    "cache_hit": false,
+    "requests_this_run": 3,
+    "response_json_bytes_this_run": 8168
+  },
+  "metrics": {
+    "NDVI": {
+      "pre_median": null,
+      "post_latest": null,
+      "post_date": null,
+      "seasonal_anomaly": null,
+      "status": "insufficient data",
+      "pre_observations": 0,
+      "post_observations": 0
+    },
+    "EVI": {
+      "pre_median": null,
+      "post_latest": null,
+      "post_date": null,
+      "seasonal_anomaly": null,
+      "status": "insufficient data",
+      "pre_observations": 0,
+      "post_observations": 0
+    }
+  },
+  "recurrence": [],
+  "warnings": [
+    "Analysis uses provisional hotspot buffer; no uniquely associated quality-screened burned cells",
+    "Insufficient pre-event seasonal reference or post-event observations",
+    "Time series contains missing/QA-rejected composites; no interpolation applied"
+  ],
+  "downloaded_granules": 0,
+  "downloaded_bytes": 0,
+  "downloaded_bytes_previous_attempts": 0,
+  "elapsed_seconds": 54.12,
+  "created_at": "2026-11-11T12:42:57.052846Z",
+  "limitations": [
+    "MODIS 250/500 m mixed pixels; burned grid cells are not official fire perimeters.",
+    "Composite date is period start, not the exact pixel acquisition date.",
+    "Vegetation index near baseline does not demonstrate complete ecological recovery.",
+    "Intervening candidate fires can affect vegetation observations after the selected event."
+  ]
+}

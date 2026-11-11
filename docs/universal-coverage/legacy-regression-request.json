@@ -1,0 +1,33 @@
+{
+  "worker_health": "queued",
+  "heartbeat_age_seconds": 0.0,
+  "last_activity_age_seconds": null,
+  "job_id": "5ed8473a74743e8fa166b269d28926ce319b73e625b995fe43d7dee4a8d8e388",
+  "status": "queued",
+  "progress_percent": 0,
+  "elapsed_seconds": null,
+  "updated_at": "2026-11-11T12:41:28.076543+00:00",
+  "id": "5ed8473a74743e8fa166b269d28926ce319b73e625b995fe43d7dee4a8d8e388",
+  "event_id": "global-3667e91d235a57ea33ce2a9dea557a0a",
+  "state": "queued",
+  "progress": 0,
+  "error": null,
+  "configuration": {
+    "pre_years": 3,
+    "post_years": 10,
+    "as_of": "2026-11-11",
+    "acquisition": "auto",
+    "buffer_m": 1000,
+    "burn_tolerance_days": 3,
+    "seasonal_window_days": 24,
+    "min_baseline_years": 2,
+    "min_valid_fraction": 0.5
+  },
+  "engine_version": "modis-recovery-3.1.0",
+  "attempts": 0,
+  "created_at": "2026-11-11T12:41:28.076538Z",
+  "result_available": false,
+  "upgrade_available": false,
+  "appeears_submission_enabled": false,
+  "result_job_id": null
+}

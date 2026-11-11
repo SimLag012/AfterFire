@@ -1,0 +1,1209 @@
+[
+  {
+    "event_id": "global-66cbb1d3ab8865c663719a9cf3287fd6",
+    "region": "brazil",
+    "detection_count": 10,
+    "configuration": {
+      "pre_years": 2,
+      "post_years": 1,
+      "as_of": "2025-08-22"
+    },
+    "state": "partial",
+    "job_id": "8c515b542f98dd0fa588076e9eea7d959fa8eedfa3ab96545f24db10b3cfa1de",
+    "error": null,
+    "availability": null,
+    "bytes_downloaded": 1676560,
+    "bytes_cached": 0,
+    "files_cached": 0,
+    "granules_failed": 0,
+    "burned_area": {
+      "available_granules": 3,
+      "valid_mapping_pixels": 429,
+      "mapping_pixels": 429,
+      "valid_mapping_fraction": 1.0,
+      "observed_cell_area_km2": 4.507832139223328,
+      "unambiguous_cell_area_km2": 4.507832139223328,
+      "ambiguous_cells": 0
+    },
+    "area_km2": 4.5078321392249014,
+    "metrics": {
+      "NDVI": {
+        "pre_median": 0.8027,
+        "post_latest": 0.6939,
+        "post_date": "2025-07-28",
+        "seasonal_anomaly": -0.028975000000000084,
+        "status": "near baseline",
+        "pre_observations": 23,
+        "post_observations": 9
+      },
+      "EVI": {
+        "pre_median": 0.5129,
+        "post_latest": 0.3815,
+        "post_date": "2025-07-28",
+        "seasonal_anomaly": -0.068,
+        "status": "approaching baseline",
+        "pre_observations": 23,
+        "post_observations": 9
+      }
+    },
+    "support": null,
+    "diagnostics": null,
+    "high_resolution": null,
+    "modis_valid_observations": 64,
+    "warnings": [
+      "Time series contains missing/QA-rejected composites; no interpolation applied"
+    ],
+    "products": [
+      "MCD64A1",
+      "MOD13Q1"
+    ],
+    "repeat_seconds": 0.023,
+    "repeat_same_job": true,
+    "seconds": 35.084
+  },
+  {
+    "event_id": "global-75e84782b376558619c389da8e6fc716",
+    "region": "brazil",
+    "detection_count": 25,
+    "configuration": {
+      "pre_years": 2,
+      "post_years": 1,
+      "as_of": "2025-08-22"
+    },
+    "state": "partial",
+    "job_id": "9406b452e6abaa596f656a4e8bf1f8f66f4453c8536e30fcfa153569b23e14fe",
+    "error": null,
+    "availability": null,
+    "bytes_downloaded": 2620728,
+    "bytes_cached": 0,
+    "files_cached": 0,
+    "granules_failed": 0,
+    "burned_area": {
+      "available_granules": 3,
+      "valid_mapping_pixels": 942,
+      "mapping_pixels": 942,
+      "valid_mapping_fraction": 1.0,
+      "observed_cell_area_km2": 30.052214261488853,
+      "unambiguous_cell_area_km2": 30.052214261488853,
+      "ambiguous_cells": 0
+    },
+    "area_km2": 30.052214261472685,
+    "metrics": {
+      "NDVI": {
+        "pre_median": 0.7845,
+        "post_latest": 0.70285,
+        "post_date": "2025-07-28",
+        "seasonal_anomaly": -0.010150000000000103,
+        "status": "near baseline",
+        "pre_observations": 28,
+        "post_observations": 12
+      },
+      "EVI": {
+        "pre_median": 0.45067500000000005,
+        "post_latest": 0.3541,
+        "post_date": "2025-07-28",
+        "seasonal_anomaly": -0.04730000000000001,
+        "status": "near baseline",
+        "pre_observations": 28,
+        "post_observations": 12
+      }
+    },
+    "support": null,
+    "diagnostics": null,
+    "high_resolution": null,
+    "modis_valid_observations": 80,
+    "warnings": [
+      "Time series contains missing/QA-rejected composites; no interpolation applied"
+    ],
+    "products": [
+      "MCD64A1",
+      "MOD13Q1"
+    ],
+    "repeat_seconds": 0.023,
+    "repeat_same_job": true,
+    "seconds": 35.996
+  },
+  {
+    "event_id": "global-1da33a9eb741c54ede92a99dd7bcec3b",
+    "region": "brazil",
+    "detection_count": 5,
+    "configuration": {
+      "pre_years": 2,
+      "post_years": 1,
+      "as_of": "2025-08-22"
+    },
+    "state": "partial",
+    "job_id": "dc439c220b7fb21f01cd0c31571edab710a3e15664a2b9c7282628296f10126f",
+    "error": null,
+    "availability": null,
+    "bytes_downloaded": 482656,
+    "bytes_cached": 0,
+    "files_cached": 0,
+    "granules_failed": 0,
+    "burned_area": {
+      "available_granules": 3,
+      "valid_mapping_pixels": 126,
+      "mapping_pixels": 126,
+      "valid_mapping_fraction": 1.0,
+      "observed_cell_area_km2": 7.942370911964911,
+      "unambiguous_cell_area_km2": 7.942370911964911,
+      "ambiguous_cells": 0
+    },
+    "area_km2": 7.942370911965388,
+    "metrics": {
+      "NDVI": {
+        "pre_median": 0.7707250000000001,
+        "post_latest": 0.6467,
+        "post_date": "2025-07-12",
+        "seasonal_anomaly": -0.1492,
+        "status": "below seasonal baseline",
+        "pre_observations": 16,
+        "post_observations": 8
+      },
+      "EVI": {
+        "pre_median": 0.41300000000000003,
+        "post_latest": 0.23665000000000003,
+        "post_date": "2025-07-12",
+        "seasonal_anomaly": -0.19055,
+        "status": "below seasonal baseline",
+        "pre_observations": 16,
+        "post_observations": 8
+      }
+    },
+    "support": null,
+    "diagnostics": null,
+    "high_resolution": null,
+    "modis_valid_observations": 48,
+    "warnings": [
+      "Time series contains missing/QA-rejected composites; no interpolation applied"
+    ],
+    "products": [
+      "MCD64A1",
+      "MOD13Q1"
+    ],
+    "repeat_seconds": 0.036,
+    "repeat_same_job": true,
+    "seconds": 33.944
+  },
+  {
+    "event_id": "global-f626c357cf56a84c532365e622c257da",
+    "region": "brazil",
+    "detection_count": 3,
+    "configuration": {
+      "pre_years": 2,
+      "post_years": 1,
+      "as_of": "2025-08-22"
+    },
+    "state": "partial",
+    "job_id": "ae857f8601c3e56dad64882232673ca4e45b06cad7d73542132c0c09626c1f4a",
+    "error": null,
+    "availability": null,
+    "bytes_downloaded": 596760,
+    "bytes_cached": 0,
+    "files_cached": 0,
+    "granules_failed": 0,
+    "burned_area": {
+      "available_granules": 3,
+      "valid_mapping_pixels": 171,
+      "mapping_pixels": 171,
+      "valid_mapping_fraction": 1.0,
+      "observed_cell_area_km2": 0.6439760198890468,
+      "unambiguous_cell_area_km2": 0.6439760198890468,
+      "ambiguous_cells": 0
+    },
+    "area_km2": 0.6439760198896569,
+    "metrics": {
+      "NDVI": {
+        "pre_median": 0.8129250000000001,
+        "post_latest": 0.6905,
+        "post_date": "2025-07-28",
+        "seasonal_anomaly": -0.08379999999999999,
+        "status": "approaching baseline",
+        "pre_observations": 30,
+        "post_observations": 12
+      },
+      "EVI": {
+        "pre_median": 0.47755000000000003,
+        "post_latest": 0.3496,
+        "post_date": "2025-07-28",
+        "seasonal_anomaly": -0.0877,
+        "status": "approaching baseline",
+        "pre_observations": 30,
+        "post_observations": 12
+      }
+    },
+    "support": null,
+    "diagnostics": null,
+    "high_resolution": null,
+    "modis_valid_observations": 84,
+    "warnings": [
+      "Time series contains missing/QA-rejected composites; no interpolation applied"
+    ],
+    "products": [
+      "MCD64A1",
+      "MOD13Q1"
+    ],
+    "repeat_seconds": 0.036,
+    "repeat_same_job": true,
+    "seconds": 46.272
+  },
+  {
+    "event_id": "global-9c2c24dd1272c940d44751b47b44c544",
+    "region": "southern_africa",
+    "detection_count": 9,
+    "configuration": {
+      "pre_years": 2,
+      "post_years": 1,
+      "as_of": "2023-08-17"
+    },
+    "state": "partial",
+    "job_id": "b925c569973313bea9c7419cb9cab4a2bb0e50cc7bc42de548dd0d3b7930b41a",
+    "error": null,
+    "availability": null,
+    "bytes_downloaded": 3985296,
+    "bytes_cached": 0,
+    "files_cached": 0,
+    "granules_failed": 0,
+    "burned_area": {
+      "available_granules": 3,
+      "valid_mapping_pixels": 1221,
+      "mapping_pixels": 1221,
+      "valid_mapping_fraction": 1.0,
+      "observed_cell_area_km2": 9.015664278446655,
+      "unambiguous_cell_area_km2": 9.015664278446655,
+      "ambiguous_cells": 0
+    },
+    "area_km2": 9.015664278449263,
+    "metrics": {
+      "NDVI": {
+        "pre_median": 0.49484999999999996,
+        "post_latest": 0.37850000000000006,
+        "post_date": "2023-07-28",
+        "seasonal_anomaly": -0.055849999999999955,
+        "status": "approaching baseline",
+        "pre_observations": 34,
+        "post_observations": 17
+      },
+      "EVI": {
+        "pre_median": 0.264625,
+        "post_latest": 0.21805000000000002,
+        "post_date": "2023-07-28",
+        "seasonal_anomaly": -0.012749999999999984,
+        "status": "near baseline",
+        "pre_observations": 34,
+        "post_observations": 17
+      }
+    },
+    "support": null,
+    "diagnostics": null,
+    "high_resolution": null,
+    "modis_valid_observations": 104,
+    "warnings": [
+      "Time series contains missing/QA-rejected composites; no interpolation applied"
+    ],
+    "products": [
+      "MCD64A1",
+      "MOD13Q1"
+    ],
+    "repeat_seconds": 0.016,
+    "repeat_same_job": true,
+    "seconds": 40.498
+  },
+  {
+    "event_id": "global-67e2b874c620b0d65a0bf0ae24986af0",
+    "region": "southern_africa",
+    "detection_count": 8,
+    "configuration": {
+      "pre_years": 2,
+      "post_years": 1,
+      "as_of": "2023-08-17"
+    },
+    "state": "partial",
+    "job_id": "ad0253e6d40dc564884c4cfb188667eec026d8e10f62ac6720ce166589aef153",
+    "error": null,
+    "availability": null,
+    "bytes_downloaded": 1462660,
+    "bytes_cached": 0,
+    "files_cached": 0,
+    "granules_failed": 0,
+    "burned_area": {
+      "available_granules": 3,
+      "valid_mapping_pixels": 486,
+      "mapping_pixels": 486,
+      "valid_mapping_fraction": 1.0,
+      "observed_cell_area_km2": 13.738155090966332,
+      "unambiguous_cell_area_km2": 13.738155090966332,
+      "ambiguous_cells": 0
+    },
+    "area_km2": 13.738155090967012,
+    "metrics": {
+      "NDVI": {
+        "pre_median": 0.5941000000000001,
+        "post_latest": 0.42090000000000005,
+        "post_date": "2023-07-28",
+        "seasonal_anomaly": -0.05824999999999997,
+        "status": "approaching baseline",
+        "pre_observations": 36,
+        "post_observations": 16
+      },
+      "EVI": {
+        "pre_median": 0.323875,
+        "post_latest": 0.2154,
+        "post_date": "2023-07-28",
+        "seasonal_anomaly": -0.011949999999999988,
+        "status": "near baseline",
+        "pre_observations": 36,
+        "post_observations": 16
+      }
+    },
+    "support": null,
+    "diagnostics": null,
+    "high_resolution": null,
+    "modis_valid_observations": 106,
+    "warnings": [
+      "Time series contains missing/QA-rejected composites; no interpolation applied"
+    ],
+    "products": [
+      "MCD64A1",
+      "MOD13Q1"
+    ],
+    "repeat_seconds": 0.022,
+    "repeat_same_job": true,
+    "seconds": 36.42
+  },
+  {
+    "event_id": "global-94f806faad3e2ad6938b8a14941a0330",
+    "region": "southern_africa",
+    "detection_count": 8,
+    "configuration": {
+      "pre_years": 2,
+      "post_years": 1,
+      "as_of": "2023-08-17"
+    },
+    "state": "partial",
+    "job_id": "db74653e4fafe4b08f6b459ddb6b05caac50f18542eeb0bb9517966530390273",
+    "error": null,
+    "availability": null,
+    "bytes_downloaded": 2757500,
+    "bytes_cached": 0,
+    "files_cached": 0,
+    "granules_failed": 0,
+    "burned_area": {
+      "available_granules": 3,
+      "valid_mapping_pixels": 948,
+      "mapping_pixels": 948,
+      "valid_mapping_fraction": 1.0,
+      "observed_cell_area_km2": 12.664861724484588,
+      "unambiguous_cell_area_km2": 12.664861724484588,
+      "ambiguous_cells": 0
+    },
+    "area_km2": 12.664861724484325,
+    "metrics": {
+      "NDVI": {
+        "pre_median": 0.5139,
+        "post_latest": 0.39095,
+        "post_date": "2023-07-28",
+        "seasonal_anomaly": -0.049250000000000016,
+        "status": "near baseline",
+        "pre_observations": 34,
+        "post_observations": 17
+      },
+      "EVI": {
+        "pre_median": 0.271775,
+        "post_latest": 0.23120000000000002,
+        "post_date": "2023-07-28",
+        "seasonal_anomaly": -0.007550000000000001,
+        "status": "near baseline",
+        "pre_observations": 34,
+        "post_observations": 17
+      }
+    },
+    "support": null,
+    "diagnostics": null,
+    "high_resolution": null,
+    "modis_valid_observations": 104,
+    "warnings": [
+      "Time series contains missing/QA-rejected composites; no interpolation applied"
+    ],
+    "products": [
+      "MCD64A1",
+      "MOD13Q1"
+    ],
+    "repeat_seconds": 0.018,
+    "repeat_same_job": true,
+    "seconds": 35.323
+  },
+  {
+    "event_id": "global-8fde71bb30d403cd50fa5e063b82192f",
+    "region": "southern_africa",
+    "detection_count": 4,
+    "configuration": {
+      "pre_years": 2,
+      "post_years": 1,
+      "as_of": "2023-08-17"
+    },
+    "state": "partial",
+    "job_id": "45f79efafff328085e89f4500d5b6ee662a88b2b07f7383f42ac914347776950",
+    "error": null,
+    "availability": null,
+    "bytes_downloaded": 1886700,
+    "bytes_cached": 0,
+    "files_cached": 0,
+    "granules_failed": 0,
+    "burned_area": {
+      "available_granules": 3,
+      "valid_mapping_pixels": 348,
+      "mapping_pixels": 348,
+      "valid_mapping_fraction": 1.0,
+      "observed_cell_area_km2": 3.434538772741583,
+      "unambiguous_cell_area_km2": 3.434538772741583,
+      "ambiguous_cells": 0
+    },
+    "area_km2": 3.4345387727421044,
+    "metrics": {
+      "NDVI": {
+        "pre_median": 0.48960000000000004,
+        "post_latest": 0.3582,
+        "post_date": "2023-07-28",
+        "seasonal_anomaly": -0.035199999999999954,
+        "status": "near baseline",
+        "pre_observations": 32,
+        "post_observations": 17
+      },
+      "EVI": {
+        "pre_median": 0.253025,
+        "post_latest": 0.18045,
+        "post_date": "2023-07-28",
+        "seasonal_anomaly": -0.013000000000000012,
+        "status": "near baseline",
+        "pre_observations": 32,
+        "post_observations": 17
+      }
+    },
+    "support": null,
+    "diagnostics": null,
+    "high_resolution": null,
+    "modis_valid_observations": 98,
+    "warnings": [
+      "Time series contains missing/QA-rejected composites; no interpolation applied"
+    ],
+    "products": [
+      "MCD64A1",
+      "MOD13Q1"
+    ],
+    "repeat_seconds": 0.021,
+    "repeat_same_job": true,
+    "seconds": 35.355
+  },
+  {
+    "event_id": "global-f7cb018c137015e862c46477265634b4",
+    "region": "australia",
+    "detection_count": 3,
+    "configuration": {
+      "pre_years": 2,
+      "post_years": 1,
+      "as_of": "2020-09-14"
+    },
+    "state": "partial",
+    "job_id": "0d201e9550c2050cd1ad07be360427d395d7869c06ef69c3eea3c9ae089a2d20",
+    "error": null,
+    "availability": null,
+    "bytes_downloaded": 442220,
+    "bytes_cached": 0,
+    "files_cached": 0,
+    "granules_failed": 0,
+    "burned_area": {
+      "available_granules": 3,
+      "valid_mapping_pixels": 111,
+      "mapping_pixels": 111,
+      "valid_mapping_fraction": 1.0,
+      "observed_cell_area_km2": 0,
+      "unambiguous_cell_area_km2": 0,
+      "ambiguous_cells": 0
+    },
+    "area_km2": 7.476077184731876,
+    "metrics": {
+      "NDVI": {
+        "pre_median": 0.47142500000000004,
+        "post_latest": 0.35735000000000006,
+        "post_date": "2020-08-28",
+        "seasonal_anomaly": -0.02089999999999992,
+        "status": "near baseline",
+        "pre_observations": 40,
+        "post_observations": 17
+      },
+      "EVI": {
+        "pre_median": 0.249925,
+        "post_latest": 0.20640000000000003,
+        "post_date": "2020-08-28",
+        "seasonal_anomaly": -0.004049999999999998,
+        "status": "near baseline",
+        "pre_observations": 40,
+        "post_observations": 17
+      }
+    },
+    "support": null,
+    "diagnostics": null,
+    "high_resolution": null,
+    "modis_valid_observations": 116,
+    "warnings": [
+      "Analysis uses provisional hotspot buffer; no uniquely associated quality-screened burned cells",
+      "Time series contains missing/QA-rejected composites; no interpolation applied"
+    ],
+    "products": [
+      "MCD64A1",
+      "MOD13Q1"
+    ],
+    "repeat_seconds": 0.022,
+    "repeat_same_job": true,
+    "seconds": 38.599
+  },
+  {
+    "event_id": "global-3cc35cec1062a8ee07ec3f58a59daaa8",
+    "region": "australia",
+    "detection_count": 27,
+    "configuration": {
+      "pre_years": 2,
+      "post_years": 1,
+      "as_of": "2020-09-15"
+    },
+    "state": "partial",
+    "job_id": "59455f1c6a11ac2ee3f5f1e3bedb0b352ffbf8975dff81970fd622ed1878728e",
+    "error": null,
+    "availability": null,
+    "bytes_downloaded": 6524364,
+    "bytes_cached": 0,
+    "files_cached": 0,
+    "granules_failed": 0,
+    "burned_area": {
+      "available_granules": 3,
+      "valid_mapping_pixels": 1185,
+      "mapping_pixels": 1185,
+      "valid_mapping_fraction": 1.0,
+      "observed_cell_area_km2": 63.32430862242294,
+      "unambiguous_cell_area_km2": 63.32430862242294,
+      "ambiguous_cells": 0
+    },
+    "area_km2": 63.32430862242832,
+    "metrics": {
+      "NDVI": {
+        "pre_median": 0.47945000000000004,
+        "post_latest": 0.3682,
+        "post_date": "2020-08-28",
+        "seasonal_anomaly": -0.021799999999999986,
+        "status": "near baseline",
+        "pre_observations": 37,
+        "post_observations": 19
+      },
+      "EVI": {
+        "pre_median": 0.2581,
+        "post_latest": 0.20455,
+        "post_date": "2020-08-28",
+        "seasonal_anomaly": -0.0045499999999999985,
+        "status": "near baseline",
+        "pre_observations": 37,
+        "post_observations": 19
+      }
+    },
+    "support": null,
+    "diagnostics": null,
+    "high_resolution": null,
+    "modis_valid_observations": 114,
+    "warnings": [
+      "Time series contains missing/QA-rejected composites; no interpolation applied"
+    ],
+    "products": [
+      "MCD64A1",
+      "MOD13Q1"
+    ],
+    "repeat_seconds": 0.024,
+    "repeat_same_job": true,
+    "seconds": 38.865
+  },
+  {
+    "event_id": "global-dcf6c3104d4ccaae41e607b9001416f5",
+    "region": "australia",
+    "detection_count": 4,
+    "configuration": {
+      "pre_years": 2,
+      "post_years": 1,
+      "as_of": "2020-09-14"
+    },
+    "state": "partial",
+    "job_id": "83a7707f280b702539577770f0a669cf97ccf6f4e422456ed7cfc60e514bcac6",
+    "error": null,
+    "availability": null,
+    "bytes_downloaded": 626136,
+    "bytes_cached": 0,
+    "files_cached": 0,
+    "granules_failed": 0,
+    "burned_area": {
+      "available_granules": 3,
+      "valid_mapping_pixels": 168,
+      "mapping_pixels": 168,
+      "valid_mapping_fraction": 1.0,
+      "observed_cell_area_km2": 4.722490812519677,
+      "unambiguous_cell_area_km2": 4.722490812519677,
+      "ambiguous_cells": 0
+    },
+    "area_km2": 4.722490812521957,
+    "metrics": {
+      "NDVI": {
+        "pre_median": 0.5194000000000001,
+        "post_latest": 0.38325,
+        "post_date": "2020-08-28",
+        "seasonal_anomaly": -0.009400000000000075,
+        "status": "near baseline",
+        "pre_observations": 38,
+        "post_observations": 20
+      },
+      "EVI": {
+        "pre_median": 0.26845,
+        "post_latest": 0.20485000000000003,
+        "post_date": "2020-08-28",
+        "seasonal_anomaly": 0.0025500000000000245,
+        "status": "near baseline",
+        "pre_observations": 38,
+        "post_observations": 20
+      }
+    },
+    "support": null,
+    "diagnostics": null,
+    "high_resolution": null,
+    "modis_valid_observations": 118,
+    "warnings": [
+      "Time series contains missing/QA-rejected composites; no interpolation applied"
+    ],
+    "products": [
+      "MCD64A1",
+      "MOD13Q1"
+    ],
+    "repeat_seconds": 0.039,
+    "repeat_same_job": true,
+    "seconds": 38.779
+  },
+  {
+    "event_id": "global-0dd9b9d40589368dd479050d3d712f4b",
+    "region": "australia",
+    "detection_count": 5,
+    "configuration": {
+      "pre_years": 2,
+      "post_years": 1,
+      "as_of": "2020-09-14"
+    },
+    "state": "partial",
+    "job_id": "aee5d109a5b7b3ea2eb114309e95f480df75061a9a503997789dae2118d04616",
+    "error": null,
+    "availability": null,
+    "bytes_downloaded": 1162464,
+    "bytes_cached": 0,
+    "files_cached": 0,
+    "granules_failed": 0,
+    "burned_area": {
+      "available_granules": 3,
+      "valid_mapping_pixels": 222,
+      "mapping_pixels": 222,
+      "valid_mapping_fraction": 1.0,
+      "observed_cell_area_km2": 6.01044285229777,
+      "unambiguous_cell_area_km2": 6.01044285229777,
+      "ambiguous_cells": 0
+    },
+    "area_km2": 6.010442852297494,
+    "metrics": {
+      "NDVI": {
+        "pre_median": 0.4721,
+        "post_latest": 0.3744,
+        "post_date": "2020-08-28",
+        "seasonal_anomaly": -0.02394999999999997,
+        "status": "near baseline",
+        "pre_observations": 38,
+        "post_observations": 18
+      },
+      "EVI": {
+        "pre_median": 0.25105,
+        "post_latest": 0.21465,
+        "post_date": "2020-08-28",
+        "seasonal_anomaly": -0.006400000000000017,
+        "status": "near baseline",
+        "pre_observations": 38,
+        "post_observations": 18
+      }
+    },
+    "support": null,
+    "diagnostics": null,
+    "high_resolution": null,
+    "modis_valid_observations": 114,
+    "warnings": [
+      "Time series contains missing/QA-rejected composites; no interpolation applied"
+    ],
+    "products": [
+      "MCD64A1",
+      "MOD13Q1"
+    ],
+    "repeat_seconds": 0.015,
+    "repeat_same_job": true,
+    "seconds": 35.482
+  },
+  {
+    "event_id": "global-7979a92ec3524e523ee8bb35539ef03e",
+    "region": "siberia",
+    "detection_count": 18,
+    "configuration": {
+      "pre_years": 2,
+      "post_years": 1,
+      "as_of": "2022-07-17"
+    },
+    "state": "partial",
+    "job_id": "b5bbe88ab55ee8d8f4efedc2426988dc80b158c077639a39f9bfad2c9c6a8fce",
+    "error": null,
+    "availability": null,
+    "bytes_downloaded": 1378824,
+    "bytes_cached": 0,
+    "files_cached": 0,
+    "granules_failed": 0,
+    "burned_area": {
+      "available_granules": 3,
+      "valid_mapping_pixels": 243,
+      "mapping_pixels": 243,
+      "valid_mapping_fraction": 1.0,
+      "observed_cell_area_km2": 7.513053565372213,
+      "unambiguous_cell_area_km2": 7.513053565372213,
+      "ambiguous_cells": 0
+    },
+    "area_km2": 7.513053565370844,
+    "metrics": {
+      "NDVI": {
+        "pre_median": 0.6363000000000001,
+        "post_latest": 0.52945,
+        "post_date": "2022-06-26",
+        "seasonal_anomaly": null,
+        "status": "insufficient data",
+        "pre_observations": 10,
+        "post_observations": 5
+      },
+      "EVI": {
+        "pre_median": 0.26897499999999996,
+        "post_latest": 0.17395000000000002,
+        "post_date": "2022-06-26",
+        "seasonal_anomaly": null,
+        "status": "insufficient data",
+        "pre_observations": 10,
+        "post_observations": 5
+      }
+    },
+    "support": null,
+    "diagnostics": null,
+    "high_resolution": null,
+    "modis_valid_observations": 30,
+    "warnings": [
+      "Insufficient pre-event seasonal reference or post-event observations",
+      "Time series contains missing/QA-rejected composites; no interpolation applied"
+    ],
+    "products": [
+      "MCD64A1",
+      "MOD13Q1"
+    ],
+    "repeat_seconds": 0.02,
+    "repeat_same_job": true,
+    "seconds": 43.603
+  },
+  {
+    "event_id": "global-f4cb534f05897923399b28794eaf82df",
+    "region": "siberia",
+    "detection_count": 21,
+    "configuration": {
+      "pre_years": 2,
+      "post_years": 1,
+      "as_of": "2022-07-17"
+    },
+    "state": "partial",
+    "job_id": "329aab212b2f55296cec723410135041bb2c46a5bafe3389a845bb1d3bedeef6",
+    "error": null,
+    "availability": null,
+    "bytes_downloaded": 9900528,
+    "bytes_cached": 0,
+    "files_cached": 0,
+    "granules_failed": 0,
+    "burned_area": {
+      "available_granules": 3,
+      "valid_mapping_pixels": 1935,
+      "mapping_pixels": 1935,
+      "valid_mapping_fraction": 1.0,
+      "observed_cell_area_km2": 47.43956679849312,
+      "unambiguous_cell_area_km2": 47.43956679849312,
+      "ambiguous_cells": 0
+    },
+    "area_km2": 47.439566798491796,
+    "metrics": {
+      "NDVI": {
+        "pre_median": 0.605225,
+        "post_latest": 0.5656,
+        "post_date": "2022-06-26",
+        "seasonal_anomaly": -0.1471,
+        "status": "below seasonal baseline",
+        "pre_observations": 12,
+        "post_observations": 6
+      },
+      "EVI": {
+        "pre_median": 0.26545,
+        "post_latest": 0.2096,
+        "post_date": "2022-06-26",
+        "seasonal_anomaly": -0.14247500000000002,
+        "status": "below seasonal baseline",
+        "pre_observations": 12,
+        "post_observations": 6
+      }
+    },
+    "support": null,
+    "diagnostics": null,
+    "high_resolution": null,
+    "modis_valid_observations": 36,
+    "warnings": [
+      "Time series contains missing/QA-rejected composites; no interpolation applied"
+    ],
+    "products": [
+      "MCD64A1",
+      "MOD13Q1"
+    ],
+    "repeat_seconds": 0.026,
+    "repeat_same_job": true,
+    "seconds": 48.195
+  },
+  {
+    "event_id": "global-7157fc3286de2eb0e9b8582af9bd42dd",
+    "region": "siberia",
+    "detection_count": 11,
+    "configuration": {
+      "pre_years": 2,
+      "post_years": 1,
+      "as_of": "2022-07-17"
+    },
+    "state": "partial",
+    "job_id": "19e81d83994c72c7ae39d1bd9d359f9cca919f86413169b6f2604ee41cc23fb0",
+    "error": null,
+    "availability": null,
+    "bytes_downloaded": 794760,
+    "bytes_cached": 0,
+    "files_cached": 0,
+    "granules_failed": 0,
+    "burned_area": {
+      "available_granules": 3,
+      "valid_mapping_pixels": 174,
+      "mapping_pixels": 204,
+      "valid_mapping_fraction": 0.8529411764705882,
+      "observed_cell_area_km2": 0,
+      "unambiguous_cell_area_km2": 0,
+      "ambiguous_cells": 0
+    },
+    "area_km2": 13.947247783685595,
+    "metrics": {
+      "NDVI": {
+        "pre_median": 0.50585,
+        "post_latest": 0.7628,
+        "post_date": "2022-06-26",
+        "seasonal_anomaly": null,
+        "status": "insufficient data",
+        "pre_observations": 9,
+        "post_observations": 7
+      },
+      "EVI": {
+        "pre_median": 0.21180000000000002,
+        "post_latest": 0.43960000000000005,
+        "post_date": "2022-06-26",
+        "seasonal_anomaly": null,
+        "status": "insufficient data",
+        "pre_observations": 9,
+        "post_observations": 7
+      }
+    },
+    "support": null,
+    "diagnostics": null,
+    "high_resolution": null,
+    "modis_valid_observations": 34,
+    "warnings": [
+      "Analysis uses provisional hotspot buffer; no uniquely associated quality-screened burned cells",
+      "Insufficient pre-event seasonal reference or post-event observations",
+      "Time series contains missing/QA-rejected composites; no interpolation applied"
+    ],
+    "products": [
+      "MCD64A1",
+      "MOD13Q1"
+    ],
+    "repeat_seconds": 0.022,
+    "repeat_same_job": true,
+    "seconds": 38.854
+  },
+  {
+    "event_id": "global-9709bff093c7ccab50d2ecdc3c235e6e",
+    "region": "siberia",
+    "detection_count": 8,
+    "configuration": {
+      "pre_years": 2,
+      "post_years": 1,
+      "as_of": "2022-07-17"
+    },
+    "state": "partial",
+    "job_id": "3f039a15333bcf53000fba0e9bacc343ef1036504eb0bfda8968291f21c0e239",
+    "error": null,
+    "availability": null,
+    "bytes_downloaded": 615744,
+    "bytes_cached": 0,
+    "files_cached": 0,
+    "granules_failed": 0,
+    "burned_area": {
+      "available_granules": 3,
+      "valid_mapping_pixels": 124,
+      "mapping_pixels": 132,
+      "valid_mapping_fraction": 0.9393939393939394,
+      "observed_cell_area_km2": 0,
+      "unambiguous_cell_area_km2": 0,
+      "ambiguous_cells": 0
+    },
+    "area_km2": 9.169047192790952,
+    "metrics": {
+      "NDVI": {
+        "pre_median": 0.5791000000000001,
+        "post_latest": 0.8082,
+        "post_date": "2022-06-10",
+        "seasonal_anomaly": 0.02849999999999997,
+        "status": "near baseline",
+        "pre_observations": 15,
+        "post_observations": 7
+      },
+      "EVI": {
+        "pre_median": 0.27140000000000003,
+        "post_latest": 0.41300000000000003,
+        "post_date": "2022-06-10",
+        "seasonal_anomaly": -0.032999999999999974,
+        "status": "near baseline",
+        "pre_observations": 15,
+        "post_observations": 7
+      }
+    },
+    "support": null,
+    "diagnostics": null,
+    "high_resolution": null,
+    "modis_valid_observations": 46,
+    "warnings": [
+      "Analysis uses provisional hotspot buffer; no uniquely associated quality-screened burned cells",
+      "Time series contains missing/QA-rejected composites; no interpolation applied"
+    ],
+    "products": [
+      "MCD64A1",
+      "MOD13Q1"
+    ],
+    "repeat_seconds": 0.017,
+    "repeat_same_job": true,
+    "seconds": 44.866
+  },
+  {
+    "event_id": "global-0ccb066bbdad86b5aedb8df0a81a3784",
+    "region": "canada_west",
+    "detection_count": 44,
+    "configuration": {
+      "pre_years": 2,
+      "post_years": 1,
+      "as_of": "2024-05-20"
+    },
+    "state": "partial",
+    "job_id": "33b40a7b486009ebe6ab0855666d89cf810c00f55e6dab218a8739054b8cf237",
+    "error": null,
+    "availability": null,
+    "bytes_downloaded": 6486480,
+    "bytes_cached": 0,
+    "files_cached": 0,
+    "granules_failed": 0,
+    "burned_area": {
+      "available_granules": 3,
+      "valid_mapping_pixels": 1356,
+      "mapping_pixels": 1356,
+      "valid_mapping_fraction": 1.0,
+      "observed_cell_area_km2": 30.48153160808155,
+      "unambiguous_cell_area_km2": 30.48153160808155,
+      "ambiguous_cells": 0
+    },
+    "area_km2": 30.481531608081582,
+    "metrics": {
+      "NDVI": {
+        "pre_median": 0.77175,
+        "post_latest": 0.36315000000000003,
+        "post_date": "2024-04-22",
+        "seasonal_anomaly": -0.20044999999999996,
+        "status": "below seasonal baseline",
+        "pre_observations": 23,
+        "post_observations": 9
+      },
+      "EVI": {
+        "pre_median": 0.3161,
+        "post_latest": 0.1208,
+        "post_date": "2024-04-22",
+        "seasonal_anomaly": -0.0913,
+        "status": "approaching baseline",
+        "pre_observations": 23,
+        "post_observations": 9
+      }
+    },
+    "support": null,
+    "diagnostics": null,
+    "high_resolution": null,
+    "modis_valid_observations": 64,
+    "warnings": [
+      "Time series contains missing/QA-rejected composites; no interpolation applied"
+    ],
+    "products": [
+      "MCD64A1",
+      "MOD13Q1"
+    ],
+    "repeat_seconds": 0.036,
+    "repeat_same_job": true,
+    "seconds": 69.694
+  },
+  {
+    "event_id": "global-613540c6540b89ce0820213935d42ee3",
+    "region": "canada_west",
+    "detection_count": 6,
+    "configuration": {
+      "pre_years": 2,
+      "post_years": 1,
+      "as_of": "2024-05-21"
+    },
+    "state": "partial",
+    "job_id": "f1a6e93fb724b426734a638caf26aeefda8e820680a18b80eab3b1e1480b0433",
+    "error": null,
+    "availability": null,
+    "bytes_downloaded": 3455136,
+    "bytes_cached": 0,
+    "files_cached": 0,
+    "granules_failed": 0,
+    "burned_area": {
+      "available_granules": 3,
+      "valid_mapping_pixels": 342,
+      "mapping_pixels": 342,
+      "valid_mapping_fraction": 1.0,
+      "observed_cell_area_km2": 0,
+      "unambiguous_cell_area_km2": 0,
+      "ambiguous_cells": 0
+    },
+    "area_km2": 24.96454067438126,
+    "metrics": {
+      "NDVI": {
+        "pre_median": 0.754,
+        "post_latest": 0.43220000000000003,
+        "post_date": "2024-04-22",
+        "seasonal_anomaly": null,
+        "status": "insufficient data",
+        "pre_observations": 21,
+        "post_observations": 7
+      },
+      "EVI": {
+        "pre_median": 0.3307,
+        "post_latest": 0.131,
+        "post_date": "2024-04-22",
+        "seasonal_anomaly": null,
+        "status": "insufficient data",
+        "pre_observations": 21,
+        "post_observations": 7
+      }
+    },
+    "support": null,
+    "diagnostics": null,
+    "high_resolution": null,
+    "modis_valid_observations": 58,
+    "warnings": [
+      "Analysis uses provisional hotspot buffer; no uniquely associated quality-screened burned cells",
+      "Insufficient pre-event seasonal reference or post-event observations",
+      "Time series contains missing/QA-rejected composites; no interpolation applied"
+    ],
+    "products": [
+      "MCD64A1",
+      "MOD13Q1"
+    ],
+    "repeat_seconds": 0.026,
+    "repeat_same_job": true,
+    "seconds": 41.463
+  },
+  {
+    "event_id": "global-08360dbf12a89d9e290d4efbcf07adfa",
+    "region": "canada_west",
+    "detection_count": 8,
+    "configuration": {
+      "pre_years": 2,
+      "post_years": 1,
+      "as_of": "2024-05-19"
+    },
+    "state": "insufficient_observations",
+    "job_id": "311e990c0e0722a3077d39a0e2542bba80e12b547836f7389c9cbd99046c0ed5",
+    "error": null,
+    "availability": null,
+    "bytes_downloaded": 1408088,
+    "bytes_cached": 0,
+    "files_cached": 0,
+    "granules_failed": 0,
+    "repeat_seconds": 0.02,
+    "repeat_same_job": true,
+    "seconds": 40.355
+  },
+  {
+    "event_id": "global-ead9f0016a759f1209758405f7b207cf",
+    "region": "canada_west",
+    "detection_count": 13,
+    "configuration": {
+      "pre_years": 2,
+      "post_years": 1,
+      "as_of": "2024-05-21"
+    },
+    "state": "partial",
+    "job_id": "69ce0adbd23840cfff7f5b9bd7304920f1f3bb54ac6314464492e7db9673ba38",
+    "error": null,
+    "availability": null,
+    "bytes_downloaded": 1568548,
+    "bytes_cached": 0,
+    "files_cached": 0,
+    "granules_failed": 0,
+    "burned_area": {
+      "available_granules": 3,
+      "valid_mapping_pixels": 222,
+      "mapping_pixels": 222,
+      "valid_mapping_fraction": 1.0,
+      "observed_cell_area_km2": 1.9319280596671404,
+      "unambiguous_cell_area_km2": 1.9319280596671404,
+      "ambiguous_cells": 0
+    },
+    "area_km2": 1.9319280596676762,
+    "metrics": {
+      "NDVI": {
+        "pre_median": 0.6934,
+        "post_latest": 0.30855,
+        "post_date": "2024-04-22",
+        "seasonal_anomaly": null,
+        "status": "insufficient data",
+        "pre_observations": 19,
+        "post_observations": 7
+      },
+      "EVI": {
+        "pre_median": 0.27085000000000004,
+        "post_latest": 0.09245,
+        "post_date": "2024-04-22",
+        "seasonal_anomaly": null,
+        "status": "insufficient data",
+        "pre_observations": 19,
+        "post_observations": 7
+      }
+    },
+    "support": null,
+    "diagnostics": null,
+    "high_resolution": null,
+    "modis_valid_observations": 54,
+    "warnings": [
+      "Insufficient pre-event seasonal reference or post-event observations",
+      "Time series contains missing/QA-rejected composites; no interpolation applied"
+    ],
+    "products": [
+      "MCD64A1",
+      "MOD13Q1"
+    ],
+    "repeat_seconds": 0.029,
+    "repeat_same_job": true,
+    "seconds": 41.478
+  }
+]
