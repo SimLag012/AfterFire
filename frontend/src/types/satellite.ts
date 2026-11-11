@@ -28,7 +28,7 @@ export interface SatelliteJob {
   phase_estimated_remaining_seconds?: number | null;
 }
 export interface OpticalScene {
-  id:string; date:string; phase:string; source:string; resolution_m:number;
+  id:string; date:string; timestamp?:string; phase:string; source:string; resolution_m:number;
   indices:Record<string,{value:number|null;valid_fraction:number;valid_pixels:number;total_pixels:number}>;
 }
 export interface SatelliteResult {

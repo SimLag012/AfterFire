@@ -236,7 +236,8 @@ def test_native_pixel_baselines_nodata_crs_shift_and_multiband_export(tmp_path,m
     with rasterio.open(tmp_path/'results'/'assessment'/assets[0]['name']) as src:
         assert src.crs==rasterio.crs.CRS.from_wkt(SINUSOIDAL.to_wkt())
         assert tuple(src.transform)==pytest.approx(tuple(affine))
-        assert src.count==len(payload['observations'])//2*3+4
+        assert src.count+int(src.tags()['empty_bands_omitted'])==len(payload['observations'])//2*3+4
+        assert all(np.isfinite(src.read(n)).any() for n in range(1,src.count+1))
         assert np.isnan(src.read(1)[0,3])
         assert src.read(src.count)[0].tolist()==[1,1,2,0]
     first=folder/payload['observations'][0]['assets'][0]['raster']

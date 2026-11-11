@@ -20,6 +20,12 @@ os.environ['AFTERFIRE_SATELLITE_PROVIDER'] = 'auto'
 for _credential in ('EARTHDATA_USERNAME', 'EARTHDATA_PASSWORD', 'EARTHDATA_TOKEN', 'LLM_API_KEY'):
     os.environ[_credential] = ''
 os.environ['AFTERFIRE_APPEEARS_ENABLED'] = 'false'
+# A dedicated database is insufficient isolation: cache tests must not inherit
+# the deployment's retained sources or published raster directory either.
+os.environ['AFTERFIRE_ANALYSIS_CACHE_DIR'] = os.path.join(_test_directory, 'satellite')
+from pathlib import Path
+from app.core.config import Settings
+Settings.cache_dir = property(lambda self: Path(_test_directory) / 'provider-cache')
 atexit.register(shutil.rmtree, _test_directory, ignore_errors=True)
 
 

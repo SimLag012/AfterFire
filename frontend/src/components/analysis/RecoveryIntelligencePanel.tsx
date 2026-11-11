@@ -47,7 +47,7 @@ export function RecoveryIntelligencePanel({eventId,sourceJobId,index,selectedDat
   const busy=!!status.data&&!['completed','failed'].includes(status.data.state);
   function color(p:CellProperties){
     if(layer==='reliability') return p.completeness>=.7?'#49b6a3':p.completeness>0?'#e5b963':colors.missing;
-    if(layer==='persistence') return ['persistent_negative_anomaly','below_reference'].includes(p.classification)?colors.negative:p.classification==='above_reference'?colors.positive:p.classification==='within_reference'?colors.neutral:colors.missing;
+    if(layer==='persistence') return ['persistent_negative_anomaly','below_reference'].includes(p.classification)?colors.negative:p.classification==='above_reference'?colors.positive:p.classification==='within_reference_range'?colors.neutral:colors.missing;
     const value=layer==='trend'?p.trend_per_year:p.anomaly;
     return value==null?colors.missing:value<-.05?colors.negative:value>.05?colors.positive:colors.neutral;
   }
@@ -63,8 +63,9 @@ export function RecoveryIntelligencePanel({eventId,sourceJobId,index,selectedDat
     {data&&metric&&<>
       <h3 className="text-lg font-semibold">Territory recovery map</h3>
       <p className="text-sm">Select a cell to follow its vegetation history. The period classification compares supported observations with the pre-fire seasonal range.</p>
+      <p className="text-xs text-slate-400">Cell support uses each pixel’s post-event history and seasonal baseline. A few supported cells can coexist with insufficient coverage for the area timeline. This map alone does not demonstrate recovery of the whole territory.</p>
       <div className="flex flex-wrap gap-4 text-sm"><label><input type="checkbox" checked={visible} onChange={e=>setVisible(e.target.checked)}/> Show scientific cells</label><label>Recovery layer <select aria-label="Recovery layer" className="bg-dark-800" value={layer} onChange={e=>setLayer(e.target.value)}><option value="anomaly">Seasonal anomaly</option><option value="persistence">Seasonal reference classification</option><option value="trend">Recovery trend</option><option value="reliability">Data reliability</option></select></label><label><input type="checkbox" checked={zones} onChange={e=>setZones(e.target.checked)}/> Persistent vegetation anomaly zones</label></div>
-      <p className="text-sm">{layer==='anomaly'?`Selected composite: ${selectedDate}`:`Assessment period: ${data.period.start}–${data.period.end}`} · same index and date as Recovery Story · {map.data?.native_resolution_m?.toFixed(2)??'231.66'} m native cells (nominal 250 m)</p>
+      <p className="text-sm">{layer==='anomaly'?`Selected composite: ${selectedDate} · same index and selected date as Recovery Story`:`Assessment period: ${data.period.start}–${data.period.end} · period summary, independent of the selected timeline date`} · {map.data?.native_resolution_m?.toFixed(2)??'231.66'} m native cells (nominal 250 m)</p>
       {map.isError&&<p role="alert">Spatial evidence unavailable. Retry the assessment.</p>}
       <>
         <div className="h-[420px] overflow-hidden rounded" aria-label="Recovery Anomaly Map"><MapContainer bounds={bounds} className="h-full w-full" scrollWheelZoom={false}><SatelliteBasemap/>

@@ -13,7 +13,7 @@ from app.providers.api_subsets import ApiSubsetProvider, ProviderUnavailable, ea
 from app.services.catalog_cache import metadata
 from app.services.satellite_cache import cache_io
 
-VERSION = 'optical-evidence-2'
+VERSION = 'optical-evidence-3'
 SOURCES = [
     dict(id='HLS_S30', collection='NASA/HLS/HLSS30/v002', first='2015-11-28', red='B4', nir='B8A', blue='B2', swir='B12', resolution=30, family='hls'),
     dict(id='HLS_L30', collection='NASA/HLS/HLSL30/v002', first='2013-04-11', red='B4', nir='B5', blue='B2', swir='B7', resolution=30, family='hls'),
@@ -102,7 +102,36 @@ def classify_pair(pre, post, minimum):
     """Separate descriptive evidence from a joint-footprint spectral comparison."""
     before=[s for s in pre if supported(s,minimum)]
     after=[s for s in post if supported(s,minimum)]
+    # A nearest-date scene on another grid must not hide an available native
+    # comparison. Preserve all source rows; select one pair, never pool tiles.
+    compatible=[(i+j,max(i,j),i,j,a,b) for i,a in enumerate(before) for j,b in enumerate(after)
+                if same_native_lattice(a.get('projection',{}),b.get('projection',{}))]
+    if compatible:
+        pair=min(compatible,key=lambda item:item[:4])
+        return pair[-2],pair[-1]
     return (before[0] if before else None, after[0] if after else None)
+
+
+def same_native_lattice(a, b):
+    """Identical CRS, pixel vectors and integer origin offsets: no resampling.
+
+    Adjacent HLS MGRS tiles have different extents/origins but can share the
+    exact 30 m lattice. A fractional shift or another CRS remains unsupported.
+    """
+    import numpy as np
+    try:
+        if a['crs'] != b['crs']:
+            return False
+        x, y = np.asarray(a['transform'], dtype=float), np.asarray(b['transform'], dtype=float)
+        if x.shape != (6,) or y.shape != (6,) or not np.isfinite([x,y]).all():
+            return False
+        vectors = x[[0,1,3,4]].reshape(2,2)
+        if not np.allclose(vectors, y[[0,1,3,4]].reshape(2,2), rtol=0, atol=1e-9):
+            return False
+        offset = np.linalg.solve(vectors, y[[2,5]]-x[[2,5]])
+        return bool(np.allclose(offset, np.round(offset), rtol=0, atol=1e-7))
+    except (KeyError, TypeError, ValueError, np.linalg.LinAlgError):
+        return False
 
 
 def _query(geometry, start, end, as_of, minimum):
@@ -138,12 +167,14 @@ def _query(geometry, start, end, as_of, minimum):
         for phase in ('pre','post'):
             for image_id in catalog[spec['id']][phase+'_ids']:
                 image=ee.Image(image_id); values=indices(ee,image,spec); images[image_id]=(image,values)
-                fields={'date':image.date().format('YYYY-MM-dd')}
+                fields={'date':image.date().format('YYYY-MM-dd'), 'timestamp':image.date().format("YYYY-MM-dd'T'HH:mm:ss'Z'")}
                 for index in ('NDVI','EVI','NBR'):
                     band=values.select(index); projection=band.projection()
                     params=dict(geometry=area,crs=projection,scale=projection.nominalScale(),maxPixels=settings.AFTERFIRE_API_MAX_PIXELS,
                                 bestEffort=False,tileScale=2)
-                    fields[index]=band.reduceRegion(ee.Reducer.median(),**params).get(index)
+                    # Default EE median switches to a histogram for larger
+                    # samples. The bounded pixel budget permits exact medians.
+                    fields[index]=band.reduceRegion(ee.Reducer.median(maxRaw=settings.AFTERFIRE_API_MAX_PIXELS),**params).get(index)
                     fields[index+'_valid']=band.reduceRegion(ee.Reducer.count(),**params).get(index)
                     # An unmasked constant on the native projection counts the entire
                     # candidate AOI, not only the valid scene footprint.
@@ -161,7 +192,7 @@ def _query(geometry, start, end, as_of, minimum):
         observations=[]
         for phase,image_id in scenes:
             record=raw[image_id]
-            item=dict(id=image_id,date=record['date'],phase=phase,source=spec['id'],collection=spec['collection'],indices={},
+            item=dict(id=image_id,date=record['date'],timestamp=record['timestamp'],phase=phase,source=spec['id'],collection=spec['collection'],indices={},
                       resolution_m=spec['resolution'],projection=record['projection'])
             for index in ('NDVI','EVI','NBR'):
                 total=record[index+'_total'] or 0; valid=record[index+'_valid'] or 0
@@ -174,16 +205,17 @@ def _query(geometry, start, end, as_of, minimum):
         result['attempts'].append(dict(source=spec['id'],scenes_checked=len(observations),supported_scenes=sum(supported(o,minimum) for o in observations)))
         result['observations'].extend(observations)
         if pre and post:
-            result.update(status='vegetation_observed',selected_source=spec['id'],before=pre,after=post)
+            result.update(status='vegetation_observed',selected_source=spec['id'],before=pre,after=post,
+                          pair_selection='Nearest ranked supported pair sharing a native pixel lattice when available; no pooling of overlapping scenes')
             # dNBR only on identical native grids with a joint valid footprint.
             # Median(pre NBR - post NBR) differs from subtracting area medians.
-            if pre['projection']==post['projection']:
+            if same_native_lattice(pre['projection'],post['projection']):
                 a=images[pre['id']][1].select('NBR'); b=images[post['id']][1].select('NBR')
                 diff=a.subtract(b).rename('dNBR'); projection=a.projection()
-                params=dict(geometry=area,crs=projection,scale=projection.nominalScale(),maxPixels=settings.AFTERFIRE_API_MAX_PIXELS,bestEffort=False,tileScale=2)
+                params=dict(geometry=area,crs=pre['projection']['crs'],crsTransform=pre['projection']['transform'],maxPixels=settings.AFTERFIRE_API_MAX_PIXELS,bestEffort=False,tileScale=2)
                 try:
                     client._request()
-                    change=ee.Dictionary({'median':diff.reduceRegion(ee.Reducer.median(),**params).get('dNBR'),
+                    change=ee.Dictionary({'median':diff.reduceRegion(ee.Reducer.median(maxRaw=settings.AFTERFIRE_API_MAX_PIXELS),**params).get('dNBR'),
                         'valid':diff.reduceRegion(ee.Reducer.count(),**params).get('dNBR')}).getInfo()
                 except Exception as exc:
                     error=exc if isinstance(exc,ProviderUnavailable) else earth_engine_error(exc)
@@ -194,6 +226,8 @@ def _query(geometry, start, end, as_of, minimum):
                 total=pre['indices']['NBR']['total_pixels']; fraction=(change['valid'] or 0)/total if total else 0
                 result['spectral_change']=dict(dnbr=change['median'] if fraction>=minimum else None,
                     joint_valid_fraction=fraction,independently_validated=False,
+                    reference_projection=pre['projection'],grid_alignment='identical_native_pixel_lattice',resampling='none',
+                    reduction='exact_median_within_bounded_pixel_budget',
                     interpretation='Observed spectral change only; clouds, phenology, harvest and moisture can confound attribution. No burn severity or confirmed burn classification.')
             else:
                 result['spectral_change']=dict(dnbr=None,reason='different_native_grids')

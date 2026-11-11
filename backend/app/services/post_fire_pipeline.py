@@ -460,10 +460,10 @@ async def run_pipeline(job, progress):
     # Availability is evidence, not an all-or-nothing gate. Keep MODIS and
     # optical results separate: different sensors never share a seasonal baseline.
     valid_observations=[o for o in observations if o['value'] is not None]
-    has_pre=any(o['period_end']<str(event.start_date) for o in valid_observations)
-    has_post=any(o['date']>str(event.end_date) for o in valid_observations)
+    pre_indices={o['index'] for o in valid_observations if o['period_end']<str(event.start_date)}
+    post_indices={o['index'] for o in valid_observations if o['date']>str(event.end_date)}
     optical={'status':'not_needed','observations':[],'attempts':[]}
-    if not unambiguous or not (has_pre and has_post):
+    if not unambiguous or not (pre_indices & post_indices):
         await progress('processing',87,phase='vegetation',current_operation='Checking bounded high-resolution optical evidence')
         from app.providers.optical_evidence import optical_evidence
         optical=await optical_evidence(provisional,event.start_date,event.end_date,after,config.min_valid_fraction)

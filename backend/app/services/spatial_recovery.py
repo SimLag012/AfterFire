@@ -111,7 +111,14 @@ def spatial_assessment(payload, parameters):
                 'series':[{k:o.get(k) for k in ('date','value','baseline','anomaly','baseline_n','baseline_years','valid_fraction')} for o in metrics]}})
         output[index]={'type':'FeatureCollection','features':features,'zones':connected_zones(features,parameters.min_cluster_cells),
             'missing_assets':missing_assets,'native_resolution_m':abs(base.a) if cells else None,
-            'period':payload['period'],'qa':'strict QA inherited from published scientific rasters',
+            'period':{'start':str(parameters.post_start or payload['event_period']['end']),
+                      'end':str(parameters.post_end or payload['period']['end'])},
+            'support_scope':'per_native_cell_post_event_history',
+            'observation_period':payload['period'],'analysis_area_source':payload['analysis_area_source'],
+            'support_note':'Cells use individual strict-QA observations and their own pre-event seasonal baseline. A supported cell does not imply that any area composite reaches the minimum spatial coverage.',
+            'area_composites_supported':sum(o['value'] is not None and o['date']>payload['event_period']['end']
+                                           for o in observations),
+            'qa':'strict QA inherited from published scientific rasters',
             'coverage_cells':len(cells),'sufficient_cells':sum(f['properties']['classification']!='insufficient_data' for f in features)}
     return output
 
@@ -132,12 +139,27 @@ def write_recovery_rasters(job_id, spatial):
             tile=f'h{c//4800:02d}v{r//4800:02d}'
             tiles.setdefault(tile,[]).append(feature)
         for tile,features in tiles.items():
+            # Static zero/classification bands alone are not a scientific export.
+            if not any(p.get('value') is not None and np.isfinite(p['value'])
+                       for f in features for p in f['properties']['series']):
+                continue
             rows=[f['properties']['grid'][0]%4800 for f in features]
             cols=[f['properties']['grid'][1]%4800 for f in features]
             r0,r1,c0,c1=min(rows),max(rows)+1,min(cols),max(cols)+1
             reference=features[0]['properties']['series']
             dates=[o['date'] for o in reference]
-            count=len(dates)*3+4
+            descriptors=[]
+            for date_index,day in enumerate(dates):
+                for key in ('value','baseline','anomaly'):
+                    values=[f['properties']['series'][date_index].get(key) for f in features]
+                    if any(v is not None and np.isfinite(v) for v in values):
+                        descriptors.append((day+' '+key,values))
+            codes={'insufficient_data':0,'persistent_negative_anomaly':1,'within_reference_range':2,'below_reference':3,'above_reference':4}
+            for key in ('trend_per_year','completeness','persistent_days','classification'):
+                values=[codes[f['properties'][key]] if key=='classification' else f['properties'][key] for f in features]
+                if any(v is not None and np.isfinite(v) for v in values):
+                    descriptors.append((key,values))
+            count=len(descriptors)
             size=(r1-r0)*(c1-c0)*count*4
             affine=tile_transform(tile,4800)*rasterio.Affine.translation(c0,r0)
             name=f'{index}-{tile}-recovery.tif'
@@ -149,26 +171,26 @@ def write_recovery_rasters(job_id, spatial):
                 try:
                     with rasterio.open(tmp,'w',driver='GTiff',height=r1-r0,width=c1-c0,count=count,
                         dtype='float32',crs=SINUSOIDAL,transform=affine,nodata=np.nan,compress='deflate') as dst:
-                        for n in range(count):
+                        for n,(label,values) in enumerate(descriptors):
                             grid=np.full((r1-r0,c1-c0),np.nan,dtype='float32')
-                            if n<len(dates)*3:
-                                date_index=n//3; key=('value','baseline','anomaly')[n%3]
-                                label=dates[date_index]+' '+key
-                                values=[f['properties']['series'][date_index].get(key) for f in features]
-                            else:
-                                key=('trend_per_year','completeness','persistent_days','classification')[n-len(dates)*3]
-                                label=key
-                                codes={'insufficient_data':0,'persistent_negative_anomaly':1,'within_reference_range':2,'below_reference':3,'above_reference':4}
-                                values=[codes[f['properties'][key]] if key=='classification' else f['properties'][key] for f in features]
                             for r,c,value in zip(rows,cols,values):
                                 if value is not None: grid[r-r0,c-c0]=value
                             dst.write(grid,n+1);dst.set_band_description(n+1,label)
                         from app.analysis.recovery_assessment import VERSION
                         dst.update_tags(assessment=VERSION,product='MOD13Q1.061',
                             qa='strict_good_land inherited',scale_applied='already dimensionless',
+                            support_scope=layer.get('support_scope','per_native_cell_post_event_history'),
+                            analysis_area_source=layer.get('analysis_area_source','unspecified'),
+                            observation_period=__import__('json').dumps(layer.get('observation_period',{})),
+                            area_composites_supported=str(layer.get('area_composites_supported','unknown')),
+                            classification_period=__import__('json').dumps(layer.get('period',{})),
+                            empty_bands_omitted=str(len(dates)*3+4-count),
                             classification='0 insufficient; 1 persistent negative; 2 within reference; 3 below; 4 above')
                     os.replace(tmp,path)
                 finally: tmp.unlink(missing_ok=True)
             assets.append({'name':name,'index':index,'tile':tile,'bands':count,'pixel_size_m':abs(affine.a),
-                'bytes':path.stat().st_size,'crs':'MODIS Sinusoidal','dates':dates})
+                'bytes':path.stat().st_size,'crs':'MODIS Sinusoidal',
+                'dates':sorted({label[:10] for label,_ in descriptors if label[:4].isdigit()}),
+                'source_dates':dates,'band_descriptions':[label for label,_ in descriptors],
+                'empty_bands_omitted':len(dates)*3+4-count,'support_scope':layer.get('support_scope','per_native_cell_post_event_history')})
     return assets

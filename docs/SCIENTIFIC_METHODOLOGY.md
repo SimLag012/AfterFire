@@ -189,3 +189,30 @@ See [the current release record](FINAL_RELEASE_VERIFICATION.md) for newly execut
 ## Final audit — 6 November 2026
 
 [Independent validation](POST_FIRE_RECOVERY_VALIDATION.md) recomputes raw QA, source scaling, native cell areas, seasonal references and trend/persistence from the current three publications. Historical HDF equivalence reports remain historical: deleted HDF files were not reacquired. Home no longer presents fixed synthetic recovery percentages, Compare uses only seasonal event assessments, and native-cell histories are connected to Recovery Intelligence. [Requirements matrix](ORIGINAL_REQUIREMENTS_AUDIT.md).
+
+## Complete audit — 11 November 2026
+
+Engine `modis-recovery-3.2.0`, optical method `optical-evidence-3` and assessment
+`assessment-5.0.2` create new publication identities. Existing publications and
+MODIS checkpoint identity remain unchanged. The strict source QA, MODIS scaling,
+seasonal reference, persistence and recovery-gap formulas are unchanged.
+
+A MODIS pre/post comparison requires observations of the **same index**. Optical
+pair selection prefers supported scenes on one native pixel lattice. Equal CRS
+and pixel vectors with an integer origin offset describe the same lattice even
+when MGRS tile extents differ. dNBR uses the pre-scene CRS and affine transform,
+with the joint QA-valid footprint; fractional shifts, different resolution and
+different CRS remain unsupported. No interpolation or scene-median pooling is
+introduced. Optical medians explicitly retain up to the configured maximum raw
+pixel count, avoiding Earth Engine's default histogram approximation within the
+bounded AOI. This remains descriptive spectral change, without burn attribution
+or validated severity thresholds.
+
+Recovery cell support is a per-pixel post-event history assessment. It does not
+require any area composite to pass the 50% area-coverage threshold. New exports
+omit all-nodata bands and exports with no finite observation; remaining band
+labels, values, grid and nodata are preserved. Consumers must use band descriptions,
+not a fixed three-bands-per-date position. Tags and JSON identify observation and
+classification periods, geometry scope and area-composite support. See the
+[complete audit](COMPLETE_SCIENTIFIC_AUDIT.md) for the real Tunisia regression,
+56-candidate campaign, independent calculations and measured limits.

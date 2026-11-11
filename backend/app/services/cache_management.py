@@ -26,6 +26,7 @@ def inventory(root=None):
         seen.add(inode)
         relative = path.relative_to(root)
         category = ('temporary' if path.suffix == '.part' else 'metadata' if path.suffix in ('.json','.lock')
+            else 'subsets' if relative.parts[0] == 'api-subsets'
             else relative.parts[0] if relative.parts[0] in classes else 'metadata')
         classes[category] += stat.st_size
         files.append((path, stat, category))

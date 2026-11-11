@@ -6,7 +6,7 @@ from pydantic import BaseModel, Field, model_validator
 from app.analysis.modis_science import seasonal_metrics
 from app.schemas.satellite_analysis import AnalysisConfiguration
 
-VERSION = 'assessment-5.0.1'
+VERSION = 'assessment-5.0.2'
 
 
 class AssessmentParameters(BaseModel):
