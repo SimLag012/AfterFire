@@ -66,6 +66,7 @@ export const EventSatelliteMap: React.FC<{
       <SwipePane position={divider} />
     </Pane>}
     {comparison && <div aria-hidden="true" className="pointer-events-none absolute bottom-0 top-0 z-[450] border-l-2 border-white" style={{left:`${divider}%`}} />}
+    {result?.candidate_geometry && <GeoJSON key={`${result.job_id}-candidate`} data={result.candidate_geometry} style={{color:'#a78bfa',fillOpacity:0,weight:2,dashArray:'6 4'}} />}
     {result && <GeoJSON key={`${result.job_id}-${result.created_at}-area`} data={result.analysis_geometry} style={{color:'#38bdf8',fillOpacity:0,weight:2}} />}
     {result && showBurned && <GeoJSON key={`${result.job_id}-${result.created_at}-burned`} data={result.burned_area} style={{color:'#f97316',fillOpacity:0.15,weight:1}} />}
     {detections.filter(d=>d.acq_date===selectedDate).map((d,i)=><CircleMarker key={i} center={[d.latitude,d.longitude]} radius={4} pathOptions={{color:'#fff',weight:1.5,fillColor:'#ff3d16',fillOpacity:0.95}} />)}

@@ -37,7 +37,7 @@ def status_payload(job,result=None,telemetry=None):
     outcome = {'state': 'insufficient_observations', 'status': 'insufficient_observations',
         'worker_health': 'insufficient_observations', 'error': None,
         'phase_label': 'Insufficient satellite observations', 'current_operation': None,
-        'warning': 'No associated burned cells or vegetation composites with sufficient valid coverage were found.'} if insufficient else {}
+        'warning': 'The available observations could not support a vegetation comparison. Open the published coverage diagnostics for product, QA and sensor limits.'} if insufficient else {}
     return {**progress_payload(job,telemetry), 'id':job.id,'event_id':job.event_id,'state':job.state,'progress':job.progress,'error':job.error,
         'configuration':job.configuration,'engine_version':job.engine_version,'attempts':job.attempts,
         'created_at':job.created_at.isoformat()+'Z','result_available':result is not None, **outcome}
@@ -50,7 +50,16 @@ async def durable_status(db, job):
     if job and result_id is None:
         result_id = (await db.execute(select(EventAnalysisResult.job_id).where(EventAnalysisResult.event_id == job.event_id)
             .order_by(EventAnalysisResult.created_at.desc()).limit(1))).scalar_one_or_none()
-    return {**status_payload(job, result_id, telemetry.payload if telemetry else None),
+    status=status_payload(job, result_id, telemetry.payload if telemetry else None)
+    if result_id and status['state']=='insufficient_observations':
+        result=await db.get(EventAnalysisResult,result_id)
+        reasons=result.payload.get('diagnostics',{}).get('reasons',[]) if result else []
+        if reasons:
+            status['warning']=' '.join(r['message'] for r in reasons)
+    from app.schemas.satellite_analysis import ENGINE_VERSION
+    upgrade=bool(job and not result_id and job.engine_version!=ENGINE_VERSION and
+                 job.state in ('failed','insufficient_data','insufficient_observations'))
+    return {**status,'upgrade_available':upgrade,
             'appeears_submission_enabled': settings.AFTERFIRE_APPEEARS_SUBMISSION_ENABLED,
             'result_job_id': result_id}
 
@@ -225,3 +234,18 @@ async def asset(event_id:str,job_id:str,filename:str,db:AsyncSession=Depends(get
         except (OSError,ValueError,KeyError):
             raise HTTPException(404,'Raster native data is unavailable or failed validation') from None
     return FileResponse(path,media_type='image/png' if filename.endswith('.png') else 'image/tiff',headers={'Cache-Control':'no-cache'})
+
+
+@router.get('/analysis/optical-preview')
+async def optical_preview(event_id:str,scene_id:str=Query(max_length=255),job_id:str|None=None,db:AsyncSession=Depends(get_db)):
+    result=await result_payload(db,event_id,job_id)
+    from app.services.optical_preview import preview
+    from app.services.satellite_cache import cache_io
+    from app.providers.api_subsets import ProviderUnavailable
+    try:
+        path=await cache_io(preview,result,scene_id)
+    except ProviderUnavailable as exc:
+        raise HTTPException(503,str(exc)) from None
+    except ValueError:
+        raise HTTPException(404,'Scene unavailable for this published analysis') from None
+    return FileResponse(path,media_type='image/png',headers={'Cache-Control':'private, max-age=86400'})

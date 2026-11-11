@@ -5,12 +5,15 @@ import os
 import numpy as np
 from rasterio.transform import Affine
 from shapely.geometry import mapping
-from app.schemas.satellite_analysis import ENGINE_VERSION
+# The orchestration/optical engine changed, but MODIS extraction, calibration,
+# QA, geometry masks and native arrays are unchanged. Keep their verified cache
+# identity independent; bump this only when those scientific operations change.
+MODIS_CHECKPOINT_VERSION = 'modis-recovery-3.0.0'
 from app.services.satellite_cache import cache_root, file_lock, ensure_space
 
 
 def checkpoint_path(record, geometry):
-    key=hashlib.sha256(json.dumps({'source':record['id'],'geometry':mapping(geometry),'engine':ENGINE_VERSION},sort_keys=True).encode()).hexdigest()
+    key=hashlib.sha256(json.dumps({'source':record['id'],'geometry':mapping(geometry),'engine':MODIS_CHECKPOINT_VERSION},sort_keys=True).encode()).hexdigest()
     return cache_root()/'processed'/(key+'.npz')
 
 

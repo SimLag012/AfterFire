@@ -457,12 +457,22 @@ async def run_pipeline(job, progress):
                     'quality':'incomplete_period' if end>after else 'strict_good_land' if value is not None else 'missing_or_insufficient_coverage',
                     'product':'MOD13Q1','version':'061','resolution_m':250,'scale_factor':0.0001,
                     'granule_ids':g['granules'] if g else [],'assets':g['assets'] if g else []})
-    if not cells and not any(o['value'] is not None for o in observations):
-        if discovery_failed or telemetry['granules_failed']:
-            raise ValueError('Source discovery or processing failed before valid observations could be established')
-        raise InsufficientObservations('No valid scientific observations. No associated burned cells were mapped '
-            'and no vegetation composite met the coverage and quality requirements for this territory.')
+    # Availability is evidence, not an all-or-nothing gate. Keep MODIS and
+    # optical results separate: different sensors never share a seasonal baseline.
+    valid_observations=[o for o in observations if o['value'] is not None]
+    has_pre=any(o['period_end']<str(event.start_date) for o in valid_observations)
+    has_post=any(o['date']>str(event.end_date) for o in valid_observations)
+    optical={'status':'not_needed','observations':[],'attempts':[]}
+    if not unambiguous or not (has_pre and has_post):
+        await progress('processing',87,phase='vegetation',current_operation='Checking bounded high-resolution optical evidence')
+        from app.providers.optical_evidence import optical_evidence
+        optical=await optical_evidence(provisional,event.start_date,event.end_date,after,config.min_valid_fraction)
+        if optical['status'] in ('provider_error','resource_limit','provider_not_configured'):
+            warnings.append('High-resolution evidence: '+optical.get('reason',optical['status']))
     observations=seasonal_metrics(observations,event.start_date,event.end_date,config)
+    from app.analysis.coverage import coverage_diagnostics
+    diagnostics,support=coverage_diagnostics(observations,cells,catalogs,expected,ba_valid,ba_total,
+        telemetry,discovery_failed,optical,event,provisional,config)
     await progress('processing', 93, phase='indicators', current_operation='Computing anomalies and recovery indicators')
     recurrence=[]
     for n in neighbours:
@@ -490,7 +500,8 @@ async def run_pipeline(job, progress):
     if successful_burn_granules and ba_total and ba_valid/ba_total<config.min_valid_fraction:
         warnings.append('MCD64A1 has insufficient valid mapping coverage')
     payload={'event_id':event.id,'job_id':job.id,'engine_version':ENGINE_VERSION,'acquisition_plan':plan,
-        'result_states':{'scientific_summary':'ready','native_spatial':'ready','visual_assets':'on_demand'},
+        'result_states':{'scientific_summary':support['category'],
+            'native_spatial':'ready' if valid_observations else 'unavailable','visual_assets':'on_demand'},
         'event_period':{'start':str(event.start_date),'end':str(event.end_date)},
         'period':{'start':str(before),'end':str(after)},'configuration':config.model_dump(mode='json'),
         'hotspot_footprint':mapping(footprint),'analysis_geometry':mapping(analysis_area),
@@ -501,6 +512,8 @@ async def run_pipeline(job, progress):
             'observed_cell_area_km2':sum(c['properties']['area_km2'] for c in cells) if ba_valid else None,
             'unambiguous_cell_area_km2':sum(c['properties']['area_km2'] for c in cells if c['properties']['association']!='ambiguous') if ba_valid else None,
             'ambiguous_cells':sum(c['properties']['association']=='ambiguous' for c in cells)},
+        'candidate_geometry':mapping(provisional),'candidate_area_km2':area_km2(provisional),
+        'diagnostics':diagnostics,'scientific_support':support,'high_resolution':optical,
         'observations':observations,'metrics':summaries,'recurrence':recurrence,'granules':provenance,
         'warnings':warnings,'downloaded_granules':downloaded_count,'downloaded_bytes':progress.data['bytes_downloaded'] if hasattr(progress, 'data') else bytes_downloaded,
         'downloaded_bytes_previous_attempts':progress.data.get('bytes_downloaded_previous_attempts',0) if hasattr(progress,'data') else 0,
@@ -510,7 +523,8 @@ async def run_pipeline(job, progress):
             'Vegetation index near baseline does not demonstrate complete ecological recovery.',
             'Intervening candidate fires can affect vegetation observations after the selected event.']}
     await progress('processing', 97, phase='publishing', current_operation='Saving scientific results and verifying publication')
-    return payload, 'partial' if warnings else 'completed'
+    state='insufficient_data' if support['category']=='insufficient_observations' else 'partial' if warnings or support['category'] in ('partial_evidence','technical_error') else 'completed'
+    return payload,state
 
 
 # Shared by all worker lanes on the same event loop. Each lane downloads one file at a time.

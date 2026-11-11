@@ -9,6 +9,7 @@ export interface SatelliteObservation {
   assets: {name: string; raster: string; bounds: [[number,number],[number,number]]; legend: {min: number; max: number}}[];
 }
 export interface SatelliteJob {
+  upgrade_available?:boolean;
   availability?: {message:string;burned_area_mapping:string;recovery_analysis:string;latest_dates:Record<string,string|null>};
   provider?: string; api_requests_completed?: number; api_dates_total?: number; byte_measurement?: string;
   id?: string; result_job_id?: string | null; state: 'not_requested' | 'insufficient_observations' | 'observations_pending' | 'queued' | 'fetching' | 'processing' | 'completed' | 'partial' | 'failed';
@@ -26,7 +27,17 @@ export interface SatelliteJob {
   elapsed_seconds?: number | null; estimated_remaining_seconds?: number | null;
   phase_estimated_remaining_seconds?: number | null;
 }
+export interface OpticalScene {
+  id:string; date:string; phase:string; source:string; resolution_m:number;
+  indices:Record<string,{value:number|null;valid_fraction:number;valid_pixels:number;total_pixels:number}>;
+}
 export interface SatelliteResult {
+  candidate_area_km2?:number; candidate_geometry?:GeoJsonObject;
+  scientific_support?:{category:string;analysis_scope:string;burn_confirmation:string};
+  diagnostics?:{reasons:{code:string;message:string}[]};
+  high_resolution?:{before?:OpticalScene;after?:OpticalScene;status:string;selected_source?:string;reason?:string;observations:OpticalScene[];
+    spectral_change?:{dnbr:number|null;reason?:string;interpretation?:string}|null;
+    catalog?:Record<string,{pre_ids:string[];post_ids:string[]}>};
   event_id: string; job_id: string; engine_version: string; created_at: string;
   event_period: {start: string; end: string}; period: {start: string; end: string};
   analysis_geometry: GeoJsonObject; hotspot_footprint: GeoJsonObject; analysis_area_source: string; analysis_area_km2: number;

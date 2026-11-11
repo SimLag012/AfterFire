@@ -45,13 +45,15 @@ async def availability(bounds, event_start, event_end, as_of, pre_years):
             missing.append('pre-fire MOD13Q1 coverage')
         if not raw['burn_dates']:
             missing.append('MCD64A1 coverage for the fire period')
-        ready = not missing
+        # Burn mapping publication is independent from vegetation support.
+        ready = bool(post and raw['pre_dates'])
+        optical_check = not ready and (as_of-event_end).days>=30
         return {'provider':'Google Earth Engine','collection':'061','checked_at':datetime.now(timezone.utc).isoformat(),
             'ttl_seconds':3600,'latest_dates':{p:str(day(raw[p+'_latest'])) if raw[p+'_latest'] is not None else None for p in ('MOD13Q1','MCD64A1')},
             'first_post_fire_composite':str(post[0]) if post else None,
             'event_overview':'available','pre_fire_context':'available' if raw['pre_dates'] else 'unavailable',
             'burned_area_mapping':'available' if raw['burn_dates'] else 'observations_pending',
-            'recovery_analysis':'observations_available' if ready else 'observations_pending',
-            'message':'Post-fire satellite observations available; QA and baseline support still require analysis' if ready else 'Insufficient satellite coverage: ' + ', '.join(missing)}
-    return await metadata({'provider':'earth_engine','kind':'availability','version':2,'event_start':str(event_start),'pre_years':pre_years,'bounds':list(bounds),
+            'recovery_analysis':'observations_available' if ready else 'high_resolution_check_required' if optical_check else 'observations_pending',
+            'message':'Post-fire satellite observations available; QA and baseline support still require analysis' if ready else 'MODIS coverage is incomplete; checking independent optical sources during analysis.' if optical_check else 'Insufficient satellite coverage: ' + ', '.join(missing)}
+    return await metadata({'provider':'earth_engine','kind':'availability','version':3,'event_start':str(event_start),'pre_years':pre_years,'bounds':list(bounds),
         'event_end':str(event_end),'as_of':str(as_of)},fetch,recent=True)

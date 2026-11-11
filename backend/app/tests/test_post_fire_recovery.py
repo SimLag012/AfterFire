@@ -261,7 +261,7 @@ async def test_analysis_api_no_auto_job_missing_result_and_invalid_input():
 
 
 @pytest.mark.asyncio
-async def test_pipeline_no_sources_fails_without_claiming_success(monkeypatch):
+async def test_pipeline_no_sources_publishes_diagnostics_without_claiming_success(monkeypatch):
     monkeypatch.setattr(settings,'AFTERFIRE_ANALYSIS_MIN_FREE_GB',0)
     from app.services import post_fire_pipeline as pipeline
     async def event(_):
@@ -279,8 +279,11 @@ async def test_pipeline_no_sources_fails_without_claiming_success(monkeypatch):
     import tempfile
     with tempfile.TemporaryDirectory() as folder:
         monkeypatch.setattr(settings,'AFTERFIRE_ANALYSIS_CACHE_DIR',folder)
-        with pytest.raises(ValueError, match='No valid scientific observations'):
-            await pipeline.run_pipeline(SimpleNamespace(id='job',owner='f'*32,event_id='controlled',configuration=AnalysisConfiguration(as_of=date(2021,8,1)).model_dump(mode='json')),progress)
+        payload,state=await pipeline.run_pipeline(SimpleNamespace(id='job',owner='f'*32,event_id='controlled',configuration=AnalysisConfiguration(as_of=date(2021,8,1)).model_dump(mode='json')),progress)
+        assert state=='insufficient_data'
+        assert payload['scientific_support']['category']=='insufficient_observations'
+        assert payload['diagnostics']['reasons']
+        assert not any(o['value'] is not None for o in payload['observations'])
     assert all(value < 100 for _,value in states)
 
 
