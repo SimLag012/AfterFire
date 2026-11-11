@@ -176,7 +176,9 @@ def test_remote_failures_preserve_task_and_do_not_publish_partial_file(tmp_path,
         client.extract('MOD13Q1',box(15,37,15.01,37.01),date(2021,1,1),date(2021,12,31),0 if failure=='network_budget' else 1000)
     assert not list(tmp_path.rglob('*.part')) and not list(tmp_path.rglob('output.tif'))
     manifests=list(tmp_path.rglob('manifest.json'))
-    if failure not in ('authentication','unavailable'):
+    if failure=='cache_quota':
+        assert not manifests and not posts  # refuse before remote task creation
+    elif failure not in ('authentication','unavailable'):
         assert len(manifests)==1 and json.loads(manifests[0].read_text())['task_id']=='saved-task'
         assert len(posts)==1
     client.close()

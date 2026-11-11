@@ -6,6 +6,7 @@ import time
 from datetime import datetime, timezone
 from app.core.config import settings
 from app.services.satellite_cache import cache_root, file_lock
+from app.services.cache_accounting import mutation, atomic_json
 
 
 def inventory(root=None):
@@ -31,7 +32,8 @@ def inventory(root=None):
         classes[category] += stat.st_size
         files.append((path, stat, category))
     disk = shutil.disk_usage(root)
-    audit = root/'cleanup-audit.json'
+    audit = root.parent/(root.name+'-cleanup-audit.json')
+    if not audit.exists():audit=root/'cleanup-audit.json'
     try:
         last = json.loads(audit.read_text())
     except (OSError,ValueError):
@@ -88,7 +90,7 @@ def cleanup(dry_run=True, incoming=0):
                             current = path.stat()
                             if (current.st_dev,current.st_ino,current.st_mtime_ns)!=(stat.st_dev,stat.st_ino,stat.st_mtime_ns):
                                 continue
-                            path.unlink()
+                            with mutation(root,[path]):path.unlink()
                         removed += stat.st_size
                         allocated += stat.st_blocks*512
                 result = {'dry_run':dry_run,'at':datetime.now(timezone.utc).isoformat(),
@@ -98,7 +100,13 @@ def cleanup(dry_run=True, incoming=0):
                     'warning':'Protected files prevent reaching target' if removed<needed else None}
                 if not dry_run:
                     # Preserve provenance sidecars/manifests. Cache validation now detects the missing sources.
-                    (root/'cleanup-audit.json').write_text(json.dumps(result))
+                    # Administrative evidence remains writable even when scientific quota is full.
+                    audit=root.parent/(root.name+'-cleanup-audit.json')
+                    temporary=audit.with_suffix('.json.part')
+                    with temporary.open('w') as handle:
+                        json.dump(result,handle);handle.flush()
+                        __import__('os').fsync(handle.fileno())
+                    temporary.replace(audit)
                 return {**stats,**result}
         finally:
             fcntl.flock(usage,fcntl.LOCK_UN)

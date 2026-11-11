@@ -9,7 +9,8 @@ from rasterio.warp import calculate_default_transform, reproject, Resampling
 from rasterio.transform import array_bounds
 from PIL import Image
 from app.analysis.modis_science import SINUSOIDAL
-from app.services.satellite_cache import cache_root, ensure_space, file_lock, cache_bytes
+from app.services.satellite_cache import cache_root, file_lock
+from app.services.cache_accounting import mutation, atomic_json
 
 
 def defer_raster(job_id, name, index, checkpoint, values, affine):
@@ -19,23 +20,25 @@ def defer_raster(job_id, name, index, checkpoint, values, affine):
     target=folder/(name+'.npz')
     manifest=folder/(name+'.json')
     with file_lock(cache_root()/'locks'/('defer-'+job_id+'-'+name+'.lock')):
-        if not target.exists():
-            temporary=target.with_suffix('.npz.part')
-            try:
-                os.link(checkpoint,temporary)
-                os.replace(temporary,target)
-            finally:
-                temporary.unlink(missing_ok=True)
-        checksum=hashlib.sha256(target.read_bytes()).hexdigest()
+        checksum=hashlib.sha256((target if target.exists() else checkpoint).read_bytes()).hexdigest()
         h,w=values.shape
         transform,width,height=calculate_default_transform(SINUSOIDAL,'EPSG:4326',w,h,*array_bounds(h,w,affine))
         west,south,east,north=array_bounds(height,width,transform)
         asset={'name':name+'.png','raster':name+'.tif','bounds':[[south,west],[north,east]],
             'legend':{'min':-0.2,'max':1.0,'units':'dimensionless','nodata':'transparent'},'state':'on_demand'}
-        saved={'schema':1,'index':index,'native':target.name,'checksum':checksum,'bytes':target.stat().st_size,
+        saved={'schema':1,'index':index,'native':target.name,'checksum':checksum,'bytes':(target if target.exists() else checkpoint).stat().st_size,
             'qa':'strict_good_land','renderer':1,'asset':asset}
-        temporary=manifest.with_suffix('.json.part')
-        temporary.write_text(json.dumps(saved));os.replace(temporary,manifest)
+        data=json.dumps(saved).encode()
+        temporary=target.with_suffix('.npz.part');sidecar=manifest.with_suffix('.json.part')
+        with mutation(cache_root(),[target,temporary,manifest,sidecar],checkpoint.stat().st_size+len(data),results=True):
+            try:
+                if not target.exists():
+                    os.link(checkpoint,temporary);os.replace(temporary,target)
+                with sidecar.open('wb') as handle:
+                    handle.write(data);handle.flush();os.fsync(handle.fileno())
+                os.replace(sidecar,manifest)
+            finally:
+                temporary.unlink(missing_ok=True);sidecar.unlink(missing_ok=True)
     return asset
 
 
@@ -109,11 +112,7 @@ def _render_raster(job_id, name, values, affine):
     rgba,transform=_preview(src,affine)
     height,width=rgba.shape[:2]
     # Full uncompressed bound checked under the global quota lock before atomic publication.
-    with file_lock(root/'quota.lock'):
-        from app.core.config import settings
-        if cache_bytes(root/'results')+src.nbytes+rgba.nbytes+65536>settings.AFTERFIRE_ANALYSIS_RESULTS_MAX_GB*1024**3:
-            raise ValueError('Derived raster results quota exceeded')
-        ensure_space(root,src.nbytes+rgba.nbytes+65536)
+    with mutation(root,[tif,png,tif.with_suffix('.tif.part'),png.with_suffix('.png.part')],src.nbytes+rgba.nbytes+65536,temporary=True,results=True):
         tif_tmp,png_tmp = tif.with_suffix('.tif.part'),png.with_suffix('.png.part')
         try:
             with rasterio.open(tif_tmp,'w',driver='GTiff',height=h,width=w,count=1,dtype='float32',
@@ -155,18 +154,19 @@ def write_raster(job_id, name, values, affine, candidate=None):
                 with path.open('rb') as handle:checksum=hashlib.file_digest(handle,'sha256').hexdigest()
                 entries.append({'name':filename,'bytes':path.stat().st_size,'checksum':checksum})
             saved={'asset':asset,'files':entries}
-            tmp=manifest.with_suffix('.json.part');tmp.write_text(json.dumps(saved));os.replace(tmp,manifest)
+            atomic_json(manifest,saved)
             record('raster_reused' if bootstrapped else 'raster_generated',1)
         else:record('raster_reused',1)
         folder=root/'results'/job_id;folder.mkdir(parents=True,exist_ok=True)
-        for entry in saved['files']:
-            suffix=Path(entry['name']).suffix
-            target=folder/(name+suffix);tmp=target.with_suffix(suffix+'.part')
-            try:
-                tmp.unlink(missing_ok=True)
-                os.link(shared/entry['name'],tmp)
-                os.replace(tmp,target)
-            finally:tmp.unlink(missing_ok=True)
+        with mutation(root,[folder/(name+suffix) for suffix in ('.png','.tif','.png.part','.tif.part')],sum(e['bytes'] for e in saved['files'])+65536,results=True):
+            for entry in saved['files']:
+                suffix=Path(entry['name']).suffix
+                target=folder/(name+suffix);tmp=target.with_suffix(suffix+'.part')
+                try:
+                    tmp.unlink(missing_ok=True)
+                    os.link(shared/entry['name'],tmp)
+                    os.replace(tmp,target)
+                finally:tmp.unlink(missing_ok=True)
         return {**saved['asset'],'name':name+'.png','raster':name+'.tif'}
 
 
@@ -182,11 +182,12 @@ def _reuse_candidate(shared,key,src,affine,candidate):
         with Image.open(png) as image:
             if not np.array_equal(np.asarray(image),rgba):return None
         shared.mkdir(parents=True,exist_ok=True)
-        for path,suffix in ((tif,'.tif'),(png,'.png')):
-            target=shared/(key+suffix);temporary=target.with_suffix(suffix+'.part')
-            try:
-                temporary.unlink(missing_ok=True);os.link(path,temporary);os.replace(temporary,target)
-            finally:temporary.unlink(missing_ok=True)
+        with mutation(cache_root(),[shared/(key+suffix) for suffix in ('.tif','.png','.tif.part','.png.part')],tif.stat().st_size+png.stat().st_size,results=True):
+            for path,suffix in ((tif,'.tif'),(png,'.png')):
+                target=shared/(key+suffix);temporary=target.with_suffix(suffix+'.part')
+                try:
+                    temporary.unlink(missing_ok=True);os.link(path,temporary);os.replace(temporary,target)
+                finally:temporary.unlink(missing_ok=True)
         height,width=rgba.shape[:2];west,south,east,north=array_bounds(height,width,transform)
         from app.services.planning_metrics import record
         record('raster_bootstrapped',1)

@@ -21,6 +21,8 @@ from app.analysis.modis_science import GRID_DIMENSIONS, SINUSOIDAL, WGS84, proje
 from app.providers.appeears import LAYERS
 from app.services.satellite_cache import cache_root, file_lock, ensure_space
 
+from app.services.cache_accounting import mutation, atomic_json
+
 ORNL = 'https://modis.ornl.gov/rst/api/v1'
 EE_BANDS = {'MOD13Q1': ['NDVI','EVI','DetailedQA','SummaryQA'],
             'MCD64A1': ['BurnDate','Uncertainty','QA','FirstDay','LastDay']}
@@ -252,8 +254,7 @@ class ApiSubsetProvider:
 
     def _publish(self, record, geometry, arrays, count, win, affine, key, spec, folder, reserved=False):
         estimate = sum(a.nbytes for a in arrays.values())
-        with (nullcontext() if reserved else file_lock(cache_root()/'quota.lock')):
-            if not reserved:ensure_space(cache_root(),estimate+65536)
+        with (nullcontext() if reserved else mutation(cache_root(),[folder],estimate+65536,temporary=True)):
             folder.mkdir(parents=True,exist_ok=True)
             names=LAYERS[record['product']]
             if set(arrays)!=set(names):
@@ -326,7 +327,7 @@ class ApiSubsetProvider:
                     saved={'schema':1,'product':product,'collection':'061','source':r['original_id'],'tile':r['tile'],
                         'projection':projection,'grid_fingerprint':hashlib.sha256(json.dumps(projection,sort_keys=True).encode()).hexdigest(),
                         'pixel_size_m':abs(native.a),'origin':[native.c,native.f],'verified_at':time.time(),'valid_seconds':86400}
-                    temporary=path.with_suffix('.part');temporary.write_text(json.dumps(saved));temporary.replace(path)
+                    atomic_json(path,saved)
         bands, names = [], []
         for i, image in enumerate(images):
             for band, fill in zip(EE_BANDS[product], FILL[product]):
@@ -390,8 +391,7 @@ class ApiSubsetProvider:
                         raise earth_engine_error(exc) from None
                     transferred(count);budget-=count
                     # One conservative reservation under the same cross-process lock for the whole batch.
-                    with file_lock(cache_root()/'quota.lock'):
-                        ensure_space(cache_root(),count+65536*len(missing))
+                    with mutation(cache_root(),[cache_root()/'api-subsets'/cache_identity(r,geometry)[0] for r in missing],count+65536*len(missing),temporary=True):
                         for r,values in zip(missing,arrays):
                             key,spec=cache_identity(r,geometry)
                             acquired[r['id']]=self._publish(r,geometry,values,per_date,win,affine,key,spec,cache_root()/'api-subsets'/key,reserved=True)

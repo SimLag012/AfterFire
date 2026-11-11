@@ -6,7 +6,8 @@ import uuid
 import httpx
 from app.providers.api_subsets import ApiSubsetProvider,ProviderUnavailable,earth_engine_error
 from app.providers.optical_evidence import SOURCES,qa_mask
-from app.services.satellite_cache import cache_root,file_lock,ensure_space
+from app.services.satellite_cache import cache_root,file_lock
+from app.services.cache_accounting import mutation
 
 
 def preview(result,image_id):
@@ -38,8 +39,8 @@ def preview(result,image_id):
             if not data.startswith(b'\x89PNG\r\n\x1a\n'):raise ValueError('Invalid preview format')
             tmp=folder/(key+'.'+uuid.uuid4().hex+'.part')
             try:
-                ensure_space(cache_root(),len(data))
-                tmp.write_bytes(data);os.replace(tmp,path)
+                with mutation(cache_root(),[tmp,path],len(data),temporary=True):
+                    tmp.write_bytes(data);os.replace(tmp,path)
             finally:tmp.unlink(missing_ok=True)
             return path
         except ProviderUnavailable:raise

@@ -79,6 +79,23 @@ async def nearby_candidates(event, geometry, end, buffer_m=1000):
     return list(grouped.values())
 
 
+def attribution_snapshot(event, detections, footprint, provisional, neighbours, config):
+    """Publication-owned reconstruction inputs; never inferred from today's candidate DB."""
+    context={'schema':1,'engine_version':ENGINE_VERSION,
+        'rules':{'territory':'event_territory','association':'burned_cells + competing candidate buffered geometry intersection',
+                 'buffer_m':config.buffer_m,'burn_tolerance_days':config.burn_tolerance_days,
+                 'candidate_search':'nearby_candidates; 120-day lookback; observation cutoff'},
+        'target':{'id':event.id,'start_date':str(event.start_date),'end_date':str(event.end_date),
+                  'detections':[{'id':getattr(d,'id',None),'longitude':d.longitude,'latitude':d.latitude,
+                                 'acq_date':str(d.acq_date)} for d in detections],
+                  'hotspot_footprint':mapping(footprint),'geometry':mapping(provisional)},
+        'candidates':[{'id':n['event'].id,'name':n['event'].name,
+                       'start_date':str(n['event'].start_date),'end_date':str(n['event'].end_date),
+                       'points':n['points'],'geometry':mapping(n['geometry'])} for n in neighbours]}
+    context['sha256']=hashlib.sha256(json.dumps(context,sort_keys=True,separators=(',',':')).encode()).hexdigest()
+    return context
+
+
 async def persist_granule(record,path,meta):
     if meta.get('subset_key'):
         record={**record,'id':hashlib.sha256((record['id']+meta['subset_key']).encode()).hexdigest(),
@@ -499,7 +516,8 @@ async def run_pipeline(job, progress):
         warnings.append('Some burned cells overlap multiple candidate events and are excluded from analysis area selection')
     if successful_burn_granules and ba_total and ba_valid/ba_total<config.min_valid_fraction:
         warnings.append('MCD64A1 has insufficient valid mapping coverage')
-    payload={'event_id':event.id,'job_id':job.id,'engine_version':ENGINE_VERSION,'acquisition_plan':plan,
+    payload={'attribution_context':attribution_snapshot(event,detections,footprint,provisional,neighbours,config),
+        'event_id':event.id,'job_id':job.id,'engine_version':ENGINE_VERSION,'acquisition_plan':plan,
         'result_states':{'scientific_summary':support['category'],
             'native_spatial':'ready' if valid_observations else 'unavailable','visual_assets':'on_demand'},
         'event_period':{'start':str(event.start_date),'end':str(event.end_date)},

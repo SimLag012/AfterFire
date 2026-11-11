@@ -126,7 +126,7 @@ def spatial_assessment(payload, parameters):
 def write_recovery_rasters(job_id, spatial):
     """Multiband export: per-date pixel value/reference/anomaly plus static evidence bands."""
     import os
-    from app.services.satellite_cache import ensure_space, file_lock, cache_bytes
+    from app.services.cache_accounting import mutation
     from app.core.config import settings
     root=cache_root()
     folder=root/'results'/job_id
@@ -164,10 +164,7 @@ def write_recovery_rasters(job_id, spatial):
             affine=tile_transform(tile,4800)*rasterio.Affine.translation(c0,r0)
             name=f'{index}-{tile}-recovery.tif'
             path=folder/name; tmp=path.with_suffix('.tif.part')
-            with file_lock(root/'quota.lock'):
-                if cache_bytes(root/'results')+size+65536>settings.AFTERFIRE_ANALYSIS_RESULTS_MAX_GB*1024**3:
-                    raise ValueError('Derived recovery raster quota exceeded')
-                ensure_space(root,size+65536)
+            with mutation(root,[path,tmp],size+65536,temporary=True,results=True):
                 try:
                     with rasterio.open(tmp,'w',driver='GTiff',height=r1-r0,width=c1-c0,count=count,
                         dtype='float32',crs=SINUSOIDAL,transform=affine,nodata=np.nan,compress='deflate') as dst:

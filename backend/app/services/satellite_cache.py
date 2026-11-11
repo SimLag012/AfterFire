@@ -6,6 +6,7 @@ import os
 import shutil
 import uuid
 import time
+import threading
 from contextlib import contextmanager, nullcontext
 from pathlib import Path
 
@@ -16,18 +17,35 @@ def cache_root():
     return Path(settings.AFTERFIRE_ANALYSIS_CACHE_DIR or settings.cache_dir / 'satellite')
 
 
+_locks = threading.local()
+
+
 @contextmanager
 def file_lock(path):
+    # Nested quota reads share the caller's flock; other threads/processes block.
+    key = str(path.absolute())
+    held = getattr(_locks, 'held', None)
+    if held is None:
+        held = _locks.held = set()
+    if key in held:
+        yield
+        return
     path.parent.mkdir(parents=True, exist_ok=True)
     with path.open('a') as handle:
+        started=time.perf_counter()
         fcntl.flock(handle, fcntl.LOCK_EX)
+        if path.name=='quota.lock':
+            from app.services.planning_metrics import record
+            record('cache_quota_lock_wait_seconds',time.perf_counter()-started)
+        held.add(key)
         try:
             yield
         finally:
+            held.remove(key)
             fcntl.flock(handle, fcntl.LOCK_UN)
 
 
-def cache_bytes(root):
+def scan_cache_bytes(root):
     seen = set()
     total = 0
     pending = [root]
@@ -53,14 +71,26 @@ def cache_bytes(root):
     return total
 
 
+def cache_bytes(root):
+    from app.services.cache_accounting import usage
+    root = Path(root)
+    if root.absolute() == cache_root().absolute():
+        return usage(root)[0]
+    if root.absolute() == (cache_root()/'results').absolute():
+        return usage(cache_root())[1]
+    return scan_cache_bytes(root)
+
+
 def ensure_space(root, incoming=0, temporary=False):
     if temporary:
-        temporary_bytes=sum(p.stat().st_size for p in root.rglob('*.part') if p.is_file())
+        from app.services.cache_accounting import usage
+        temporary_bytes=usage(root)[2]
         if temporary_bytes+incoming>settings.AFTERFIRE_ANALYSIS_TEMP_MAX_GB*1024**3:
             raise ValueError('Satellite temporary space limit exceeded')
     limit = int(settings.AFTERFIRE_ANALYSIS_CACHE_MAX_GB * 1024**3)
-    if cache_bytes(root)+incoming > limit:
-        raise ValueError(f'Satellite cache quota exceeded: available={max(0,limit-cache_bytes(root))} bytes, required={incoming} bytes; published results protected. Inspect cache dry-run for recoverable bytes.')
+    used = cache_bytes(root)
+    if used+incoming > limit:
+        raise ValueError(f'Satellite cache quota exceeded: available={max(0,limit-used)} bytes, required={incoming} bytes; published results protected. Inspect cache dry-run for recoverable bytes.')
     if shutil.disk_usage(root).free - incoming < settings.AFTERFIRE_ANALYSIS_MIN_FREE_GB*1024**3:
         raise ValueError('Insufficient free disk space for satellite analysis')
 
@@ -72,6 +102,7 @@ def acquire(record, downloader, job_budget, on_bytes=None):
     path = root / 'sources' / (record['id']+'.hdf')
     sidecar = path.with_suffix('.json')
     path.parent.mkdir(exist_ok=True)
+    from app.services.cache_accounting import mutation
     downloaded = 0
     with file_lock(root / 'locks' / (record['id']+'.lock')):
         if path.exists() and sidecar.exists():
@@ -83,12 +114,11 @@ def acquire(record, downloader, job_budget, on_bytes=None):
             quarantine = root / 'quarantine'
             quarantine.mkdir(exist_ok=True)
             retained = quarantine / (record['id']+'-'+uuid.uuid4().hex)
-            if path.exists():
-                os.replace(path,retained.with_suffix('.hdf'))
-            if sidecar.exists():
-                os.replace(sidecar,retained.with_suffix('.json'))
+            with mutation(root,[path,sidecar,retained.with_suffix('.hdf'),retained.with_suffix('.json')]):
+                if path.exists():os.replace(path,retained.with_suffix('.hdf'))
+                if sidecar.exists():os.replace(sidecar,retained.with_suffix('.json'))
         tmp = path.with_suffix('.part')
-        tmp.unlink(missing_ok=True)  # stale interrupted acquisition of this locked granule
+        with mutation(root,[tmp]):tmp.unlink(missing_ok=True)
         digest = hashlib.sha256()
         try:
             with tmp.open('wb') as target:
@@ -101,8 +131,7 @@ def acquire(record, downloader, job_budget, on_bytes=None):
                     if downloaded > job_budget:
                         raise ValueError('Job download byte limit exceeded; reduce analysis window')
                     # Reservation/write serialized across processes; checks include partial files.
-                    with file_lock(root / 'quota.lock'):
-                        ensure_space(root,len(block),temporary=True)
+                    with mutation(root,[tmp],len(block),temporary=True):
                         target.write(block)
                         target.flush()
                     digest.update(block)
@@ -115,13 +144,15 @@ def acquire(record, downloader, job_budget, on_bytes=None):
                 from app.analysis.modis_science import validate_source
                 validate_source(tmp, record)
             meta = {'checksum':digest.hexdigest(),'bytes':downloaded, 'original_id':record['original_id']}
-            os.replace(tmp,path)
             side_tmp = sidecar.with_suffix('.json.part')
-            side_tmp.write_text(json.dumps(meta))
-            os.replace(side_tmp,sidecar)
+            data=json.dumps(meta)
+            with mutation(root,[tmp,path,side_tmp,sidecar],len(data)):
+                os.replace(tmp,path)
+                side_tmp.write_text(data)
+                os.replace(side_tmp,sidecar)
             return path,meta,downloaded
         except BaseException:
-            tmp.unlink(missing_ok=True)
+            with mutation(root,[tmp]):tmp.unlink(missing_ok=True)
             raise
 
 
@@ -140,6 +171,12 @@ def active_cache():
 def prune_sources():
     """Cleanup runs before acquiring the shared job lease, never during an active read."""
     if not settings.AFTERFIRE_CACHE_AUTO_CLEANUP:
+        return 0
+    root=cache_root();root.mkdir(parents=True,exist_ok=True)
+    # An admission check never enumerates retained sources. Inventory is explicit
+    # maintenance, needed only if a real cleanup threshold has been crossed.
+    if (cache_bytes(root) < settings.AFTERFIRE_CACHE_CLEANUP_THRESHOLD_PERCENT/100*settings.AFTERFIRE_ANALYSIS_CACHE_MAX_GB*1024**3
+            and shutil.disk_usage(root).free >= settings.AFTERFIRE_ANALYSIS_MIN_FREE_GB*1024**3):
         return 0
     from app.services.cache_management import cleanup
     return cleanup(dry_run=False)['recovered_bytes']

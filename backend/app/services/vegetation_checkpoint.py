@@ -9,7 +9,8 @@ from shapely.geometry import mapping
 # QA, geometry masks and native arrays are unchanged. Keep their verified cache
 # identity independent; bump this only when those scientific operations change.
 MODIS_CHECKPOINT_VERSION = 'modis-recovery-3.0.0'
-from app.services.satellite_cache import cache_root, file_lock, ensure_space
+from app.services.satellite_cache import cache_root, file_lock
+from app.services.cache_accounting import mutation
 
 
 def checkpoint_path(record, geometry):
@@ -34,15 +35,26 @@ def save_checkpoint(record, geometry, values, affine, total, provenance):
     path.parent.mkdir(parents=True,exist_ok=True)
     with file_lock(cache_root()/'locks'/(path.stem+'.lock')):
         if load_checkpoint(record,geometry): return
-        with file_lock(cache_root()/'quota.lock'):
-            ensure_space(cache_root(),sum(v.nbytes for v in values.values())+65536)
-            tmp=path.with_suffix('.part')
+        # Compress and hash once outside the cross-process quota lock. Native values,
+        # dtype, transform and provenance retain the exact checkpoint format.
+        from io import BytesIO
+        buffer=BytesIO()
+        np.savez_compressed(buffer,**values,transform=np.array(tuple(affine)[:6]),total=total,provenance=json.dumps(provenance))
+        data=buffer.getvalue()
+        checksum=hashlib.sha256(data).hexdigest()
+        sidecar=path.with_suffix('.json');temp=sidecar.with_suffix('.json.part')
+        tmp=path.with_suffix('.part')
+        metadata=json.dumps({'checksum':checksum}).encode()
+        with mutation(cache_root(),[path,sidecar,tmp,temp],len(data)+len(metadata),temporary=True):
             try:
                 with tmp.open('wb') as handle:
-                    np.savez_compressed(handle,**values,transform=np.array(tuple(affine)[:6]),total=total,provenance=json.dumps(provenance))
-                    handle.flush();os.fsync(handle.fileno())
-                with tmp.open('rb') as handle: checksum=hashlib.file_digest(handle,'sha256').hexdigest()
+                    handle.write(data);handle.flush();os.fsync(handle.fileno())
                 os.replace(tmp,path)
-                sidecar=path.with_suffix('.json');temp=sidecar.with_suffix('.json.part')
-                temp.write_text(json.dumps({'checksum':checksum}));os.replace(temp,sidecar)
-            finally: tmp.unlink(missing_ok=True)
+                with temp.open('wb') as handle:
+                    handle.write(metadata);handle.flush();os.fsync(handle.fileno())
+                os.replace(temp,sidecar)
+                directory=os.open(path.parent,os.O_RDONLY|os.O_DIRECTORY)
+                try:os.fsync(directory)
+                finally:os.close(directory)
+            finally:
+                tmp.unlink(missing_ok=True);temp.unlink(missing_ok=True)

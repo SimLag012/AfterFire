@@ -3,11 +3,14 @@ import hashlib
 import json
 import os
 import re
+import sqlite3
 import time
 from pathlib import Path
 from app.core.config import settings
 from app.services.satellite_cache import cache_root, file_lock
 from app.services.planning_metrics import record
+
+from app.services.cache_accounting import atomic_json
 
 VALIDATOR = 'source-integrity-6.1'
 
@@ -60,9 +63,12 @@ def verify(path, entry, identity, validator=None, force=False):
                 validator()
             if fingerprint(path) != generation:
                 return False
-            temporary = evidence.with_suffix('.part')
-            temporary.write_text(json.dumps({'trust': trust, 'fingerprint': generation, 'at': time.time()}))
-            os.replace(temporary, evidence)
+            try:
+                atomic_json(evidence, {'trust': trust, 'fingerprint': generation, 'at': time.time()})
+            except (OSError,ValueError,sqlite3.DatabaseError):
+                # Bytes, identity and science validator have already passed. An
+                # optional evidence-cache write must never trigger reacquisition.
+                record('integrity_evidence_write_skipped',1)
             return True
         except (OSError, ValueError, KeyError):
             return False
@@ -110,9 +116,10 @@ def verify_manifest(folder, manifest):
             # Do not extend the age of unchanged evidence when only one file changed.
             at=saved['at'] if fresh else time.time()
             if any(fingerprint(folder/n)!=generation[n] for n in names):return False
-            tmp=evidence.with_suffix('.part')
-            tmp.write_text(json.dumps({'trust':trust,'fingerprints':generation,'at':at}))
-            os.replace(tmp,evidence)
+            try:
+                atomic_json(evidence, {'trust':trust,'fingerprints':generation,'at':at})
+            except (OSError,ValueError,sqlite3.DatabaseError):
+                record('integrity_evidence_write_skipped',1)
             return True
         except (OSError,ValueError,KeyError,TypeError):
             return False

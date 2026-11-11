@@ -42,10 +42,7 @@ def task_request(product, geometry, start, end):
     return key, {'task_type':'area','task_name':'afterfire-'+key[:40],'params':params}
 
 
-def atomic_json(path, value):
-    tmp = path.with_suffix('.json.part')
-    tmp.write_text(json.dumps(value, sort_keys=True))
-    os.replace(tmp, path)
+from app.services.cache_accounting import atomic_json, mutation
 
 
 class AppEEARS:
@@ -104,6 +101,9 @@ class AppEEARS:
         with file_lock(root/'locks'/('subset-'+key+'.lock')):
             manifest = json.loads(manifest_path.read_text()) if manifest_path.exists() else {}
             if not manifest:
+                # Refuse before creating a remote task if its checkpoint cannot fit.
+                with file_lock(root/'quota.lock'):
+                    ensure_space(root,65536)
                 self.require_submission()
                 response = self.client.get(BASE+'/product/'+product+'.061')
                 response.raise_for_status()
@@ -180,14 +180,14 @@ class AppEEARS:
                                 count+=len(block); downloaded+=len(block)
                                 if transfer: transfer(len(block))
                                 if downloaded>budget: raise ValueError('Request network byte limit exceeded')
-                                with file_lock(root/'quota.lock'):
-                                    ensure_space(root,len(block),temporary=True); target.write(block); target.flush()
+                                with mutation(root,[tmp],len(block),temporary=True):
+                                    target.write(block); target.flush()
                                 digest.update(block)
                             os.fsync(target.fileno())
                     if count!=f['file_size']: raise ValueError('Incomplete AppEEARS file')
-                    os.replace(tmp,path)
+                    with mutation(root,[tmp,path]):os.replace(tmp,path)
                 finally:
-                    tmp.unlink(missing_ok=True)
+                    with mutation(root,[tmp]):tmp.unlink(missing_ok=True)
                 entry = {'file_id':f['file_id'],'name':name,'bytes':count,'checksum':digest.hexdigest()}
                 entries.append(entry)
                 transferred_files.append(name)

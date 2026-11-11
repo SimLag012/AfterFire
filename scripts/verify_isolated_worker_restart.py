@@ -9,7 +9,7 @@ import os
 import sys
 from datetime import date,datetime,timedelta
 from pathlib import Path
-sys.path.insert(0, '/app')
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'backend'))
 import numpy as np
 from rasterio.transform import Affine
 from app.db.database import init_db,AsyncSessionLocal,engine

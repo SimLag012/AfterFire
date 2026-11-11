@@ -4,6 +4,7 @@ import fcntl
 import hashlib
 import json
 import os
+import sqlite3
 import time
 import uuid
 from datetime import date, datetime, timezone
@@ -41,13 +42,15 @@ async def metadata(key, fetch, recent=False):
                 pass
             record('metadata_cache_read_seconds',time.monotonic()-reading)
             value = await fetch()
-            tmp = folder / (digest + '.' + uuid.uuid4().hex + '.part')
+            from app.services.cache_accounting import atomic_json
+            from app.services.satellite_cache import cache_io
             try:
-                tmp.write_text(json.dumps({'timestamp': time.time(), 'acquired_at': datetime.now(timezone.utc).isoformat(),
-                    'provenance': key, 'ttl_seconds': ttl, 'value': value}))
-                os.replace(tmp, path)
-            finally:
-                tmp.unlink(missing_ok=True)
+                await cache_io(atomic_json,path,{'timestamp': time.time(), 'acquired_at': datetime.now(timezone.utc).isoformat(),
+                    'provenance': key, 'ttl_seconds': ttl, 'value': value})
+            except (OSError,ValueError,sqlite3.DatabaseError):
+                # This successful remote response is valid even if its optional
+                # metadata cache cannot be extended under the configured quota.
+                record('metadata_cache_write_skipped',1)
             return value
         finally:
             fcntl.flock(lock, fcntl.LOCK_UN)
