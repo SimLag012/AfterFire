@@ -1,0 +1,20 @@
+{
+  "scope": "100 durable JSON metadata writes per mode, isolated roots; pre-pooling variant, background benchmark load; directional experiment only",
+  "results": [
+    {
+      "mode": "DELETE",
+      "seconds": 4.83158853599889,
+      "cpu_seconds": 1.045707111
+    },
+    {
+      "mode": "PERSIST",
+      "seconds": 5.678348449000623,
+      "cpu_seconds": 1.1490565029999997
+    },
+    {
+      "mode": "WAL",
+      "seconds": 3.295754521001072,
+      "cpu_seconds": 0.7185340309999999
+    }
+  ]
+}

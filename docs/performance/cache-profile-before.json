@@ -1,0 +1,17 @@
+{
+  "operation": "read-only operational cache profile; measured before edits",
+  "files_physical": 124154,
+  "used_bytes": 202596261,
+  "inventory_seconds": 10.631301190998784,
+  "cache_bytes_seconds": 0.8859586350008612,
+  "classes": {
+    "sources": 0,
+    "subsets": 73889483,
+    "results": 9298523,
+    "processed": 31315409,
+    "temporary": 0,
+    "metadata": 88092846,
+    "quarantine": 0
+  },
+  "app_import_seconds": 1.362808957001107
+}

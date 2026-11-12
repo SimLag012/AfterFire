@@ -1,0 +1,44 @@
+{
+  "event": "global-7d39d5f32e51ecf008a57c5f6238fcb2",
+  "area_km2": 609.4561354900235,
+  "label": "all-cold-optimized",
+  "repeat": 0,
+  "state": "benchmark_error",
+  "error_type": "ProviderUnavailable",
+  "seconds": 603.7636052110029,
+  "cpu_seconds": 3.6856281320000015,
+  "provider_operations": [
+    {
+      "operation": "_earth_engine_batch",
+      "seconds": 9.573049564998655,
+      "cpu_seconds": 0.157041126,
+      "requests": 2,
+      "decoded_bytes": 431200,
+      "status": "completed"
+    },
+    {
+      "operation": "_earth_engine_batch",
+      "seconds": 245.38957222500176,
+      "cpu_seconds": 1.025350802,
+      "requests": 2,
+      "decoded_bytes": 10838016,
+      "status": "completed"
+    },
+    {
+      "operation": "_earth_engine_batch",
+      "seconds": 347.0496300559971,
+      "cpu_seconds": 0.9311726539999998,
+      "requests": 2,
+      "decoded_bytes": 10838016,
+      "status": "completed"
+    },
+    {
+      "operation": "_earth_engine_batch",
+      "seconds": 0.0005241539984126575,
+      "cpu_seconds": 0.0005244150000001113,
+      "requests": 1,
+      "decoded_bytes": null,
+      "status": "ProviderUnavailable"
+    }
+  ]
+}
