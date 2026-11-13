@@ -1,0 +1,52 @@
+{
+  "checked_at": "2026-11-13T19:50:34.056211+00:00",
+  "scope": "Current-code temporal replay of frozen real publications; no acquisitions or writes",
+  "cases": 2,
+  "passed": 2,
+  "rows": [
+    {
+      "event_id": "global-8ab308b435230781004c8e0d80c7dba6",
+      "job_id": "96e231257c508cc1b0b8997e5f23a7f8dad2513b0e70234e69cdde0c2c928b12",
+      "check": "passed",
+      "payload_sha256": "25ebf91d44407e4cde200e877394a3719479bf77d8395985a1698bb48417b900",
+      "period": {
+        "start": "2026-07-14",
+        "end": "2026-11-11"
+      },
+      "invalid_windows_rejected": 2,
+      "indices": {
+        "NDVI": {
+          "classification": "insufficient_data",
+          "supported": 0
+        },
+        "EVI": {
+          "classification": "insufficient_data",
+          "supported": 0
+        }
+      },
+      "seconds": 0.0621
+    },
+    {
+      "event_id": "global-8ab308b435230781004c8e0d80c7dba6",
+      "job_id": "d146f804917157cf55ad30b744b094f85bcc54f53f472efccc9fe820b3c059da",
+      "check": "passed",
+      "payload_sha256": "3c46273f580123aee2b8068a82083a127a5e8d972548a7a55c734120af85b3e1",
+      "period": {
+        "start": "2026-07-14",
+        "end": "2026-11-11"
+      },
+      "invalid_windows_rejected": 2,
+      "indices": {
+        "NDVI": {
+          "classification": "insufficient_data",
+          "supported": 0
+        },
+        "EVI": {
+          "classification": "insufficient_data",
+          "supported": 0
+        }
+      },
+      "seconds": 0.0505
+    }
+  ]
+}

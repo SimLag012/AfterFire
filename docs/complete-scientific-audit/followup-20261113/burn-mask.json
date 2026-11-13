@@ -1,0 +1,356 @@
+[
+  {
+    "event": "global-75e84782b376558619c389da8e6fc716",
+    "mapped_features": 140,
+    "raw_pixels": 942,
+    "sources": 3
+  },
+  {
+    "event": "global-1da33a9eb741c54ede92a99dd7bcec3b",
+    "mapped_features": 37,
+    "raw_pixels": 126,
+    "sources": 3
+  },
+  {
+    "event": "global-064accfd021b4683dc3aba56b06de7fd",
+    "mapped_features": 125,
+    "raw_pixels": 741,
+    "sources": 3
+  },
+  {
+    "event": "global-66cbb1d3ab8865c663719a9cf3287fd6",
+    "mapped_features": 21,
+    "raw_pixels": 429,
+    "sources": 3
+  },
+  {
+    "event": "global-f626c357cf56a84c532365e622c257da",
+    "mapped_features": 3,
+    "raw_pixels": 171,
+    "sources": 3
+  },
+  {
+    "event": "global-18f50185ddfea0a5b9e83c23d27e0d70",
+    "mapped_features": 11,
+    "raw_pixels": 276,
+    "sources": 3
+  },
+  {
+    "event": "global-4e355c2147307573902bfda62fc7ed69",
+    "mapped_features": 122,
+    "raw_pixels": 882,
+    "sources": 3
+  },
+  {
+    "event": "global-e6ef6f62f38984d41744412b16a31563",
+    "mapped_features": 18,
+    "raw_pixels": 330,
+    "sources": 3
+  },
+  {
+    "event": "global-ac7c9cdea11c4c4d67d83f55068a8d1d",
+    "mapped_features": 18,
+    "raw_pixels": 282,
+    "sources": 3
+  },
+  {
+    "event": "global-ff6d763ce384d2d79be0260c41560c1d",
+    "mapped_features": 37,
+    "raw_pixels": 180,
+    "sources": 3
+  },
+  {
+    "event": "global-e0ee6acc85dc19bdec7fb4730e0fc23a",
+    "mapped_features": 7,
+    "raw_pixels": 93,
+    "sources": 3
+  },
+  {
+    "event": "global-1ca9b13efea381d35aad976a47e337cd",
+    "mapped_features": 125,
+    "raw_pixels": 663,
+    "sources": 3
+  },
+  {
+    "event": "global-0dd9b9d40589368dd479050d3d712f4b",
+    "mapped_features": 28,
+    "raw_pixels": 222,
+    "sources": 3
+  },
+  {
+    "event": "global-2c9edb4c5b549bc9ef91ce283b92c436",
+    "mapped_features": 26,
+    "raw_pixels": 204,
+    "sources": 3
+  },
+  {
+    "event": "global-3260eea6dc85e332b61a3c023b8f1800",
+    "mapped_features": 31,
+    "raw_pixels": 159,
+    "sources": 3
+  },
+  {
+    "event": "global-926d0f8dfe6563451f7e9c7b3f25fbc3",
+    "mapped_features": 36,
+    "raw_pixels": 135,
+    "sources": 3
+  },
+  {
+    "event": "global-9709bff093c7ccab50d2ecdc3c235e6e",
+    "mapped_features": 0,
+    "raw_pixels": 132,
+    "sources": 3
+  },
+  {
+    "event": "global-be5478484e497710b3b4bd18a18cc445",
+    "mapped_features": 0,
+    "raw_pixels": 429,
+    "sources": 3
+  },
+  {
+    "event": "global-7979a92ec3524e523ee8bb35539ef03e",
+    "mapped_features": 35,
+    "raw_pixels": 243,
+    "sources": 3
+  },
+  {
+    "event": "global-f3d3c4014edc70644b64c7c963e8a668",
+    "mapped_features": 26,
+    "raw_pixels": 393,
+    "sources": 3
+  },
+  {
+    "event": "global-febf57e02ba47a52868adecbabde8687",
+    "mapped_features": 8,
+    "raw_pixels": 351,
+    "sources": 3
+  },
+  {
+    "event": "global-dd1f007922be49d30908018cf1dae028",
+    "mapped_features": 266,
+    "raw_pixels": 3174,
+    "sources": 3
+  },
+  {
+    "event": "global-4bc6ed9108d9e2b29d5f6af3e3f6b198",
+    "mapped_features": 106,
+    "raw_pixels": 669,
+    "sources": 3
+  },
+  {
+    "event": "global-b872c5e27c461e9c4ae724060b788cd0",
+    "mapped_features": 0,
+    "raw_pixels": 78,
+    "sources": 3
+  },
+  {
+    "event": "global-52af204a40bf9f82a228e9f54085fe7f",
+    "mapped_features": 34,
+    "raw_pixels": 441,
+    "sources": 3
+  },
+  {
+    "event": "global-5fcb2781ec1c584d2d7f8f18aeef7c8f",
+    "mapped_features": 13,
+    "raw_pixels": 147,
+    "sources": 3
+  },
+  {
+    "event": "global-730fd3db3b65e67698840df5cf924b77",
+    "mapped_features": 11,
+    "raw_pixels": 219,
+    "sources": 3
+  },
+  {
+    "event": "global-de962de3f998e4976373e018b1aa0a0d",
+    "mapped_features": 22,
+    "raw_pixels": 140,
+    "sources": 4
+  },
+  {
+    "event": "global-7d39d5f32e51ecf008a57c5f6238fcb2",
+    "mapped_features": 1911,
+    "raw_pixels": 11372,
+    "sources": 4
+  },
+  {
+    "event": "global-a67a52521ea9434f0783e0677b664c42",
+    "mapped_features": 676,
+    "raw_pixels": 4176,
+    "sources": 4
+  },
+  {
+    "event": "global-c7ee1b9b32c94d91d766449a656285b6",
+    "mapped_features": 53,
+    "raw_pixels": 252,
+    "sources": 4
+  },
+  {
+    "event": "global-ae03e27d2d3aa866064ac98758faefa8",
+    "mapped_features": 450,
+    "raw_pixels": 3252,
+    "sources": 8
+  },
+  {
+    "event": "global-6c75f44c7f2e9a434486e8107a60adb2",
+    "mapped_features": 619,
+    "raw_pixels": 2718,
+    "sources": 3
+  },
+  {
+    "event": "global-05eef89441827b78e719e46b3f40b50e",
+    "mapped_features": 22,
+    "raw_pixels": 141,
+    "sources": 3
+  },
+  {
+    "event": "global-62ee07984b5efdae659f0c6833ffba02",
+    "mapped_features": 9,
+    "raw_pixels": 105,
+    "sources": 3
+  },
+  {
+    "event": "global-febdc594c5df5e2bf5dfec7d81928ae0",
+    "mapped_features": 109,
+    "raw_pixels": 687,
+    "sources": 3
+  },
+  {
+    "event": "global-0c2dc52b8a01d3a7e95094d034bb6a83",
+    "mapped_features": 45,
+    "raw_pixels": 159,
+    "sources": 3
+  },
+  {
+    "event": "global-d56dcf74acebb75218956e8968fd287b",
+    "mapped_features": 68,
+    "raw_pixels": 261,
+    "sources": 3
+  },
+  {
+    "event": "global-f0b63a3b789d0bce4d37114895897a41",
+    "mapped_features": 25,
+    "raw_pixels": 114,
+    "sources": 3
+  },
+  {
+    "event": "global-651546575cc3b6de39a347934a39b86d",
+    "mapped_features": 120,
+    "raw_pixels": 486,
+    "sources": 3
+  },
+  {
+    "event": "global-3243956ef2081a9309a7816b972b1d84",
+    "mapped_features": 71,
+    "raw_pixels": 213,
+    "sources": 3
+  },
+  {
+    "event": "global-b084df31bd082c102aa46f75500039df",
+    "mapped_features": 13,
+    "raw_pixels": 564,
+    "sources": 3
+  },
+  {
+    "event": "global-a16ee17f6317e3ea1a3fad05fe319246",
+    "mapped_features": 364,
+    "raw_pixels": 2535,
+    "sources": 3
+  },
+  {
+    "event": "global-c8c510abed54e5586d3251499b603334",
+    "mapped_features": 506,
+    "raw_pixels": 2088,
+    "sources": 3
+  },
+  {
+    "event": "global-c4cb538b3d82199edf1c7dcf6d26c824",
+    "mapped_features": 132,
+    "raw_pixels": 756,
+    "sources": 3
+  },
+  {
+    "event": "global-1019de824d50e36fab75e0f0e6b4e3df",
+    "mapped_features": 114,
+    "raw_pixels": 813,
+    "sources": 3
+  },
+  {
+    "event": "global-7ead7debdedf61ac872d0b7259ef9c4b",
+    "mapped_features": 0,
+    "raw_pixels": 132,
+    "sources": 3
+  },
+  {
+    "event": "global-8ae345b003214a6997149edf8cb48929",
+    "mapped_features": 25,
+    "raw_pixels": 282,
+    "sources": 3
+  },
+  {
+    "event": "global-42e4ea7aff90536deb96d88362ca5b14",
+    "mapped_features": 7,
+    "raw_pixels": 117,
+    "sources": 3
+  },
+  {
+    "event": "global-c668d3d84858a7514b928bd17bd2d59b",
+    "mapped_features": 52,
+    "raw_pixels": 249,
+    "sources": 3
+  },
+  {
+    "event": "global-36b964695d5e97ccc0b3de58842798fb",
+    "mapped_features": 0,
+    "raw_pixels": 105,
+    "sources": 3
+  },
+  {
+    "event": "global-b252eeaaa9bbcac23453e85678427701",
+    "mapped_features": 117,
+    "raw_pixels": 2643,
+    "sources": 3
+  },
+  {
+    "event": "global-28556be7c339e95f273a62e728c9f33a",
+    "mapped_features": 59,
+    "raw_pixels": 1113,
+    "sources": 3
+  },
+  {
+    "event": "global-22937829c0cc24d0f67f7152b0339a33",
+    "mapped_features": 70,
+    "raw_pixels": 450,
+    "sources": 3
+  },
+  {
+    "event": "global-236132ce9280db59ca82d5c98e249887",
+    "mapped_features": 0,
+    "raw_pixels": 78,
+    "sources": 3
+  },
+  {
+    "event": "global-3e96de345373a7fa1ede2ade992745b4",
+    "mapped_features": 29,
+    "raw_pixels": 183,
+    "sources": 3
+  },
+  {
+    "event": "global-435e6b4d3977258e6a0ae49f81a1bb40",
+    "mapped_features": 0,
+    "raw_pixels": 75,
+    "sources": 3
+  },
+  {
+    "event": "global-3a79f990e04241bb29902b9c0e52d541",
+    "mapped_features": 37,
+    "raw_pixels": 2523,
+    "sources": 3
+  },
+  {
+    "event": "global-3a2123962b74975c2d07e601be24570e",
+    "mapped_features": 98,
+    "raw_pixels": 891,
+    "sources": 3
+  }
+]

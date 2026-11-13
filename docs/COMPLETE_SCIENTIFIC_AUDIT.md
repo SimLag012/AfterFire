@@ -1,5 +1,29 @@
 # AfterFire — complete scientific engine audit
 
+## Verifica aggiuntiva sulla revisione 6e7a27a — 13 novembre 2026
+
+Questa esecuzione riparte da `99e3a04`, già coincidente con `origin/main`, e conserva le modifiche locali preesistenti. Non presenta i precedenti download come nuove acquisizioni. Sono stati riconfrontati integralmente via API i 59 payload versionati del campione; il codice corrente ne riproduce tutte le classificazioni temporali. Le due pubblicazioni della Tunisia obbligatoria sono state ricontrollate separatamente. [Rapporto machine-readable e inventario delle prove](complete-scientific-audit/followup-20261113/verification.json).
+
+I risultati del campione rimangono **50/59 con combustione mappata**, **56/59 con MODIS pre/post dello stesso indice**, **54/59 con assessment temporale valutabile**, **46/59 con combustione mappata e assessment valutabile**, **56/59 con almeno una cella Intelligence supportata**, **8/59 con confronto ottico**, **59/59 parziali** e **0 errori tecnici terminali**. Sono verifiche delle pubblicazioni della campagna già congelata, non 59 nuove acquisizioni cold. Nessuna di queste misure dimostra recupero ecologico. I 41 candidati VIIRS non acquisiti rimangono esplicitamente non eseguiti nel manifesto precedente.
+
+### Ulteriore difetto corretto
+
+**P2 — finestre assessment implicite non validate.** Una richiesta con solo `post_end` anteriore alla fine dell'evento, oppure solo `post_start` successivo al cutoff della sorgente, superava i controlli API. `model_copy(update=...)` completava i limiti senza eseguire il validatore: il worker poteva pubblicare una classificazione vuota con periodo invertito. Esempio sulla Tunisia: `post_end=2026-07-13` risolveva il periodo `2026-07-14–2026-07-13`. È un errore di validazione e metadati, distinto dalla legittima insufficienza delle osservazioni post-evento.
+
+La funzione condivisa `assessment_window` ora valida il periodo dopo avere risolto i default e lo limita all'intervallo post-evento della pubblicazione. L'API la usa prima dell'accodamento; i calcoli territoriali e spaziali applicano la stessa regola. Sei nuovi test riproducono il difetto prima della correzione e passano dopo. File: `backend/app/analysis/recovery_assessment.py`, `backend/app/api/routes/recovery_intelligence.py`, `backend/app/tests/test_assessment_period.py`. Lo script `scripts/verify_assessment_windows.py` conserva anche gli eventuali casi falliti: **59/59 classificazioni invariate, 118 finestre impossibili rifiutate**, oltre a **2/2 versioni Tunisia e altre quattro finestre rifiutate**. Non cambia la metodologia scientifica, quindi la versione assessment resta 5.1.0; nessun record pubblicato viene riscritto.
+
+### Controlli rieseguiti
+
+- Suite complete isolate: **260 SQLite + 260 PostGIS prima; 266 + 266 dopo**, zero skip o fallimenti nelle suite finali. Il JUnit `window-before.xml` conserva intenzionalmente i sei fallimenti che dimostrano il difetto.
+- Maschera burned area: **59/59 eventi**, **51.784 campioni raw**, **186 finestre sorgente**, **7.107 feature**, comprese le associazioni ambigue; queste feature non sono 7.107 celle univocamente associate. Decoder QA indipendente confrontato con il codice corrente e con le feature API.
+- Verificatore indipendente completo: **165/165 pubblicazioni**, riferite a **88 candidati distinti**, più **cinque storie Reburn**; **10.625.912 controlli QA raw**, **22.794 compositi**, **17.602 controlli di feature burned area**, senza errori. Sorgenti NASA conservate montate in sola lettura, zero nuovi HDF e zero submission AppEEARS. Le verifiche ripetono pixel tra indici e versioni: non sono 165 incendi casuali indipendenti né superfici da sommare. Il campione casuale per le percentuali resta quello di 59 candidati.
+- Tunisia: nuovo `computePixels` HLS, **2.143.152 byte decodificati**, **9.627 centri comuni su 15.110**, dNBR indipendente **0,03907087331**, scarto **0,0000020923** da EE. Nessuna interpolazione o attribuzione di combustione. I due asset API hanno **156 bande ciascuno, zero bande vuote**, stessa griglia e stessi valori delle bande originali conservate.
+- Tre nuovi SIGKILL e restart Docker, in container senza rete con DB/cache temporanei, al **50/90/99%**: lease recuperata al secondo tentativo, checkpoint riusato, zero nuove richieste, pubblicazione atomica e zero job fantasma. Non è stato riavviato alcun servizio operativo.
+- Build TypeScript/Vite e Chromium sulla build locale corrente: Explorer, Recovery Story, Tunisia e Chips/Dixie a **1440 px e 390 px**. Valori confrontati con API reali; Tunisia mostra 12 identità ottiche distinte e 9/255 celle senza compositi territoriali post-evento validi; Chips/Dixie mostra 228 celle ripetute e Recovery Gap su 226 condivise. Zero errori JS e overflow nei controlli.
+- Secret scanning dei file tracciati e dello staging, controllo diff e verifica della divergenza Git. Commit correttivo locale `6e7a27a`; nessun push e nessun aggiornamento dei servizi operativi.
+
+Le prove sono in `docs/complete-scientific-audit/followup-20261113/`. I tempi dei nuovi replay/API sono separati dalle acquisizioni cold/warm storiche riportate sotto. Non si rivendicano nuove misure di traffico HTTP, RAM di picco o prestazioni cold sull'intero campione. Le deprecazioni delle dipendenze restano warning, non test disabilitati.
+
 ## Verifica del 13 novembre 2026
 
 Abbiamo verificato 59 candidati distinti. Per i 56 candidati FIRMS MODIS dei manifesti congelati abbiamo riletto le pubblicazioni per ID di job, confrontato integralmente il JSON e rieseguito i calcoli su raster e serie conservati. Per tre nuovi candidati FIRMS VIIRS S-NPP abbiamo eseguito anche discovery e acquisizione sul worker operativo. Entrambi i gruppi hanno pubblicazioni del motore 3.2.0. Le correzioni locali 3.2.1 e Reburn 6.0.3 sono state applicate in replay.
