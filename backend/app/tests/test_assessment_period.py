@@ -4,7 +4,7 @@ from types import SimpleNamespace
 
 import pytest
 
-from app.analysis.recovery_assessment import AssessmentParameters, assess
+from app.analysis.recovery_assessment import AssessmentParameters, assess, assessment_window
 from app.api.routes import recovery_intelligence
 from app.services.spatial_recovery import spatial_assessment
 from app.tests.test_phase5_recovery import fixture
@@ -46,3 +46,48 @@ async def test_legacy_tunisia_map_uses_its_persisted_classification_window(monke
     response = await recovery_intelligence.assessment_map('tunisia', 'NDVI', None, 'legacy', None)
     assert response['classification_period'] == window
     assert record.payload['period'] == history
+
+
+@pytest.mark.parametrize('parameters', [
+    AssessmentParameters(post_end=date(2020, 12, 31)),
+    AssessmentParameters(post_start=date(2025, 1, 1)),
+    AssessmentParameters(post_start=date(2020, 1, 1)),
+    AssessmentParameters(post_end=date(2025, 1, 1)),
+])
+def test_effective_window_stays_inside_source_post_event_interval(parameters):
+    # Each request is valid in isolation. Resolving its missing bound against
+    # this source must not publish an inverted or unobserved classification span.
+    payload = fixture([.3] * 4)
+    with pytest.raises(ValueError):
+        assessment_window(payload, parameters)
+    with pytest.raises(ValueError):
+        assess(payload, parameters)
+    with pytest.raises(ValueError):
+        spatial_assessment(payload, parameters)
+
+
+@pytest.mark.parametrize('parameters', [
+    AssessmentParameters(post_end=date(2020, 12, 31)),
+    AssessmentParameters(post_start=date(2025, 1, 1)),
+])
+@pytest.mark.asyncio
+async def test_invalid_effective_window_is_rejected_before_enqueue(parameters, monkeypatch):
+    from fastapi import HTTPException
+
+    source = SimpleNamespace(payload=fixture([.3] * 4))
+    class Database:
+        async def execute(self, statement):
+            return SimpleNamespace(scalar_one_or_none=lambda: source)
+
+    async def require_event(*args):
+        return None
+
+    async def enqueue(*args):
+        pytest.fail('Invalid scientific interval must not enter the worker queue')
+
+    monkeypatch.setattr(recovery_intelligence, 'require_event', require_event)
+    monkeypatch.setattr(recovery_intelligence, 'enqueue_assessment', enqueue)
+    with pytest.raises(HTTPException) as error:
+        await recovery_intelligence.request_assessment(
+            'fixture', recovery_intelligence.AssessmentRequest(parameters=parameters), Database())
+    assert error.value.status_code == 422

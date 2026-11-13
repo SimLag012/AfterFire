@@ -70,10 +70,20 @@ def runs(points, predicate, parameters):
 
 def assessment_window(payload, parameters):
     # The last detection is the lower boundary; a composite must start strictly after it.
-    return parameters.model_copy(update={
-        'post_start': parameters.post_start or day(payload['event_period']['end']),
-        'post_end': parameters.post_end or day(payload['period']['end']),
+    event_end = day(payload['event_period']['end'])
+    source_end = day(payload['period']['end'])
+    # Validate after resolving defaults too: model_copy(update=...) bypasses
+    # Pydantic validators, allowing a one-sided request to invert the interval.
+    window = AssessmentParameters.model_validate({
+        **parameters.model_dump(),
+        'post_start': parameters.post_start or event_end,
+        'post_end': parameters.post_end or source_end,
     })
+    if window.post_start < event_end:
+        raise ValueError('Assessment window must be after the fire')
+    if window.post_end > source_end:
+        raise ValueError('Assessment cutoff exceeds published observations')
+    return window
 
 
 def in_post_window(observation, event_end, parameters):
@@ -114,6 +124,7 @@ def assess_index(series, event_start, event_end, parameters):
 
 def assess(payload, parameters=None):
     parameters = parameters or AssessmentParameters()
+    window = assessment_window(payload, parameters)
     config = AnalysisConfiguration.model_validate(payload['configuration'])
     start,end=day(payload['event_period']['start']),day(payload['event_period']['end'])
     observations=seasonal_metrics(payload['observations'],start,end,config)
@@ -121,7 +132,6 @@ def assess(payload, parameters=None):
         if o['baseline_n']<parameters.min_baseline_observations:
             for key in ('baseline','baseline_mad','baseline_lower','baseline_upper','anomaly'):
                 o[key]=None
-    window = assessment_window(payload, parameters)
     indices={index:assess_index([o for o in observations if o['index']==index],start,end,window) for index in ('NDVI','EVI')}
     concordance=indices['NDVI']['classification']==indices['EVI']['classification']
     insights=[]

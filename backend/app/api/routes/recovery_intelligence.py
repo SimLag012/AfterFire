@@ -11,7 +11,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.core.config import settings
 from app.db.database import get_db
 from app.models.satellite_analysis import (EventAnalysisJob, EventAnalysisResult, RecoveryAssessmentRecord, RecoveryComparisonRecord)
-from app.analysis.recovery_assessment import AssessmentParameters, VERSION
+from app.analysis.recovery_assessment import AssessmentParameters, VERSION, assessment_window
 from app.analysis.recovery_comparison import compare, VERSION as COMPARISON_VERSION
 from app.services.recovery_jobs import enqueue_assessment, latest_assessment
 from app.api.routes.event_analysis import require_event
@@ -31,10 +31,10 @@ async def request_assessment(event_id:str, request:AssessmentRequest, db:AsyncSe
     if request.source_job_id: stmt=stmt.where(EventAnalysisResult.job_id==request.source_job_id)
     source=(await db.execute(stmt.order_by(EventAnalysisResult.created_at.desc()).limit(1))).scalar_one_or_none()
     if source is None: raise HTTPException(409,'Publish satellite observations before requesting assessment')
-    if request.parameters.post_start and str(request.parameters.post_start)<source.payload['event_period']['end']:
-        raise HTTPException(422,'Assessment window must be after the fire')
-    if request.parameters.post_end and str(request.parameters.post_end)>source.payload['period']['end']:
-        raise HTTPException(422,'Assessment cutoff exceeds published observations')
+    try:
+        assessment_window(source.payload, request.parameters)
+    except ValueError as exc:
+        raise HTTPException(422, str(exc)) from None
     job=await enqueue_assessment(db,source,request.parameters)
     return {'id':job.id,'state':job.state,'progress':job.progress,'error':job.error}
 
