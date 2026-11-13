@@ -77,3 +77,6 @@ app.include_router(recovery_intelligence_router, prefix=settings.API_V1_STR, tag
 
 from app.api.routes.reburn import router as reburn_router
 app.include_router(reburn_router, prefix=settings.API_V1_STR, tags=['Reburn Intelligence'])
+
+from app.fire_activity.routes import router as fire_activity_router
+app.include_router(fire_activity_router, prefix=settings.API_V1_STR)

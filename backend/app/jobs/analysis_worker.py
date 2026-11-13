@@ -79,7 +79,13 @@ async def lane():
             if job:
                 await process(job)
             else:
-                await asyncio.sleep(3)
+                # History runs in the existing worker, only when Recovery has no queued work.
+                from app.fire_activity.service import claim, run
+                study = await claim()
+                if study:
+                    await run(study)
+                else:
+                    await asyncio.sleep(3)
         except (OperationalError, OSError):
             # If the DB was unavailable while releasing a job, its lease remains recoverable.
             log.warning('Worker database connection interrupted; reconnecting')

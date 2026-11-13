@@ -20,3 +20,5 @@ __all__ = [
 ]
 
 from app.models.satellite_analysis import SatelliteGranule, EventAnalysisJob, EventAnalysisResult, EventVegetationObservation, EventBurnedAreaObservation
+
+from app.models.fire_activity import ActivityStudy, ActivityWindow
