@@ -52,6 +52,14 @@ I tre nuovi job hanno richiesto 151–177 s, mediana 169,57 s. Le tre ripetizion
 
 Riproduzione del burn mask: dal runtime backend impostare PYTHONPATH=backend ed eseguire python scripts/verify_burn_quality_replay.py docs/complete-scientific-audit/verification-20261113.json /percorso/cache/satellite. Il comando usa i job versionati e i sottoinsiemi MCD64A1 originali.
 
+### Chiusura sulla revisione corrente
+
+La ripresa ha verificato il commit cfa8cb5 in una nuova immagine backend costruita dalle dipendenze dichiarate. Il contenuto interamente committato passa **260 test SQLite e 260 PostgreSQL/PostGIS**, con zero errori, fallimenti o skip. I 251 test citati sopra descrivono il precedente commit parziale 74250d5. Sono riuscite la build frontend e le verifiche Chromium desktop/mobile su Explorer, Recovery Story e Chips/Dixie.
+
+Nuovo controllo API dei 56 JSON congelati, tutti identici. Il replay indipendente della maschera MCD64A1 sui 59 eventi riproduce 7.107 feature da 51.784 campioni in 186 finestre sorgente. I due GeoTIFF Tunisia mantengono 156 bande utili ciascuno. Le verifiche usano il codice corrente e le pubblicazioni operative versionate. L’attivazione delle nuove immagini nei servizi operativi resta da eseguire.
+
+[Esiti della revisione corrente e impronte dei test](complete-scientific-audit/final-revision-verification-20261113.json).
+
 ## Campagna dell’11 novembre 2026
 
 

@@ -1,0 +1,1627 @@
+{
+  "checked_at": "2026-11-13T19:38:27.417464+00:00",
+  "source_commit": "cfa8cb55155031470100a325e3a91237d0136877",
+  "runtime_image": "afterfire-audit-20261113",
+  "runtime_image_id": "sha256:bcfe92d8019a5d0e886821aadc470ea3fcbfeb170be363f885c35459e5fb7ca9",
+  "tests": {
+    "sqlite": {
+      "tests": 260,
+      "errors": 0,
+      "failures": 0,
+      "skipped": 0,
+      "seconds": 25.929,
+      "junit_sha256": "e5cad2154b4d70b7966d7ab85ce67b1f28ac16d102c6678d5a84db5f98420588",
+      "junit_file": "final-sqlite-20261113.xml"
+    },
+    "postgis": {
+      "tests": 260,
+      "errors": 0,
+      "failures": 0,
+      "skipped": 0,
+      "seconds": 28.663,
+      "junit_sha256": "65f70824fae0b46cf96fd6ab90053ee51dc72c437f0598cd0ba6d2758c8f1830",
+      "junit_file": "final-postgis-20261113.xml"
+    }
+  },
+  "build": {
+    "backend": "passed",
+    "frontend": "passed"
+  },
+  "publication_matches": {
+    "checked_at": "2026-11-13T19:35:07.378063+00:00",
+    "scope": "GET by original job ID; canonical full JSON equality to frozen capture; recomputed mapped cells and same-index pre/post counts.",
+    "cases": 56,
+    "passed": 56,
+    "data_bytes": 15729899,
+    "median_seconds": 0.07815,
+    "rows": [
+      {
+        "event_id": "global-75e84782b376558619c389da8e6fc716",
+        "job_id": "834fa69c004ac8b7de909e271d44c1818102c45200be736dd2c748a6dfc3817f",
+        "engine": "modis-recovery-3.2.0",
+        "sha256": "73d455085e8f9c888b10904b023c0b160609fc2b8f51311305388f9199b12656",
+        "bytes": 287214,
+        "seconds": 0.1766,
+        "mapped_cells": 140,
+        "indices": {
+          "NDVI": {
+            "pre": 28,
+            "post": 12
+          },
+          "EVI": {
+            "pre": 28,
+            "post": 12
+          }
+        },
+        "check": "passed"
+      },
+      {
+        "event_id": "global-1da33a9eb741c54ede92a99dd7bcec3b",
+        "job_id": "e5fe77b6f4ea3daf2e70315d3607690750c78591196caf0ff360deb40a660096",
+        "engine": "modis-recovery-3.2.0",
+        "sha256": "c3b0ed0cbd1014dd6f4b77af188d486f1f2051a432232c322e3472f17fa69467",
+        "bytes": 224562,
+        "seconds": 0.0897,
+        "mapped_cells": 37,
+        "indices": {
+          "NDVI": {
+            "pre": 16,
+            "post": 8
+          },
+          "EVI": {
+            "pre": 16,
+            "post": 8
+          }
+        },
+        "check": "passed"
+      },
+      {
+        "event_id": "global-064accfd021b4683dc3aba56b06de7fd",
+        "job_id": "e3e3e5765942d9c868c69031bb5b9a7d86edf260e3f418afd9efadf7d6f053f9",
+        "engine": "modis-recovery-3.2.0",
+        "sha256": "0c268935522b46d7407748539f95b859089d5056124d5a9e9bfbb8a2ebbf5f50",
+        "bytes": 276206,
+        "seconds": 0.1511,
+        "mapped_cells": 125,
+        "indices": {
+          "NDVI": {
+            "pre": 27,
+            "post": 13
+          },
+          "EVI": {
+            "pre": 27,
+            "post": 13
+          }
+        },
+        "check": "passed"
+      },
+      {
+        "event_id": "global-66cbb1d3ab8865c663719a9cf3287fd6",
+        "job_id": "59580f4c43d41064144a602fa5bf0e55b4d702f9bd1869d2c635876faf62ceb5",
+        "engine": "modis-recovery-3.2.0",
+        "sha256": "6fded514e2d567ec2c3d03a1573a3a3bc1260d7f5b465b75ec483f1f4b93aeb2",
+        "bytes": 214457,
+        "seconds": 0.171,
+        "mapped_cells": 21,
+        "indices": {
+          "NDVI": {
+            "pre": 23,
+            "post": 9
+          },
+          "EVI": {
+            "pre": 23,
+            "post": 9
+          }
+        },
+        "check": "passed"
+      },
+      {
+        "event_id": "global-f626c357cf56a84c532365e622c257da",
+        "job_id": "4d987e756cc907add925b69ac5ac2b4fd5f05b6ad66dde44f5701b10a388b51a",
+        "engine": "modis-recovery-3.2.0",
+        "sha256": "9de479f921a043a4b788d0f0662a791aa77aab6f2ddcdba84c3dfe07a9ea16bb",
+        "bytes": 203987,
+        "seconds": 0.153,
+        "mapped_cells": 3,
+        "indices": {
+          "NDVI": {
+            "pre": 30,
+            "post": 12
+          },
+          "EVI": {
+            "pre": 30,
+            "post": 12
+          }
+        },
+        "check": "passed"
+      },
+      {
+        "event_id": "global-18f50185ddfea0a5b9e83c23d27e0d70",
+        "job_id": "6ca7552393a76c93ce2357934f564de035c41101014b2e2303c2c5fe9879686d",
+        "engine": "modis-recovery-3.2.0",
+        "sha256": "e7de136a937c729d167667bc93d26bce834312f0a4504ab756ae4ac12b4a8985",
+        "bytes": 209292,
+        "seconds": 0.1082,
+        "mapped_cells": 11,
+        "indices": {
+          "NDVI": {
+            "pre": 35,
+            "post": 18
+          },
+          "EVI": {
+            "pre": 35,
+            "post": 18
+          }
+        },
+        "check": "passed"
+      },
+      {
+        "event_id": "global-4e355c2147307573902bfda62fc7ed69",
+        "job_id": "e3b3594da25dab85079e38643bc1f01dba83aefe041742fe66321a76aacef0b3",
+        "engine": "modis-recovery-3.2.0",
+        "sha256": "74af4374a999c6b9ed489cce9d97c585d26488f4b92d62b5b61df99cbc3fd7be",
+        "bytes": 276012,
+        "seconds": 0.1021,
+        "mapped_cells": 122,
+        "indices": {
+          "NDVI": {
+            "pre": 38,
+            "post": 17
+          },
+          "EVI": {
+            "pre": 38,
+            "post": 17
+          }
+        },
+        "check": "passed"
+      },
+      {
+        "event_id": "global-e6ef6f62f38984d41744412b16a31563",
+        "job_id": "776c0a29639a44dd90ec1de44f89fe34e997d346ff5ad3c3f9e64e1b8d190750",
+        "engine": "modis-recovery-3.2.0",
+        "sha256": "73959ab5fb61ac42c0a576c232f123c2386f42db3de6d3b75521f46de92b9c04",
+        "bytes": 212950,
+        "seconds": 0.0869,
+        "mapped_cells": 18,
+        "indices": {
+          "NDVI": {
+            "pre": 34,
+            "post": 16
+          },
+          "EVI": {
+            "pre": 34,
+            "post": 16
+          }
+        },
+        "check": "passed"
+      },
+      {
+        "event_id": "global-ac7c9cdea11c4c4d67d83f55068a8d1d",
+        "job_id": "e285a762b168f97f0dfcc0282f1b2b8519824c19a6eb7b5074326e17bf60dee4",
+        "engine": "modis-recovery-3.2.0",
+        "sha256": "55e4574c56e5ce13c5039167c295fe164c99302d61c8daa8b839e0a2597deae1",
+        "bytes": 212664,
+        "seconds": 0.065,
+        "mapped_cells": 18,
+        "indices": {
+          "NDVI": {
+            "pre": 34,
+            "post": 18
+          },
+          "EVI": {
+            "pre": 34,
+            "post": 18
+          }
+        },
+        "check": "passed"
+      },
+      {
+        "event_id": "global-ff6d763ce384d2d79be0260c41560c1d",
+        "job_id": "963f623cb362ed164ed93f2b50f07d4afa575a794e819cb574e74c1c725269f3",
+        "engine": "modis-recovery-3.2.0",
+        "sha256": "c3109845a5be09dda66a8758a521972a38e7449316d18d9c7188bb254a6de831",
+        "bytes": 224206,
+        "seconds": 0.0746,
+        "mapped_cells": 37,
+        "indices": {
+          "NDVI": {
+            "pre": 34,
+            "post": 17
+          },
+          "EVI": {
+            "pre": 34,
+            "post": 17
+          }
+        },
+        "check": "passed"
+      },
+      {
+        "event_id": "global-e0ee6acc85dc19bdec7fb4730e0fc23a",
+        "job_id": "a21a0e17ffbe5a787df58843c907bd5c43472dcd014dd17b21bcc6594238a257",
+        "engine": "modis-recovery-3.2.0",
+        "sha256": "45cc7100c6d6bec9c4f7da8eb931b28941ffa22018c408ccc344a0459a5e08dc",
+        "bytes": 207113,
+        "seconds": 0.0697,
+        "mapped_cells": 7,
+        "indices": {
+          "NDVI": {
+            "pre": 37,
+            "post": 18
+          },
+          "EVI": {
+            "pre": 37,
+            "post": 18
+          }
+        },
+        "check": "passed"
+      },
+      {
+        "event_id": "global-1ca9b13efea381d35aad976a47e337cd",
+        "job_id": "55b2278ef18b26fdd544a8a4e573dc337a04baf12c70d96c51c0a2f48b277a2c",
+        "engine": "modis-recovery-3.2.0",
+        "sha256": "1cbc7f01e57af668403f4a0d2a65ac30feb38240a9b80bd2ac49f8da9bfdf1f2",
+        "bytes": 275742,
+        "seconds": 0.084,
+        "mapped_cells": 125,
+        "indices": {
+          "NDVI": {
+            "pre": 41,
+            "post": 21
+          },
+          "EVI": {
+            "pre": 41,
+            "post": 21
+          }
+        },
+        "check": "passed"
+      },
+      {
+        "event_id": "global-0dd9b9d40589368dd479050d3d712f4b",
+        "job_id": "a732605cfcc14a36ecc6d0c2d8c182889e402f8a6d19bf54b77f9b2a55293c2f",
+        "engine": "modis-recovery-3.2.0",
+        "sha256": "64e9dfc4e448168ca1119efcdb11083c686736efe163738aa3aea8da308e26e3",
+        "bytes": 219984,
+        "seconds": 0.1548,
+        "mapped_cells": 28,
+        "indices": {
+          "NDVI": {
+            "pre": 38,
+            "post": 18
+          },
+          "EVI": {
+            "pre": 38,
+            "post": 18
+          }
+        },
+        "check": "passed"
+      },
+      {
+        "event_id": "global-2c9edb4c5b549bc9ef91ce283b92c436",
+        "job_id": "6487e9d7d55138b38423d4a95031728c72b0910394b6f6984ef1b8dff355902b",
+        "engine": "modis-recovery-3.2.0",
+        "sha256": "d2f26e8944bae1fd8b4a167013fb2fc392a85d2b912ce695b9ec66169206e8ff",
+        "bytes": 217749,
+        "seconds": 0.082,
+        "mapped_cells": 26,
+        "indices": {
+          "NDVI": {
+            "pre": 32,
+            "post": 19
+          },
+          "EVI": {
+            "pre": 32,
+            "post": 19
+          }
+        },
+        "check": "passed"
+      },
+      {
+        "event_id": "global-3260eea6dc85e332b61a3c023b8f1800",
+        "job_id": "9a7df8bfa76ae41a980ca1431ba464cfd9225c15e34b8402a303af20aadad512",
+        "engine": "modis-recovery-3.2.0",
+        "sha256": "7fb2a7ec178086782809d2d49f236b85315e7fe476ea82de0783a8b826c24cc2",
+        "bytes": 220917,
+        "seconds": 0.0743,
+        "mapped_cells": 16,
+        "indices": {
+          "NDVI": {
+            "pre": 34,
+            "post": 20
+          },
+          "EVI": {
+            "pre": 34,
+            "post": 20
+          }
+        },
+        "check": "passed"
+      },
+      {
+        "event_id": "global-926d0f8dfe6563451f7e9c7b3f25fbc3",
+        "job_id": "160e6e1b99e70e3e68c552b0ddb2d34823d7bf325953787f5cafbbba843943c5",
+        "engine": "modis-recovery-3.2.0",
+        "sha256": "c967d21b618781dfefbbb77c42922b5a8fd2f8672a97b4c6bdee710e86a14996",
+        "bytes": 220830,
+        "seconds": 0.0931,
+        "mapped_cells": 3,
+        "indices": {
+          "NDVI": {
+            "pre": 12,
+            "post": 4
+          },
+          "EVI": {
+            "pre": 12,
+            "post": 4
+          }
+        },
+        "check": "passed"
+      },
+      {
+        "event_id": "global-9709bff093c7ccab50d2ecdc3c235e6e",
+        "job_id": "47c6f3b96bb0b4602c7b2775c3d5dffed9ea9057ff54d57c0a6ad2fddb0079c4",
+        "engine": "modis-recovery-3.2.0",
+        "sha256": "cb68f415efe9ce933f60a5d026582840e5f2a609dba47f5c415cea5af47c7227",
+        "bytes": 230344,
+        "seconds": 0.0635,
+        "mapped_cells": 0,
+        "indices": {
+          "NDVI": {
+            "pre": 15,
+            "post": 7
+          },
+          "EVI": {
+            "pre": 15,
+            "post": 7
+          }
+        },
+        "check": "passed"
+      },
+      {
+        "event_id": "global-be5478484e497710b3b4bd18a18cc445",
+        "job_id": "79efbb21fd1adfc717dc9ae45c73fc01a1999ab2846c30b508609ac61fdd8332",
+        "engine": "modis-recovery-3.2.0",
+        "sha256": "49ce37489e46069166f1d3206e5dcda27ec3a6be918b717805f76d875b7aaf51",
+        "bytes": 242552,
+        "seconds": 0.0632,
+        "mapped_cells": 0,
+        "indices": {
+          "NDVI": {
+            "pre": 12,
+            "post": 5
+          },
+          "EVI": {
+            "pre": 12,
+            "post": 5
+          }
+        },
+        "check": "passed"
+      },
+      {
+        "event_id": "global-7979a92ec3524e523ee8bb35539ef03e",
+        "job_id": "29c226c5a4a98b65ad2e1daedc1edca00b6bd07733dd92c511cb587b181194b5",
+        "engine": "modis-recovery-3.2.0",
+        "sha256": "3a3811ef5ad73bd356a0a7a5155e6488fb259e443c04c3122af241f6739de9c2",
+        "bytes": 221355,
+        "seconds": 0.0785,
+        "mapped_cells": 35,
+        "indices": {
+          "NDVI": {
+            "pre": 10,
+            "post": 5
+          },
+          "EVI": {
+            "pre": 10,
+            "post": 5
+          }
+        },
+        "check": "passed"
+      },
+      {
+        "event_id": "global-f3d3c4014edc70644b64c7c963e8a668",
+        "job_id": "172653f1fed8a940431542780b0145ed048cf5e5f2cf2e74db79a438f6c859ce",
+        "engine": "modis-recovery-3.2.0",
+        "sha256": "a8770a8f2501bac63b95759da73c314d62935c75433272c10d49d40cad1be028",
+        "bytes": 216516,
+        "seconds": 0.0828,
+        "mapped_cells": 26,
+        "indices": {
+          "NDVI": {
+            "pre": 10,
+            "post": 5
+          },
+          "EVI": {
+            "pre": 10,
+            "post": 5
+          }
+        },
+        "check": "passed"
+      },
+      {
+        "event_id": "global-febf57e02ba47a52868adecbabde8687",
+        "job_id": "21bca8b6194061626ad962959a5ec9485a48d3a98c65152beaf7f01c214b8d69",
+        "engine": "modis-recovery-3.2.0",
+        "sha256": "2aba1c379c2cf3011307c8e9c2fafb4ca64fcea9b011057e5fa958d2b58a01e3",
+        "bytes": 206492,
+        "seconds": 0.0764,
+        "mapped_cells": 8,
+        "indices": {
+          "NDVI": {
+            "pre": 20,
+            "post": 5
+          },
+          "EVI": {
+            "pre": 20,
+            "post": 5
+          }
+        },
+        "check": "passed"
+      },
+      {
+        "event_id": "global-dd1f007922be49d30908018cf1dae028",
+        "job_id": "1916f86283cf5f784fce165341309a88f14894808ee5e18527fbe0a095468fb0",
+        "engine": "modis-recovery-3.2.0",
+        "sha256": "6b2138db697c5b55c19eecfbc2b5efdcc74093b7f72ba1d844cee0b33fd285f3",
+        "bytes": 359467,
+        "seconds": 0.1242,
+        "mapped_cells": 144,
+        "indices": {
+          "NDVI": {
+            "pre": 23,
+            "post": 11
+          },
+          "EVI": {
+            "pre": 23,
+            "post": 11
+          }
+        },
+        "check": "passed"
+      },
+      {
+        "event_id": "global-4bc6ed9108d9e2b29d5f6af3e3f6b198",
+        "job_id": "7a199cdf9193999f7c754f00bbfb402d5737f3e65a28737269bd1ab6d1786c2b",
+        "engine": "modis-recovery-3.2.0",
+        "sha256": "3d9ef023bf8b1bb84855a8f7a2bff824a3adb68c6dde24439568d59aea025c13",
+        "bytes": 264491,
+        "seconds": 0.0844,
+        "mapped_cells": 106,
+        "indices": {
+          "NDVI": {
+            "pre": 22,
+            "post": 10
+          },
+          "EVI": {
+            "pre": 22,
+            "post": 10
+          }
+        },
+        "check": "passed"
+      },
+      {
+        "event_id": "global-b872c5e27c461e9c4ae724060b788cd0",
+        "job_id": "8fa9c09fb59eb3b2a53799ae271e8d5c9a25e88299f6aa8293bb2afd4531ec0f",
+        "engine": "modis-recovery-3.2.0",
+        "sha256": "6761a7bd4d9693f3275edac41aa06fb7201575c5987fed3b4631a7c204c1b594",
+        "bytes": 231051,
+        "seconds": 0.0735,
+        "mapped_cells": 0,
+        "indices": {
+          "NDVI": {
+            "pre": 22,
+            "post": 6
+          },
+          "EVI": {
+            "pre": 22,
+            "post": 6
+          }
+        },
+        "check": "passed"
+      },
+      {
+        "event_id": "global-52af204a40bf9f82a228e9f54085fe7f",
+        "job_id": "26371f21445280007c1700410483f85a6eae5cca2ee35f2a22dbbdea0d7a1d61",
+        "engine": "modis-recovery-3.2.0",
+        "sha256": "ce1dfdc136fa6dcdb1fe2b1712000144c516844922933c05393b9da16725eb30",
+        "bytes": 224379,
+        "seconds": 0.1011,
+        "mapped_cells": 34,
+        "indices": {
+          "NDVI": {
+            "pre": 20,
+            "post": 9
+          },
+          "EVI": {
+            "pre": 20,
+            "post": 9
+          }
+        },
+        "check": "passed"
+      },
+      {
+        "event_id": "global-5fcb2781ec1c584d2d7f8f18aeef7c8f",
+        "job_id": "661898c818b6c6e39ee2ad34fb2a603b6953cd2e815abff887b7efa1666616ce",
+        "engine": "modis-recovery-3.2.0",
+        "sha256": "ab009eebf5816e0cfcae25ae7be7ea0fce85ecd8bda12c5f13e645dcfe2938ff",
+        "bytes": 164096,
+        "seconds": 0.0778,
+        "mapped_cells": 13,
+        "indices": {
+          "NDVI": {
+            "pre": 42,
+            "post": 5
+          },
+          "EVI": {
+            "pre": 42,
+            "post": 5
+          }
+        },
+        "check": "passed"
+      },
+      {
+        "event_id": "global-730fd3db3b65e67698840df5cf924b77",
+        "job_id": "8d0dcc63fd353ab3b70d4d331fba427c71e99472791c638a9761b77bdd65bfd9",
+        "engine": "modis-recovery-3.2.0",
+        "sha256": "dec4f94b08b931f49946cb6d901dc9f829e2474da406c7d1f2bc01fc82477b09",
+        "bytes": 163341,
+        "seconds": 0.0451,
+        "mapped_cells": 11,
+        "indices": {
+          "NDVI": {
+            "pre": 39,
+            "post": 6
+          },
+          "EVI": {
+            "pre": 39,
+            "post": 6
+          }
+        },
+        "check": "passed"
+      },
+      {
+        "event_id": "global-de962de3f998e4976373e018b1aa0a0d",
+        "job_id": "30c72573253cad6569963d81f87e816017c24771b389e5a80f78f9dd9519061a",
+        "engine": "modis-recovery-3.2.0",
+        "sha256": "183219e5fab3bdf4955a21ff92c16ce23f30a3223e96c105ff8161b07ec672bc",
+        "bytes": 214187,
+        "seconds": 0.056,
+        "mapped_cells": 8,
+        "indices": {
+          "NDVI": {
+            "pre": 28,
+            "post": 14
+          },
+          "EVI": {
+            "pre": 28,
+            "post": 14
+          }
+        },
+        "check": "passed"
+      },
+      {
+        "event_id": "global-7d39d5f32e51ecf008a57c5f6238fcb2",
+        "job_id": "49c8654073ad378143e9bcb6ad9fc0c8605ff01410d30adae04cba7013cfe082",
+        "engine": "modis-recovery-3.2.0",
+        "sha256": "ef2a59eb94d213b714dcd6322e7ded4ae23eab1a160dd3362cb7da779067aa1d",
+        "bytes": 1310155,
+        "seconds": 0.3942,
+        "mapped_cells": 1067,
+        "indices": {
+          "NDVI": {
+            "pre": 32,
+            "post": 15
+          },
+          "EVI": {
+            "pre": 32,
+            "post": 15
+          }
+        },
+        "check": "passed"
+      },
+      {
+        "event_id": "global-a67a52521ea9434f0783e0677b664c42",
+        "job_id": "4d7ebffb9755e7ffb7f9dee17d993a203551d93685c2d0a8fd46a70a7deffbda",
+        "engine": "modis-recovery-3.2.0",
+        "sha256": "f5e2c45537c0e563f18bafd740a34aa1eed353fc412be2df025d41f54db3cb28",
+        "bytes": 600675,
+        "seconds": 0.1815,
+        "mapped_cells": 0,
+        "indices": {
+          "NDVI": {
+            "pre": 29,
+            "post": 14
+          },
+          "EVI": {
+            "pre": 29,
+            "post": 14
+          }
+        },
+        "check": "passed"
+      },
+      {
+        "event_id": "global-c7ee1b9b32c94d91d766449a656285b6",
+        "job_id": "ee4c8138f3d46eb3bb428c40320cf419360ccd06d9164dfb61bed524da2193e3",
+        "engine": "modis-recovery-3.2.0",
+        "sha256": "237c898fdb6b092cecafb9d7ecfd3d2a0b6d3ae5836faa0b7d99e7b5df0b0663",
+        "bytes": 277319,
+        "seconds": 0.0749,
+        "mapped_cells": 0,
+        "indices": {
+          "NDVI": {
+            "pre": 33,
+            "post": 16
+          },
+          "EVI": {
+            "pre": 33,
+            "post": 16
+          }
+        },
+        "check": "passed"
+      },
+      {
+        "event_id": "global-ae03e27d2d3aa866064ac98758faefa8",
+        "job_id": "c93e3a19e032d0c9e6b0dfbec928b0ba40a91eda662e04834b520c31d367454d",
+        "engine": "modis-recovery-3.2.0",
+        "sha256": "a229dc7649bbc5db1671c0395690317bc175ba29aca1e60c3c1721f909058c51",
+        "bytes": 592459,
+        "seconds": 0.1431,
+        "mapped_cells": 348,
+        "indices": {
+          "NDVI": {
+            "pre": 28,
+            "post": 13
+          },
+          "EVI": {
+            "pre": 28,
+            "post": 13
+          }
+        },
+        "check": "passed"
+      },
+      {
+        "event_id": "global-6c75f44c7f2e9a434486e8107a60adb2",
+        "job_id": "2b60588f9d76792f0bcc354fb29aae8f274911609f3acd746705b1be09c2242d",
+        "engine": "modis-recovery-3.2.0",
+        "sha256": "f1598429ddd9f23498f95892049dcdc579dadd5a28c9784fcd88e74b24428bce",
+        "bytes": 569257,
+        "seconds": 0.1535,
+        "mapped_cells": 388,
+        "indices": {
+          "NDVI": {
+            "pre": 42,
+            "post": 22
+          },
+          "EVI": {
+            "pre": 42,
+            "post": 22
+          }
+        },
+        "check": "passed"
+      },
+      {
+        "event_id": "global-05eef89441827b78e719e46b3f40b50e",
+        "job_id": "1aeda255dccdaf120ff0680c8e4926ebdb3df5d64ab214f02e49e4e9cb15d0de",
+        "engine": "modis-recovery-3.2.0",
+        "sha256": "b5e54da00665a8a4132c1078bb7094111f08dcbcdb8ab63eee67ee0496b7a422",
+        "bytes": 215575,
+        "seconds": 0.053,
+        "mapped_cells": 22,
+        "indices": {
+          "NDVI": {
+            "pre": 44,
+            "post": 22
+          },
+          "EVI": {
+            "pre": 44,
+            "post": 22
+          }
+        },
+        "check": "passed"
+      },
+      {
+        "event_id": "global-62ee07984b5efdae659f0c6833ffba02",
+        "job_id": "c0eb565fe004b8fa80da8783bcd6d686ccab54c31a21b5f9ae67e1ceb20285cd",
+        "engine": "modis-recovery-3.2.0",
+        "sha256": "5b707699307bc85df6c11ab0a923215a39f288ce3dbd1ce54a4eaec498d27066",
+        "bytes": 208401,
+        "seconds": 0.0537,
+        "mapped_cells": 9,
+        "indices": {
+          "NDVI": {
+            "pre": 36,
+            "post": 15
+          },
+          "EVI": {
+            "pre": 36,
+            "post": 15
+          }
+        },
+        "check": "passed"
+      },
+      {
+        "event_id": "global-febdc594c5df5e2bf5dfec7d81928ae0",
+        "job_id": "78509e2a53ae1fef264789897c0d30e6e0ac3bed551633c0001ed664443c8dd8",
+        "engine": "modis-recovery-3.2.0",
+        "sha256": "32a5c6adde54fd68941929091a588efdb7a6e06af1d70515e73e61873b1df3f5",
+        "bytes": 266529,
+        "seconds": 0.1211,
+        "mapped_cells": 109,
+        "indices": {
+          "NDVI": {
+            "pre": 13,
+            "post": 4
+          },
+          "EVI": {
+            "pre": 13,
+            "post": 4
+          }
+        },
+        "check": "passed"
+      },
+      {
+        "event_id": "global-0c2dc52b8a01d3a7e95094d034bb6a83",
+        "job_id": "567b7cc5f1c74b72d77505bbc9bf9f673234919078289cbb2cebe871dee2d6b6",
+        "engine": "modis-recovery-3.2.0",
+        "sha256": "3a40b574c0d5a0137deecf8fae0a23c1e79224d4ac7ee18aba1e9e0b3487df13",
+        "bytes": 261797,
+        "seconds": 0.0567,
+        "mapped_cells": 45,
+        "indices": {
+          "NDVI": {
+            "pre": 7,
+            "post": 0
+          },
+          "EVI": {
+            "pre": 7,
+            "post": 0
+          }
+        },
+        "check": "passed"
+      },
+      {
+        "event_id": "global-d56dcf74acebb75218956e8968fd287b",
+        "job_id": "7cd6e924114d1949608b2cae92788d4a35d14d95252df240824a7c3b1c074192",
+        "engine": "modis-recovery-3.2.0",
+        "sha256": "3643ffdef254cc1c5381015f713057103a291b29748500f30fa940dc682df71f",
+        "bytes": 240105,
+        "seconds": 0.0606,
+        "mapped_cells": 68,
+        "indices": {
+          "NDVI": {
+            "pre": 2,
+            "post": 1
+          },
+          "EVI": {
+            "pre": 2,
+            "post": 1
+          }
+        },
+        "check": "passed"
+      },
+      {
+        "event_id": "global-f0b63a3b789d0bce4d37114895897a41",
+        "job_id": "c9ce2e7005eb6382a31e00af7fda78cf0f544130654895e46a6af993dcc2bacf",
+        "engine": "modis-recovery-3.2.0",
+        "sha256": "f8245a0612ba603dfb60dba02e4312986d2f821d419c9108538ded255a5c0671",
+        "bytes": 215505,
+        "seconds": 0.0414,
+        "mapped_cells": 25,
+        "indices": {
+          "NDVI": {
+            "pre": 8,
+            "post": 2
+          },
+          "EVI": {
+            "pre": 8,
+            "post": 2
+          }
+        },
+        "check": "passed"
+      },
+      {
+        "event_id": "global-651546575cc3b6de39a347934a39b86d",
+        "job_id": "a770c2353cc3ae7ea4a992431420729456df839de08c7b9b5561d0fde60d44e4",
+        "engine": "modis-recovery-3.2.0",
+        "sha256": "5a5b2d825e7f088e08cae529bbf2e077384e06954040998a38e0be308f762e9b",
+        "bytes": 270897,
+        "seconds": 0.0773,
+        "mapped_cells": 120,
+        "indices": {
+          "NDVI": {
+            "pre": 16,
+            "post": 5
+          },
+          "EVI": {
+            "pre": 16,
+            "post": 5
+          }
+        },
+        "check": "passed"
+      },
+      {
+        "event_id": "global-3243956ef2081a9309a7816b972b1d84",
+        "job_id": "40964f38f562af2475c8e2b5eeff7a8f132ca1aee21d7a253cffc73688deaffd",
+        "engine": "modis-recovery-3.2.0",
+        "sha256": "1c66a7e2e86ac6f4279c1ff8b33838479f7d9bcc7889e896482790b764034824",
+        "bytes": 242573,
+        "seconds": 0.0656,
+        "mapped_cells": 71,
+        "indices": {
+          "NDVI": {
+            "pre": 20,
+            "post": 7
+          },
+          "EVI": {
+            "pre": 20,
+            "post": 7
+          }
+        },
+        "check": "passed"
+      },
+      {
+        "event_id": "global-b084df31bd082c102aa46f75500039df",
+        "job_id": "732767c0769e3e761ec3f32e6b3a0ca02598052262510e97286b4ab8bb3a643c",
+        "engine": "modis-recovery-3.2.0",
+        "sha256": "4b4880771bfda3484cb3ba4b9da9df96601d99460694852ca3226a17516bdd07",
+        "bytes": 212867,
+        "seconds": 0.0488,
+        "mapped_cells": 13,
+        "indices": {
+          "NDVI": {
+            "pre": 14,
+            "post": 9
+          },
+          "EVI": {
+            "pre": 14,
+            "post": 9
+          }
+        },
+        "check": "passed"
+      },
+      {
+        "event_id": "global-a16ee17f6317e3ea1a3fad05fe319246",
+        "job_id": "d89f481f7a973f958a7560cfcad9ed3640f0c9f5f344eaa517aea8a80328d964",
+        "engine": "modis-recovery-3.2.0",
+        "sha256": "b4096a6877453d2f4afd56965281541cc9d5282043db22e1ffd5d7a7f1ab18fe",
+        "bytes": 419478,
+        "seconds": 0.0904,
+        "mapped_cells": 364,
+        "indices": {
+          "NDVI": {
+            "pre": 14,
+            "post": 3
+          },
+          "EVI": {
+            "pre": 14,
+            "post": 3
+          }
+        },
+        "check": "passed"
+      },
+      {
+        "event_id": "global-c8c510abed54e5586d3251499b603334",
+        "job_id": "0d761db87c863b734db1e7acf01a980b192d19ef480ced6514865df333b6e4f8",
+        "engine": "modis-recovery-3.2.0",
+        "sha256": "2db9736ebf63081e2555e2f8b62ca265ff483572aa57cc9f69de6105f56b8640",
+        "bytes": 498288,
+        "seconds": 0.1167,
+        "mapped_cells": 506,
+        "indices": {
+          "NDVI": {
+            "pre": 17,
+            "post": 8
+          },
+          "EVI": {
+            "pre": 17,
+            "post": 8
+          }
+        },
+        "check": "passed"
+      },
+      {
+        "event_id": "global-c4cb538b3d82199edf1c7dcf6d26c824",
+        "job_id": "93b16129a2d0f43b484f09285652ccd5682dd183c767f7ca7d72ec03991e88df",
+        "engine": "modis-recovery-3.2.0",
+        "sha256": "b1821ddee4423b8e5b389dff678393762070dac8c986b6c53919be138188fef1",
+        "bytes": 307733,
+        "seconds": 0.072,
+        "mapped_cells": 132,
+        "indices": {
+          "NDVI": {
+            "pre": 0,
+            "post": 0
+          },
+          "EVI": {
+            "pre": 0,
+            "post": 0
+          }
+        },
+        "check": "passed"
+      },
+      {
+        "event_id": "global-1019de824d50e36fab75e0f0e6b4e3df",
+        "job_id": "cd80a2d0e832c0c4a74ca153e1ea6e43f9ee65054bd5fbe37cea42fda71576bb",
+        "engine": "modis-recovery-3.2.0",
+        "sha256": "f8de498d83bddf364af8f9bee8cce45950aeafbbe3b5450df6c28972fbead78e",
+        "bytes": 276434,
+        "seconds": 0.081,
+        "mapped_cells": 114,
+        "indices": {
+          "NDVI": {
+            "pre": 17,
+            "post": 6
+          },
+          "EVI": {
+            "pre": 17,
+            "post": 6
+          }
+        },
+        "check": "passed"
+      },
+      {
+        "event_id": "global-7ead7debdedf61ac872d0b7259ef9c4b",
+        "job_id": "5bac63b62d9aab0591a0207adf654c618fe50cb66e2e168dc596d793b2c2a99f",
+        "engine": "modis-recovery-3.2.0",
+        "sha256": "2f5555f46e211e7842fcae6167425bad1ad4c9de7b5fda0deafae31e591b7640",
+        "bytes": 222079,
+        "seconds": 0.0513,
+        "mapped_cells": 0,
+        "indices": {
+          "NDVI": {
+            "pre": 26,
+            "post": 13
+          },
+          "EVI": {
+            "pre": 26,
+            "post": 13
+          }
+        },
+        "check": "passed"
+      },
+      {
+        "event_id": "global-8ae345b003214a6997149edf8cb48929",
+        "job_id": "6b314036aab460da2f16c61b0e2ce8e2a088b52b500faeecdbfa2c65487947f3",
+        "engine": "modis-recovery-3.2.0",
+        "sha256": "9c3627cbb95e1d139df300b7db77052a8485cd38b2b136f1450f72b05a7a26ca",
+        "bytes": 217003,
+        "seconds": 0.0564,
+        "mapped_cells": 25,
+        "indices": {
+          "NDVI": {
+            "pre": 25,
+            "post": 13
+          },
+          "EVI": {
+            "pre": 25,
+            "post": 13
+          }
+        },
+        "check": "passed"
+      },
+      {
+        "event_id": "global-42e4ea7aff90536deb96d88362ca5b14",
+        "job_id": "86945558c3b22781b800c085364004f10fe689f7f3ffeda476658a60affb2f55",
+        "engine": "modis-recovery-3.2.0",
+        "sha256": "2ea2a19145c6181e0ebbb023762b170283012edac2d2b49e75f967c6a7ec3735",
+        "bytes": 205259,
+        "seconds": 0.0402,
+        "mapped_cells": 7,
+        "indices": {
+          "NDVI": {
+            "pre": 22,
+            "post": 11
+          },
+          "EVI": {
+            "pre": 22,
+            "post": 11
+          }
+        },
+        "check": "passed"
+      },
+      {
+        "event_id": "global-c668d3d84858a7514b928bd17bd2d59b",
+        "job_id": "9655b2e1468e426ccc38d666371850045d27a19679a56194ef3d4ee4f1dfdb7f",
+        "engine": "modis-recovery-3.2.0",
+        "sha256": "b0a1deb35407d8abf48538486cf73b8e14d30112b9062188b712781f5db259da",
+        "bytes": 233480,
+        "seconds": 0.0538,
+        "mapped_cells": 52,
+        "indices": {
+          "NDVI": {
+            "pre": 26,
+            "post": 9
+          },
+          "EVI": {
+            "pre": 26,
+            "post": 9
+          }
+        },
+        "check": "passed"
+      },
+      {
+        "event_id": "global-36b964695d5e97ccc0b3de58842798fb",
+        "job_id": "c8f87fe71cfb50845182c0b6d5b1ace4ec2baaf3144ac858a3bfaa871f256af2",
+        "engine": "modis-recovery-3.2.0",
+        "sha256": "2baa1e730bcdf4acb0bf880f544281bdacb0da7021746d70c05713c094b40466",
+        "bytes": 221885,
+        "seconds": 0.0526,
+        "mapped_cells": 0,
+        "indices": {
+          "NDVI": {
+            "pre": 27,
+            "post": 13
+          },
+          "EVI": {
+            "pre": 27,
+            "post": 13
+          }
+        },
+        "check": "passed"
+      },
+      {
+        "event_id": "global-b252eeaaa9bbcac23453e85678427701",
+        "job_id": "f7e79127b358a0f33a13a89daff983a62ec366a587005ca16b64366bae40bbbd",
+        "engine": "modis-recovery-3.2.0",
+        "sha256": "ec1fa367519a350136afed9fbbdec6a3cd993803a505871c83e7c5f020d55429",
+        "bytes": 276407,
+        "seconds": 0.098,
+        "mapped_cells": 117,
+        "indices": {
+          "NDVI": {
+            "pre": 25,
+            "post": 8
+          },
+          "EVI": {
+            "pre": 25,
+            "post": 8
+          }
+        },
+        "check": "passed"
+      },
+      {
+        "event_id": "global-28556be7c339e95f273a62e728c9f33a",
+        "job_id": "069e5d34cafc6e4587162f8977c60846d540c16d117de2d14a7739350589dd63",
+        "engine": "modis-recovery-3.2.0",
+        "sha256": "a196a1191df032e4e3d6b5bc26a2fa40702ee6ba0890cac6fe5749e4f91ca40d",
+        "bytes": 240853,
+        "seconds": 0.0882,
+        "mapped_cells": 59,
+        "indices": {
+          "NDVI": {
+            "pre": 28,
+            "post": 7
+          },
+          "EVI": {
+            "pre": 28,
+            "post": 7
+          }
+        },
+        "check": "passed"
+      },
+      {
+        "event_id": "global-22937829c0cc24d0f67f7152b0339a33",
+        "job_id": "3c63b6c4bd5c37695e051cfb060fd2aae8470f4517631321dc9b24d5aec9e8cf",
+        "engine": "modis-recovery-3.2.0",
+        "sha256": "10c8f057d2d4447cade9e937d024c24378844b3a4a6619fcf9b015e32ac3f3a6",
+        "bytes": 243647,
+        "seconds": 0.0924,
+        "mapped_cells": 70,
+        "indices": {
+          "NDVI": {
+            "pre": 25,
+            "post": 10
+          },
+          "EVI": {
+            "pre": 25,
+            "post": 10
+          }
+        },
+        "check": "passed"
+      },
+      {
+        "event_id": "global-236132ce9280db59ca82d5c98e249887",
+        "job_id": "6ddaff8d80bc5382a545d7cd38a0858edb662de0ba0ac10254b8503ecf0f8b89",
+        "engine": "modis-recovery-3.2.0",
+        "sha256": "c78665e9117311272103522a9dbdee09d39be75c6130d8240ab16c7c8389c79a",
+        "bytes": 222237,
+        "seconds": 0.0752,
+        "mapped_cells": 0,
+        "indices": {
+          "NDVI": {
+            "pre": 0,
+            "post": 0
+          },
+          "EVI": {
+            "pre": 0,
+            "post": 0
+          }
+        },
+        "check": "passed"
+      },
+      {
+        "event_id": "global-3e96de345373a7fa1ede2ade992745b4",
+        "job_id": "9e88abc96a5fd7ac1950a8361bc728d7937ee7f561c912155917262eb0103a99",
+        "engine": "modis-recovery-3.2.0",
+        "sha256": "adf5fabc684d6fb7b9b632898b203ef75fe1e054306c112b500787f71c04a951",
+        "bytes": 218846,
+        "seconds": 0.0671,
+        "mapped_cells": 29,
+        "indices": {
+          "NDVI": {
+            "pre": 28,
+            "post": 8
+          },
+          "EVI": {
+            "pre": 28,
+            "post": 8
+          }
+        },
+        "check": "passed"
+      }
+    ]
+  },
+  "native_burn_replay": [
+    {
+      "event": "global-75e84782b376558619c389da8e6fc716",
+      "mapped_features": 140,
+      "raw_pixels": 942,
+      "sources": 3
+    },
+    {
+      "event": "global-1da33a9eb741c54ede92a99dd7bcec3b",
+      "mapped_features": 37,
+      "raw_pixels": 126,
+      "sources": 3
+    },
+    {
+      "event": "global-064accfd021b4683dc3aba56b06de7fd",
+      "mapped_features": 125,
+      "raw_pixels": 741,
+      "sources": 3
+    },
+    {
+      "event": "global-66cbb1d3ab8865c663719a9cf3287fd6",
+      "mapped_features": 21,
+      "raw_pixels": 429,
+      "sources": 3
+    },
+    {
+      "event": "global-f626c357cf56a84c532365e622c257da",
+      "mapped_features": 3,
+      "raw_pixels": 171,
+      "sources": 3
+    },
+    {
+      "event": "global-18f50185ddfea0a5b9e83c23d27e0d70",
+      "mapped_features": 11,
+      "raw_pixels": 276,
+      "sources": 3
+    },
+    {
+      "event": "global-4e355c2147307573902bfda62fc7ed69",
+      "mapped_features": 122,
+      "raw_pixels": 882,
+      "sources": 3
+    },
+    {
+      "event": "global-e6ef6f62f38984d41744412b16a31563",
+      "mapped_features": 18,
+      "raw_pixels": 330,
+      "sources": 3
+    },
+    {
+      "event": "global-ac7c9cdea11c4c4d67d83f55068a8d1d",
+      "mapped_features": 18,
+      "raw_pixels": 282,
+      "sources": 3
+    },
+    {
+      "event": "global-ff6d763ce384d2d79be0260c41560c1d",
+      "mapped_features": 37,
+      "raw_pixels": 180,
+      "sources": 3
+    },
+    {
+      "event": "global-e0ee6acc85dc19bdec7fb4730e0fc23a",
+      "mapped_features": 7,
+      "raw_pixels": 93,
+      "sources": 3
+    },
+    {
+      "event": "global-1ca9b13efea381d35aad976a47e337cd",
+      "mapped_features": 125,
+      "raw_pixels": 663,
+      "sources": 3
+    },
+    {
+      "event": "global-0dd9b9d40589368dd479050d3d712f4b",
+      "mapped_features": 28,
+      "raw_pixels": 222,
+      "sources": 3
+    },
+    {
+      "event": "global-2c9edb4c5b549bc9ef91ce283b92c436",
+      "mapped_features": 26,
+      "raw_pixels": 204,
+      "sources": 3
+    },
+    {
+      "event": "global-3260eea6dc85e332b61a3c023b8f1800",
+      "mapped_features": 31,
+      "raw_pixels": 159,
+      "sources": 3
+    },
+    {
+      "event": "global-926d0f8dfe6563451f7e9c7b3f25fbc3",
+      "mapped_features": 36,
+      "raw_pixels": 135,
+      "sources": 3
+    },
+    {
+      "event": "global-9709bff093c7ccab50d2ecdc3c235e6e",
+      "mapped_features": 0,
+      "raw_pixels": 132,
+      "sources": 3
+    },
+    {
+      "event": "global-be5478484e497710b3b4bd18a18cc445",
+      "mapped_features": 0,
+      "raw_pixels": 429,
+      "sources": 3
+    },
+    {
+      "event": "global-7979a92ec3524e523ee8bb35539ef03e",
+      "mapped_features": 35,
+      "raw_pixels": 243,
+      "sources": 3
+    },
+    {
+      "event": "global-f3d3c4014edc70644b64c7c963e8a668",
+      "mapped_features": 26,
+      "raw_pixels": 393,
+      "sources": 3
+    },
+    {
+      "event": "global-febf57e02ba47a52868adecbabde8687",
+      "mapped_features": 8,
+      "raw_pixels": 351,
+      "sources": 3
+    },
+    {
+      "event": "global-dd1f007922be49d30908018cf1dae028",
+      "mapped_features": 266,
+      "raw_pixels": 3174,
+      "sources": 3
+    },
+    {
+      "event": "global-4bc6ed9108d9e2b29d5f6af3e3f6b198",
+      "mapped_features": 106,
+      "raw_pixels": 669,
+      "sources": 3
+    },
+    {
+      "event": "global-b872c5e27c461e9c4ae724060b788cd0",
+      "mapped_features": 0,
+      "raw_pixels": 78,
+      "sources": 3
+    },
+    {
+      "event": "global-52af204a40bf9f82a228e9f54085fe7f",
+      "mapped_features": 34,
+      "raw_pixels": 441,
+      "sources": 3
+    },
+    {
+      "event": "global-5fcb2781ec1c584d2d7f8f18aeef7c8f",
+      "mapped_features": 13,
+      "raw_pixels": 147,
+      "sources": 3
+    },
+    {
+      "event": "global-730fd3db3b65e67698840df5cf924b77",
+      "mapped_features": 11,
+      "raw_pixels": 219,
+      "sources": 3
+    },
+    {
+      "event": "global-de962de3f998e4976373e018b1aa0a0d",
+      "mapped_features": 22,
+      "raw_pixels": 140,
+      "sources": 4
+    },
+    {
+      "event": "global-7d39d5f32e51ecf008a57c5f6238fcb2",
+      "mapped_features": 1911,
+      "raw_pixels": 11372,
+      "sources": 4
+    },
+    {
+      "event": "global-a67a52521ea9434f0783e0677b664c42",
+      "mapped_features": 676,
+      "raw_pixels": 4176,
+      "sources": 4
+    },
+    {
+      "event": "global-c7ee1b9b32c94d91d766449a656285b6",
+      "mapped_features": 53,
+      "raw_pixels": 252,
+      "sources": 4
+    },
+    {
+      "event": "global-ae03e27d2d3aa866064ac98758faefa8",
+      "mapped_features": 450,
+      "raw_pixels": 3252,
+      "sources": 8
+    },
+    {
+      "event": "global-6c75f44c7f2e9a434486e8107a60adb2",
+      "mapped_features": 619,
+      "raw_pixels": 2718,
+      "sources": 3
+    },
+    {
+      "event": "global-05eef89441827b78e719e46b3f40b50e",
+      "mapped_features": 22,
+      "raw_pixels": 141,
+      "sources": 3
+    },
+    {
+      "event": "global-62ee07984b5efdae659f0c6833ffba02",
+      "mapped_features": 9,
+      "raw_pixels": 105,
+      "sources": 3
+    },
+    {
+      "event": "global-febdc594c5df5e2bf5dfec7d81928ae0",
+      "mapped_features": 109,
+      "raw_pixels": 687,
+      "sources": 3
+    },
+    {
+      "event": "global-0c2dc52b8a01d3a7e95094d034bb6a83",
+      "mapped_features": 45,
+      "raw_pixels": 159,
+      "sources": 3
+    },
+    {
+      "event": "global-d56dcf74acebb75218956e8968fd287b",
+      "mapped_features": 68,
+      "raw_pixels": 261,
+      "sources": 3
+    },
+    {
+      "event": "global-f0b63a3b789d0bce4d37114895897a41",
+      "mapped_features": 25,
+      "raw_pixels": 114,
+      "sources": 3
+    },
+    {
+      "event": "global-651546575cc3b6de39a347934a39b86d",
+      "mapped_features": 120,
+      "raw_pixels": 486,
+      "sources": 3
+    },
+    {
+      "event": "global-3243956ef2081a9309a7816b972b1d84",
+      "mapped_features": 71,
+      "raw_pixels": 213,
+      "sources": 3
+    },
+    {
+      "event": "global-b084df31bd082c102aa46f75500039df",
+      "mapped_features": 13,
+      "raw_pixels": 564,
+      "sources": 3
+    },
+    {
+      "event": "global-a16ee17f6317e3ea1a3fad05fe319246",
+      "mapped_features": 364,
+      "raw_pixels": 2535,
+      "sources": 3
+    },
+    {
+      "event": "global-c8c510abed54e5586d3251499b603334",
+      "mapped_features": 506,
+      "raw_pixels": 2088,
+      "sources": 3
+    },
+    {
+      "event": "global-c4cb538b3d82199edf1c7dcf6d26c824",
+      "mapped_features": 132,
+      "raw_pixels": 756,
+      "sources": 3
+    },
+    {
+      "event": "global-1019de824d50e36fab75e0f0e6b4e3df",
+      "mapped_features": 114,
+      "raw_pixels": 813,
+      "sources": 3
+    },
+    {
+      "event": "global-7ead7debdedf61ac872d0b7259ef9c4b",
+      "mapped_features": 0,
+      "raw_pixels": 132,
+      "sources": 3
+    },
+    {
+      "event": "global-8ae345b003214a6997149edf8cb48929",
+      "mapped_features": 25,
+      "raw_pixels": 282,
+      "sources": 3
+    },
+    {
+      "event": "global-42e4ea7aff90536deb96d88362ca5b14",
+      "mapped_features": 7,
+      "raw_pixels": 117,
+      "sources": 3
+    },
+    {
+      "event": "global-c668d3d84858a7514b928bd17bd2d59b",
+      "mapped_features": 52,
+      "raw_pixels": 249,
+      "sources": 3
+    },
+    {
+      "event": "global-36b964695d5e97ccc0b3de58842798fb",
+      "mapped_features": 0,
+      "raw_pixels": 105,
+      "sources": 3
+    },
+    {
+      "event": "global-b252eeaaa9bbcac23453e85678427701",
+      "mapped_features": 117,
+      "raw_pixels": 2643,
+      "sources": 3
+    },
+    {
+      "event": "global-28556be7c339e95f273a62e728c9f33a",
+      "mapped_features": 59,
+      "raw_pixels": 1113,
+      "sources": 3
+    },
+    {
+      "event": "global-22937829c0cc24d0f67f7152b0339a33",
+      "mapped_features": 70,
+      "raw_pixels": 450,
+      "sources": 3
+    },
+    {
+      "event": "global-236132ce9280db59ca82d5c98e249887",
+      "mapped_features": 0,
+      "raw_pixels": 78,
+      "sources": 3
+    },
+    {
+      "event": "global-3e96de345373a7fa1ede2ade992745b4",
+      "mapped_features": 29,
+      "raw_pixels": 183,
+      "sources": 3
+    },
+    {
+      "event": "global-435e6b4d3977258e6a0ae49f81a1bb40",
+      "mapped_features": 0,
+      "raw_pixels": 75,
+      "sources": 3
+    },
+    {
+      "event": "global-3a79f990e04241bb29902b9c0e52d541",
+      "mapped_features": 37,
+      "raw_pixels": 2523,
+      "sources": 3
+    },
+    {
+      "event": "global-3a2123962b74975c2d07e601be24570e",
+      "mapped_features": 98,
+      "raw_pixels": 891,
+      "sources": 3
+    }
+  ],
+  "tunisia_assets": [
+    {
+      "index": "NDVI",
+      "http_status": 200,
+      "bytes": 45200,
+      "sha256": "93c1f1545fb155de4c6b6abc78aecfbbea13f074c7adecf09a8100e99889e192",
+      "bands": 156,
+      "width": 27,
+      "height": 21,
+      "tags": {
+        "analysis_area_source": "provisional_hotspot_buffer",
+        "area_composites_supported": "0",
+        "assessment": "assessment-5.0.2",
+        "classification": "0 insufficient; 1 persistent negative; 2 within reference; 3 below; 4 above",
+        "classification_period": "{\"start\": \"2026-07-14\", \"end\": \"2026-11-11\"}",
+        "empty_bands_omitted": "76",
+        "observation_period": "{\"start\": \"2023-07-14\", \"end\": \"2026-11-11\"}",
+        "product": "MOD13Q1.061",
+        "qa": "strict_good_land inherited",
+        "scale_applied": "already dimensionless",
+        "support_scope": "per_native_cell_post_event_history",
+        "AREA_OR_POINT": "Area"
+      },
+      "empty_bands": 0,
+      "unchanged_retained_values": true,
+      "unchanged_native_grid": true
+    },
+    {
+      "index": "EVI",
+      "http_status": 200,
+      "bytes": 45448,
+      "sha256": "705f77d19d57552b7abc8c9d522690e83d2f104a455150b0cdeec0496586c5f5",
+      "bands": 156,
+      "width": 27,
+      "height": 21,
+      "tags": {
+        "analysis_area_source": "provisional_hotspot_buffer",
+        "area_composites_supported": "0",
+        "assessment": "assessment-5.0.2",
+        "classification": "0 insufficient; 1 persistent negative; 2 within reference; 3 below; 4 above",
+        "classification_period": "{\"start\": \"2026-07-14\", \"end\": \"2026-11-11\"}",
+        "empty_bands_omitted": "76",
+        "observation_period": "{\"start\": \"2023-07-14\", \"end\": \"2026-11-11\"}",
+        "product": "MOD13Q1.061",
+        "qa": "strict_good_land inherited",
+        "scale_applied": "already dimensionless",
+        "support_scope": "per_native_cell_post_event_history",
+        "AREA_OR_POINT": "Area"
+      },
+      "empty_bands": 0,
+      "unchanged_retained_values": true,
+      "unchanged_native_grid": true
+    }
+  ],
+  "browser": {
+    "release": {
+      "explorer_desktop_overflow": false,
+      "initial_hotspot_requests": [
+        "http://localhost:4193/api/v1/global/hotspots?bbox=27.5006776,35.8886624,28.3991324,36.450647599999996&start_date=2023-07-20&end_date=2023-07-22&sensor=MODIS"
+      ],
+      "source_switch_atomic": true,
+      "selected_event_url": "http://localhost:4193/events/global-6c75f44c7f2e9a434486e8107a60adb2?returnTo=%2Fexplorer%3Fperiod%3Dcustom%26start%3D2023-07-20%26end%3D2023-07-22%26sensor%3DMODIS%26map%3D27.56264%252C35.92742%252C28.33717%252C36.41189%26z%3D11%26source%3Donline",
+      "cached_science_visible_seconds": 3.1976367459999997,
+      "requested_frame_seconds": 0.2352814929999995,
+      "science_desktop_overflow": false,
+      "science_mobile_overflow": false,
+      "explorer_mobile_overflow": false,
+      "invalid_dates_clear_candidates": true,
+      "errors": []
+    },
+    "reburn": {
+      "checked_at": "2026-11-13T19:35:57.097Z",
+      "event": "global-51910cbfe4720638c1fce8630f452ce9",
+      "views": [
+        {
+          "viewport": {
+            "width": 1440,
+            "height": 1050
+          },
+          "repeated_cells": 228,
+          "shared_gap_cells": 226,
+          "original_gap": "insufficient_observations",
+          "supplemental_gap": "supported_return_to_reference",
+          "supplemental_composites": 251,
+          "source_history": "de1d34330bb4a457d1a6efb70d1e8c563e9b92982f4231ebb5258330c3f033ff",
+          "current_history": "38f05b584885bfb02b7687e5186efb88d55bba0c89812e9705ad5fa8422108c6",
+          "cell": "11980:20931",
+          "overflow": false,
+          "errors": []
+        },
+        {
+          "viewport": {
+            "width": 390,
+            "height": 844
+          },
+          "repeated_cells": 228,
+          "shared_gap_cells": 226,
+          "original_gap": "insufficient_observations",
+          "supplemental_gap": "supported_return_to_reference",
+          "supplemental_composites": 251,
+          "source_history": "de1d34330bb4a457d1a6efb70d1e8c563e9b92982f4231ebb5258330c3f033ff",
+          "current_history": "38f05b584885bfb02b7687e5186efb88d55bba0c89812e9705ad5fa8422108c6",
+          "cell": "11980:20931",
+          "overflow": false,
+          "errors": []
+        }
+      ]
+    }
+  },
+  "secret_scan": "passed for all tracked files",
+  "scope": "Current committed source in isolated test containers. Browser uses current local frontend build and retained operational API publications. Native replay uses retained NASA arrays and versioned job IDs. Existing operational services were not redeployed."
+}
