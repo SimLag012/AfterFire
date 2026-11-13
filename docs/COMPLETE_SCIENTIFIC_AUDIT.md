@@ -1,5 +1,60 @@
 # AfterFire — complete scientific engine audit
 
+## Verifica del 13 novembre 2026
+
+Abbiamo verificato 59 candidati distinti. Per i 56 candidati FIRMS MODIS dei manifesti congelati abbiamo riletto le pubblicazioni per ID di job, confrontato integralmente il JSON e rieseguito i calcoli su raster e serie conservati. Per tre nuovi candidati FIRMS VIIRS S-NPP abbiamo eseguito anche discovery e acquisizione sul worker operativo. Entrambi i gruppi hanno pubblicazioni del motore 3.2.0. Le correzioni locali 3.2.1 e Reburn 6.0.3 sono state applicate in replay.
+
+| Misura | MODIS (56) | VIIRS (3) | Totale |
+|---|---:|---:|---:|
+| Pubblicazioni ottenute | 56 | 3 | 59/59 (100.0%) |
+| Combustione mappata e associata | 48 | 2 | 50/59 (84.7%) |
+| MODIS pre/post sullo stesso indice | 53 | 3 | 56/59 (94.9%) |
+| Baseline post-evento disponibile | 51 | 3 | 54/59 (91.5%) |
+| Assessment territoriale valutabile | 51 | 3 | 54/59 (91.5%) |
+| Combustione mappata e assessment valutabile | 44 | 2 | 46/59 (78.0%) |
+| Almeno una cella con Recovery Intelligence supportata | 53 | 3 | 56/59 (94.9%) |
+| Confronto ottico pre/post | 7 | 1 | 8/59 (13.6%) |
+| Pubblicazioni con limitazioni | 56 | 3 | 59/59 (100.0%) |
+| Errori tecnici terminali | 0 | 0 | 0/59 (0.0%) |
+
+Le categorie ricalcolate sono 48 combustione con vegetazione pre/post, 9 vegetazione del candidato, 2 evidenza limitata, 0 osservazioni insufficienti e 0 errori tecnici. La valutabilità richiede almeno tre anomalie supportate su un indice. Non dimostra il ritorno sostenuto degli indici o il ripristino ecologico.
+
+Il secondo manifesto comprende 44 candidati ordinati deterministicamente prima delle analisi. Abbiamo limitato la nuova acquisizione a tre job seriali oltre i 56 verificati. Le altre 41 selezioni e i cinque viewport con risposta troncata sono registrati nel JSON. Le frequenze descrivono questo campione. [Dati per evento, selezioni, controlli e telemetria](complete-scientific-audit/verification-20261113.json).
+
+### Nuovi eventi acquisiti
+
+| ID e regione | Data | Celle associate | NDVI pre/post | EVI pre/post | Baseline NDVI/EVI | Ottico | Recovery NDVI/EVI | Durata richiesta |
+|---|---|---:|---:|---:|---:|---|---|---:|
+| global-435e6b4d3977258e6a0ae49f81a1bb40 · brazil | 2024-08-20 | 0 | 30/10 | 30/10 | 9/9 | Sentinel_2 | within_reference_range / within_reference_range | 169.57 s |
+| global-3a79f990e04241bb29902b9c0e52d541 · southern_africa | 2022-08-15 | 20 | 35/17 | 35/17 | 17/17 | not_needed | persistent_negative_anomaly / within_reference_range | 151.29 s |
+| global-3a2123962b74975c2d07e601be24570e · australia | 2019-09-15 | 65 | 33/18 | 33/18 | 14/14 | not_needed | below_reference / within_reference_range | 176.52 s |
+
+### Difetti riprodotti e impatto misurato
+
+| Priorità e componente | Prima | Correzione e verifica |
+|---|---|---|
+| P1 · copertura API e frontend | Indonesia aveva 45 celle associate, Alaska 132. Il frontend dichiarava la combustione non confermata per entrambi. Il fallback ottico promuoveva inoltre il caso indonesiano a vegetazione candidata. | Il motore classifica entrambi come evidenza limitata, conserva la misura della combustione e il supporto ottico separati. Il frontend legge la conferma MCD64A1 anche sui vecchi JSON. Due nuovi casi di test e verifica browser sulle due pubblicazioni più la Tunisia. |
+| P1 · QA MCD64A1 | Una BurnDate positiva con codice speciale per celle non bruciate poteva superare i filtri evento e ricostruzione episodi. | Maschera esplicita dei bit 5–7 in modis_science e reburn. Oracolo indipendente su tutti i 256 byte. Replay su 51.784 campioni di 186 finestre granulo/evento, 7.107 feature riprodotte incluse le ambigue. Zero campioni reali con data positiva e flag speciale. [Specifica NASA Collection 6.1](https://ladsweb.modaps.eosdis.nasa.gov/filespec/MODIS/61/MCD64A1) |
+| P1 · Recovery Gap | La freschezza dipendeva dall’ordine delle righe in ingresso. | Selezione per data finale del composito. Le 251 date Chips/Dixie, 226 celle condivise, 16 richieste EE e 10.280.960 byte decodificati danno la stessa classificazione e gli stessi valori anche in ordine inverso. |
+| P1 · antimeridiano | Centro e ampiezza del candidato potevano spostare di migliaia di km il punto mostrato. | Calcolo della longitudine su un intervallo continuo nel cluster, API dettaglio, indice e bounds Leaflet. Verificato su punti controllati, ricerca e dettaglio SQLite/PostGIS. Nessun incendio reale a cavallo del meridiano nel campione. |
+| P2 · indice e performance raster | Una query bounds per candidato. Geometria rasterizzata a ogni data e trasformatore ricostruito per cella. | Una query aggregata per pagina, maschera riusata su stesso affine e dimensioni nel singolo assessment, cache limitata dei trasformatori. Su 500 celle il tempo di proiezione in due processi è passato da 0,490 a 0,180 s con SHA-256 WKB identico. Misura del solo kernel. |
+| P2 · provenienza su mobile | Il job ID visibile allargava la pagina Chips/Dixie a 626 px su viewport da 390 px. | Il testo va a capo conservando l’identificatore completo. Browser reali su build locale a 390 e 1440 px con controlli su serie, mappe, valori API e assenza di overflow. |
+
+### Verifiche operative
+
+Tunisia, 14 luglio 2026. Le due pubblicazioni versionate sono state ricontrollate sui raw. Nessun composito post-evento raggiunge la copertura territoriale. Nove celle su 255 hanno evidenza locale per indice. Il nuovo prelievo HLS dà dNBR 0,03907087 su 9.627 centri comuni, con scarto di 0,00000209 dal valore EE. I due TIFF serviti dall’API hanno 156 bande ciascuno, zero bande vuote e valori identici alle bande conservate dei file originali. Il confronto ottico descrive l’area candidata. MCD64A1 non conferma la combustione.
+
+Sui 59 eventi il replay temporale indipendente ha verificato 2696 punti baseline. La ricostruzione nativa ha valutato 25642 celle NDVI e altrettante EVI, senza asset mancanti. I sette riferimenti storici sono stati riaperti per otto pubblicazioni versionate. Le cinque storie Reburn includono due versioni Chips/Dixie e una storia senza sorgenti.
+
+Tre SIGKILL e riavvii Docker isolati ai progressi 50/90/99 hanno prodotto un secondo tentativo, riuso del checkpoint, zero nuove richieste e zero job fantasma. Suite complete del workspace con tutte le modifiche locali: 260 SQLite e 260 PostgreSQL/PostGIS. Sul solo contenuto del commit: 251 per database. La differenza sono nove test locali preesistenti fuori dal commit. Build TypeScript/Vite, Chromium, controlli API e scansione dei segreti eseguiti.
+
+I tre nuovi job hanno richiesto 151–177 s, mediana 169,57 s. Le tre ripetizioni hanno restituito lo stesso job in 21–38 ms. I byte acquisiti sono array decodificati. Il campione istantaneo del worker era di 629,9 MiB e 96,65% CPU. Cache su disco circa 406 MiB e database operativo 168.629.039 byte. Le distribuzioni cold/warm storiche sono documentate più sotto. Il JSON conserva tempi e contatori disponibili per fase. Preflight, memoria di picco e traffico HTTP per singolo evento non sono stati strumentati in questa estensione.
+
+Riproduzione del burn mask: dal runtime backend impostare PYTHONPATH=backend ed eseguire python scripts/verify_burn_quality_replay.py docs/complete-scientific-audit/verification-20261113.json /percorso/cache/satellite. Il comando usa i job versionati e i sottoinsiemi MCD64A1 originali.
+
+## Campagna dell’11 novembre 2026
+
+
 Verifica del 11 novembre 2026. Base Git `6dda3c3`. Il lavoro locale precedente è stato preservato. Questo rapporto distingue esecuzioni reali, replay di osservazioni originali, test controllati e limiti non dimostrati. Gli artefatti pubblicabili sono metadati e fixture derivate; credenziali, database, cache e raster rimangono fuori da Git.
 
 ## Risposta misurata
