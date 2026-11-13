@@ -135,21 +135,32 @@ async def indexed_events(
     total = await db.scalar(select(func.count()).select_from(events_query.subquery())) or 0
     observations = await db.scalar(select(func.count()).select_from(FireDetection).where(*predicates)) or 0
     events = (await db.scalars(events_query.order_by(E.start_date.desc(), E.id).offset(offset).limit(limit))).all()
+    # Aggregate complete memberships for the page in one query, including
+    # positive-domain longitudes for compact groups crossing the dateline.
+    from sqlalchemy import case
+    lon = FireDetection.longitude
+    shifted = case((lon < 0, lon + 360), else_=lon)
+    aggregates = (await db.execute(select(
+        L.event_id, func.avg(FireDetection.latitude), func.avg(lon),
+        func.min(FireDetection.latitude), func.max(FireDetection.latitude),
+        func.min(lon), func.max(lon), func.avg(shifted), func.min(shifted), func.max(shifted),
+    ).join(FireDetection, L.detection_id == FireDetection.id)
+        .where(L.event_id.in_([event.id for event in events])).group_by(L.event_id))).all()
+    bounds_by_event = {row[0]: row[1:] for row in aggregates}
     items = []
     for event in events:
-        bounds = (await db.execute(select(
-            func.avg(FireDetection.latitude), func.avg(FireDetection.longitude),
-            func.min(FireDetection.latitude), func.max(FireDetection.latitude),
-            func.min(FireDetection.longitude), func.max(FireDetection.longitude),
-        ).join(L, L.detection_id == FireDetection.id).where(L.event_id == event.id))).one()
+        lat, centre, south, north, west, east, shifted_centre, shifted_west, shifted_east = bounds_by_event[event.id]
+        if east - west > 180:
+            centre = (shifted_centre + 180) % 360 - 180
+            west, east = shifted_west, shifted_east - 360
         items.append(dict(
             id=event.id, area_id=event.area_id, name=event.name,
             start_date=str(event.start_date), end_date=str(event.end_date),
             duration_days=event.duration_days, detection_count=event.detection_count,
             modis_detections=event.modis_detections, viirs_detections=event.viirs_detections,
             total_frp_mw=event.total_frp_mw, max_frp_mw=event.max_frp_mw,
-            center_lat=bounds[0], center_lon=bounds[1], min_lat=bounds[2], max_lat=bounds[3],
-            min_lon=bounds[4], max_lon=bounds[5], confidence_summary=event.confidence_summary,
+            center_lat=lat, center_lon=centre, min_lat=south, max_lat=north,
+            min_lon=west, max_lon=east, confidence_summary=event.confidence_summary,
             clustering_method=event.clustering_method, is_synthetic_demo=event.is_synthetic_demo,
             detection_ids=[],
         ))

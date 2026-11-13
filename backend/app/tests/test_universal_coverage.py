@@ -122,3 +122,13 @@ def test_orchestration_upgrade_preserves_validated_modis_checkpoint_identity(mon
     record={'id':'native-source'}
     legacy=hashlib.sha256(json.dumps({'source':record['id'],'geometry':mapping(geometry),'engine':'modis-recovery-3.0.0'},sort_keys=True).encode()).hexdigest()
     assert checkpoint_path(record,geometry).name==legacy+'.npz'
+
+
+@pytest.mark.parametrize('optical_status', ['vegetation_observed', 'partial_vegetation_observations'])
+def test_mapped_burn_without_paired_modis_is_partial(optical_status):
+    cells = [{'properties': {'association': 'spatiotemporal_candidate'}}]
+    _, support = diagnostic(cells=cells, optical={'status': optical_status})
+    assert support['category'] == 'partial_evidence'
+    assert support['analysis_scope'] == 'mapped_burn_without_modis_pair'
+    assert support['burn_confirmation'] == 'MCD64A1_mapped_cells'
+    assert support['optical_pre_post_supported'] == (optical_status == 'vegetation_observed')

@@ -112,7 +112,7 @@ function CircleViewController({ circle }: { circle?: { center: [number, number];
 function CandidateFocus({ event, returnTo }: { event?: EventMapItem; returnTo?: string }) {
   const map = useMap();
   useEffect(() => {
-    if (event) map.fitBounds([[event.min_lat, event.min_lon], [event.max_lat, event.max_lon]], { padding: [60, 60], maxZoom: 11 });
+    if (event) map.fitBounds([[event.min_lat, event.min_lon], [event.max_lat, (event.max_lon < event.min_lon ? event.max_lon + 360 : event.max_lon)]], { padding: [60, 60], maxZoom: 11 });
   }, [event?.id, map]);
   return event ? <CircleMarker center={[event.center_lat, event.center_lon]} radius={16}
     pathOptions={{ color: '#34d399', weight: 4, fillOpacity: 0.15 }}>

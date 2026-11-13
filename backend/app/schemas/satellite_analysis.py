@@ -2,7 +2,7 @@ from datetime import date
 from pydantic import BaseModel, Field, model_validator
 from app.core.config import settings
 
-ENGINE_VERSION = "modis-recovery-3.2.0"
+ENGINE_VERSION = "modis-recovery-3.2.1"
 
 
 class AnalysisConfiguration(BaseModel):

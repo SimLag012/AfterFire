@@ -4,6 +4,7 @@ from typing import List, Dict, Any, Optional
 from datetime import datetime, date, timedelta
 from collections import defaultdict, deque
 import numpy as np
+from app.analysis.longitude import longitude_summary
 
 
 class HarmonizationEngine:
@@ -203,11 +204,11 @@ class HarmonizationEngine:
             lats = [d["latitude"] for d in cluster]
             lons = [d["longitude"] for d in cluster]
             min_lt, max_lt = min(lats), max(lats)
-            min_ln, max_ln = min(lons), max(lons)
+            center_lon, min_ln, max_ln, longitude_width = longitude_summary(lons)
             
             # Approximate bounding box area in km2
             lat_dist = (max_lt - min_lt) * 111.0
-            lon_dist = (max_ln - min_ln) * 111.0 * math.cos(math.radians(np.mean(lats)))
+            lon_dist = longitude_width * 111.0 * math.cos(math.radians(np.mean(lats)))
             extent_km2 = round(max(0.5, lat_dist * lon_dist), 2)
 
             detection_ids = sorted(str(d.get("id") or (
@@ -225,7 +226,7 @@ class HarmonizationEngine:
                 "area_id": area_id,
                 "detection_ids": detection_ids,
                 "center_lat": round(float(np.mean(lats)), 6),
-                "center_lon": round(float(np.mean(lons)), 6),
+                "center_lon": round(center_lon, 6),
                 "min_lat": min_lt,
                 "max_lat": max_lt,
                 "min_lon": min_ln,

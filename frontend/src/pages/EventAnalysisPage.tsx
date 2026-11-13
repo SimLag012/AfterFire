@@ -125,7 +125,7 @@ function EventStory({eventId}:{eventId:string}) {
   if (detailQuery.isLoading) return <main role="status" className="p-8">Loading event…</main>;
   if (!event || !detailQuery.data) return <main className="p-8"><p role="alert">Event candidate unavailable.</p><Link to={returnTo}>Return to Fire Explorer</Link></main>;
   const detail=detailQuery.data;
-  const bounds: [[number,number],[number,number]]=[[event.min_lat-0.01,event.min_lon-0.01],[event.max_lat+0.01,event.max_lon+0.01]];
+  const bounds: [[number,number],[number,number]]=[[event.min_lat-0.01,event.min_lon-0.01],[event.max_lat+0.01,(event.max_lon < event.min_lon ? event.max_lon + 360 : event.max_lon)+0.01]];
   const selectedPosition=dates.indexOf(currentDate);
   const metric=result?.metrics[index];
   const postObservations=observations.filter(o=>o.phase==='after' && o.value!=null);

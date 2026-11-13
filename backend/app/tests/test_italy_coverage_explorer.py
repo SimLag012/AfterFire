@@ -226,6 +226,24 @@ async def test_dateline_circle_and_wrapped_viewport():
 
 
 @pytest.mark.asyncio
+async def test_indexed_and_detail_centres_match_across_dateline():
+    from index_fire_events import rebuild_index
+    async with AsyncSessionLocal() as db:
+        for i, lon in enumerate([179.99, -179.99, -179.995]):
+            db.add(_detection(f'wrapped-{i}', 51.0, lon, date(2020, 7, 1)))
+        await db.commit()
+    await rebuild_index()
+    async with AsyncClient(transport=ASGITransport(app=app), base_url='http://test') as client:
+        listing = await client.get('/api/v1/explorer/events', params={'bbox': '179,50,-179,52'})
+        event, = listing.json()['events']
+        detail = (await client.get('/api/v1/events/' + event['id'])).json()['event']
+    for item in (event, detail):
+        assert item['center_lon'] == pytest.approx(-179.9983333)
+        assert item['min_lon'] == 179.99
+        assert item['max_lon'] == pytest.approx(-179.99)
+
+
+@pytest.mark.asyncio
 async def test_indexed_event_pagination_and_stable_filtered_detail():
     from index_fire_events import rebuild_index
     async with AsyncSessionLocal() as db:

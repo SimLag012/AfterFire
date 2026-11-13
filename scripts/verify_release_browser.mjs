@@ -16,6 +16,8 @@ try{
  await page.getByRole('link',{name:'Analyze candidate',exact:true}).first().waitFor();
  assert.equal(await page.getByLabel('Fire data source',{exact:true}).inputValue(),'online');
  assert.equal(await page.getByRole('button',{name:'Last 30 days',exact:true}).count(),0);
+ const filters=page.getByText('Area, dates and sensor filters',{exact:true});
+ if(await filters.count() && !await filters.evaluate(el=>el.closest('details').open)) await filters.click();
  await page.getByRole('button',{name:'Draw / edit circle',exact:true}).waitFor();
  report.explorer_desktop_overflow=await overflow();
  await page.screenshot({path:output+'-explorer-desktop.png',fullPage:true});
@@ -60,6 +62,7 @@ try{
  await page.getByRole('button',{name:'Fire data',exact:false}).click();
  await page.getByRole('link',{name:'Analyze candidate',exact:true}).first().waitFor();
  report.explorer_mobile_overflow=await overflow();
+ if(await filters.count() && !await filters.evaluate(el=>el.closest('details').open)) await filters.click();
  await page.getByLabel('From',{exact:true}).fill('2025-01-01');
  await page.getByText('Enter valid dates in chronological order.',{exact:true}).waitFor();
  assert.equal(await page.getByRole('link',{name:'Analyze candidate',exact:true}).count(),0);

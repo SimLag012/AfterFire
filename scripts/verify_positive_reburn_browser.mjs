@@ -36,7 +36,10 @@ try{
   assert((await gap.innerText()).includes(second.start));
   const validation=page.getByRole('region',{name:'Chips/Dixie vegetation validation'});
   await validation.getByText(/251 MOD13Q1.061 composites/).waitFor();
-  for(const index of Object.keys(evidence.result.indices)) await validation.getByText('Observation support for '+index,{exact:true}).click();
+  for(const index of Object.keys(evidence.result.indices)){
+   const summary=validation.getByText('Observation support for '+index,{exact:true});
+   if(!await summary.evaluate(el=>el.closest('details').open)) await summary.click();
+  }
   const rendered=await validation.innerText();
   for(const [index,metrics] of Object.entries(evidence.result.indices)){
    const last=metrics.last_pre_reburn;
@@ -56,7 +59,7 @@ try{
   assert((await cell.innerText()).includes('2012-'));assert((await cell.innerText()).includes('2021-'));
   await cell.screenshot({path:output+'-cell-'+viewport.width+'.png'});
   const overflow=await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth);
-  assert(!overflow&&!errors.length);
+  assert(!overflow&&!errors.length,JSON.stringify({viewport,overflow,errors}));
   report.views.push({viewport,repeated_cells:published.summary.repeated_cells,shared_gap_cells:226,original_gap:'insufficient_observations',supplemental_gap:evidence.result.classification,supplemental_composites:evidence.dates.length,source_history:evidence.history_job,current_history:published.job_id,cell:option,overflow,errors});
   await page.close();
  }

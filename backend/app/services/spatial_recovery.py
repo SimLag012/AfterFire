@@ -38,6 +38,8 @@ def connected_zones(features, minimum):
 def spatial_assessment(payload, parameters):
     config=AnalysisConfiguration.model_validate(payload['configuration'])
     geometry=project(shape(payload['analysis_geometry']),WGS84,SINUSOIDAL)
+    polygon = mapping(geometry)
+    masks = {}
     folder=cache_root()/'results'/payload['job_id']
     output={}
     for index in ('NDVI','EVI'):
@@ -65,8 +67,11 @@ def spatial_assessment(payload, parameters):
                     if not np.allclose([row,col],np.round([row,col]),rtol=0,atol=1e-5):
                         raise ValueError('Raster is shifted from native grid')
                     values=src.read(1,masked=True).filled(np.nan)
-                    mask=geometry_mask([mapping(geometry)],values.shape,src.transform,invert=True)
-                    for r,c in np.argwhere(mask):
+                    raster_grid = (src.transform, values.shape)
+                    if raster_grid not in masks:
+                        mask = geometry_mask([polygon], values.shape, src.transform, invert=True)
+                        masks[raster_grid] = np.argwhere(mask)
+                    for r,c in masks[raster_grid]:
                         grid=(int(tile[4:6])*4800+int(round(row))+int(r),int(tile[1:3])*4800+int(round(col))+int(c))
                         if grid not in cells:
                             x,y=src.transform*(int(c),int(r))

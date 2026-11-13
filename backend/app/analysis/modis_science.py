@@ -3,6 +3,7 @@ import calendar
 import math
 import re
 from datetime import date, timedelta
+from functools import lru_cache
 
 import numpy as np
 from pyproj import CRS, Transformer
@@ -45,8 +46,13 @@ def tile_transform(tile, size):
     return from_origin(X_MIN + h * TILE_SIZE, Y_MAX - v * TILE_SIZE, TILE_SIZE / size, TILE_SIZE / size)
 
 
+@lru_cache(maxsize=64)
+def _transformer(source, target):
+    return Transformer.from_crs(source, target, always_xy=True)
+
+
 def project(geom, source, target):
-    result=transform(Transformer.from_crs(source, target, always_xy=True).transform, geom)
+    result=transform(_transformer(source, target).transform, geom)
     if target==WGS84 and not result.is_empty and result.bounds[2]-result.bounds[0]>180:
         return wrap_dateline(result)
     return result
@@ -102,6 +108,7 @@ def mcd64_valid(burn, qa, uncertainty, year, start, end, tolerance=3):
     max_doy = 366 if calendar.isleap(year) else 365
     # Exclude shortened mapping periods; uncertainty intervals must overlap observed event window.
     return ((burn >= 1) & (burn <= max_doy) & ((qa & 3) == 3) & ((qa & 4) == 0)
+            & ((qa & 0xE0) == 0)  # Bits 5–7 describe unburned cells.
             & (uncertainty >= 0) & (uncertainty <= 100)
             & (burn.astype(np.int32) - uncertainty <= last)
             & (burn.astype(np.int32) + uncertainty >= first))

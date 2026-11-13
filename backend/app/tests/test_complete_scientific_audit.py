@@ -27,7 +27,7 @@ def test_burn_dates_uncertainty_and_every_qa_byte(year):
     for burn_day in (0,1,60,365,366,367):
         day=date(year,1,1)+timedelta(days=max(1,burn_day)-1)
         actual=mcd64_valid(np.full(256,burn_day),qa,np.zeros(256),year,day,day,0)
-        expected=[1<=burn_day<=(366 if year%4==0 else 365) and q%4==3 and (q//4)%2==0 for q in range(256)]
+        expected=[1<=burn_day<=(366 if year%4==0 else 365) and q%4==3 and (q//4)%2==0 and q//32==0 for q in range(256)]
         assert actual.tolist()==expected
 
 
@@ -281,6 +281,7 @@ def test_campaign_registers_all_frozen_candidates_before_any_analysis(tmp_path,m
     from pathlib import Path
     calls=[]
     class Response:
+        status_code = 200
         def __init__(self,value):self.value=value
         def raise_for_status(self):pass
         def json(self):return self.value

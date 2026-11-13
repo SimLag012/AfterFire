@@ -11,7 +11,7 @@ from app.analysis.modis_science import SINUSOIDAL, WGS84, tile_transform, projec
 from app.analysis.recovery_assessment import AssessmentParameters, assess_index
 from app.schemas.satellite_analysis import AnalysisConfiguration
 
-VERSION = 'reburn-6.0.2'
+VERSION = 'reburn-6.0.3'
 
 
 class ReburnParameters(BaseModel):
@@ -59,7 +59,7 @@ class ReburnDetectionEngine:
             if len(grid)!=2 or any(type(v) is not int for v in grid) or not (0<=grid[0]<43200 and 0<=grid[1]<86400):
                 raise ValueError('Invalid global native MCD64A1 grid identity')
             qa = o.get('qa', 0)
-            if (qa & 3) != 3 or qa & 4 or not 0 <= o.get('uncertainty_days', -1) <= 100:
+            if (qa & 3) != 3 or qa & (4 | 0xE0) or not 0 <= o.get('uncertainty_days', -1) <= 100:
                 rejected += 1
                 continue
             day = date.fromisoformat(o['date'])
@@ -164,7 +164,7 @@ class RecoveryGapEngine:
                 and date.fromisoformat(o['period_end']) < lower_b]
             summary = assess_index(safe, lower_a, upper_a, parameters.assessment)
             valid = [o for o in safe if o.get('anomaly') is not None]
-            latest = valid[-1] if valid else None
+            latest = max(valid, key=lambda o: (o['period_end'], o['date']), default=None)
             age = (lower_b-date.fromisoformat(latest['period_end'])).days if latest else None
             if age is None or age > parameters.freshness_days or len(valid) < parameters.assessment.min_consecutive:
                 state = 'insufficient_observations'

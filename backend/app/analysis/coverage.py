@@ -24,11 +24,14 @@ def coverage_diagnostics(observations,cells,catalogs,expected,ba_valid,ba_total,
     errors=bool(discovery_failed or telemetry['granules_failed'] or optical['status']=='provider_error' or optical.get('provider_errors'))
     if errors: reasons.append(dict(code='provider_or_processing_error',message='Some sources could not be acquired or processed. This is a technical limitation, not evidence that vegetation was unchanged.'))
     if mapped and modis_pair: category='burn_and_vegetation_supported'
+    elif mapped: category='partial_evidence'
     elif modis_pair or optical_pair: category='candidate_vegetation_supported'
-    elif mapped or valid or optical_partial: category='partial_evidence'
+    elif valid or optical_partial: category='partial_evidence'
     elif errors: category='technical_error'
     else: category='insufficient_observations'
-    scope='burned_area_supported_recovery' if mapped and modis_pair else 'candidate_area_vegetation_analysis'
+    scope = 'candidate_area_vegetation_analysis'
+    if mapped:
+        scope = 'mapped_burn_modis_pre_post' if modis_pair else 'mapped_burn_without_modis_pair'
     support=dict(category=category,analysis_scope=scope,burn_confirmation='MCD64A1_mapped_cells' if mapped else 'unconfirmed_thermal_candidate',
                  modis_pre_post_supported=modis_pair,modis_paired_indices=paired_indices,optical_pre_post_supported=optical_pair,
                  recovery_baseline_supported=any(o.get('baseline') is not None for o in post))

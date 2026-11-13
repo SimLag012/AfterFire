@@ -8,6 +8,7 @@ from sqlalchemy.dialects.postgresql import insert as postgres_insert
 from sqlalchemy.dialects.sqlite import insert as sqlite_insert
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.analysis.longitude import longitude_summary
 from app.analysis.harmonization import HarmonizationEngine
 from app.db.database import get_db
 from app.models.area import AreaOfInterest
@@ -387,6 +388,7 @@ async def get_event_detail(event_id: str, db: AsyncSession = Depends(get_db)):
             )
         ) or 0
 
+    center_lon, west, east, _ = longitude_summary([item.longitude for item in detections])
     event_summary = {
         "id": event.id,
         "area_id": event.area_id,
@@ -398,11 +400,11 @@ async def get_event_detail(event_id: str, db: AsyncSession = Depends(get_db)):
         "modis_detections": event.modis_detections,
         "viirs_detections": event.viirs_detections,
         "center_lat": sum(item.latitude for item in detections) / len(detections) if detections else 0,
-        "center_lon": sum(item.longitude for item in detections) / len(detections) if detections else 0,
+        "center_lon": center_lon,
         "min_lat": min((item.latitude for item in detections), default=0),
         "max_lat": max((item.latitude for item in detections), default=0),
-        "min_lon": min((item.longitude for item in detections), default=0),
-        "max_lon": max((item.longitude for item in detections), default=0),
+        "min_lon": west,
+        "max_lon": east,
         "total_frp_mw": event.total_frp_mw,
         "max_frp_mw": event.max_frp_mw,
         "confidence_summary": event.confidence_summary,

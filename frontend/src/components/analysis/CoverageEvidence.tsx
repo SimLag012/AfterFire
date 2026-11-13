@@ -4,9 +4,17 @@ export function CoverageEvidence({result}:{result:SatelliteResult}) {
   const support=result.scientific_support;
   const optical=result.high_resolution;
   if(!support) return null;
+  const mapped = support.burn_confirmation === 'MCD64A1_mapped_cells';
+  const paired = ['mapped_burn_modis_pre_post', 'burned_area_supported_recovery'].includes(support.analysis_scope);
+  let finding = 'Candidate-area vegetation analysis · burning is unconfirmed';
+  if (mapped) finding = paired
+    ? 'MCD64A1 mapped burning · MODIS vegetation observations before and after the event'
+    : 'MCD64A1 mapped burning · insufficient paired MODIS vegetation observations';
+  // Older publications classified candidate-footprint optical pairs independently of mapped burning.
+  const category = mapped && !paired ? 'partial evidence' : support.category.replace(/_/g,' ');
   return <div className="space-y-3 text-sm" aria-label="Scientific coverage">
-    <p className="text-teal-200">{support.analysis_scope==='burned_area_supported_recovery'?'Burned-area-supported recovery':'Candidate-area vegetation analysis · burning is unconfirmed'}</p>
-    <p>Evidence · {support.category.replace(/_/g,' ')}. Candidate territory {fmt(result.candidate_area_km2)} km² · uniquely associated mapped burned cells {fmt(result.burned_area_summary.unambiguous_cell_area_km2)} km².</p>
+    <p className="text-teal-200">{finding}</p>
+    <p>Evidence · {category}. Candidate territory {fmt(result.candidate_area_km2)} km² · uniquely associated mapped burned cells {fmt(result.burned_area_summary.unambiguous_cell_area_km2)} km².</p>
     {result.diagnostics?.reasons.map(reason=><p key={reason.code} className="text-slate-300">{reason.message}</p>)}
     {optical && optical.status!=='not_needed' && <>
       <p>Independent optical observations · {optical.status.replace(/_/g,' ')}{optical.selected_source?` · ${optical.selected_source}`:''}. {optical.reason}</p>
