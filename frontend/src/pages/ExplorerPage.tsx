@@ -1,3 +1,5 @@
+import { FireActivityPanel } from '../components/fireActivity/FireActivityPanel';
+import type { FireDetection } from '../types';
 import { CandidateSearch } from '../components/common/CandidateSearch';
 import L from 'leaflet';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
@@ -76,6 +78,10 @@ export const ExplorerPage: React.FC = () => {
   const colorMode=['sensor','date'].includes(searchParams.get('color') || '') ? searchParams.get('color') as 'sensor'|'date' : 'confidence';
   const opacity=Math.min(1,Math.max(0.1,parseNumber(searchParams.get('opacity'),0.85)));
   const [drawingCircle, setDrawingCircle] = useState(false);
+  const [activityOpen,setActivityOpen]=useState(false);
+  const [activityPoints,setActivityPoints]=useState<FireDetection[]|null>(null);
+  const [activityMonth,setActivityMonth]=useState('');
+  const showActivityMonth=useCallback((points:FireDetection[]|null,month:string)=>{setActivityPoints(points);setActivityMonth(month);if(points?.length)setFocusPosition([points[0].latitude,points[0].longitude]);},[]);
   // Request only the actual Leaflet viewport, including shared/saved views.
   const [viewport, setViewport] = useState('');
   const [zoom, setZoom] = useState(5);
@@ -315,6 +321,7 @@ export const ExplorerPage: React.FC = () => {
           <input aria-label="Search location or latitude, longitude" placeholder="Search location or lat, lon" value={search} onChange={e=>setSearch(e.target.value)} minLength={2} maxLength={100}/>
           <button type="submit" aria-label="Search location">Search</button>
         </form>
+        <button className="explorer-tool" aria-expanded={activityOpen} onClick={()=>setActivityOpen(v=>!v)}>Fire activity</button>
         <button className="explorer-tool" aria-expanded={layersOpen} onClick={()=>{setLayersOpen(v=>!v);if(window.innerWidth<1024)setSidebarOpen(false);}}>Layers</button>
         <button className="explorer-tool" onClick={()=>{localStorage.setItem('afterfire-view',window.location.search);setNotice('View saved on this device');}}>Save view</button>
         <button className="explorer-tool" onClick={()=>{const saved=localStorage.getItem('afterfire-view');if(saved){clearTimeout(timer.current);const params=new URLSearchParams(saved);setInitialBounds(parseViewBounds(params.get('map')));const z=parseNumber(params.get('z'),5);setInitialZoom(Math.max(0,Math.min(19,z)));setSearchParams(params);setViewGeneration(v=>v+1);setNotice('Saved view restored');}else setNotice('No saved view yet');}}>Restore</button>
@@ -645,10 +652,13 @@ export const ExplorerPage: React.FC = () => {
 
           </div>
 
+          {activityOpen&&<FireActivityPanel bbox={circleBox||outlinedBox||regionalBox||viewport} onClose={()=>setActivityOpen(false)} onMonth={showActivityMonth}
+            onCandidates={(start,end,area)=>{setActivityPoints(null);setActivityOpen(false);setFocusPosition(undefined);setInitialBounds(parseViewBounds(area.join(',')));setViewGeneration(v=>v+1);updateParams({start,end:end>cutoff?cutoff:end,source:'online',period:'custom',candidates:'on',lat:undefined,lon:undefined,radius:undefined,italyOutline:'off',map:area.join(',')});}}/>}
+          {activityPoints&&<div className="absolute right-4 bottom-24 z-[660] rounded bg-slate-900 p-2 text-xs">Original FIRMS observations · {activityMonth}<button className="ml-2 underline" onClick={()=>setActivityPoints(null)}>Return to Explorer observations</button></div>}
           <LeafletMap
             key={viewGeneration}
             showLegend={false}
-            detections={fireVisible ? detections : []}
+            detections={activityPoints ?? (fireVisible ? detections : [])}
             events={candidatesVisible ? eventCandidates : []}
             scientificResult={scienceLayer ? scienceResult.data : undefined}
             scientificObservation={scienceObservation}
@@ -662,7 +672,7 @@ export const ExplorerPage: React.FC = () => {
             labels={labels}
             terrain={terrain}
             contextDate={endDate || dateOnly(new Date())}
-            visualClusters={fireVisible && source==='archive' && hasValidDates && !invalidCircle && (zoom<10 || hotspotQuery.data?.truncated) ? clusterQuery.data?.clusters ?? [] : []}
+            visualClusters={!activityPoints && fireVisible && source==='archive' && hasValidDates && !invalidCircle && (zoom<10 || hotspotQuery.data?.truncated) ? clusterQuery.data?.clusters ?? [] : []}
             focusedEvent={candidatesVisible && selectedEventId ? (focusedEvent?.id === selectedEventId ? focusedEvent : eventCandidates.find((event) => event.id === selectedEventId)) : undefined}
             onReturnToItaly={() => {
               setFocusedEvent(undefined);
