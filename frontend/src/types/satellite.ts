@@ -45,7 +45,7 @@ export interface SatelliteResult {
   burned_area_summary: {available_granules: number; observed_cell_area_km2: number | null; unambiguous_cell_area_km2: number | null; ambiguous_cells: number; valid_mapping_fraction: number | null};
   observations: SatelliteObservation[];
   metrics: Record<'NDVI' | 'EVI', {pre_median: number | null; post_latest: number | null; post_date: string | null; seasonal_anomaly: number | null; status: string; pre_observations: number; post_observations: number}>;
-  recurrence: {event_id: string; name: string; start_date: string; end_date: string; gap_start_days: number; gap_since_end_days: number; association: string; indicator_status: string; vegetation_before: SatelliteObservation | null}[];
+  recurrence: {event_id: string; place?:string; name: string; start_date: string; end_date: string; gap_start_days: number; gap_since_end_days: number; association: string; indicator_status: string; vegetation_before: SatelliteObservation | null}[];
   granules: {id: string; original_id: string; product: string; version: string; tile: string; period: {start: string; end: string}; cmr_id: string; checksum: string; bytes: number; cache_hit: boolean; provider?: string; task_id?: string; files?: {name:string; bytes:number; checksum:string}[]}[];
   warnings: string[]; limitations: string[]; downloaded_granules: number; downloaded_bytes: number; elapsed_seconds: number;
 }

@@ -188,7 +188,14 @@ async def result_payload(db,event_id,job_id):
 
 @router.get('/analysis/result')
 async def analysis_result(event_id:str,job_id:str|None=None,db:AsyncSession=Depends(get_db)):
-    return await result_payload(db,event_id,job_id)
+    payload = await result_payload(db,event_id,job_id)
+    recurrence = payload.get('recurrence') or []
+    if not recurrence:
+        return payload
+    ids = [item['event_id'] for item in recurrence]
+    places = dict((await db.execute(select(FireEventCandidate.id, FireEventCandidate.place)
+        .where(FireEventCandidate.id.in_(ids)))).all())
+    return {**payload, 'recurrence': [{**item, 'place': places.get(item['event_id'])} for item in recurrence]}
 
 
 @router.get('/vegetation/timeseries')

@@ -3,7 +3,6 @@ import React, { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Database, Key, CheckCircle, AlertCircle, ExternalLink, Upload, RefreshCw, ShieldCheck, FileSpreadsheet } from 'lucide-react';
 import { apiClient } from '../api/client';
-import { DemoBanner } from '../components/common/DemoBanner';
 
 export const DatasetsPage: React.FC = () => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -52,7 +51,6 @@ export const DatasetsPage: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-dark-950 text-slate-100 flex flex-col pb-20">
-      <DemoBanner />
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 w-full space-y-8">
         <ResourceDiagnostics />
@@ -170,14 +168,7 @@ export const DatasetsPage: React.FC = () => {
                     Last import: {italyCoverage.real.last_import_at ?? 'never'} · Sensors: {italyCoverage.real.sensors.join(', ') || 'none reported'} · Satellites: {italyCoverage.real.satellites.join(', ') || 'none reported'}
                   </div>
                 </div>
-                <div className="rounded-lg border border-sky-800/60 bg-sky-950/20 p-3">
-                  <div className="text-[10px] uppercase tracking-wide text-sky-300">DEMO DATA inside Italy (separate)</div>
-                  <div className="mt-1 text-lg font-bold text-white">{italyCoverage.demo.count.toLocaleString()}</div>
-                  <div className="text-[11px] text-slate-300">
-                    Demo date range: {italyCoverage.demo.min_date ?? 'not available'} – {italyCoverage.demo.max_date ?? 'not available'}
-                  </div>
-                  <div className="mt-1 text-[10px] text-slate-500">{italyCoverage.demo.scope_note}</div>
-                </div>
+
               </div>
 
               <div className="overflow-x-auto rounded-lg border border-dark-700">
@@ -187,15 +178,11 @@ export const DatasetsPage: React.FC = () => {
                       <th className="px-3 py-2">Product</th>
                       <th className="px-3 py-2">Real records in DB</th>
                       <th className="px-3 py-2">Imported date range</th>
-                      <th className="px-3 py-2">Demo records</th>
                       <th className="px-3 py-2">Import state</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-dark-800">
                     {italyCoverage.products.map((product) => {
-                      const demoProduct = italyCoverage.demo.products.find(
-                        (row) => row.dataset_name === product.dataset_name,
-                      );
                       return (
                         <tr key={product.dataset_name} className="text-slate-300">
                           <td className="px-3 py-2">
@@ -206,7 +193,6 @@ export const DatasetsPage: React.FC = () => {
                           <td className="px-3 py-2 font-mono text-[11px]">
                             {product.loaded_min_date ?? '—'} – {product.loaded_max_date ?? '—'}
                           </td>
-                          <td className="px-3 py-2 font-mono">{(demoProduct?.count ?? 0).toLocaleString()}</td>
                           <td className="px-3 py-2">
                             <span className={`rounded px-2 py-1 text-[10px] ${
                               product.loaded_count > 0
@@ -241,7 +227,7 @@ export const DatasetsPage: React.FC = () => {
             <h3>Enabling Live NASA FIRMS Queries</h3>
           </div>
           <p className="text-xs text-slate-300 leading-relaxed max-w-3xl">
-            AfterFire displays the real records actually imported into the local archive. Demo records are synthetic and labeled separately. To query real-time active fire observations directly from NASA FIRMS Area API:
+            AfterFire displays the real records actually imported into the local archive. To query real-time active fire observations directly from NASA FIRMS Area API:
           </p>
 
           <div className="bg-dark-900 p-4 rounded-xl border border-dark-800 font-mono text-xs text-slate-300 space-y-2">

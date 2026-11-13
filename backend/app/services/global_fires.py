@@ -289,6 +289,9 @@ async def persist_candidate(db,event_id):
     saved=snapshot(event_id);event=saved['event']
     fields={c.name for c in FireEventCandidate.__table__.columns}
     values={k:v for k,v in event.items() if k in fields}
+    if not values.get('place'):
+        from app.services.candidate_places import place_reference
+        values['place'] = place_reference(event['center_lat'], event['center_lon'])
     values.update(start_date=date.fromisoformat(event['start_date']),end_date=date.fromisoformat(event['end_date']),
         notes=json.dumps({'provisional':True,'provider':saved['provider'],'clustering_version':VERSION,'scope':'selected snapshot'}))
     detections=[]

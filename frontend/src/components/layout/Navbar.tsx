@@ -75,15 +75,7 @@ export const Navbar: React.FC = () => {
 
           {/* Right Status Badge */}
           <div className="hidden lg:flex items-center space-x-3">
-            {health?.app_mode === 'demo' ? (
-              <div
-                title={health.message}
-                className="flex items-center space-x-2 px-2.5 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-xs text-amber-300 shadow-sm"
-              >
-                <span className="w-2 h-2 rounded-full bg-amber-400"></span>
-                <span className="font-mono text-[11px] font-semibold tracking-wide">DEMO MODE</span>
-              </div>
-            ) : health?.effective_status === 'real_connected' ? (
+            {health?.effective_status === 'real_connected' ? (
               <div
                 title={health.message}
                 className="flex items-center space-x-2 px-2.5 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-xs text-emerald-300 shadow-sm"

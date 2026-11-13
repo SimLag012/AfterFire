@@ -17,7 +17,6 @@ import {
 import { apiClient } from '../api/client';
 import { RecoveryChart } from '../components/charts/RecoveryChart';
 import { AIAnalystCard } from '../components/common/AIAnalystCard';
-import { DemoBanner } from '../components/common/DemoBanner';
 
 export const RecoveryPage: React.FC = () => {
   const { areaId = 'rhodes-greece-2023' } = useParams<{ areaId: string }>();
@@ -42,11 +41,11 @@ export const RecoveryPage: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-dark-950 text-slate-100 flex flex-col pb-20">
-      <DemoBanner area={area} />
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 w-full space-y-8">
         <p role="note" className="rounded border border-amber-700 p-3 text-sm text-amber-200">Legacy area report: these mean-based summaries do not use the seasonal event methodology. For supported NDVI/EVI anomalies, native-cell evidence and observation gaps, <Link className="underline" to="/recovery">open published Recovery Stories</Link>.</p>
-        {/* Header & Territory Switcher */}
+        {area?.is_demo_preset === "true" && <p role="note">Historical synthetic study area</p>}
+      {/* Header & Territory Switcher */}
         <div className="flex flex-wrap items-center justify-between gap-4 border-b border-dark-800 pb-5">
           <div className="space-y-1">
             <div className="flex items-center space-x-2 text-xs text-slate-400">

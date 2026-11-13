@@ -102,6 +102,7 @@ async def explorer_clusters(
 @router.get("/explorer/events", response_model=IndexedEventResponse)
 async def indexed_events(
     bbox: str,
+    q: str = "",
     start_date: Optional[date] = None,
     end_date: Optional[date] = None,
     sensor: Optional[str] = Query(None, pattern="^(MODIS|VIIRS)$"),
@@ -132,6 +133,9 @@ async def indexed_events(
         predicates.append(satellite_filter(satellite))
     matches = select(L.event_id).join(FireDetection, L.detection_id == FireDetection.id).where(*predicates).distinct()
     events_query = select(E).join(CurrentEventIndex, CurrentEventIndex.event_id == E.id).where(E.id.in_(matches))
+    if q.strip():
+        from app.models.event import candidate_search
+        events_query = events_query.where(candidate_search(q))
     total = await db.scalar(select(func.count()).select_from(events_query.subquery())) or 0
     observations = await db.scalar(select(func.count()).select_from(FireDetection).where(*predicates)) or 0
     events = (await db.scalars(events_query.order_by(E.start_date.desc(), E.id).offset(offset).limit(limit))).all()
@@ -154,7 +158,7 @@ async def indexed_events(
             centre = (shifted_centre + 180) % 360 - 180
             west, east = shifted_west, shifted_east - 360
         items.append(dict(
-            id=event.id, area_id=event.area_id, name=event.name,
+            id=event.id, area_id=event.area_id, name=event.name, place=event.place,
             start_date=str(event.start_date), end_date=str(event.end_date),
             duration_days=event.duration_days, detection_count=event.detection_count,
             modis_detections=event.modis_detections, viirs_detections=event.viirs_detections,

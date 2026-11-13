@@ -1,7 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Flame, Compass, Activity, ArrowRight, ShieldCheck, Database, Layers, CheckCircle2, TrendingUp, AlertTriangle } from 'lucide-react';
-import { DemoBanner } from '../components/common/DemoBanner';
 
 export const HomePage: React.FC = () => {
   const presets = [
@@ -18,7 +17,6 @@ export const HomePage: React.FC = () => {
 
   return (
     <div className="min-h-screen flex flex-col bg-dark-950 text-slate-100">
-      <DemoBanner />
 
       {/* Hero Section */}
       <section className="relative overflow-hidden pt-12 pb-20 md:pt-20 md:pb-32 border-b border-dark-800">
@@ -180,7 +178,7 @@ export const HomePage: React.FC = () => {
                 <span>Zero Hallucinated Numbers</span>
               </div>
               <p className="text-xs text-slate-400">
-                No simulated data presented as real observations. Synthetic demo cases are explicitly tagged with persistent banners.
+                Explorer shows satellite observations with their acquisition dates and sources.
               </p>
             </div>
 

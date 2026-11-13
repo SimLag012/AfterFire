@@ -6,7 +6,7 @@ compose=(docker compose -f compose.yaml -f compose.clean.yaml)
 "${compose[@]}" exec -T db sh -c 'exec psql -v ON_ERROR_STOP=1 -U "$POSTGRES_USER" -d "$POSTGRES_DB"' <<'SQL'
 SELECT PostGIS_Version();
 SELECT count(*) AS schema_tables FROM information_schema.tables WHERE table_schema='public';
-SELECT count(*) AS real_or_demo_detections FROM fire_detections;
+SELECT count(*) AS total_detections FROM fire_detections;
 SELECT count(*) AS candidates FROM fire_event_candidates;
 SQL
 curl --fail --silent --show-error http://127.0.0.1:8000/api/v1/health

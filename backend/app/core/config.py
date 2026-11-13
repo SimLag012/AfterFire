@@ -3,14 +3,13 @@ import math
 from pathlib import Path
 from typing import List, Tuple
 
-from pydantic import Field, model_validator
+from pydantic import Field, field_validator, model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Settings(BaseSettings):
     PROJECT_NAME: str = "AfterFire"
     API_V1_STR: str = "/api/v1"
-    DEBUG: bool = True
 
     DATABASE_URL: str = "sqlite+aiosqlite:///./afterfire.db"
 
@@ -18,7 +17,6 @@ class Settings(BaseSettings):
     AFTERFIRE_API_FIRST: bool = True
     AFTERFIRE_FULL_HDF_AUTO_DOWNLOAD: bool = False
     AFTERFIRE_SATELLITE_PROVIDER: str = Field(default='auto', pattern='^(auto|earth_engine|ornl)$')
-    AFTERFIRE_ORNL_ENABLED: bool = True
     AFTERFIRE_EARTH_ENGINE_ENABLED: bool = False
     AFTERFIRE_EE_PROJECT_ID: str = ''
     AFTERFIRE_API_MAX_REQUESTS: int = Field(default=1000, ge=1, le=5000)
@@ -59,10 +57,9 @@ class Settings(BaseSettings):
     AFTERFIRE_ANALYSIS_CACHE_DIR: str = ""
     AFTERFIRE_ANALYSIS_MIN_FREE_GB: float = Field(default=1, ge=0)
     LLM_API_KEY: str = ""
-    DEMO_MODE: bool = False
 
-    ANALYSIS_BBOX: str = "14.7,37.1,15.4,37.8"
-    ANALYSIS_REGION_NAME: str = "Sicily East"
+    ANALYSIS_BBOX: str = ""
+    ANALYSIS_REGION_NAME: str = ""
     ANALYSIS_START_DATE: date = date(2024, 1, 1)
     ANALYSIS_END_DATE: date = Field(default_factory=date.today)
 
@@ -86,20 +83,26 @@ class Settings(BaseSettings):
         extra="ignore",
     )
 
+    @field_validator("ANALYSIS_END_DATE", mode="before")
+    @classmethod
+    def default_preview_end_date(cls, value):
+        return date.today() if value == "" else value
+
     @model_validator(mode="after")
     def validate_analysis_configuration(self) -> "Settings":
-        coords = self._parse_bbox(self.ANALYSIS_BBOX)
-        west, south, east, north = coords
-        if not all(math.isfinite(value) for value in coords):
-            raise ValueError("ANALYSIS_BBOX coordinates must be finite numbers.")
-        if not (-180 <= west <= 180 and -180 <= east <= 180):
-            raise ValueError("ANALYSIS_BBOX longitude values must be between -180 and 180.")
-        if not (-90 <= south <= 90 and -90 <= north <= 90):
-            raise ValueError("ANALYSIS_BBOX latitude values must be between -90 and 90.")
-        if west >= east or south >= north:
-            raise ValueError("ANALYSIS_BBOX must have west < east and south < north (non-zero area).")
-        if not self.ALLOW_GLOBAL_DOWNLOADS and west == -180 and east == 180 and south == -90 and north == 90:
-            raise ValueError("ANALYSIS_BBOX cannot cover the entire globe when ALLOW_GLOBAL_DOWNLOADS=false.")
+        if self.ANALYSIS_BBOX:
+            coords = self._parse_bbox(self.ANALYSIS_BBOX)
+            west, south, east, north = coords
+            if not all(math.isfinite(value) for value in coords):
+                raise ValueError("ANALYSIS_BBOX coordinates must be finite numbers.")
+            if not (-180 <= west <= 180 and -180 <= east <= 180):
+                raise ValueError("ANALYSIS_BBOX longitude values must be between -180 and 180.")
+            if not (-90 <= south <= 90 and -90 <= north <= 90):
+                raise ValueError("ANALYSIS_BBOX latitude values must be between -90 and 90.")
+            if west >= east or south >= north:
+                raise ValueError("ANALYSIS_BBOX must have west < east and south < north (non-zero area).")
+            if not self.ALLOW_GLOBAL_DOWNLOADS and west == -180 and east == 180 and south == -90 and north == 90:
+                raise ValueError("ANALYSIS_BBOX cannot cover the entire globe when ALLOW_GLOBAL_DOWNLOADS=false.")
         if self.ANALYSIS_START_DATE > self.ANALYSIS_END_DATE:
             raise ValueError("ANALYSIS_START_DATE must be on or before ANALYSIS_END_DATE.")
         return self
@@ -115,8 +118,8 @@ class Settings(BaseSettings):
         return (coords[0], coords[1], coords[2], coords[3])
 
     @property
-    def analysis_bbox(self) -> Tuple[float, float, float, float]:
-        return self._parse_bbox(self.ANALYSIS_BBOX)
+    def analysis_bbox(self) -> Tuple[float, float, float, float] | None:
+        return self._parse_bbox(self.ANALYSIS_BBOX) if self.ANALYSIS_BBOX else None
 
     @property
     def cache_dir(self) -> Path:

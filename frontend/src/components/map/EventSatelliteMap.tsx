@@ -11,7 +11,7 @@ function FitTerritory({geometry, bounds}: {geometry?: GeoJsonObject; bounds: [[n
   useEffect(() => {
     const layer = geometry ? L.geoJSON(geometry) : null;
     const extent = layer?.getBounds();
-    map.fitBounds(extent?.isValid() ? extent : bounds, {padding: [25,25], maxZoom: 14});
+    map.fitBounds(extent?.isValid() ? extent : bounds, {padding: [25,25], maxZoom: 14, animate: false});
   }, [map,geometry,bounds[0][0],bounds[0][1],bounds[1][0],bounds[1][1]]);
   return null;
 }

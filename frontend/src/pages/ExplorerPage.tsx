@@ -1,3 +1,4 @@
+import { CandidateSearch } from '../components/common/CandidateSearch';
 import L from 'leaflet';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
@@ -6,7 +7,6 @@ import { CalendarDays, CircleDot, Crosshair, Layers3, RotateCcw } from 'lucide-r
 import { hasLocalObservations, loadObservations } from '../api/observationCache';
 import { satelliteApi } from '../api/satellite';
 import { apiClient } from '../api/client';
-import { DemoBanner } from '../components/common/DemoBanner';
 import { LeafletMap } from '../components/map/LeafletMap';
 
 type Period = 'today' | '24h' | 'all' | '7d' | '30d' | '12mo' | 'custom';
@@ -100,6 +100,7 @@ export const ExplorerPage: React.FC = () => {
   const sensor = ['MODIS', 'VIIRS', 'both'].includes(requestedSensor) ? requestedSensor : 'both';
   const scienceLayer=searchParams.get('science') || '';
   const selectedEventId = searchParams.get('event') ?? undefined;
+  const candidateSearch = searchParams.get("q") ?? "";
   const candidatePage = Math.max(1, Math.floor(parseNumber(searchParams.get('candidatePage'), 1)));
   const [focusedEvent, setFocusedEvent] = useState<import('../types').EventMapItem>();
   const hasCircle = searchParams.has('lat') && searchParams.has('lon') && searchParams.has('radius')
@@ -133,14 +134,14 @@ export const ExplorerPage: React.FC = () => {
   const bounds = circleCenter?.toBounds(radiusKm * 2000);
   const wrap = (longitude: number) => ((longitude + 180) % 360 + 360) % 360 - 180;
   const circleBox = bounds && [wrap(bounds.getWest()), Math.max(-90,bounds.getSouth()), wrap(bounds.getEast()), Math.min(90,bounds.getNorth())].map(v => v.toFixed(6)).join(',');
-  // Wide regional views use a stable, reusable window around the visible center.
-  const centerX = wrap(west + longitudeSpan / 2);
-  const centerY = Math.round((north + south) / 2);
-  const regionalOverview = !italyOverview && zoom >= 4 && (longitudeSpan > 16 || north - south > 16);
-  const regionalBox = [wrap(Math.round(centerX)-6), Math.max(-90,centerY-6),
-    wrap(Math.round(centerX)+6), Math.min(90,centerY+6)].join(',');
-  const outlinedBox = italyOverview ? ITALY_BBOX : regionalOverview ? regionalBox : undefined;
-  const onlineBounds = circleBox || outlinedBox || (tooWide ? '' : viewport);
+  const outlinedBox = italyOverview ? ITALY_BBOX : undefined;
+  // At regional zoom, bound the FIRMS request independently of the Italy overlay.
+  const regionLat = Math.round((north + south) / 2);
+  const regionLon = Math.round(wrap(west + longitudeSpan / 2));
+  const regionalBox = zoom >= 4 && (longitudeSpan > 16 || north - south > 16)
+    ? [wrap(regionLon - 6), Math.max(-90, regionLat - 6), wrap(regionLon + 6), Math.min(90, regionLat + 6)].join(',')
+    : undefined;
+  const onlineBounds = circleBox || outlinedBox || regionalBox || (tooWide ? '' : viewport);
   const queryBounds = source === 'online' ? onlineBounds : viewport;
 
   const updateParams = useCallback((updates: Record<string, string | undefined>) => {
@@ -185,7 +186,7 @@ export const ExplorerPage: React.FC = () => {
   });
 
   const candidateQuery = useQuery({
-    queryKey: ['explorerCandidates', viewport, candidatePage, startDate, endDate, afterUtc, sensor, satellite, hasCircle, centerLat, centerLon, radiusKm],
+    queryKey: ['explorerCandidates', candidateSearch, viewport, candidatePage, startDate, endDate, afterUtc, sensor, satellite, hasCircle, centerLat, centerLon, radiusKm],
     queryFn: ({ signal }) => apiClient.getExplorerEvents({
       bbox: hasCircle ? '-180,-90,180,90' : viewport,
       start_date: startDate || undefined,
@@ -196,6 +197,7 @@ export const ExplorerPage: React.FC = () => {
       scope: 'all',
       ...circleParams,
       limit: PAGE_SIZE,
+      q: candidateSearch || undefined,
       offset: (candidatePage - 1) * PAGE_SIZE,
     }, signal),
     enabled: source==='archive' && hasValidViewport && hasValidDates && !invalidCircle,
@@ -223,7 +225,8 @@ export const ExplorerPage: React.FC = () => {
   const matchingIds = new Set(detections.map(d => d.candidate_event_id));
   const onlineEvents = (hotspotQuery.data?.events ?? []).filter(event =>
     (!circleCenter || circleCenter.distanceTo([event.center_lat,event.center_lon]) <= radiusKm * 1000)
-    && (selectedPeriod !== '24h' || matchingIds.has(event.id)));
+    && (selectedPeriod !== '24h' || matchingIds.has(event.id))
+    && [event.id,event.name,event.place,event.start_date,event.end_date].some(value=>value?.toLowerCase().includes(candidateSearch.trim().toLowerCase())));
   const candidateData=source==='online' ? hotspotQuery.data && {...hotspotQuery.data,events:onlineEvents,total_events:onlineEvents.length,total_detections:detections.length,index_status:'ready'} : candidateQuery.data;
   const eventCandidates = hasValidDates && !invalidCircle ? candidateData?.events ?? [] : [];
   const scienceStatus=useQuery({queryKey:['satellite-status',selectedEventId],queryFn:({signal})=>satelliteApi.status(selectedEventId!,signal),enabled:!!selectedEventId && !!scienceLayer,retry:false});
@@ -306,7 +309,6 @@ export const ExplorerPage: React.FC = () => {
 
   return (
     <div className="afterfire-explorer flex flex-col bg-dark-950 text-slate-100">
-      <DemoBanner detectionCount={source==='online' ? detections.length : clusterQuery.data?.total_observations ?? 0} message={source==='online' ? 'NASA FIRMS on demand · real thermal observations. Query status and coverage are shown on the map.' : undefined} realDataOnly />
       <div className="explorer-toolbar">
         <button aria-expanded={sidebarOpen} onClick={()=>setSidebarOpen(v=>!v)} className="explorer-tool">☰ <span>Fire data</span></button>
         <form onSubmit={findLocation} className="explorer-search">
@@ -327,11 +329,7 @@ export const ExplorerPage: React.FC = () => {
               <Layers3 className="h-4 w-4 text-emerald-300" />
               <h1 className="text-lg font-semibold">Global fire explorer</h1>
             </div>
-            <p className="mb-4 text-xs leading-relaxed text-slate-400">
-              Explore real satellite observations across the map. Visual aggregates are map-only; algorithmic candidates
-              are fetched separately and are not official fire perimeters.
-            </p>
-
+            <details><summary className="cursor-pointer text-sm text-emerald-200">Area, dates and sensor filters</summary>
             {source === 'archive' && <div className="mb-4 rounded-lg border border-dark-700 bg-dark-950/70 p-3">
               <h2 className="text-xs font-semibold text-slate-200">Imported archive in Italy</h2>
               {coverageQuery.isLoading && <p className="mt-2 text-[11px] text-slate-400">Loading database coverage…</p>}
@@ -340,9 +338,6 @@ export const ExplorerPage: React.FC = () => {
                 <>
                   <p className="mt-2 text-[11px] text-slate-300">
                     Real observations: {archive.real.count.toLocaleString()} · {archiveStart ?? 'date range unavailable'} – {archiveEnd ?? 'date range unavailable'}
-                  </p>
-                  <p className="mt-1 text-[11px] text-slate-400">
-                    Demo records are reported separately ({archive.demo.count.toLocaleString()}); never included in these map results.
                   </p>
                   <p className="mt-1 text-[10px] leading-relaxed text-amber-200/80">
                     Archive coverage completeness has not been assessed. Imported date windows do not establish that all observations are present.
@@ -502,35 +497,12 @@ export const ExplorerPage: React.FC = () => {
                 </p>
               )}
               </>
-              {source==='online' && <p className="text-xs text-slate-400">{hasCircle ? 'Shows observations and candidate centers inside the circle. Candidate totals describe the whole grouping.' : outlinedBox ? 'Query area: outlined region.' : 'Query area: visible map viewport.'}</p>}
+              {source==='online' && <p className="text-xs text-slate-400">{hasCircle ? 'Shows observations and candidate centers inside the circle. Candidate totals describe the whole grouping.' : outlinedBox ? 'Query area: Italy bounding box.' : regionalBox ? 'Query area: a 12° window around the map centre.' : 'Query area: visible map viewport.'}</p>}
             </div>
+            </details>
           </section>
 
-          {source === 'archive' && <section className="rounded-xl border border-dark-700 bg-dark-900 p-4">
-            <div className="flex items-center justify-between gap-2 border-b border-dark-700 pb-2">
-              <h2 className="font-semibold">Map aggregates</h2>
-              <span className="text-[11px] text-slate-400">
-                {clusterQuery.data?.clusters.length ?? 0} clusters · {(clusterQuery.data?.total_observations ?? clusterQuery.data?.total_detections ?? 0).toLocaleString()} observations
-              </span>
-            </div>
-            {clusterQuery.isFetching && <p role="status" className="py-2 text-xs text-slate-400">Updating visible map…</p>}
-            {clusterQuery.isError && <p role="alert" className="py-2 text-xs text-red-300">Could not load visual aggregates for this viewport.</p>}
-            {mapCoverage && (
-              <p role="status" className={`mt-2 text-xs ${mapCoverage.status === 'observations_present' ? 'text-emerald-300' : 'text-amber-300'}`}>
-                {mapCoverage.detail || mapCoverage.message || mapCoverage.status}
-              </p>
-            )}
-            {!clusterQuery.isFetching && clusterQuery.data?.clusters.length === 0 && mapCoverage && (
-              <p className="py-2 text-xs text-slate-400">
-                No real observations match the visible viewport and filters. Imported archive windows are not a completeness guarantee.
-              </p>
-            )}
-            <p className="mt-2 text-[10px] text-slate-500">
-              Aggregate markers are visual-only groups, not scientific event candidates.
-            </p>
-          </section>}
-
-          <section className="min-h-48 rounded-xl border border-dark-700 bg-dark-900 p-4">
+          <section className="shrink-0 rounded-xl border border-dark-700 bg-dark-900 p-4">
             <div className="flex items-center justify-between gap-2 border-b border-dark-700 pb-2">
               <h2 className="font-semibold">Algorithmic candidate events</h2>
               {candidateData && (
@@ -539,6 +511,7 @@ export const ExplorerPage: React.FC = () => {
                 </span>
               )}
             </div>
+            <CandidateSearch value={candidateSearch} onChange={q=>updateParams({q:q || undefined,candidatePage:undefined})}/>
             {(source==='online' ? hotspotQuery.isFetching : candidateQuery.isFetching) && <p role="status" className="py-3 text-xs text-slate-400">Searching candidates…</p>}
             {(source==='online' ? hotspotQuery.isError : candidateQuery.isError) && <p role="alert" className="py-3 text-xs text-red-300">Could not load candidate events. Narrow the date range or viewport and retry.</p>}
             {candidateData?.truncated && (
@@ -548,7 +521,7 @@ export const ExplorerPage: React.FC = () => {
             )}
             {candidateData && eventCandidates.length === 0 && (
               <p className="py-4 text-xs text-slate-400">
-                {candidateData.total_detections === 0
+                {candidateSearch.trim() ? 'No candidates match this search in the selected area and period.' : candidateData.total_detections === 0
                   ? source==='online' ? 'No thermal detections returned for this supported area and period; completeness is not guaranteed.' : 'No data available in the current local archive for this area and period.'
                   : candidateData.index_status !== 'ready'
                     ? 'Observations are available; the candidate index has not been built. Run the archive indexing command described in Data Coverage.'
@@ -565,7 +538,8 @@ export const ExplorerPage: React.FC = () => {
                 >
                   <div className="flex items-start justify-between gap-2">
                     <div>
-                      <h3 className="text-sm font-medium">{candidate.name}</h3>
+                      <h3 className="text-sm font-semibold">{candidate.place || candidate.name}</h3>
+                      <p className="break-all text-xs text-emerald-200">ID · {candidate.id}</p>
                       <p className="mt-1 text-[11px] text-slate-400">
                         {candidate.start_date} – {candidate.end_date} · {candidate.detection_count} observations
                       </p>
@@ -617,11 +591,36 @@ export const ExplorerPage: React.FC = () => {
               </p>
             )}
           </section>
+          {source === 'archive' && <section className="rounded-xl border border-dark-700 bg-dark-900 p-4">
+            <div className="flex items-center justify-between gap-2 border-b border-dark-700 pb-2">
+              <h2 className="font-semibold">Map aggregates</h2>
+              <span className="text-[11px] text-slate-400">
+                {clusterQuery.data?.clusters.length ?? 0} clusters · {(clusterQuery.data?.total_observations ?? clusterQuery.data?.total_detections ?? 0).toLocaleString()} observations
+              </span>
+            </div>
+            {clusterQuery.isFetching && <p role="status" className="py-2 text-xs text-slate-400">Updating visible map…</p>}
+            {clusterQuery.isError && <p role="alert" className="py-2 text-xs text-red-300">Could not load visual aggregates for this viewport.</p>}
+            {mapCoverage && (
+              <p role="status" className={`mt-2 text-xs ${mapCoverage.status === 'observations_present' ? 'text-emerald-300' : 'text-amber-300'}`}>
+                {mapCoverage.detail || mapCoverage.message || mapCoverage.status}
+              </p>
+            )}
+            {!clusterQuery.isFetching && clusterQuery.data?.clusters.length === 0 && mapCoverage && (
+              <p className="py-2 text-xs text-slate-400">
+                No real observations match the visible viewport and filters. Imported archive windows are not a completeness guarantee.
+              </p>
+            )}
+            <p className="mt-2 text-[10px] text-slate-500">
+              Aggregate markers are visual-only groups, not scientific event candidates.
+            </p>
+          </section>}
+
         </aside>
 
         <section className="explorer-map" aria-label="Satellite observation map">
           {layersOpen && <div className="explorer-layers" aria-label="Map layer manager"><h2>Map layers</h2>
             <button onClick={()=>setLayersOpen(false)} aria-label="Close layers" className="float-right">×</button>
+            <label className="block py-2"><input type="checkbox" checked={searchParams.get('italyOutline') !== 'off'} onChange={e=>updateParams({italyOutline:e.target.checked ? undefined : 'off'})}/> Italy outline</label>
             {([['fire','Hotspots / visual clusters',fireVisible],['candidates','Candidate fire events',candidatesVisible],['labels','Borders and place labels',labels],['terrain','Terrain basemap',terrain],['imagery','Dated NASA true color',context]] as const).map(([key,label,checked])=><label key={key} className="block py-2"><input type="checkbox" checked={checked} onChange={e=>updateParams({[key]:e.target.checked ? (key==='fire'||key==='candidates' ? undefined : 'on') : (key==='fire'||key==='candidates' ? 'off' : undefined)})}/> {label}</label>)}
             <p className="text-[11px] text-slate-400">Base imagery dates vary. NASA overlay requests {endDate || 'today'}; imagery availability is independent of fire observations.</p>
             <label className="block py-2">Hotspot color<select aria-label="Hotspot color" value={colorMode} onChange={e=>updateParams({color:e.target.value})} className="ml-2 bg-dark-800"><option value="confidence">Confidence</option><option value="sensor">Instrument</option><option value="date">Observation date</option></select></label>
@@ -635,12 +634,12 @@ export const ExplorerPage: React.FC = () => {
             <p className="text-[11px] text-emerald-200">Area filter: {hasCircle ? 'search circle' : 'visible viewport'}</p>
           </div>}
           <div className="explorer-map-status" aria-label="Observation query status">
-          {source === 'online' && !hasCircle && tooWide && !outlinedBox && <p role="status" className="explorer-status-message">Zoom in to search a region up to 30° wide and high.</p>}
+          {source === 'online' && !hasCircle && tooWide && !outlinedBox && !regionalBox && <p role="status" className="explorer-status-message">Zoom in to search a region up to 30° wide and high.</p>}
           {hotspotQuery.isFetching && <p role="status" className="explorer-status-message">{hotspotQuery.failureCount ? 'Request limit reached. Waiting to retry…' : 'Updating satellite observations…'}</p>}
           {hotspotQuery.isError && <div role="alert" className="explorer-status-message">{(hotspotQuery.error as {response?:{data?:{detail?:string}}}).response?.data?.detail || 'Hotspot request unavailable'} <button className="underline" onClick={()=>hotspotQuery.refetch()}>Retry observations</button></div>}
           {hotspotQuery.data?.truncated && <div role="status" className="explorer-status-message">Partial acquisition. <button className="underline" disabled={hotspotQuery.isFetching} onClick={async()=>{refine.current=true;try{await hotspotQuery.refetch();}finally{refine.current=false;}}}>Load more of this area</button></div>}
           {source==='online' && hotspotQuery.data && hasValidDates && <details className="explorer-status-message">
-            <summary>{detections.length} online observations · {hasCircle ? 'search circle' : outlinedBox ? 'outlined area' : 'visible area'}{hotspotQuery.data.coverage?.state === 'cached' && ' · cached'}{hotspotQuery.data.coverage?.message.includes('partially') && ' · partial coverage'}</summary>
+            <summary>{detections.length} online observations · {hasCircle ? 'search circle' : outlinedBox ? 'Italy' : regionalBox ? 'regional window' : 'visible area'}{hotspotQuery.data.coverage?.state === 'cached' && ' · cached'}{hotspotQuery.data.coverage?.message.includes('partially') && ' · partial coverage'}</summary>
             <p>{hotspotQuery.data.coverage?.message}. Candidate totals describe their original acquisition window.</p>
           </details>}
 
@@ -656,7 +655,7 @@ export const ExplorerPage: React.FC = () => {
             showScientificBurned={scienceLayer==='burned'}
             initialBounds={initialBounds}
             initialZoom={initialZoom}
-            observationBounds={source === 'online' && !hasCircle && outlinedBox ? parseViewBounds(outlinedBox) : undefined}
+            observationBounds={searchParams.get('italyOutline') !== 'off' ? parseViewBounds(ITALY_BBOX) : undefined}
             focusPosition={focusPosition}
             colorMode={colorMode}
             opacity={opacity}

@@ -1,4 +1,5 @@
 import L from 'leaflet';
+import {createPortal} from 'react-dom';
 import axios from 'axios';
 import React,{useEffect,useState} from 'react';
 import {Link} from 'react-router-dom';
@@ -10,7 +11,7 @@ import {ResponsiveContainer,LineChart,Line,XAxis,YAxis,CartesianGrid,Tooltip,Leg
 import type {CellProperties} from '../../types/recovery';
 const fmt=(n:number|null|undefined)=>n==null?'Unavailable':n.toFixed(4);
 const colors={negative:'#ef7657',neutral:'#ded9c4',positive:'#41b8bb',missing:'#8b879b'};
-export function RecoveryIntelligencePanel({eventId,sourceJobId,index,selectedDate,bounds,geometry,burned}:{eventId:string;sourceJobId:string;index:'NDVI'|'EVI';selectedDate:string;bounds:[[number,number],[number,number]];geometry:import('geojson').GeoJsonObject;burned:import('geojson').GeoJsonObject}){
+export function RecoveryIntelligencePanel({eventId,sourceJobId,index,selectedDate,bounds,geometry,burned,downloadSection}:{downloadSection:HTMLDivElement|null;eventId:string;sourceJobId:string;index:'NDVI'|'EVI';selectedDate:string;bounds:[[number,number],[number,number]];geometry:import('geojson').GeoJsonObject;burned:import('geojson').GeoJsonObject}){
   const client=useQueryClient();
   const [jobId,setJobId]=useState('');
   const [assessmentId,setAssessmentId]=useState('');
@@ -43,6 +44,7 @@ export function RecoveryIntelligencePanel({eventId,sourceJobId,index,selectedDat
   const cellHistory=useQuery({queryKey:['recovery-cell',eventId,data?.job_id,index,cell?.id],
     queryFn:()=>recoveryApi.cell(eventId,data!.job_id,index,cell!.id),enabled:!!data&&!!cell,retry:false});
   const cellCentre=cellHistory.data?L.geoJSON(cellHistory.data).getBounds().getCenter():null;
+  const period=data?.classification_period??data?.period;
   const metric=data?.indices[index];
   const busy=!!status.data&&!['completed','failed'].includes(status.data.state);
   function color(p:CellProperties){
@@ -54,18 +56,18 @@ export function RecoveryIntelligencePanel({eventId,sourceJobId,index,selectedDat
   return <section aria-label="Recovery Intelligence" className="space-y-4 rounded-xl border border-teal-800 bg-dark-900 p-4">
     <div className="flex flex-wrap items-center justify-between gap-3"><h2 className="text-xl font-semibold">Recovery Intelligence · {index}</h2><Link className="text-teal-300 underline" to={`/compare?event=${encodeURIComponent(eventId)}`}>Compare Recovery →</Link></div>
     <p className="text-sm text-slate-400">Observed seasonal evidence from published NASA measurements. No new satellite downloads are needed.</p>
-    <details><summary>Change assessment interval</summary><div className="flex flex-wrap gap-3 text-sm"><label>Assessment from <input aria-label="Assessment from" type="date" className="bg-dark-800" value={periodStart} onChange={e=>setPeriodStart(e.target.value)}/></label><label>Assessment through <input aria-label="Assessment through" type="date" className="bg-dark-800" value={periodEnd} onChange={e=>setPeriodEnd(e.target.value)}/></label><span>Leave empty for the full published interval.</span></div>
+    <details><summary>Change assessment interval</summary><div className="flex flex-wrap gap-3 text-sm"><label>Assessment from <input aria-label="Assessment from" type="date" className="bg-dark-800" value={periodStart} onChange={e=>setPeriodStart(e.target.value)}/></label><label>Assessment through <input aria-label="Assessment through" type="date" className="bg-dark-800" value={periodEnd} onChange={e=>setPeriodEnd(e.target.value)}/></label><span>Leave empty for the full post-event interval.</span></div>
     <button className="rounded bg-teal-800 px-4 py-2 disabled:opacity-50" disabled={busy||start.isPending} onClick={()=>start.mutate()}>Apply assessment interval</button></details>
     {(busy||status.data?.state==='failed')&&<p role="status">{status.data?.operation} · {status.data?.progress}% {status.data?.error}</p>}
     {start.isError&&<p role="alert">Assessment could not be requested. Retry after satellite observations are published.</p>}
     {(initialAssessment.isError || (result.isError&&!missing)) && <p role="alert">Could not load territory evidence. <button onClick={()=>missing?initialAssessment.refetch():result.refetch()}>Retry</button></p>}
     {missing && !initialAssessment.isError && status.data?.state!=='failed' && <p role="status">Preparing the territory assessment from published satellite observations…</p>}
-    {data&&metric&&<>
+    {data&&metric&&period&&<>
       <h3 className="text-lg font-semibold">Territory recovery map</h3>
       <p className="text-sm">Select a cell to follow its vegetation history. The period classification compares supported observations with the pre-fire seasonal range.</p>
       <p className="text-xs text-slate-400">Cell support uses each pixel’s post-event history and seasonal baseline. A few supported cells can coexist with insufficient coverage for the area timeline. This map alone does not demonstrate recovery of the whole territory.</p>
       <div className="flex flex-wrap gap-4 text-sm"><label><input type="checkbox" checked={visible} onChange={e=>setVisible(e.target.checked)}/> Show scientific cells</label><label>Recovery layer <select aria-label="Recovery layer" className="bg-dark-800" value={layer} onChange={e=>setLayer(e.target.value)}><option value="anomaly">Seasonal anomaly</option><option value="persistence">Seasonal reference classification</option><option value="trend">Recovery trend</option><option value="reliability">Data reliability</option></select></label><label><input type="checkbox" checked={zones} onChange={e=>setZones(e.target.checked)}/> Persistent vegetation anomaly zones</label></div>
-      <p className="text-sm">{layer==='anomaly'?`Selected composite: ${selectedDate} · same index and selected date as Recovery Story`:`Assessment period: ${data.period.start}–${data.period.end} · period summary, independent of the selected timeline date`} · {map.data?.native_resolution_m?.toFixed(2)??'231.66'} m native cells (nominal 250 m)</p>
+      <p className="text-sm">{layer==='anomaly'?`Selected composite: ${selectedDate} · same index and selected date as Recovery Story`:`Assessment period: ${period.start}–${period.end} · period summary, independent of the selected timeline date`} · {map.data?.native_resolution_m?.toFixed(2)??'231.66'} m native cells (nominal 250 m)</p>
       {map.isError&&<p role="alert">Spatial evidence unavailable. Retry the assessment.</p>}
       <>
         <div className="h-[420px] overflow-hidden rounded" aria-label="Recovery Anomaly Map"><MapContainer bounds={bounds} className="h-full w-full" scrollWheelZoom={false}><SatelliteBasemap/>
@@ -87,11 +89,11 @@ export function RecoveryIntelligencePanel({eventId,sourceJobId,index,selectedDat
           <div className="h-64" aria-label="Selected cell vegetation history"><ResponsiveContainer width="100%" height="100%"><LineChart data={cellHistory.data.properties.series} margin={{top:10,right:20,left:0,bottom:15}}><CartesianGrid stroke="#334155"/><XAxis dataKey="date" tick={{fontSize:10}} minTickGap={55}/><YAxis domain={['auto','auto']} width={45}/><Tooltip formatter={(value:unknown)=>typeof value==='number'?value.toFixed(4):String(value)} contentStyle={{background:'#0f172a',borderColor:'#334155',fontSize:12}} labelStyle={{color:'#e2e8f0'}}/><Legend/><ReferenceLine x={selectedDate} stroke="#ffffff"/>
             <Line dataKey="value" name={index} stroke="#34d399" dot={{r:1}} connectNulls={false} isAnimationActive={false}/><Line dataKey="baseline" name="Cell seasonal median" stroke="#fbbf24" dot={false} connectNulls={false} isAnimationActive={false}/><Line dataKey="anomaly" name="Cell seasonal anomaly" stroke="#38bdf8" dot={false} connectNulls={false} isAnimationActive={false}/>
           </LineChart></ResponsiveContainer></div>
-          <details><summary>Observed dates, reference support and gaps</summary><div className="max-h-64 overflow-auto"><table className="w-full text-xs"><caption>Native cell history · {index} · null values remain unavailable</caption><thead><tr><th>Date</th><th>Observed</th><th>Baseline</th><th>Anomaly</th><th>Refs / years</th></tr></thead><tbody>{cellHistory.data.properties.series.map(p=><tr key={p.date}><td>{p.date}</td><td>{fmt(p.value)}</td><td>{fmt(p.baseline)}</td><td>{fmt(p.anomaly)}</td><td>{p.baseline_n??0} / {p.baseline_years??0}</td></tr>)}</tbody></table></div></details>
+          <details open><summary>Observed dates, reference support and gaps</summary><div className="max-h-64 overflow-auto"><table className="w-full text-xs"><caption>Native cell history · {index} · null values remain unavailable</caption><thead><tr><th>Date</th><th>Observed</th><th>Baseline</th><th>Anomaly</th><th>Refs / years</th></tr></thead><tbody>{cellHistory.data.properties.series.map(p=><tr key={p.date}><td>{p.date}</td><td>{fmt(p.value)}</td><td>{fmt(p.baseline)}</td><td>{fmt(p.anomaly)}</td><td>{p.baseline_n??0} / {p.baseline_years??0}</td></tr>)}</tbody></table></div></details>
         </>}
       </article>}
-      <details><summary>Seasonal evidence and observation support</summary>
-      <p className="text-sm">Assessment interval: {data.period.start}–{data.period.end}</p>
+      <details open><summary>Seasonal evidence and observation support</summary>
+      <p className="text-sm">Assessment interval: {period.start}–{period.end}</p>
       <p className="text-sm">{data.version} · source {data.source_job_id.slice(0,12)} · {metric.classification.replace(/_/g,' ')} · evidence: {metric.reliability.evidence}</p>
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
         <article className="rounded bg-dark-950 p-3"><h3>Initial observed change</h3><p>{fmt(metric.first_post_observation?.anomaly)} · {metric.first_post_observation?.date??'No valid post-event composite'}</p><p className="text-xs text-slate-400">Minimum value in first {metric.initial_window_days} days: {fmt(metric.initial_minimum?.value)} ({metric.initial_minimum?.date??'unavailable'})</p></article>
@@ -100,10 +102,10 @@ export function RecoveryIntelligencePanel({eventId,sourceJobId,index,selectedDat
         <article className="rounded bg-dark-950 p-3"><h3>Observation support</h3><p>{metric.reliability.baseline_supported_composites}/{metric.reliability.expected_post_composites} composites</p><p className="text-xs text-slate-400">Completeness {(metric.reliability.completeness*100).toFixed(1)}% · largest valid gap {metric.reliability.largest_valid_gap_days??'unknown'} days</p></article>
       </div>
       <p className="text-sm">{metric.persistent_negative_periods.length} observed persistent negative periods · first sustained return: {metric.return_to_reference?.start??'Not observed with sufficient support'}{!data.ndvi_evi_concordant?' · NDVI/EVI classifications differ.':''}</p>
-      <details><summary>Persistence evidence and scientific insights</summary>{metric.persistent_negative_periods.map(p=><p key={p.start}>{p.start}–{p.end}: {p.observations} composites, {p.duration_days} days, median anomaly {fmt(p.median_anomaly)}</p>)}{data.insights.map(i=><p key={i.text}>{i.text}</p>)}</details>
+      <details open><summary>Persistence evidence and scientific insights</summary>{metric.persistent_negative_periods.map(p=><p key={p.start}>{p.start}–{p.end}: {p.observations} composites, {p.duration_days} days, median anomaly {fmt(p.median_anomaly)}</p>)}{data.insights.map(i=><p key={i.text}>{i.text}</p>)}</details>
       </details>
-      <div className="flex flex-wrap gap-3">{data.raster_assets?.filter(a=>a.index===index).map(a=><a key={a.name} className="text-xs text-teal-300 underline" href={`/api/v1/events/${encodeURIComponent(eventId)}/recovery-assessment/assets/${data.job_id}/${a.name}`}>Download native recovery GeoTIFF ({a.bands} bands)</a>)}</div>
-      <details><summary>Methods and limits</summary>{data.limitations.map(l=><p key={l} className="text-xs text-slate-400">{l}</p>)}</details>
+      {downloadSection && createPortal(<div className="flex flex-wrap gap-3">{data.raster_assets?.filter(a=>a.index===index).map(a=><a key={a.name} className="text-xs text-teal-300 underline" href={`/api/v1/events/${encodeURIComponent(eventId)}/recovery-assessment/assets/${data.job_id}/${a.name}`}>Download native recovery GeoTIFF ({a.bands} bands)</a>)}</div>,downloadSection)}
+      <details open><summary>Methods and limits</summary>{data.limitations.map(l=><p key={l} className="text-xs text-slate-400">{l}</p>)}</details>
     </>}
   </section>;
 }

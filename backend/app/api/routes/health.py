@@ -25,27 +25,21 @@ async def build_system_status(probe: bool = True) -> Dict[str, Any]:
     earthdata_configured = bool(settings.EARTHDATA_USERNAME and settings.EARTHDATA_PASSWORD)
     ai_analyst_configured = bool(settings.LLM_API_KEY)
 
-    app_mode = "demo" if settings.DEMO_MODE else "real"
-
-    if settings.DEMO_MODE:
-        effective_status = "demo"
-        effective_message = "Application is running in Demo Mode (DEMO_MODE=true). Synthetic study cases are active."
+    if not firms_info["configured"]:
+        effective_status = "real_unconfigured"
+        effective_message = "Real-data mode active, but FIRMS_MAP_KEY is missing. Configure FIRMS_MAP_KEY in .env for live satellite retrieval."
+    elif firms_info["status"] == "not_checked":
+        effective_status = "real_on_demand"
+        effective_message = firms_info["message"]
+    elif firms_info["status"] == "connected":
+        effective_status = "real_connected"
+        effective_message = "Real-data mode active and NASA FIRMS API is connected and verified operational."
+    elif firms_info["status"] == "auth_failed":
+        effective_status = "real_auth_failed"
+        effective_message = "Real-data mode active, but NASA FIRMS rejected the MAP_KEY (invalid or expired token)."
     else:
-        if not firms_info["configured"]:
-            effective_status = "real_unconfigured"
-            effective_message = "Real-data mode active, but FIRMS_MAP_KEY is missing. Configure FIRMS_MAP_KEY in .env for live satellite retrieval."
-        elif firms_info["status"] == "not_checked":
-            effective_status = "real_on_demand"
-            effective_message = firms_info["message"]
-        elif firms_info["status"] == "connected":
-            effective_status = "real_connected"
-            effective_message = "Real-data mode active and NASA FIRMS API is connected and verified operational."
-        elif firms_info["status"] == "auth_failed":
-            effective_status = "real_auth_failed"
-            effective_message = "Real-data mode active, but NASA FIRMS rejected the MAP_KEY (invalid or expired token)."
-        else:
-            effective_status = "real_unavailable"
-            effective_message = f"Real-data mode active, but NASA FIRMS API is currently unreachable: {firms_info['message']}"
+        effective_status = "real_unavailable"
+        effective_message = f"Real-data mode active, but NASA FIRMS API is currently unreachable: {firms_info['message']}"
 
     providers = {
         "earth_engine": {
@@ -104,8 +98,6 @@ async def build_system_status(probe: bool = True) -> Dict[str, Any]:
         "status": "ok",
         "service": settings.PROJECT_NAME,
         "version": "1.0.0",
-        "demo_mode": settings.DEMO_MODE,
-        "app_mode": app_mode,
         "effective_status": effective_status,
         "message": effective_message,
         "firms_configured": bool(settings.FIRMS_MAP_KEY),

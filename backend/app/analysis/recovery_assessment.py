@@ -6,7 +6,7 @@ from pydantic import BaseModel, Field, model_validator
 from app.analysis.modis_science import seasonal_metrics
 from app.schemas.satellite_analysis import AnalysisConfiguration
 
-VERSION = 'assessment-5.0.2'
+VERSION = 'assessment-5.1.0'
 
 
 class AssessmentParameters(BaseModel):
@@ -68,10 +68,23 @@ def runs(points, predicate, parameters):
     return found
 
 
+def assessment_window(payload, parameters):
+    # The last detection is the lower boundary; a composite must start strictly after it.
+    return parameters.model_copy(update={
+        'post_start': parameters.post_start or day(payload['event_period']['end']),
+        'post_end': parameters.post_end or day(payload['period']['end']),
+    })
+
+
+def in_post_window(observation, event_end, parameters):
+    start = day(observation['date'])
+    return (start > event_end
+            and (parameters.post_start is None or start >= parameters.post_start)
+            and (parameters.post_end is None or day(observation.get('period_end', observation['date'])) <= parameters.post_end))
+
+
 def assess_index(series, event_start, event_end, parameters):
-    post = sorted([o for o in series if day(o['date'])>event_end
-        and (parameters.post_start is None or day(o['date'])>=parameters.post_start)
-        and (parameters.post_end is None or day(o.get('period_end',o['date']))<=parameters.post_end)],key=lambda o:o['date'])
+    post = sorted((o for o in series if in_post_window(o, event_end, parameters)), key=lambda o: o['date'])
     observed = [o for o in post if o.get('value') is not None]
     usable = [o for o in post if o.get('anomaly') is not None]
     initial = [o for o in usable if day(o['date'])<=event_end+timedelta(days=parameters.initial_window_days)]
@@ -108,7 +121,8 @@ def assess(payload, parameters=None):
         if o['baseline_n']<parameters.min_baseline_observations:
             for key in ('baseline','baseline_mad','baseline_lower','baseline_upper','anomaly'):
                 o[key]=None
-    indices={index:assess_index([o for o in observations if o['index']==index],start,end,parameters) for index in ('NDVI','EVI')}
+    window = assessment_window(payload, parameters)
+    indices={index:assess_index([o for o in observations if o['index']==index],start,end,window) for index in ('NDVI','EVI')}
     concordance=indices['NDVI']['classification']==indices['EVI']['classification']
     insights=[]
     for index,result in indices.items():
@@ -120,7 +134,8 @@ def assess(payload, parameters=None):
             insights.append({'index':index,'text':'Observed sustained return to the seasonal reference range; this does not establish full ecological recovery.',
                 'evidence':result['return_to_reference']})
     return {'version':VERSION,'source_job_id':payload['job_id'],'event_id':payload['event_id'],
-        'event_period':payload['event_period'],'period':{'start':str(parameters.post_start or payload['period']['start']),'end':str(parameters.post_end or payload['period']['end'])},'source_engine_version':payload.get('engine_version'), 'configuration':payload['configuration'],
+        'event_period':payload['event_period'],'observation_period':payload['period'],
+        'period':{'start':str(window.post_start),'end':str(window.post_end)},'source_engine_version':payload.get('engine_version'), 'configuration':payload['configuration'],
         'parameters':parameters.model_dump(mode='json'),'indices':indices,'ndvi_evi_concordant':concordance,'insights':insights,
         'analysis_geometry':payload['analysis_geometry'],'analysis_area_source':payload['analysis_area_source'],
         'observed_burned_area_km2':payload['burned_area_summary'].get('unambiguous_cell_area_km2'),

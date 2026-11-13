@@ -1,3 +1,4 @@
+import { CandidateSearch } from '../common/CandidateSearch';
 import React,{useEffect,useRef,useState} from 'react';
 import {useQuery} from '@tanstack/react-query';
 import {useSearchParams,Link} from 'react-router-dom';
@@ -8,7 +9,8 @@ export function RecoveryComparisonPanel(){
   const [ids,setIds]=useState<string[]>(()=>params.getAll('assessment'));
   const [index,setIndex]=useState('NDVI');
   const initializedFromEvent=useRef(false);
-  const options=useQuery({queryKey:['recovery-options'],queryFn:recoveryApi.list});
+  const [query,setQuery]=React.useState('');
+  const options=useQuery({queryKey:['recovery-options',query],queryFn:()=>recoveryApi.list(query)});
   useEffect(()=>{if(initializedFromEvent.current||!options.data)return;initializedFromEvent.current=true;if(ids.length)return;const found=options.data.find(o=>o.event_id===params.get('event'));if(found)setIds([found.assessment_id]);},[options.data,params,ids.length]);
   const result=useQuery({queryKey:['recovery-comparison',ids,index],queryFn:()=>recoveryApi.compare(ids,index),enabled:ids.length>=2,retry:false});
   const data=result.data;
@@ -17,9 +19,11 @@ export function RecoveryComparisonPanel(){
     <h2 className="text-xl font-semibold">Compare Recovery · NASA event candidates</h2>
     <p className="text-sm text-slate-400">Select 2–4 assessed events. Curves use each territory’s seasonal anomaly and months since its last FIRMS detection.</p>
     <label>Comparison index <select aria-label="Comparison index" className="bg-dark-800" value={index} onChange={e=>setIndex(e.target.value)}><option>NDVI</option><option>EVI</option></select></label>
+    <CandidateSearch value={query} onChange={setQuery}/>
+    {query && options.data?.length===0 && <p>No candidates match this search.</p>}
     {options.isError&&<p role="alert">Published assessments could not be loaded. Retry this page.</p>}
-    {options.data?.length===0&&<p>No published recovery assessments yet. <Link className="text-teal-300 underline" to="/explorer">Select a real event in Explorer</Link> and compute its Recovery Intelligence.</p>}
-    <div className="grid gap-2 sm:grid-cols-2">{options.data?.map(o=><label key={o.assessment_id} className="break-words text-sm"><input type="checkbox" checked={ids.includes(o.assessment_id)} disabled={!ids.includes(o.assessment_id)&&ids.length>=4} onChange={e=>{const next=e.target.checked?[...ids,o.assessment_id]:ids.filter(id=>id!==o.assessment_id);setIds(next);setParams(next.map(id=>['assessment',id] as [string,string]));}}/> {o.name} · {o.created_at.slice(0,10)} · {o.parameters.post_start||o.parameters.post_end?`${o.parameters.post_start??'start'}–${o.parameters.post_end??'end'}`:'Full interval'} · {o.version}</label>)}</div>
+    {!query && options.data?.length===0&&<p>No published recovery assessments yet. <Link className="text-teal-300 underline" to="/explorer">Select a real event in Explorer</Link> and compute its Recovery Intelligence.</p>}
+    <div className="grid gap-2 sm:grid-cols-2">{options.data?.map(o=><label key={o.assessment_id} className="break-words text-sm"><input type="checkbox" checked={ids.includes(o.assessment_id)} disabled={!ids.includes(o.assessment_id)&&ids.length>=4} onChange={e=>{const next=e.target.checked?[...ids,o.assessment_id]:ids.filter(id=>id!==o.assessment_id);setIds(next);setParams(next.map(id=>['assessment',id] as [string,string]));}}/> {o.name} · {o.place || 'Place unavailable'} · {o.start_date} · <span className="break-all">{o.event_id}</span> · {o.created_at.slice(0,10)} · {o.parameters.post_start||o.parameters.post_end?`${o.parameters.post_start??'start'}–${o.parameters.post_end??'end'}`:'Full interval'} · {o.version}</label>)}</div>
     {result.isLoading&&<p role="status">Preparing comparison from persisted measurements…</p>}
     {result.isError&&<p role="alert">Comparison unavailable. Choose distinct event candidates with published evidence.</p>}
     {data&&<><p>{data.status.replace(/_/g,' ')} · common horizon {data.common_start_months.toFixed(1)}–{data.common_horizon_months.toFixed(1)} months · chart and indicators use this shared horizon</p>{data.reasons.map(r=><p key={r} className="text-sm text-amber-300">{r}</p>)}

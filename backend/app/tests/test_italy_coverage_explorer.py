@@ -359,7 +359,7 @@ async def test_hotspot_metadata_links_current_candidate_and_filters_utc_platform
     async with AsyncSessionLocal() as session:
         session.add_all([_detection('linked-real',41.9,12.5,date(2024,7,1)),
                          _detection('linked-demo',41.9,12.5,date(2024,7,1),synthetic='true')])
-        session.add(FireEventCandidate(id='linked-event',area_id='fixture',name='Controlled candidate',
+        session.add(FireEventCandidate(id='linked-event',area_id='fixture',name='Controlled candidate',place='5 km from Rome, Italy',
             start_date=date(2024,7,1),end_date=date(2024,7,1),duration_days=1,detection_count=1,is_synthetic_demo='false'))
         await session.commit()
         session.add_all([FireEventDetection(event_id='linked-event',detection_id='linked-real'),CurrentEventIndex(event_id='linked-event')])
@@ -371,6 +371,12 @@ async def test_hotspot_metadata_links_current_candidate_and_filters_utc_platform
         rows=response.json()['detections']
         assert len(rows)==1 and rows[0]['candidate_event_id']=='linked-event'
         assert rows[0]['dataset_name']=='FIRMS_MODIS_C61' and rows[0]['acq_time']=='1200'
+        for query in ('ROME', 'linked-event', '2024-07', 'controlled'):
+            page = await client.get('/api/v1/explorer/events', params={**params, 'q':query})
+            assert page.json()['total_events'] == 1
+            assert page.json()['events'][0]['place'] == '5 km from Rome, Italy'
+        unmatched = await client.get('/api/v1/explorer/events', params={**params, 'q':'%'})
+        assert unmatched.json()['total_events'] == 0
         late=await client.get('/api/v1/explorer/hotspots',params={**params,'after_utc':'2024-07-01T13:00:00Z'})
         assert late.json()['detections']==[]
         wrong=await client.get('/api/v1/explorer/hotspots',params={**params,'satellite':'invented'})

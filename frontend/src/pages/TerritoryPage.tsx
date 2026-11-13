@@ -17,7 +17,6 @@ import {
 import { apiClient } from '../api/client';
 import { LeafletMap } from '../components/map/LeafletMap';
 import { TimelineBar, TimelinePhase } from '../components/timeline/TimelineBar';
-import { DemoBanner } from '../components/common/DemoBanner';
 
 const toDateValue = (date: string | undefined, fallback: string): string => {
   if (!date || Number.isNaN(new Date(`${date}T00:00:00.000Z`).getTime())) {
@@ -153,10 +152,10 @@ export const TerritoryPage: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-dark-950 text-slate-100 flex flex-col pb-16">
-      <DemoBanner area={area} detectionCount={summary?.detection_count ?? allDetections.length} />
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 w-full space-y-6">
-        {/* Header Breadcrumbs & Actions */}
+        {area?.is_demo_preset === "true" && <p role="note">Historical synthetic study area</p>}
+      {/* Header Breadcrumbs & Actions */}
         <div className="flex flex-wrap items-center justify-between gap-4 border-b border-dark-800 pb-5">
           <div className="space-y-1">
             <div className="flex items-center space-x-2 text-xs text-slate-400">

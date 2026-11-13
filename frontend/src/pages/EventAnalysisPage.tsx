@@ -1,3 +1,4 @@
+import { CandidateSearch } from '../components/common/CandidateSearch';
 import '../styles/event-story.css';
 import { CoverageEvidence } from '../components/analysis/CoverageEvidence';
 import { RecoveryIntelligencePanel } from '../components/analysis/RecoveryIntelligencePanel';
@@ -27,12 +28,12 @@ function EventStory({eventId}:{eventId:string}) {
   const requestedReturn=params.get('returnTo');
   const returnTo=requestedReturn && /^\/explorer(?:\?|$)/.test(requestedReturn) ? requestedReturn : '/explorer';
   const client=useQueryClient();
-  const [showReburn,setShowReburn]=useState(params.get('view')==='reburn');
+  const [downloadSection,setDownloadSection]=useState<HTMLDivElement | null>(null);
+  const [historySearch,setHistorySearch]=useState('');
   const [selectedDate,setSelectedDate]=useState('');
   const [index,setIndex]=useState<'NDVI'|'EVI'>('NDVI');
   const [before,setBefore]=useState('');
   const [after,setAfter]=useState('');
-  const [compare,setCompare]=useState(true);
   const [playing,setPlaying]=useState(false);
   const [speed,setSpeed]=useState(2000);
   const [frameReady,setFrameReady]=useState('');
@@ -132,15 +133,16 @@ function EventStory({eventId}:{eventId:string}) {
   const latest=postObservations[postObservations.length-1];
   const comparison=latest?.value!=null && latest.baseline_lower!=null && latest.baseline_upper!=null
     ? latest.value<latest.baseline_lower?'below':latest.value>latest.baseline_upper?'above':'within' : undefined;
+  const filteredHistory = result?.recurrence.filter(r=>[r.name,r.place,r.event_id,r.start_date,r.end_date].some(value=>value?.toLowerCase().includes(historySearch.trim().toLowerCase()))) ?? [];
   const burned=result?.burned_area as import('geojson').FeatureCollection|undefined;
   return <main className="event-story mx-auto w-full max-w-6xl space-y-6 px-4 py-6 sm:px-8">
       <header className="story-header">
         <Link to={returnTo} className="story-back">← Fire Explorer</Link>
         <p className="story-kicker">Satellite Recovery Story</p>
         <h1>{event.name}</h1>
-        <p className="story-location">{event.start_date} – {event.end_date} · {event.center_lat.toFixed(3)}°, {event.center_lon.toFixed(3)}°</p>
-        <p className="text-sm text-slate-400">{detail.detections.length} associated FIRMS observations · algorithmic fire candidate</p>
-        {event.is_synthetic_demo==='true' && <p className="text-amber-300">Demo event. Satellite acquisition requires a real fire candidate.</p>}
+        <p className="story-location">{event.place || detail.area?.name || 'Place unavailable'} · {event.start_date} – {event.end_date} · {event.center_lat.toFixed(3)}°, {event.center_lon.toFixed(3)}°</p>
+        <p className="text-sm text-slate-400"><span className="break-all">{event.id}</span> · {detail.detections.length} associated FIRMS observations · algorithmic fire candidate</p>
+        {event.is_synthetic_demo==='true' && <p className="text-amber-300">This historical record contains synthetic observations.</p>}
       </header>
       <section className={panel} aria-label="Analysis Status">
         <h2>How did this territory change?</h2>
@@ -155,7 +157,7 @@ function EventStory({eventId}:{eventId:string}) {
           </dl>
           <p role="status" className="text-xs text-slate-400">Cached scientific analysis · {result.period.start}–{result.period.end}</p>
           <nav aria-label="Recovery story chapters" className="story-nav"><a href="#before-after">Before / After</a><a href="#trajectory">Recovery timeline</a><a href="#territory">Territory map</a><a href="#reburn">Reburn history</a></nav>
-        </> : <p role="status">{job?.availability?.message ?? (job?.state==='insufficient_observations' ? job.warning || 'Satellite coverage is insufficient for this territory and observation window.' : active ? 'Your satellite analysis is running. You can return here to follow its progress.' : job?.state==='failed' ? 'The analysis stopped before publication.' : event.is_synthetic_demo==='true' ? 'No satellite analysis for this demonstration event.' : 'Checking available satellite observations…')}</p>}
+        </> : <p role="status">{job?.availability?.message ?? (job?.state==='insufficient_observations' ? job.warning || 'Satellite coverage is insufficient for this territory and observation window.' : active ? 'Your satellite analysis is running. You can return here to follow its progress.' : job?.state==='failed' ? 'The analysis stopped before publication.' : event.is_synthetic_demo==='true' ? 'Satellite acquisition requires observed fire detections.' : 'Checking available satellite observations…')}</p>}
         {!result && <div className="h-64 overflow-hidden rounded-lg"><EventSatelliteMap eventId={eventId} detections={detail.detections} bounds={bounds} selectedDate={event.start_date}/></div>}
         {job?.availability && <p className="text-sm text-amber-200">Burned-area mapping · {job.availability.burned_area_mapping.replace(/_/g,' ')}. Recovery · {job.availability.recovery_analysis.replace(/_/g,' ')}.</p>}
         {job?.state==='insufficient_observations' && result && <p role="status">{job.warning || 'The latest analysis window has insufficient satellite coverage.'}</p>}
@@ -166,7 +168,7 @@ function EventStory({eventId}:{eventId:string}) {
         {resultQuery.isError && <p role="alert">The published result could not be loaded. <button onClick={()=>resultQuery.refetch()}>Retry loading</button></p>}
         {(job?.state==='failed'||job?.state==='partial') && <details><summary>Retry incomplete analysis</summary><button disabled={start.isPending} onClick={()=>start.mutate(true)}>Resume available work</button></details>}
         {result && result.job_id !== job?.id && <p className="text-amber-300">Showing the previous published result while the current job is pending.</p>}
-        {result && result.warnings.length>0 && <details><summary>Quality notices ({result.warnings.length})</summary>{result.warnings.map(w=><p key={w}>{w}</p>)}</details>}
+        {result && result.warnings.length>0 && <details open><summary>Quality notices ({result.warnings.length})</summary>{result.warnings.map(w=><p key={w}>{w}</p>)}</details>}
       </section>
       {result && <>
       <section id="before-after" className={panel} aria-label="Before After comparison">
@@ -179,8 +181,7 @@ function EventStory({eventId}:{eventId:string}) {
           <p className="text-xs text-slate-400">Dated true-colour previews of the candidate area. Clouds and rejected pixels are transparent. Display previews are resampled; index statistics use native sensor grids. This comparison does not confirm burning.</p>
         </>}
         <p>Compare MODIS vegetation indices across two valid composites on the same ground. Move the divider to reveal each side when both layers are available.</p>
-        {beforeOptions.length>0 && afterOptions.length>0 && <label><input type="checkbox" checked={compare} onChange={e=>setCompare(e.target.checked)} /> Compare real observations</label>}
-        {!beforeOptions.length||!afterOptions.length ? <p className="text-sm text-slate-400">Two valid comparable pre/post MODIS composites are not yet available.</p> : compare && <>
+        {!beforeOptions.length||!afterOptions.length ? <p className="text-sm text-slate-400">Two valid comparable pre/post MODIS composites are not yet available.</p> : <>
           <div className="flex flex-wrap gap-4">
             <label>Before <select aria-label="Before observation" className="bg-dark-800" value={beforeDate} onChange={e=>setBefore(e.target.value)}>{beforeOptions.map(o=><option key={o.date}>{o.date}</option>)}</select></label>
             <label>After <select aria-label="After observation" className="bg-dark-800" value={afterDate} onChange={e=>setAfter(e.target.value)}>{afterOptions.map(o=><option key={o.date}>{o.date}</option>)}</select></label>
@@ -236,18 +237,20 @@ function EventStory({eventId}:{eventId:string}) {
           <EventSatelliteMap eventId={eventId} result={result} observation={observation} detections={detail.detections} bounds={bounds} selectedDate={currentDate} showBurned={showBurned} onFrameReady={ready} />
         </div>
         <p className="text-xs text-slate-400">Red: FIRMS detections on selected date (nominal 375 m VIIRS / 1 km MODIS) · violet dashed: candidate territory · blue: analysis area · orange: event-associated MCD64A1.061 cells (monthly, nominal 500 m). Index colour scale: −0.2 brown → 1 green; QA-rejected pixels are transparent. Satellite basemap: Esri World Imagery, acquisition date varies/unknown; it does not depict the selected event date.</p>
-        {observation?.assets.map(asset=><a key={asset.raster} className="mr-4 text-xs text-emerald-300 underline" href={satelliteApi.asset(eventId,result!.job_id,asset.raster)}>Download {asset.raster} GeoTIFF</a>)}
+
       </section>
 
-<div id="territory">{result && result.observations.some(o=>o.value!=null) && <RecoveryIntelligencePanel eventId={eventId} sourceJobId={result.job_id} index={index} selectedDate={currentDate} bounds={bounds} geometry={result.analysis_geometry} burned={result.burned_area} />}</div>
-      {result && <section id="reburn" className={panel}><div className="flex flex-wrap gap-4"><button className="rounded bg-amber-700 px-4 py-2" aria-expanded={showReburn} onClick={()=>setShowReburn(v=>!v)}>Reburn History</button><Link to={`/events/${eventId}/reburn`} className="text-amber-200 underline">Open territory history</Link></div>
-        {showReburn&&<Suspense fallback={<p role="status">Loading Reburn Intelligence…</p>}><ReburnIntelligencePanel key={eventId} eventId={eventId} sourceJobId={result.job_id} period={result.period}/></Suspense>}
+      <div id="territory">{result && result.observations.some(o=>o.value!=null) && <RecoveryIntelligencePanel downloadSection={downloadSection} eventId={eventId} sourceJobId={result.job_id} index={index} selectedDate={currentDate} bounds={bounds} geometry={result.analysis_geometry} burned={result.burned_area} />}</div>
+      {result && <section id="reburn" className={panel}><div className="flex flex-wrap gap-4"><Link to={`/events/${eventId}/reburn`} className="text-amber-200 underline">Open territory history</Link></div>
+        <Suspense fallback={<p role="status">Loading Reburn Intelligence…</p>}><ReburnIntelligencePanel key={eventId} eventId={eventId} sourceJobId={result.job_id} period={result.period}/></Suspense>
       </section>}
       <section className={panel} aria-label="Reburn History">
         <h2 className="text-lg font-semibold">Reburn History</h2>
         {!result?.recurrence.length && <p className="text-sm text-slate-400">{result?'No later intersecting candidates found within the analysis window.':'Awaiting analysis.'}</p>}
-        {result?.recurrence.map(r=><article key={r.event_id} className="border-t border-dark-800 pt-3 text-sm">
-          <Link className="text-emerald-300 underline" to={`/events/${encodeURIComponent(r.event_id)}`}>{r.name}</Link> · {r.start_date}–{r.end_date}
+        {(result?.recurrence.length ?? 0)>0 && <CandidateSearch value={historySearch} onChange={setHistorySearch}/>}
+        {historySearch && filteredHistory.length===0 && <p>No matching candidates.</p>}
+        {filteredHistory.map(r=><article key={r.event_id} className="border-t border-dark-800 pt-3 text-sm">
+          <Link className="text-emerald-300 underline" to={`/events/${encodeURIComponent(r.event_id)}`}>{r.name}</Link> · {r.place || "Place unavailable"} · <span className="break-all">{r.event_id}</span> · {r.start_date}–{r.end_date}
           <p>{r.gap_start_days} days between candidate starts · {r.gap_since_end_days} days since first candidate end · prior vegetation: {r.indicator_status}</p>
           <p className="text-xs text-slate-400">{r.association} · prior usable composite {r.vegetation_before?.date ?? 'unavailable'}.</p>
         </article>)}
@@ -255,15 +258,6 @@ function EventStory({eventId}:{eventId:string}) {
       </section>
 
       </>}
-      <details className={panel}><summary>Analysis window and sources</summary>
-        <p className="text-sm">Changing the time window or territory buffer requests a separate analysis. Previous publications remain available.</p>
-        <div className="story-settings">
-          <label>Pre-event years <input aria-label="Pre-event years" type="number" min="1" max="10" value={preYears} onChange={e=>setPreYears(Number(e.target.value))}/></label>
-          <label>Post-event years <input aria-label="Post-event years" type="number" min="1" max="26" value={postYears} onChange={e=>setPostYears(Number(e.target.value))}/></label>
-          <label>Buffer (m) <input aria-label="Provisional buffer" type="number" min="250" max="5000" value={buffer} onChange={e=>setBuffer(Number(e.target.value))}/></label>
-          <label>Observations through <input aria-label="Observations through" type="date" max={new Date().toISOString().slice(0,10)} value={asOf} onChange={e=>setAsOf(e.target.value)}/></label>
-          <button disabled={active||start.isPending} onClick={()=>start.mutate(false)}>Apply analysis settings</button>
-        </div>
       <section className={panel} aria-label="Burned Area">
         <h2 className="text-lg font-semibold">Burned Area</h2>
         <p className="text-sm">{result ? `${result.analysis_area_source} · analysis area ${number(result.analysis_area_km2)} km²` : 'Awaiting event-scoped satellite analysis.'}</p>
@@ -275,9 +269,22 @@ function EventStory({eventId}:{eventId:string}) {
         <h2 className="text-lg font-semibold">Sources & Scientific Limitations</h2>
         <p className="text-sm">NASA LP DAAC: <a className="underline" href="https://lpdaac.usgs.gov/products/mod13q1v061/">MOD13Q1 Collection 6.1</a> (250 m, 16 days), <a className="underline" href="https://lpdaac.usgs.gov/products/mcd64a1v061/">MCD64A1 Collection 6.1</a> (500 m, monthly). Sources discovered with NASA CMR; verified native subsets and configured Collection 6.1 APIs. </p>
         {[...detail.limitations,...(result?.limitations ?? [])].map(s=><p key={s} className="text-xs text-slate-400">{s}</p>)}
+      </section>
+      <details className={panel}><summary>Analysis settings</summary>
+        <p className="text-sm">Changing the time window or territory buffer requests a separate analysis. Previous publications remain available.</p>
+        <div className="story-settings">
+          <label>Pre-event years <input aria-label="Pre-event years" type="number" min="1" max="10" value={preYears} onChange={e=>setPreYears(Number(e.target.value))}/></label>
+          <label>Post-event years <input aria-label="Post-event years" type="number" min="1" max="26" value={postYears} onChange={e=>setPostYears(Number(e.target.value))}/></label>
+          <label>Buffer (m) <input aria-label="Provisional buffer" type="number" min="250" max="5000" value={buffer} onChange={e=>setBuffer(Number(e.target.value))}/></label>
+          <label>Observations through <input aria-label="Observations through" type="date" max={new Date().toISOString().slice(0,10)} value={asOf} onChange={e=>setAsOf(e.target.value)}/></label>
+          <button disabled={active||start.isPending} onClick={()=>start.mutate(false)}>Apply analysis settings</button>
+        </div>
+      </details>
+      {result && <details className={panel}><summary>Downloads and source files</summary>
+        <div ref={setDownloadSection}/>
+        {observation?.assets.map(asset=><a key={asset.raster} className="mr-4 text-xs text-emerald-300 underline" href={satelliteApi.asset(eventId,result!.job_id,asset.raster)}>Download {asset.raster} GeoTIFF</a>)}
         {result && <><p className="text-xs">This run downloaded {result.downloaded_granules} granules · {(result.downloaded_bytes/1024**2).toFixed(2)} MiB · {result.elapsed_seconds}s. {result.observations.filter(o=>o.value!==null).length} valid index observations.</p>
           <details><summary>Granule provenance ({result.granules.length})</summary><ul className="space-y-2 break-all text-xs">{result.granules.map(g=><li key={g.id}>{g.provider ?? 'NASA CMR / LP DAAC'} · {g.task_id && `task ${g.task_id} · `}{g.original_id} · {g.period.start}–{g.period.end} · CMR {g.cmr_id} · SHA256 {g.checksum} · {g.bytes} bytes · {g.cache_hit?'cache':'acquired'}</li>)}</ul></details></>}
-      </section>
-      </details>
+      </details>}
   </main>;
 };

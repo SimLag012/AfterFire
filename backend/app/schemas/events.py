@@ -10,6 +10,7 @@ class EventMapItem(BaseModel):
     id: str
     area_id: str
     name: str
+    place: Optional[str] = None
     start_date: str
     end_date: str
     duration_days: int

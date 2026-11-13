@@ -39,6 +39,9 @@ def main():
     p = argparse.ArgumentParser()
     p.add_argument('--output', default='/tmp/complete-scientific-audit')
     p.add_argument('--select-only', action='store_true')
+    p.add_argument('--enqueue-only', action='store_true', help='Queue the frozen candidates after registration and exit')
+    p.add_argument('--registered', action='store_true', help='All candidates in this manifest are already registered')
+    p.add_argument('--as-of', type=date.fromisoformat, default=date(2026, 11, 11))
     p.add_argument('--register-only', action='store_true', help='Register all frozen candidates, without analysing them; run for every manifest before a multi-manifest campaign')
     p.add_argument('--phase', default='baseline')
     p.add_argument('--limit', type=int, default=60)
@@ -47,11 +50,20 @@ def main():
     root = Path(args.output)
     root.mkdir(parents=True, exist_ok=True)
     manifest = root / 'manifest.json'
+    def configuration(event):
+        cutoff = min(args.as_of, date.fromisoformat(event['end_date']) + timedelta(days=365))
+        return dict(pre_years=2, post_years=1, as_of=str(cutoff))
+
     with httpx.Client(base_url='http://localhost:8000/api/v1', timeout=120) as client:
         def get(path, **kw):
             r = client.get(path, **kw); r.raise_for_status(); return r.json()
         def post(path, body):
-            r = client.post(path, json=body); r.raise_for_status(); return r.json()
+            r = client.post(path, json=body)
+            if r.status_code == 429:
+                time.sleep(max(1, int(r.headers.get('retry-after', 60))))
+                r = client.post(path, json=body)
+            r.raise_for_status()
+            return r.json()
         if not manifest.exists():
             viewports, selected, seen = [], [], set()
             windows = [('zambia_supplement', '26,-14,28,-12', '2022-08-15', '2022-08-17'),
@@ -80,9 +92,18 @@ def main():
         # Burn-cell ambiguity depends on the registered neighbouring candidates.
         # Register the whole frozen sample before the first analysis, so case
         # iteration order cannot expand that context halfway through a run.
-        for case in cases:
-            post('/global/events/'+case['event']['id']+'/select', {})
+        if not args.registered:
+            for case in cases:
+                post('/global/events/'+case['event']['id']+'/select', {})
         if args.register_only:
+            return
+        if args.enqueue_only:
+            jobs = []
+            for case in cases[:args.limit]:
+                event = case['event']
+                job = post('/events/'+event['id']+'/analysis', dict(configuration=configuration(event)))
+                jobs.append(dict(event_id=event['id'], job_id=job['id'], state=job['state']))
+                write(root / (args.phase+'-queue.json'), jobs)
             return
         path = root / (args.phase+'.json')
         rows = json.loads(path.read_text()) if path.exists() else []
@@ -92,12 +113,10 @@ def main():
             if identity in done:
                 continue
             t = time.monotonic()
-            cutoff = min(date(2026,11,11), date.fromisoformat(e['end_date'])+timedelta(days=365))
-            config = dict(pre_years=2, post_years=1, as_of=str(cutoff))
+            config = configuration(e)
             row = dict(event_id=identity, region=case['region'], date=e['start_date'],
                        detection_count=e['detection_count'], configuration=config)
             try:
-                post('/global/events/'+identity+'/select', {})
                 job = post('/events/'+identity+'/analysis', dict(configuration=config))
                 while job['state'] in ('queued','fetching','processing'):
                     if time.monotonic()-t > 600:

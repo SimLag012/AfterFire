@@ -8,6 +8,6 @@ export const recoveryApi={
   result:async(id:string,source:string,assessmentId?:string)=>(await api.get<RecoveryResult>(path(id)+'/result',{params:{source_job_id:source,assessment_id:assessmentId||undefined}})).data,
   map:async(id:string,assessment:string,index:string,date:string)=>(await api.get<RecoveryMap>(path(id)+'/map',{params:{assessment_id:assessment,index,observation_date:date||undefined}})).data,
   cell:async(id:string,assessment:string,index:string,cell:string)=>(await api.get<RecoveryCell>(path(id)+'/cells/'+encodeURIComponent(cell),{params:{assessment_id:assessment,index}})).data,
-  list:async()=>(await api.get<AssessmentOption[]>('/recovery-assessments')).data,
+  list:async(q:string)=>(await api.get<AssessmentOption[]>('/recovery-assessments',{params:{q}})).data,
   compare:async(ids:string[],index:string)=>(await api.post<RecoveryComparison>('/recovery-comparison',{assessment_ids:ids,index})).data,
 };

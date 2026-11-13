@@ -65,7 +65,14 @@ async def assessment_result(event_id:str,assessment_id:str|None=None,source_job_
     source=await db.get(EventAnalysisResult,row.source_job_id)
     if source and hashlib.sha256(json.dumps(source.payload,sort_keys=True).encode()).hexdigest()!=row.payload.get('source_fingerprint'):
         raise HTTPException(409,'Source observations changed; compute a new assessment')
-    return {k:v for k,v in row.payload.items() if k!='spatial'}
+    summary = {k:v for k,v in row.payload.items() if k!='spatial'}
+    # Early publications used period for the whole source history.
+    layer = row.payload.get('spatial', {}).get('NDVI', {})
+    summary['classification_period'] = layer.get('period') or {
+        'start': row.payload['parameters'].get('post_start') or row.payload['event_period']['end'],
+        'end': row.payload['period']['end'],
+    }
+    return summary
 
 
 @router.get('/events/{event_id}/recovery-assessment/map')
@@ -82,7 +89,9 @@ async def assessment_map(event_id:str,index:str=Query('NDVI',pattern='^(NDVI|EVI
             props={**props,**(selected or {'date':str(observation_date),'value':None,'baseline':None,'anomaly':None,'valid_fraction':0,'baseline_n':0,'baseline_years':0})}
         features.append({**f,'properties':props})
     return {**{k:v for k,v in layer.items() if k!='features'},'features':features,'assessment_id':row.job_id,
-        'classification_period':row.payload['period']}
+        'classification_period':layer.get('period') or {
+            'start':row.payload.get('parameters',{}).get('post_start') or row.payload['event_period']['end'],
+            'end':row.payload['period']['end']}}
 
 
 @router.get('/events/{event_id}/recovery-assessment/cells/{cell_id}')
@@ -100,13 +109,21 @@ async def assessment_insights(event_id:str,assessment_id:str|None=None,db:AsyncS
 
 
 @router.get('/recovery-assessments')
-async def assessment_list(limit:int=Query(100,ge=1,le=100),offset:int=Query(0,ge=0),db:AsyncSession=Depends(get_db)):
+async def assessment_list(limit:int=Query(100,ge=1,le=100),offset:int=Query(0,ge=0),db:AsyncSession=Depends(get_db),q:str=""):
     from app.models.event import FireEventCandidate
-    rows=(await db.execute(select(RecoveryAssessmentRecord.job_id,RecoveryAssessmentRecord.event_id,RecoveryAssessmentRecord.created_at,FireEventCandidate.name,EventAnalysisJob.configuration,EventAnalysisJob.engine_version)
-        .join(FireEventCandidate,FireEventCandidate.id==RecoveryAssessmentRecord.event_id)
-        .join(EventAnalysisJob,EventAnalysisJob.id==RecoveryAssessmentRecord.job_id)
-        .order_by(RecoveryAssessmentRecord.created_at.desc()).offset(offset).limit(limit))).all()
-    return [{'assessment_id':r.job_id,'event_id':r.event_id,'name':r.name,'created_at':r.created_at.isoformat()+'Z','parameters':r.configuration.get('parameters',{}),'version':r.engine_version} for r in rows]
+    stmt = (
+        select(RecoveryAssessmentRecord.job_id, RecoveryAssessmentRecord.event_id,
+               RecoveryAssessmentRecord.created_at, FireEventCandidate.name, EventAnalysisJob.configuration,
+               EventAnalysisJob.engine_version, FireEventCandidate.place, FireEventCandidate.start_date,
+               FireEventCandidate.end_date)
+        .join(FireEventCandidate, FireEventCandidate.id == RecoveryAssessmentRecord.event_id)
+        .join(EventAnalysisJob, EventAnalysisJob.id == RecoveryAssessmentRecord.job_id)
+    )
+    if q.strip():
+        from app.models.event import candidate_search
+        stmt = stmt.where(candidate_search(q))
+    rows=(await db.execute(stmt.order_by(RecoveryAssessmentRecord.created_at.desc()).offset(offset).limit(limit))).all()
+    return [{'assessment_id':r.job_id,'event_id':r.event_id,'name':r.name,'place':r.place,'start_date':str(r.start_date),'end_date':str(r.end_date),'created_at':r.created_at.isoformat()+'Z','parameters':r.configuration.get('parameters',{}),'version':r.engine_version} for r in rows]
 
 
 class ComparisonRequest(BaseModel):

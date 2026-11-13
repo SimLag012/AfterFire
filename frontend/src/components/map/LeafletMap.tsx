@@ -1,3 +1,4 @@
+import { CandidateSearch } from '../common/CandidateSearch';
 import { SatelliteBasemap } from './SatelliteBasemap';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
@@ -117,7 +118,7 @@ function CandidateFocus({ event, returnTo }: { event?: EventMapItem; returnTo?: 
   return event ? <CircleMarker center={[event.center_lat, event.center_lon]} radius={16}
     pathOptions={{ color: '#34d399', weight: 4, fillOpacity: 0.15 }}>
     <Tooltip permanent direction="top">Selected candidate · {event.detection_count} observations</Tooltip>
-    <Popup><strong>{event.name}</strong><p>{event.start_date} – {event.end_date}</p>
+    <Popup><strong>{event.place || event.name}</strong><p className="break-all">{event.id}</p><p>{event.start_date} – {event.end_date}</p>
       <Link to={`/events/${encodeURIComponent(event.id)}?returnTo=${encodeURIComponent(returnTo || '/explorer')}`}>Analyze candidate</Link></Popup>
   </CircleMarker> : null;
 }
@@ -351,29 +352,7 @@ function ThermalDetectionClusters({
                   Cluster center: {cluster.center[0].toFixed(4)}, {cluster.center[1].toFixed(4)}
                 </div>
                 <ZoomToClusterButton detections={group} />
-                {cluster.events.length === 1 && (
-                  <Link
-                    className="block rounded bg-emerald-700 px-2 py-1 text-center text-white"
-                    to={`/events/${encodeURIComponent(cluster.events[0].id)}${returnTo ? `?returnTo=${encodeURIComponent(returnTo)}` : ''}`}
-                  >
-                    Analyze event candidate
-                  </Link>
-                )}
-                {cluster.events.length > 1 && (
-                  <div className="space-y-1 border-t border-slate-600 pt-1">
-                    <div className="font-semibold">Candidate events in this visual cluster</div>
-                    {cluster.events.slice(0, 5).map((event) => (
-                      <Link
-                        key={event.id}
-                        className="block text-emerald-300 underline"
-                        to={`/events/${encodeURIComponent(event.id)}${returnTo ? `?returnTo=${encodeURIComponent(returnTo)}` : ''}`}
-                      >
-                        {event.start_date} · {event.detection_count} observations
-                      </Link>
-                    ))}
-                    {cluster.events.length > 5 && <div>{cluster.events.length - 5} more candidate events</div>}
-                  </div>
-                )}
+                <PopupCandidates events={cluster.events} returnTo={returnTo}/>
                 {cluster.events.length === 0 && (
                   <div className="text-[10px] text-amber-300">
                     Visual marker group only; it is not a scientific event candidate.
@@ -401,6 +380,20 @@ function ZoomToClusterButton({ detections }: { detections: FireDetection[] }) {
       Zoom to grouped observations
     </button>
   );
+}
+
+function PopupCandidates({events, returnTo}: {events: EventMapItem[]; returnTo?: string}) {
+  const [query,setQuery] = useState('');
+  const filtered = events.filter(e=>[e.id,e.name,e.place,e.start_date,e.end_date]
+    .some(value=>value?.toLowerCase().includes(query.trim().toLowerCase())));
+  return <div className="max-h-52 overflow-auto">
+    {events.length>1 && <CandidateSearch value={query} onChange={setQuery}/>}
+    {filtered.map(event=><Link key={event.id} className="block break-words p-1 text-emerald-300 underline"
+      to={`/events/${encodeURIComponent(event.id)}?returnTo=${encodeURIComponent(returnTo || '/explorer')}`}>
+      {event.place || event.name} · {event.start_date} · <span className="break-all">{event.id}</span>
+    </Link>)}
+    {query && !filtered.length && <p>No matching candidates.</p>}
+  </div>;
 }
 
 function DetectionPopup({ detection, events }: { detection: FireDetection; events: EventMapItem[] }) {
@@ -441,11 +434,7 @@ function DetectionPopup({ detection, events }: { detection: FireDetection; event
         </div>
         <div className="text-[10px] text-slate-400">Source: {detection.dataset_name}</div>
         {detection.candidate_event_id && !events.some(e=>e.id===detection.candidate_event_id) && <Link className="block rounded bg-emerald-700 p-2 text-white" to={`/events/${encodeURIComponent(detection.candidate_event_id)}`}>Analyze linked candidate</Link>}
-        {events.map((event) => (
-          <Link key={event.id} className="block rounded bg-emerald-700 px-2 py-1 text-center text-white" to={`/events/${event.id}`}>
-            Analyze candidate · {event.start_date}
-          </Link>
-        ))}
+        <PopupCandidates events={events}/>
       </div>
     </Popup>
   );
@@ -505,7 +494,7 @@ export const LeafletMap: React.FC<LeafletMapProps> = ({
         <SearchFocus position={focusPosition} />
         <CircleViewController circle={selectionCircle} />
         <CandidateFocus event={focusedEvent} returnTo={returnTo} />
-        {events.filter(e=>e.id!==focusedEvent?.id).map(event=><CircleMarker key={'candidate-'+event.id} center={[event.center_lat,event.center_lon]} radius={7} pathOptions={{color:'#34d399',weight:2,fillOpacity:0.2}}><Tooltip>Candidate · {event.name}</Tooltip><Popup><strong>{event.name}</strong><p>{event.start_date} – {event.end_date} · {event.detection_count} observations</p><Link to={`/events/${encodeURIComponent(event.id)}?returnTo=${encodeURIComponent(returnTo || '/explorer')}`}>Analyze candidate</Link><p>Algorithmic grouping, not an official perimeter.</p></Popup></CircleMarker>)}
+        {events.filter(e=>e.id!==focusedEvent?.id).map(event=><CircleMarker key={'candidate-'+event.id} center={[event.center_lat,event.center_lon]} radius={7} pathOptions={{color:'#34d399',weight:2,fillOpacity:0.2}}><Tooltip>Candidate · {event.name}</Tooltip><Popup><strong>{event.place || event.name}</strong><p className="break-all">{event.id}</p><p>{event.start_date} – {event.end_date} · {event.detection_count} observations</p><Link to={`/events/${encodeURIComponent(event.id)}?returnTo=${encodeURIComponent(returnTo || '/explorer')}`}>Analyze candidate</Link><p>Algorithmic grouping, not an official perimeter.</p></Popup></CircleMarker>)}
         {showReturnToItaly && <ReturnToItalyControl onReturn={onReturnToItaly} />}
         <RegionClickSelector enabled={selectionEnabled} onBoundsSelected={onBoundsSelected} />
         <CircleClickSelector enabled={circleSelectionEnabled} onCircleSelected={onCircleSelected} />

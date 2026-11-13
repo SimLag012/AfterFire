@@ -94,7 +94,7 @@ DBSCAN and does not establish a confirmed wildfire or an official perimeter.
 ## Read APIs
 
 - `GET /api/v1/italy/coverage`: database counts, products, sensors, dates, last
-  import, source configuration, and checkpoints, with demo data separate.
+  import, source configuration, and checkpoints, with historical synthetic records counted separately.
 - `GET /api/v1/explorer/clusters?bbox=6.3,35.3,18.9,47.2&zoom=5&scope=italy`:
   Mercator grid aggregation **in SQL**, including the complete matching record
   count, sensor set and observed dates. No 50,000-observation cutoff. Cells split
@@ -129,7 +129,7 @@ their delete fixtures never touch the configured user archive.
 Imported hotspots without an associated study area have no linked MOD13Q1 or
 MCD64A1 observations. Their detail page explicitly reports the missing data.
 Recovery requires at least three valid NDVI observations before a recorded
-candidate and two after it, of matching real/demo provenance. No fallback baseline,
+candidate and two after it, of matching observation provenance. No fallback baseline,
 trough or midpoint fire date is invented. Baseline is an observed pre-event mean,
 not a seasonal model. NDVI cannot establish recovery of biodiversity or forest
 structure. Timeline imagery is context; days without observations remain missing.
@@ -138,7 +138,7 @@ structure. Timeline imagery is context; days without observations remain missing
 
 See [Post-Fire Recovery](../docs/POST_FIRE_RECOVERY.md), [Satellite Pipeline](../docs/SATELLITE_DATA_PIPELINE.md), [Scientific Methodology](../docs/SCIENTIFIC_METHODOLOGY.md), [Analysis Cache](../docs/ANALYSIS_CACHE.md) and [Verification](../docs/POST_FIRE_VERIFICATION.md).
 
-The existing PostgreSQL/PostGIS database and persistent cache volume are reused. Additive tables are initialized automatically; imported FIRMS rows are not reimported or deleted. Keep `DEMO_MODE=false` for real archive use.
+The existing PostgreSQL/PostGIS database and persistent cache volume are reused. Additive tables are initialized automatically; imported FIRMS rows are not reimported or deleted.
 
 Set `EARTHDATA_USERNAME` / `EARTHDATA_PASSWORD`, or `EARTHDATA_TOKEN`, in `.env` (backend only). Earthdata must authorize LP DAAC access and applicable EULAs. CMR metadata discovery does not require credentials. Missing/invalid authentication produces a failed job, never synthetic observations. Default cache retention is non-destructive; configure disk limits and optionally explicit source-only LRU according to [cache documentation](../docs/ANALYSIS_CACHE.md).
 

@@ -48,9 +48,8 @@ try{
  report.requested_frame_seconds=(performance.now()-frameStart)/1000;
  await page.getByLabel('Vegetation index',{exact:true}).selectOption('EVI');
  await page.getByRole('heading',{name:'Recovery Intelligence · EVI',exact:true}).waitFor();
- await page.getByLabel('Compare real observations',{exact:true}).check();
+
  await page.getByLabel('Before observation',{exact:true}).waitFor();
- await page.getByRole('button',{name:'Reburn History',exact:true}).click();
  report.science_desktop_overflow=await overflow();
  await page.screenshot({path:output+'-science-desktop.png',fullPage:true});
  await page.setViewportSize({width:390,height:844});

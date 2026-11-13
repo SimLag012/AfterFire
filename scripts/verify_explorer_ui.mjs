@@ -103,7 +103,6 @@ export async function verifyExplorerUI(tab, browser, base = 'http://127.0.0.1:30
     await p.getByRole('button', {name:'2. Fire Period',exact:true}).click();
     await observe();
     await waitVisible(p.getByText('No event-scoped observations yet.', {exact:false}).first());
-    assert(await p.getByText('DEMO DATA', { exact: true }).count() === 0, 'Real candidate must not be labeled as demo');
     await tab.reload();
     await observe();
     await waitVisible(p.getByText('Algorithmic candidate · not an official perimeter', { exact: true }));

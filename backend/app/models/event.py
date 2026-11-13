@@ -1,5 +1,5 @@
 from datetime import datetime, date
-from sqlalchemy import Column, String, Float, Integer, Date, DateTime, Text, Index, ForeignKey
+from sqlalchemy import Column, String, Float, Integer, Date, DateTime, Text, Index, ForeignKey, cast, or_
 from app.db.database import Base
 
 
@@ -8,6 +8,7 @@ class FireEventCandidate(Base):
 
     id = Column(String(64), primary_key=True, index=True)
     area_id = Column(String(64), nullable=False, index=True)
+    place = Column(String(255), nullable=True)
     name = Column(String(255), nullable=False)
     
     start_date = Column(Date, nullable=False, index=True)
@@ -52,3 +53,10 @@ class FireEventDetection(Base):
 class CurrentEventIndex(Base):
     __tablename__ = "current_event_index"
     event_id = Column(String(64), ForeignKey("fire_event_candidates.id"), primary_key=True)
+
+
+def candidate_search(term):
+    """Match the same visible metadata before pagination in each catalogue."""
+    E = FireEventCandidate
+    columns = (E.id, E.name, E.place, cast(E.start_date, String), cast(E.end_date, String))
+    return or_(*(column.icontains(term.strip(), autoescape=True) for column in columns))

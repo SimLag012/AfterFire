@@ -48,7 +48,7 @@ async def load_event(event_id):
         if event is None:
             raise ValueError('Event candidate not found')
         if event.is_synthetic_demo == 'true':
-            raise ValueError('Real satellite analysis requires a non-demo FIRMS candidate')
+            raise ValueError('Satellite analysis requires a candidate derived from observed FIRMS detections')
         detections = (await db.execute(select(FireDetection).join(FireEventDetection,FireEventDetection.detection_id==FireDetection.id)
                       .where(FireEventDetection.event_id==event_id))).scalars().all()
         return event,detections

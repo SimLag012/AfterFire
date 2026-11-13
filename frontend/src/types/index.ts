@@ -83,6 +83,7 @@ export interface CalendarAggregation {
 }
 
 export interface FireEventCandidate {
+  place?: string | null;
   id: string;
   area_id: string;
   name: string;
@@ -489,9 +490,7 @@ export interface SystemStatus {
   status: string;
   service: string;
   version: string;
-  demo_mode: boolean;
-  app_mode: 'demo' | 'real';
-  effective_status: 'demo' | 'real_connected' | 'real_on_demand' | 'real_unconfigured' | 'real_auth_failed' | 'real_unavailable';
+  effective_status: 'real_connected' | 'real_on_demand' | 'real_unconfigured' | 'real_auth_failed' | 'real_unavailable';
   message: string;
   firms_configured: boolean;
   earthdata_configured: boolean;
@@ -505,7 +504,7 @@ export interface SystemStatus {
   };
   active_analysis: {
     region_name: string;
-    bbox: [number, number, number, number];
+    bbox: [number, number, number, number] | null;
     start_date: string;
     end_date: string;
   };

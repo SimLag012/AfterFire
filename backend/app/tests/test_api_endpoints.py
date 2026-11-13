@@ -1,6 +1,7 @@
 import math
 import pytest
 from httpx import AsyncClient, ASGITransport
+from app.tests.area_fixtures import seed_sample_areas
 from app.main import app
 from app.db.database import Base, init_db, AsyncSessionLocal
 from app.jobs.seed_data import seed_initial_data
@@ -14,6 +15,7 @@ async def setup_test_db():
     await init_db()
     async with AsyncSessionLocal() as session:
         await seed_initial_data(session)
+        await seed_sample_areas(session)
     yield
 
 
@@ -102,7 +104,7 @@ async def test_real_data_seed_skips_synthetic_study_cases():
             await connection.run_sync(Base.metadata.create_all)
 
         async with session_factory() as session:
-            await seed_initial_data(session, seed_demo_data=False)
+            await seed_initial_data(session)
             area_count = await session.scalar(select(func.count()).select_from(AreaOfInterest))
             assert area_count == 0
     finally:

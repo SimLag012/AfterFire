@@ -13,7 +13,6 @@ async function tiles(){await page.waitForFunction(()=>[...document.querySelector
 try{
  await page.goto(`http://localhost:3000/explorer?period=custom&start=2021-08-11&end=2021-08-12&lat=37.0143&lon=14.7734&radius=10&event=${event}`);
  await page.getByRole('link',{name:'Analyze candidate',exact:true}).click();
- await page.getByRole('button',{name:'Reburn History',exact:true}).click();
  await panel().getByRole('heading',{name:'Reburn History & Recovery Gap',exact:true}).waitFor();
  // A bounded cached analysis makes no remote submission.
  await panel().getByText('History period and acquisition settings',{exact:true}).click();

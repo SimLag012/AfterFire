@@ -25,7 +25,7 @@ Rather than being another static map of fire markers, AfterFire addresses concre
 - **What was the pre-fire baseline?** Calculating observed pre-fire seasonal median reference values from MODIS MOD13Q1 250m 16-day composites.
 - **How did canopy greenness evolve after the event?** Quantifying drop magnitude, seasonal anomalies and sustained returns to the reference band, and QA masking.
 - **Are there areas exhibiting delayed or truncated recovery?** Detecting recurring wildfires and compound disturbances before canopy restoration.
-- **How reliable are these conclusions?** Enforcing strict traceability, zero hallucinated figures, explicit remote-sensing limitations, and transparent demo vs live tagging.
+- **How reliable are these conclusions?** Enforcing strict traceability, zero hallucinated figures, explicit remote-sensing limitations, and explicit observation provenance.
 
 > **Disclaimer:** AfterFire is an independent community project developed for the NASA Space Apps Challenge 2026. It is not an official service or endorsement of NASA.
 
@@ -125,10 +125,7 @@ pip install -r requirements.txt
 cp ../.env.example .env
 uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
 ```
-The backend initializes the database and seeds calibrated synthetic study cases only when
-`DEMO_MODE=true`. Real-data mode is the default; create a study area and configure a NASA
-FIRMS MAP key to retrieve observations. The Explorer hides synthetic presets and only
-displays real observations, grouped into zoom-dependent map clusters.
+The backend initializes dataset metadata. Configure a NASA FIRMS MAP key to retrieve live observations.
 
 The Explorer opens on Italy and defaults to bounded online FIRMS observations. Select archive mode explicitly to inspect locally imported history.
 For complete Italy ingestion, resumable annual downloads, API backfill and indexing, see [backend/README.md](backend/README.md).
@@ -147,18 +144,12 @@ Open API documentation at: **http://localhost:8000/docs**
 
 #### Geographic analysis limits
 
-The backend validates the analysis configuration at startup. Set the WGS84 bounding
-box as `west,south,east,north` in `.env`; the example values are editable defaults,
-not a permanent analysis period. `MAX_DOWNLOAD_DAYS_PER_REQUEST`,
-`MAX_CONCURRENT_DOWNLOADS`, and `MAX_DOWNLOAD_SIZE_MB` bound active-fire retrieval.
-FIRMS responses are requested for the bounding box at NASA rather than fetched
-globally and filtered afterward.
-
-The Explorer's optional **Draw circle** search is independent of the configured
-analysis bounding box used for provider downloads. Users can pan and zoom globally,
-draw or clear a circular area, and return to the Italy view without changing their
-date or sensor filters. Online circle searches request the enclosing rectangle and show observations and candidate centers inside the radius. Archive mode uses the local spatial query. The separate analysis workflow continues to
-use the configured bounding box and date interval to constrain provider retrieval.
+The preview API accepts a WGS84 bounding box as west,south,east,north.
+A deployment can supply an optional default with `ANALYSIS_BBOX`. Without a
+default, callers must provide the area in their preview request.
+Explorer uses the selected map area or search circle. Event analysis uses
+the candidate territory. Download size, concurrency and time-window limits
+are configured separately.
 
 The current automated remote downloader supports NASA FIRMS active-fire feeds
 (MODIS and VIIRS Suomi-NPP, NOAA-20 and NOAA-21; standard and NRT feeds). The event workflow retrieves bounded MCD64A1 and MOD13Q1 native-grid subsets through Earth Engine when configured. FIRMS NRT availability is
@@ -218,56 +209,18 @@ npm run build
 
 ---
 
-## 6. Hackathon Demo Walkthrough (For Judges)
+## 6. Explore a candidate
 
-1. **Homepage (`/`)**:
-   - Review project vision and the 3 core phases: *Before*, *Fire*, *Recovery*.
-   - Notice the persistent calibrated demo data banner and links to official NASA data sources.
-   - Click **Explore the Map**.
+Open Explorer, choose a period and search the candidates by ID, date or place.
+The Italy outline can be hidden in Layers. Place references give the distance
+from the candidate centre to the nearest city in the bundled GeoNames gazetteer
+(population threshold 15,000). They can refer to a city across a border.
+Geographic names and coordinates are from [GeoNames](https://www.geonames.org/)
+under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).
 
-2. **Interactive Explorer (`/explorer`)**:
-   - Start with the map centered on Italy and its currently available archive data.
-   - Use date and sensor filters to update the visible clusters and synchronized
-     results list; the active period and archive coverage remain explicit.
-   - Pan anywhere in the world and optionally draw a circle to search that area.
-     Clear it to return to the Italian results, or use **Return to Italy** to restore
-     the initial view while retaining the filters.
-   - Treat visual clusters as groups of observations, not confirmed individual fires.
-     Local coverage gaps are reported as unavailable data, not as evidence of no fire.
-   - Synthetic study cases remain explicitly identified as **DEMO DATA** and separate
-     from real satellite observations.
-
-3. **Territory Story & Synchronized Timeline (`/territory/rhodes-greece-2023`)**:
-   - Scrub through the 4 phases:
-     - *1. Before Fire*: Baseline canopy greenness.
-     - *2. Fire Period*: Active thermal detections and flaming frontiers.
-     - *3. Immediate Post-Fire*: MCD64A1 burned scar and initial NDVI crash.
-     - *4. Recovery Trajectory*: Regrowth monitoring.
-   - Press **Play Timeline** to watch the map automatically synchronize its layers.
-
-4. **Recovery Explorer (`/recovery/rhodes-greece-2023`)**:
-   - Inspect the interactive Recharts trajectory:
-     - Pre-fire baseline (blue dashed line) with $\pm 1\sigma$ variance band.
-     - Fire disturbance line in red.
-     - 16-day observed composite NDVI (green line).
-   - Review scorecard: Pre-fire baseline (`0.650`), Trough (`0.170`, `-73.8%`), Latest observed (`0.410`), Recovery status (`Partial Recovery, 64%`).
-   - Interact with the **Scientific AI Analyst**: Switch tabs between *Overview*, *Recovery*, *Harmonization*, and *Recurrence*.
-
-5. **Recurring Wildfires & Compound Disturbance (`/recurrence/kangaroo-island-2020`)**:
-   - Explore the Black Summer multi-fire case.
-   - Notice the compound disturbance alert: Event 2 occurred before vegetation had restored to baseline, demonstrating recovery truncation.
-
-6. **Cross-Territory Comparison (`/compare`)**:
-   - Compare *Rhodes Island* vs *Jasper National Park*.
-   - Note the automatic **Scientific Comparability Advisory**: Flags distinct biomes (Mediterranean pine vs Boreal coniferous) and contrasting resprouting adaptations.
-
-7. **Exportable Scientific Report (`/report/rhodes-greece-2023`)**:
-   - View complete printable synthesis with bounding box, dataset citations, trajectory chart, and limitations.
-   - Click **Print Report / Save PDF** for an instant high-resolution summary.
-
-8. **Datasets & Provenance (`/datasets`)**:
-   - Inspect status of all NASA feeds and configuration instructions for `FIRMS_MAP_KEY`.
-   - Ingest custom user-downloaded FIRMS CSV files through the upload tool.
+Open a candidate to inspect its before/after imagery, vegetation trajectory,
+burned area and recurrence evidence. Downloads and source files are at the end
+of the analysis.
 
 ---
 
@@ -280,10 +233,9 @@ npm run build
 | `EARTHDATA_USERNAME` | NASA Earthdata login username | *(Optional)* |
 | `EARTHDATA_PASSWORD` | NASA Earthdata login password | *(Optional)* |
 | `LLM_API_KEY` | OpenAI API key for AI Analyst narrative | *(Optional)* |
-| `DEMO_MODE` | Seeds and enables synthetic study cases | `false` |
-| `ANALYSIS_BBOX` | Default region as west,south,east,north WGS84 coordinates | `14.7,37.1,15.4,37.8` |
-| `ANALYSIS_REGION_NAME` | Human-readable configured region label | `Sicily East` |
-| `ANALYSIS_START_DATE` / `ANALYSIS_END_DATE` | Initial analysis date interval | `2024-01-01` / `2026-10-27` |
+| `ANALYSIS_BBOX` | Default region as west,south,east,north WGS84 coordinates | *(Optional)* |
+| `ANALYSIS_REGION_NAME` | Human-readable configured region label | *(Optional)* |
+| `ANALYSIS_START_DATE` / `ANALYSIS_END_DATE` | Initial analysis date interval | `2024-01-01` / today |
 | `MAX_DOWNLOAD_DAYS_PER_REQUEST` | Maximum days in one FIRMS API window (1–5) | `5` |
 | `MAX_CONCURRENT_DOWNLOADS` | Maximum simultaneous provider downloads | `2` |
 | `MAX_DOWNLOAD_SIZE_MB` | Maximum bytes accepted per provider operation/upload | `250` |

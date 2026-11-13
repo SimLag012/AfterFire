@@ -31,9 +31,9 @@ logging.getLogger("httpx").setLevel(logging.WARNING)
 async def lifespan(app: FastAPI):
     logger.info("Initializing database schema...")
     await init_db()
-    logger.info("Seeding initial dataset & demo presets if needed...")
+    logger.info("Initializing dataset metadata...")
     async with AsyncSessionLocal() as session:
-        await seed_initial_data(session, seed_demo_data=settings.DEMO_MODE)
+        await seed_initial_data(session)
     logger.info("AfterFire API backend initialized successfully.")
     yield
 

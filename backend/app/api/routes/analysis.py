@@ -55,6 +55,8 @@ async def get_analysis_config():
 @router.post("/analysis/preview")
 async def preview_analysis(payload: AnalysisPreviewRequest):
     bbox = payload.bbox or settings.analysis_bbox
+    if bbox is None:
+        raise HTTPException(status_code=422, detail="Select a bounding box for this analysis.")
     _validate_bbox(bbox)
     start_date = payload.start_date or settings.ANALYSIS_START_DATE
     end_date = payload.end_date or settings.ANALYSIS_END_DATE

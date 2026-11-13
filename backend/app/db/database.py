@@ -54,9 +54,24 @@ async def init_db():
         if engine.dialect.name == "postgresql":
             # API and dedicated workers can initialize concurrently.
             await conn.execute(text("SELECT pg_advisory_xact_lock(714251020)"))
+        elif engine.dialect.name == "sqlite":
+            # SQLite needs an explicit transaction for schema changes and their data backfill.
+            await conn.exec_driver_sql("BEGIN IMMEDIATE")
         await conn.run_sync(Base.metadata.create_all)
         await conn.execute(text('CREATE INDEX IF NOT EXISTS idx_satellite_product_tile ON satellite_granules (product, version, tile)'))
         # create_all does not add columns to an existing installation.
+        event_columns = await conn.run_sync(lambda sync: {c["name"] for c in inspect(sync).get_columns("fire_event_candidates")})
+        if "place" not in event_columns:
+            from app.services.candidate_places import place_reference
+            await conn.execute(text("ALTER TABLE fire_event_candidates ADD COLUMN place VARCHAR(255)"))
+            centers = await conn.execute(text("""
+                SELECT l.event_id, AVG(d.latitude) AS lat, AVG(d.longitude) AS lon
+                FROM fire_event_detections l JOIN fire_detections d ON d.id = l.detection_id
+                GROUP BY l.event_id
+            """))
+            for batch in centers.partitions(500):
+                await conn.execute(text("UPDATE fire_event_candidates SET place=:place WHERE id=:id"),
+                    [dict(id=row.event_id, place=place_reference(row.lat, row.lon)) for row in batch])
         columns = await conn.run_sync(lambda sync: {c["name"] for c in inspect(sync).get_columns("fire_detections")})
         if "import_region" not in columns:
             await conn.execute(text("ALTER TABLE fire_detections ADD COLUMN import_region VARCHAR(64)"))

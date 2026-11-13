@@ -31,12 +31,12 @@ try {
  await page.getByLabel('Analysis Status',{exact:true}).getByText('Partial results — see quality notices · 100%',{exact:true}).waitFor({timeout:600000});
  evidence.publishedStatus=await page.getByLabel('Analysis Status',{exact:true}).innerText();
  }
- await page.getByLabel('Observation date',{exact:true}).selectOption('2021-07-28',{timeout:120000});await frames(1);
+ await page.getByLabel('Observation date',{exact:true}).selectOption('2021-07-28',{timeout:120000});await frames(3);
  evidence.before=await inspect();
- await page.getByLabel('Observation date',{exact:true}).selectOption('2026-09-30');await frames(1);
+ await page.getByLabel('Observation date',{exact:true}).selectOption('2026-09-30');await frames(3);
  evidence.after=await inspect();
- assert.notEqual(evidence.before.images[0].source,evidence.after.images[0].source);
- await page.getByLabel('Compare real observations').check();
+ assert.notEqual(evidence.before.images.at(-1).source,evidence.after.images.at(-1).source);
+
  await page.getByLabel('Before observation',{exact:true}).selectOption('2021-07-12');
  await page.getByLabel('After observation',{exact:true}).selectOption('2026-09-30');await frames(3);
  evidence.desktop=await inspect();
@@ -59,19 +59,18 @@ try {
  await page.getByLabel('Observation date',{exact:true}).selectOption('2019-12-03');
  await page.waitForFunction(()=>!document.querySelector('.leaflet-container img.leaflet-image-layer') || document.querySelectorAll('img.leaflet-image-layer').length===2);
  evidence.missing=await inspect();assert.equal(evidence.missing.images.length,2);
- await page.getByLabel('Compare real observations').uncheck();
- await page.getByLabel('Observation date',{exact:true}).selectOption('2019-08-13');await frames(1);
+
+ await page.getByLabel('Observation date',{exact:true}).selectOption('2019-08-13');await frames(3);
  await page.getByLabel('Playback speed',{exact:true}).selectOption('4000');await page.getByRole('button',{name:'Play observations',exact:true}).click();
  await page.waitForFunction(()=>document.querySelector('[aria-label="Observation date"]').value!=='2019-08-13',null,{timeout:15000});
  await page.getByRole('button',{name:'Pause playback',exact:true}).click();
  evidence.playbackDate=await page.getByLabel('Observation date',{exact:true}).inputValue();
  await page.setViewportSize({width:390,height:844});
- await page.getByLabel('Observation date',{exact:true}).selectOption('2026-09-30');await frames(1);
- await page.getByLabel('Compare real observations').check();await frames(3);
+ await page.getByLabel('Observation date',{exact:true}).selectOption('2026-09-30');await frames(3);
  evidence.mobile=await inspect();assert.equal(evidence.mobile.overflow,false);
  await page.getByLabel('Before After comparison',{exact:true}).scrollIntoViewIfNeeded();
  await page.waitForTimeout(2000);await inspect();await page.screenshot({path:`docs/${prefix}-before-after-mobile.png`});
- await page.reload();await page.getByLabel('Observation date',{exact:true}).selectOption('2026-09-30');await frames(1);
+ await page.reload();await page.getByLabel('Observation date',{exact:true}).selectOption('2026-09-30');await frames(3);
  evidence.reload=await inspect();
  for(const k of ['desktop','evi','mobile','reload']){assert(evidence[k].tiles.loaded>0);assert(evidence[k].mapTiles.every(m=>m.loaded>0));assert(evidence[k].tiles.satelliteOnly);assert(evidence[k].images.every(i=>i.loaded));}
  assert.deepEqual(errors,[]);evidence.errors=errors;evidence.pass=true;

@@ -174,11 +174,14 @@ async def stream(event_id:str,job_id:str):
 
 
 @router.get('/reburn-sources')
-async def sources(area_id:str|None=None,limit:int=Query(100,ge=1,le=100),offset:int=Query(0,ge=0),db:AsyncSession=Depends(get_db)):
+async def sources(area_id:str|None=None,limit:int=Query(100,ge=1,le=100),offset:int=Query(0,ge=0),db:AsyncSession=Depends(get_db),q:str=""):
     from app.models.event import FireEventCandidate
-    stmt=select(EventAnalysisResult,FireEventCandidate.name,FireEventCandidate.area_id).join(FireEventCandidate,
+    stmt=select(EventAnalysisResult,FireEventCandidate.name,FireEventCandidate.area_id,FireEventCandidate.place,FireEventCandidate.start_date,FireEventCandidate.end_date).join(FireEventCandidate,
         FireEventCandidate.id==EventAnalysisResult.event_id).where(FireEventCandidate.is_synthetic_demo!='true')
+    if q.strip():
+        from app.models.event import candidate_search
+        stmt=stmt.where(candidate_search(q))
     if area_id: stmt=stmt.where(FireEventCandidate.area_id==area_id)
     rows=(await db.execute(stmt.order_by(EventAnalysisResult.created_at.desc()).offset(offset).limit(limit))).all()
-    return [{'source_job_id':r.job_id,'event_id':r.event_id,'name':name,'area_id':area,'period':r.payload['period']}
-        for r,name,area in rows]
+    return [{'source_job_id':r.job_id,'event_id':r.event_id,'name':name,'area_id':area,'place':place,'start_date':start,'end_date':end,'period':r.payload['period']}
+        for r,name,area,place,start,end in rows]

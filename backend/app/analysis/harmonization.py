@@ -3,8 +3,11 @@ import hashlib
 from typing import List, Dict, Any, Optional
 from datetime import datetime, date, timedelta
 from collections import defaultdict, deque
+
 import numpy as np
 from app.analysis.longitude import longitude_summary
+
+from app.services.candidate_places import place_reference
 
 
 class HarmonizationEngine:
@@ -232,6 +235,7 @@ class HarmonizationEngine:
                 "min_lon": min_ln,
                 "max_lon": max_ln,
                 "name": event_name,
+                "place": place_reference(float(np.mean(lats)), center_lon),
                 "start_date": start_d.strftime("%Y-%m-%d"),
                 "end_date": end_d.strftime("%Y-%m-%d"),
                 "duration_days": duration,

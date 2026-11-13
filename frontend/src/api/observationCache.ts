@@ -23,7 +23,7 @@ function storage() {
     open.onsuccess=()=>{
       const db=open.result;
       const read=db.transaction('windows').objectStore('windows').getAll();
-      read.onsuccess=()=>{for(const row of read.result as Entry[]) if(row.expires>Date.now()) entries.set(row.key,row); resolve(db);};
+      read.onsuccess=()=>{for(const row of read.result as Entry[]) if(row.expires>Date.now() && !row.data.events?.some(e=>!e.place)) entries.set(row.key,row); resolve(db);};
       read.onerror=()=>reject(read.error);
     };
   }).catch(()=>null);

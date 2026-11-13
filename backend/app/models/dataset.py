@@ -16,7 +16,7 @@ class DatasetMetadata(Base):
     temporal_range = Column(String(100), nullable=False)
     
     last_import_at = Column(DateTime, nullable=True)
-    status = Column(String(50), default="active")  # "active", "demo_mode", "credentials_needed", "error"
+    status = Column(String(50), default="active")  # "active", "credentials_needed", "error"
     limitations = Column(Text, nullable=False)
     citation = Column(Text, nullable=False)
     

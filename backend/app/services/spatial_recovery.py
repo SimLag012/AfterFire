@@ -6,7 +6,7 @@ import rasterio
 from rasterio.features import geometry_mask
 from shapely.geometry import mapping, shape, box
 from app.analysis.modis_science import SINUSOIDAL, WGS84, project, tile_transform, seasonal_metrics
-from app.analysis.recovery_assessment import assess_index
+from app.analysis.recovery_assessment import assess_index, assessment_window, in_post_window
 from app.schemas.satellite_analysis import AnalysisConfiguration
 from app.services.satellite_cache import cache_root
 
@@ -37,6 +37,9 @@ def connected_zones(features, minimum):
 
 def spatial_assessment(payload, parameters):
     config=AnalysisConfiguration.model_validate(payload['configuration'])
+    window = assessment_window(payload, parameters)
+    event_start = date.fromisoformat(payload['event_period']['start'])
+    event_end = date.fromisoformat(payload['event_period']['end'])
     geometry=project(shape(payload['analysis_geometry']),WGS84,SINUSOIDAL)
     polygon = mapping(geometry)
     masks = {}
@@ -90,7 +93,7 @@ def spatial_assessment(payload, parameters):
                 if value is not None: matrix[row,col]=value
         from app.analysis.recovery_assessment import pixel_baselines
         baselines,bands,counts,years=pixel_baselines(observations,matrix,
-            date.fromisoformat(payload['event_period']['start']),config,parameters)
+            event_start,config,parameters)
         for col,grid in enumerate(grid_keys):
             cell=cells[grid]
             metrics=[]
@@ -104,7 +107,7 @@ def spatial_assessment(payload, parameters):
                     'anomaly':value-baseline if value is not None and baseline is not None else None,
                     'valid_pixels':int(value is not None),'valid_fraction':float(value is not None),
                     'baseline_n':int(counts[row,col]),'baseline_years':int(years[row,col])})
-            summary=assess_index(metrics,date.fromisoformat(payload['event_period']['start']),date.fromisoformat(payload['event_period']['end']),parameters)
+            summary=assess_index(metrics,event_start,event_end,window)
             latest=summary['latest'] or {}
             periods=summary['persistent_negative_periods']
             features.append({'type':'Feature','geometry':cell['geometry'],'properties':{
@@ -116,13 +119,13 @@ def spatial_assessment(payload, parameters):
                 'series':[{k:o.get(k) for k in ('date','value','baseline','anomaly','baseline_n','baseline_years','valid_fraction')} for o in metrics]}})
         output[index]={'type':'FeatureCollection','features':features,'zones':connected_zones(features,parameters.min_cluster_cells),
             'missing_assets':missing_assets,'native_resolution_m':abs(base.a) if cells else None,
-            'period':{'start':str(parameters.post_start or payload['event_period']['end']),
-                      'end':str(parameters.post_end or payload['period']['end'])},
+            'period':{'start':str(window.post_start),
+                      'end':str(window.post_end)},
             'support_scope':'per_native_cell_post_event_history',
             'observation_period':payload['period'],'analysis_area_source':payload['analysis_area_source'],
             'support_note':'Cells use individual strict-QA observations and their own pre-event seasonal baseline. A supported cell does not imply that any area composite reaches the minimum spatial coverage.',
-            'area_composites_supported':sum(o['value'] is not None and o['date']>payload['event_period']['end']
-                                           for o in observations),
+            'area_composites_supported':sum(o['value'] is not None and in_post_window(o,event_end,window)
+                                            for o in observations),
             'qa':'strict QA inherited from published scientific rasters',
             'coverage_cells':len(cells),'sufficient_cells':sum(f['properties']['classification']!='insufficient_data' for f in features)}
     return output
