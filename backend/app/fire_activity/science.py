@@ -72,6 +72,8 @@ def fit(samples):
             'domain_viirs_density':[min(s['viirs']*10000/s['area_km2'] for s in train),max(s['viirs']*10000/s['area_km2'] for s in train)],
             'domain_area_km2':[min(s['area_km2'] for s in train),max(s['area_km2'] for s in train)],
             'density_normalization_km2':10000,
+            'domain_calendar_months':sorted({s['month'] for s in samples}),
+            'domain_years':[min(s['year'] for s in samples),max(s['year'] for s in samples)],
             'samples_sha256':identity(samples), 'limitations':['Conditional on detected activity and archive completeness; clear-sky opportunities unavailable.',
             'Conformal interval assumes exchangeability; spatial/temporal dependence may weaken coverage.',
             'Aqua orbital drift and product changes are not explicitly corrected.']}
@@ -99,7 +101,11 @@ def estimate(summary, complete_products, model):
     if 'VIIRS_SNPP_SP' not in complete_products or model.get('status')!='validated':
         return {'value':None,'status':'insufficient_calibration_or_coverage','lower':None,'upper':None,'sensors':[],'calibration_id':model.get('id')}
     density=v*10000/area if area else None
-    if density is None or not model['domain_viirs_density'][0]<=density<=model['domain_viirs_density'][1] or not model['domain_area_km2'][0]<=area<=model['domain_area_km2'][1]:
+    period=summary.get('month','')
+    valid_time=(isinstance(period,str) and len(period)==7 and period[4]=='-' and period[:4].isdigit() and period[5:].isdigit()
+                and int(period[5:]) in model.get('domain_calendar_months',[])
+                and model.get('domain_years',[1,0])[0]<=int(period[:4])<=model.get('domain_years',[1,0])[1])
+    if not valid_time or density is None or not model['domain_viirs_density'][0]<=density<=model['domain_viirs_density'][1] or not model['domain_area_km2'][0]<=area<=model['domain_area_km2'][1]:
         return {'value':None,'status':'outside_calibration_domain','lower':None,'upper':None,'sensors':['VIIRS SNPP'],'calibration_id':model['id']}
     a,b=model['coefficients']; z=a+b*np.log1p(density); q=model['log_residual_q80']; scale=area/10000
     return {'value':float(max(0,np.expm1(z))*scale), 'status':'calibrated_estimate',

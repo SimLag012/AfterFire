@@ -222,6 +222,7 @@ async def calendar_payload(db,study):
             d['archive_fraction']=d['complete_days']/full_days
         summary={'original_counts':dict(raw_counts),'occupied_cell_days':occupied,'daytime_only':True,'grid_crs':'EPSG:6933','cell_size_m':10000}
         summary['area_km2']=bbox_area(cfg['bbox'])
+        summary['month']=month
         metric=estimate(summary,complete,model)
         viirs_estimate=estimate(summary,[p for p in complete if p!='MODIS_SP'],model)
         if month<'2002-08':
@@ -255,7 +256,12 @@ async def calendar_payload(db,study):
 
 async def original_observations(db,study,month=None):
     cfg=study.configuration
-    rows=(await db.execute(select(ActivityWindow).where(ActivityWindow.area_key==area_key(cfg),
-        ActivityWindow.start_date>=cfg['start_date'],ActivityWindow.end_date<=cfg['end_date']))).scalars()
-    return sorted({o['id']:o for r in rows if r.state in GOOD for o in r.observations
+    # Use the exact same checkpoint set as the calendar. Overlapping studies may
+    # have different partial-boundary windows; their rows must not leak into a
+    # month's map/export while its calendar says those records are not acquired.
+    expected=[window_id(cfg,p,a,b) for a,b in windows(cfg) if month is None or str(a).startswith(month)
+              for p in PRODUCTS]
+    rows=(await db.execute(select(ActivityWindow).where(ActivityWindow.id.in_(expected),
+          ActivityWindow.state.in_(GOOD)))).scalars()
+    return sorted({o['id']:o for r in rows for o in r.observations
                    if month is None or o['date'].startswith(month)}.values(),key=lambda o:(o['timestamp_utc'],o['id']))

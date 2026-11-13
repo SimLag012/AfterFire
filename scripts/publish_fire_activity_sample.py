@@ -14,7 +14,7 @@ from app.db.database import AsyncSessionLocal,init_db
 from app.fire_activity.models import ActivityStudy,ActivityWindow
 from app.fire_activity.schema import StudyRequest
 from app.fire_activity import service
-from app.fire_activity.observations import summarize
+from app.fire_activity.observations import summarize,daily_summary
 from app.providers.firms import FirmsProvider
 
 async def main():
@@ -50,6 +50,12 @@ async def main():
                     state,obs,evidence=retained if retained else await service.acquire(cfg,product,a,b)
                     assert state in service.GOOD,(region,year,month,product,state,evidence)
                     all_obs.extend(obs)
+                    if retained and 'daily_summary' not in evidence:
+                        # Populate a derived cache for early v1 checkpoints; preserve raw proof/timestamps.
+                        async with AsyncSessionLocal() as db:
+                            row=await db.get(ActivityWindow,wid)
+                            row.evidence={**row.evidence,'daily_summary':daily_summary(obs)}
+                            await db.commit()
                     if not retained:
                         async with AsyncSessionLocal() as db:
                             row=await db.get(ActivityWindow,wid)

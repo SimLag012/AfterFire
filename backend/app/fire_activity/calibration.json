@@ -57,11 +57,19 @@
     48357.252006537106
   ],
   "density_normalization_km2": 10000,
+  "domain_calendar_months": [
+    1,
+    8
+  ],
+  "domain_years": [
+    2019,
+    2024
+  ],
   "samples_sha256": "4cd22ad7b853bf6c644c4ae02e546bc822cb672a9da8dfceea8abd9bdc9c7265",
   "limitations": [
     "Conditional on detected activity and archive completeness; clear-sky opportunities unavailable.",
     "Conformal interval assumes exchangeability; spatial/temporal dependence may weaken coverage.",
     "Aqua orbital drift and product changes are not explicitly corrected."
   ],
-  "id": "ae9a6c4db6802f1cb9916148875f73d14ee029cb4ee8e3cc25ba11f1bf7129f7"
+  "id": "f37cf74985ad11f5e3c6a64feecd8b75bd190dfaadcb70c68b7e0d18df49cd40"
 }

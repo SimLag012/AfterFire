@@ -123,9 +123,12 @@ def test_blocked_fit_disjoint_splits_and_intervals():
     assert result['geographic_holdout']==['e','f']
     assert result['interval_n']==8 and result['validation']['temporal']['n']==8
     assert result['validation']['geographic']['n']==24
-    s={'occupied_cell_days':{'SNPP':21},'area_km2':result['domain_area_km2'][0]}
+    s={'occupied_cell_days':{'SNPP':21},'area_km2':result['domain_area_km2'][0],'month':'2020-08'}
     p=estimate(s,['VIIRS_SNPP_SP'],result)
     assert p['lower']<=p['value']<=p['upper']
+    s['month']='2020-12'
+    assert estimate(s,['VIIRS_SNPP_SP'],result)['value'] is None
+    s['month']='2020-08'
     s['area_km2']=1
     assert estimate(s,['VIIRS_SNPP_SP'],result)['value'] is None
 
@@ -185,3 +188,22 @@ def test_packaged_real_calibration_is_content_addressed():
     assert model['status']=='validated'
     assert model['reference']=='Aqua' and model['processing']=='SP'
     assert model['training_n']==32 and model['interval_n']==8
+
+
+@pytest.mark.asyncio
+async def test_raw_exports_do_not_leak_unaccounted_partial_windows():
+    async with engine.begin() as conn:await conn.run_sync(Base.metadata.create_all)
+    full=service.config(StudyRequest(bbox=(12,40,12.1,40.1),start_date=date(2020,8,1),end_date=date(2020,8,31)))
+    part=service.config(StudyRequest(bbox=(12,40,12.1,40.1),start_date=date(2020,8,15),end_date=date(2020,8,19)))
+    point=normalize(raw(longitude=12,acq_date='2020-08-15'),'MODIS_SP')
+    async with AsyncSessionLocal() as db:
+        study=ActivityStudy(id='full-scope',configuration=full,state='partial');db.add(study)
+        db.add(ActivityWindow(id=service.window_id(part,'MODIS_SP',date(2020,8,15),date(2020,8,19)),
+          area_key=service.area_key(part),product='MODIS_SP',start_date='2020-08-15',end_date='2020-08-19',state='complete',observations=[point],evidence={}))
+        await db.commit()
+        result=await service.calendar_payload(db,study)
+        assert result['months'][0]['raw_record_counts']['MODIS'] is None
+        assert await service.original_observations(db,study,'2020-08')==[]
+        # The retained original is still available to its actual acquisition scope.
+        actual=ActivityStudy(id='part-scope',configuration=part,state='completed')
+        assert len(await service.original_observations(db,actual,'2020-08'))==1
