@@ -33,7 +33,7 @@ async function eventFlow(page,label) {
   const selection=new URL(page.url()).searchParams;
   assert.equal(selection.get('radius'),'14.2');
   await checkpoint(page,label+'_authentic_month',{detail:(await page.locator('.activity-detail').innerText()).split('Compare month')[0]});
-  await page.getByRole('link',{name:/Recovery Story:/}).first().click();
+  await page.locator('.activity-detail a[href^="/events/global-730fd3db3b65e67698840df5cf924b77?"]').click();
   await page.getByRole('region',{name:'Recovery Intelligence',exact:true}).waitFor();
   await page.getByRole('heading',{name:'Before / After',exact:true}).waitFor();
   await page.getByRole('heading',{name:'Reburn History & Recovery Gap',exact:true}).waitFor();

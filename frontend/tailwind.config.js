@@ -8,6 +8,7 @@ export default {
   theme: {
     extend: {
       colors: {
+        slate: Object.fromEntries(Object.entries({950:'--color-paper-3',900:'--color-paper-2',800:'--color-hover',700:'--color-rule',600:'--color-rule-strong',500:'--color-muted',400:'--color-muted',300:'--color-ink-2',200:'--color-ink-2',100:'--color-ink',50:'--color-ink'}).map(([shade,token])=>[shade,`color-mix(in srgb, var(${token}) calc(<alpha-value> * 100%), transparent)`])),
         dark: {
           950: 'color-mix(in srgb, var(--color-paper) calc(<alpha-value> * 100%), transparent)',
           900: 'color-mix(in srgb, var(--color-paper-2) calc(<alpha-value> * 100%), transparent)',

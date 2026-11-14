@@ -32,18 +32,19 @@ async def explorer_clusters(
     scope: str = Query("all", pattern="^(all|italy)$"),
     satellite: Optional[str] = None,
     after_utc: Optional[datetime] = None,
+    bounds: Optional[str] = Query(None,max_length=16000),
     db: AsyncSession = Depends(get_db),
 ):
     """Aggregate in SQL: the number of raw observations never limits the map."""
     from sqlalchemy import case, func
     bind=db.get_bind()
     cacheable=bind.dialect.name=='postgresql' and not str(bind.url.database).startswith('afterfire_test_')
-    cache_key=(str(bind.url),bbox,zoom,start_date,end_date,sensor,satellite,after_utc,center_lat,center_lon,radius_km,scope)
+    cache_key=(str(bind.url),bbox,zoom,start_date,end_date,sensor,satellite,after_utc,center_lat,center_lon,radius_km,scope,bounds)
     saved=_cluster_cache.get(cache_key) if cacheable else None
     if saved and time.monotonic()-saved[0]<15: return saved[1]
     from app.services.explorer_query import observation_filters, validate_bbox
     predicates = observation_filters(bbox, start_date, end_date, sensor,
-                                     center_lat, center_lon, radius_km, scope, db.get_bind().dialect.name)
+                                     center_lat, center_lon, radius_km, scope, db.get_bind().dialect.name, bounds)
     if after_utc:
         from app.services.explorer_query import after_utc_filter
         predicates.append(after_utc_filter(after_utc))
@@ -51,22 +52,27 @@ async def explorer_clusters(
         from app.services.explorer_query import satellite_filter
         predicates.append(satellite_filter(satellite))
     west, south, east, north = validate_bbox(bbox)
-    # Mercator cells are shared across adjacent viewports, and shrink with zoom.
-    pixels = 256 * 2 ** zoom
+    # Keep cluster cells stable at high zoom, where individual detections remain
+    # available through the hotspot endpoint but a map aggregate still helps.
+    pixels = 256 * 2 ** min(zoom, 12)
     lat = case((FireDetection.latitude > 85.05112878, 85.05112878),
                (FireDetection.latitude < -85.05112878, -85.05112878),
                else_=FireDetection.latitude)
-    cell_x = func.floor((FireDetection.longitude + 180) / 360 * pixels / CLUSTER_CELL_PIXELS)
-    cell_y = func.floor((1 - func.ln(func.tan(math.pi / 4 + func.radians(lat) / 2))
-                         / math.pi) / 2 * pixels / CLUSTER_CELL_PIXELS)
-    rows = (await db.execute(select(
-        cell_x.label("x"), cell_y.label("y"), FireDetection.instrument,
-        func.count().label("n"), func.sum(FireDetection.latitude).label("lat_sum"),
-        func.sum(FireDetection.longitude).label("lon_sum"),
-        func.min(FireDetection.acq_date).label("start"),
-        func.max(FireDetection.acq_date).label("end"),
-    ).where(*predicates).group_by(cell_x, cell_y, FireDetection.instrument).limit(8193))).all()
-    if len(rows)>8192: raise HTTPException(413, "Viewport is too dense at this zoom; zoom out or narrow the date range")
+    cell_pixels=CLUSTER_CELL_PIXELS
+    while True:
+        cell_x = func.floor((FireDetection.longitude + 180) / 360 * pixels / cell_pixels)
+        cell_y = func.floor((1 - func.ln(func.tan(math.pi / 4 + func.radians(lat) / 2))
+                             / math.pi) / 2 * pixels / cell_pixels)
+        rows = (await db.execute(select(
+            cell_x.label("x"), cell_y.label("y"), FireDetection.instrument,
+            func.count().label("n"), func.sum(FireDetection.latitude).label("lat_sum"),
+            func.sum(FireDetection.longitude).label("lon_sum"),
+            func.min(FireDetection.acq_date).label("start"),
+            func.max(FireDetection.acq_date).label("end"),
+        ).where(*predicates).group_by(cell_x, cell_y, FireDetection.instrument).limit(8193))).all()
+        if len(rows)<=8192:
+            break
+        cell_pixels*=2
     cells = {}
     for row in rows:
         key = (int(row.x), int(row.y))
@@ -90,7 +96,7 @@ async def explorer_clusters(
         center_lat=center_lat, center_lon=center_lon, radius_km=radius_km,
     )
     result = dict(clusters=clusters, total_observations=total, zoom=zoom,
-                cluster_cell_pixels=CLUSTER_CELL_PIXELS, data_coverage=coverage,
+                cluster_cell_pixels=cell_pixels, data_coverage=coverage,
                 semantics="Visual observation clusters; not individual or official fire events.")
     if cacheable:
         _cluster_cache[cache_key]=(time.monotonic(),result)
@@ -114,6 +120,7 @@ async def indexed_events(
     offset: int = Query(0, ge=0),
     satellite: Optional[str] = None,
     after_utc: Optional[datetime] = None,
+    bounds: Optional[str] = Query(None,max_length=16000),
     db: AsyncSession = Depends(get_db),
 ):
     """Paginate stable, pre-indexed candidates using matching observations.
@@ -124,7 +131,7 @@ async def indexed_events(
     from app.models.event import FireEventCandidate as E, FireEventDetection as L, CurrentEventIndex
     from app.services.explorer_query import observation_filters
     predicates = observation_filters(bbox, start_date, end_date, sensor,
-                                     center_lat, center_lon, radius_km, scope, db.get_bind().dialect.name)
+                                     center_lat, center_lon, radius_km, scope, db.get_bind().dialect.name, bounds)
     if after_utc:
         from app.services.explorer_query import after_utc_filter
         predicates.append(after_utc_filter(after_utc))
@@ -179,10 +186,11 @@ async def hotspots(bbox: str, start_date: Optional[date] = None, end_date: Optio
                    sensor: Optional[str] = Query(None, pattern='^(MODIS|VIIRS)$'), satellite: Optional[str] = None,
                    center_lat: Optional[float] = Query(None,ge=-90,le=90),
                    center_lon: Optional[float] = Query(None,ge=-180,le=180),
+                   bounds: Optional[str] = Query(None,max_length=16000),
                    radius_km: Optional[float] = Query(None,gt=0,le=500), after_utc: Optional[datetime] = None, db: AsyncSession = Depends(get_db)):
     from app.services.explorer_query import observation_filters, satellite_filter
     from app.schemas.fire import FireDetectionResponse
-    predicates=observation_filters(bbox,start_date,end_date,sensor,center_lat,center_lon,radius_km,'all',db.get_bind().dialect.name)
+    predicates=observation_filters(bbox,start_date,end_date,sensor,center_lat,center_lon,radius_km,'all',db.get_bind().dialect.name,bounds)
     if satellite: predicates.append(satellite_filter(satellite))
     if after_utc:
         from app.services.explorer_query import after_utc_filter

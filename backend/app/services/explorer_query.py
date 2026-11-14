@@ -1,9 +1,10 @@
 """Shared database filters for display clusters and indexed candidate lists."""
 import math
+import json
 from datetime import date, datetime, timedelta, timezone
 
 from fastapi import HTTPException
-from sqlalchemy import case, func, or_
+from sqlalchemy import case, func, or_, and_
 
 from app.models.fire import FireDetection as D
 
@@ -34,7 +35,7 @@ def validate_bbox(value: str) -> tuple[float, float, float, float]:
 def observation_filters(bbox: str, start_date: date | None, end_date: date | None,
                         sensor: str | None, center_lat: float | None,
                         center_lon: float | None, radius_km: float | None,
-                        scope: str = 'all', dialect: str = 'sqlite') -> list:
+                        scope: str = 'all', dialect: str = 'sqlite', bounds: str | None = None) -> list:
     west, south, east, north = validate_bbox(bbox)
     if sum(x is not None for x in (center_lat, center_lon, radius_km)) not in (0, 3):
         raise HTTPException(422, 'center_lat, center_lon, and radius_km must be supplied together.')
@@ -45,6 +46,15 @@ def observation_filters(bbox: str, start_date: date | None, end_date: date | Non
         conditions.extend([D.longitude >= west, D.longitude <= east])
     else:
         conditions.append(or_(D.longitude >= west, D.longitude <= east))
+    if bounds is not None:
+        try:
+            boxes=json.loads(bounds)
+            if not isinstance(boxes,list) or not 1<=len(boxes)<=64:raise ValueError
+            boxes=[validate_bbox(','.join(map(str,b))) for b in boxes if isinstance(b,list) and len(b)==4]
+            if len(boxes)!=len(json.loads(bounds)):raise ValueError
+        except (ValueError,TypeError):raise HTTPException(422,'bounds must contain 1–64 WGS84 rectangles') from None
+        conditions.append(or_(*(and_(D.latitude>=s,D.latitude<=n,
+            and_(D.longitude>=w,D.longitude<=e) if w<e else or_(D.longitude>=w,D.longitude<=e)) for w,s,e,n in boxes)))
     if start_date:
         conditions.append(D.acq_date >= start_date)
     if end_date:

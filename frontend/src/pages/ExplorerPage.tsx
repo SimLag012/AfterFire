@@ -5,7 +5,7 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useQuery } from '@tanstack/react-query';
 import { Link, useLocation, useSearchParams } from 'react-router-dom';
 import { Flame, CalendarDays, ChevronLeft, ChevronRight, CircleDot, Crosshair, Layers3, RotateCcw, Search, SlidersHorizontal, X } from 'lucide-react';
-import { hasLocalObservations, loadObservations } from '../api/observationCache';
+import { loadSelectedObservations } from '../api/selectedObservations';
 import { satelliteApi } from '../api/satellite';
 import { apiClient } from '../api/client';
 import { LeafletMap } from '../components/map/LeafletMap';
@@ -15,24 +15,27 @@ const FireActivityPanel = React.lazy(() => import('../components/fireActivity/Fi
 type Period = 'today' | '24h' | 'all' | '7d' | '30d' | '12mo' | 'custom';
 
 const ITALY_BBOX = '6.3,35.3,18.9,47.2';
-const ITALY_CENTER: [number,number] = [41.25,12.6];
 const PAGE_SIZE = 10;
-type LocationResult = {name:string;lat:number;lon:number;bbox?:[number,number,number,number];bounds?:[number,number,number,number][]};
+type LocationResult = {name:string;short_name?:string;lat:number;lon:number;bbox?:[number,number,number,number];bounds?:[number,number,number,number][]};
 type LocationMapBounds = [[number,number],[number,number]];
 
-function paddedLocationBounds(result: LocationResult): LocationMapBounds[] {
-  const boxes=result.bounds ?? [result.bbox ?? [result.lon-0.05,result.lat-0.05,result.lon+0.05,result.lat+0.05]];
-  return boxes.map(([west,south,east,north])=>{
-    const midLat=(south+north)/2;
-    const lonScale=Math.max(0.2,Math.cos(midLat*Math.PI/180));
-    const latPad=Math.max((north-south)*0.1,0.02);
-    const lonPad=Math.max((east-west)*0.1,0.02/lonScale);
-    return [[Math.max(-90,south-latPad),Math.max(-180,west-lonPad)],[Math.min(90,north+latPad),Math.min(180,east+lonPad)]] as LocationMapBounds;
-  });
+function locationBounds(result: LocationResult): LocationMapBounds[] {
+  return (result.bounds ?? [result.bbox ?? [result.lon-0.05,result.lat-0.05,result.lon+0.05,result.lat+0.05]])
+    .map(([west,south,east,north])=>[[south,west],[north,east]] as LocationMapBounds);
+}
+
+function restoredTerritory(value:string|null): LocationMapBounds[] {
+  try {const boxes=JSON.parse(value||'null');if(Array.isArray(boxes)&&boxes.length>0&&boxes.length<=64&&boxes.every(b=>Array.isArray(b)&&b.length===2&&b.every((p:unknown)=>Array.isArray(p)&&p.length===2&&p.every(Number.isFinite))&&b[0][0]>=-90&&b[1][0]<=90&&b[0][0]<b[1][0]&&b[0][1]>=-180&&b[1][1]<=180&&b[0][1]<b[1][1]))return boxes;}catch{}
+  return [[[35.3,6.3],[47.2,18.9]]];
 }
 
 function pointInsideBounds(latitude:number,longitude:number,bounds:LocationMapBounds[]) {
   return bounds.some(([[south,west],[north,east]])=>latitude>=south&&latitude<=north&&longitude>=west&&longitude<=east);
+}
+
+function searchPlaceLabel(value:string) {
+  return value.trim().replace(/\s+/g,' ').split(' ').filter(Boolean)
+    .map(part=>part.charAt(0).toLocaleUpperCase()+part.slice(1)).join(' ') || 'Italy';
 }
 
 const parseNumber = (value: string | null, fallback: number): number => {
@@ -81,8 +84,9 @@ export const ExplorerPage: React.FC = () => {
   const [search,setSearch]=useState('');
   const [searchResults,setSearchResults]=useState<LocationResult[]>([]);
   const [searchError,setSearchError]=useState('');
+  const [returnPlace,setReturnPlace]=useState(()=>searchParams.get('place')||'Italy');
   const [focusPosition,setFocusPosition]=useState<[number,number]>();
-  const [focusBounds,setFocusBounds]=useState<LocationMapBounds[]>();
+  const [focusBounds,setFocusBounds]=useState<LocationMapBounds[]>(()=>restoredTerritory(searchParams.get('territory')));
   const [notice,setNotice]=useState('');
   const [initialZoom,setInitialZoom]=useState(()=>{const z=parseNumber(searchParams.get('z'),NaN);return Number.isInteger(z) && z>=0 && z<=19 ? z : undefined;});
   const [initialBounds,setInitialBounds]=useState(()=>parseViewBounds(searchParams.get('map')));
@@ -103,11 +107,11 @@ export const ExplorerPage: React.FC = () => {
   const [activitySelectionRevision,setActivitySelectionRevision]=useState(0);
   const [activityGeometry,setActivityGeometry]=useState<GeoJSON.Geometry>();
   const [activityMonth,setActivityMonth]=useState('');
+  useEffect(()=>{const next=restoredTerritory(searchParams.get('territory'));setFocusBounds(current=>JSON.stringify(current)===JSON.stringify(next)?current:next);setReturnPlace(searchParams.get('place')||'Italy');},[searchParams.get('territory'),searchParams.get('place')]);
   const showActivityMonth=useCallback((points:FireDetection[]|null,month:string)=>{setActivityPoints(points);setActivityMonth(month);if(points?.length)setFocusPosition([points[0].latitude,points[0].longitude]);},[]);
-  // Request only the actual Leaflet viewport, including shared/saved views.
+  // Camera state is separate from the pinned request territory.
   const [viewport, setViewport] = useState('');
   const [zoom, setZoom] = useState(5);
-  const [mapCenter,setMapCenter]=useState<[number,number]>(ITALY_CENTER);
   const source=searchParams.get('source')==='archive' ? 'archive' : 'online';
 
   const centerLat = parseNumber(searchParams.get('lat'), NaN);
@@ -154,28 +158,21 @@ export const ExplorerPage: React.FC = () => {
   const [west, south, east, north] = viewport.split(',').map(Number);
   const hasValidViewport = validBbox && west !== east && south < north;
 
-  const longitudeSpan = east > west ? east - west : 360 + east - west;
-  const tooWide = hasValidViewport && (longitudeSpan > 30 || north - south > 30);
-  // fitBounds includes different margins on wide monitors and portrait phones.
-  const italyOverview = west <= 6.3 && east >= 18.9 && south <= 35.3 && north >= 47.2
-    && Math.abs((east + west) / 2 - 12.6) < 1 && zoom >= 3 && zoom <= 6;
   const circleCenter = hasCircle ? L.latLng(centerLat, centerLon) : undefined;
   const bounds = circleCenter?.toBounds(radiusKm * 2020);
   const wrap = (longitude: number) => ((longitude + 180) % 360 + 360) % 360 - 180;
   const circleBox = bounds && [wrap(bounds.getWest()), Math.max(-90,bounds.getSouth()), wrap(bounds.getEast()), Math.min(90,bounds.getNorth())].map(v => v.toFixed(6)).join(',');
-  const outlinedBox = italyOverview ? ITALY_BBOX : undefined;
-  // At regional zoom, bound the FIRMS request independently of the Italy overlay.
-  const regionLat = Math.round(mapCenter[0]);
-  const regionLon = Math.round(wrap(mapCenter[1]));
-  const regionalBox = longitudeSpan > 16 || north - south > 16
-    ? [wrap(regionLon - 6), Math.max(-90, regionLat - 6), wrap(regionLon + 6), Math.min(90, regionLat + 6)].join(',')
-    : undefined;
-  const onlineBounds = circleBox || outlinedBox || regionalBox || (tooWide ? '' : viewport);
-  const queryBounds = source === 'online' ? onlineBounds : viewport;
+  const territoryBoxes=useMemo(()=>focusBounds.map(([[south,west],[north,east]])=>[west,south,east,north]),[focusBounds]);
+  const territoryKey=JSON.stringify(territoryBoxes);
+  const territoryEnvelope=[Math.min(...territoryBoxes.map(b=>b[0])),Math.min(...territoryBoxes.map(b=>b[1])),Math.max(...territoryBoxes.map(b=>b[2])),Math.max(...territoryBoxes.map(b=>b[3]))].join(',');
+  const queryBounds = circleBox || territoryEnvelope;
+  const boundsFilter=hasCircle?undefined:territoryKey;
   const insideSelectedTerritory=(latitude:number,longitude:number)=>hasCircle || !focusBounds || pointInsideBounds(latitude,longitude,focusBounds);
 
   const updateParams = useCallback((updates: Record<string, string | undefined>) => {
-    // Debounced map events must merge into the current URL, not an older render's filters.
+    // A delayed camera event must not navigate away from a different page.
+    if(window.location.pathname!=='/' && window.location.pathname!=='/explorer')return;
+    // Merge into current URL rather than an older render's filters.
     const current = new URLSearchParams(window.location.search);
     const next = new URLSearchParams(current);
     for (const [key, value] of Object.entries(updates)) {
@@ -184,6 +181,14 @@ export const ExplorerPage: React.FC = () => {
     }
     if (next.toString() !== current.toString()) setSearchParams(next);
   }, [setSearchParams]);
+
+  const selectTerritory=(boxes:LocationMapBounds[],label:string)=>{
+    setFocusBounds(boxes);setReturnPlace(label);setFocusPosition(undefined);
+    setActivityPoints(null);setActivityGeometry(undefined);setActivitySelectionRevision(v=>v+1);
+    updateParams({territory:JSON.stringify(boxes),place:label,lat:undefined,lon:undefined,radius:undefined,study:undefined,month:undefined,event:undefined,candidatePage:undefined});
+  };
+
+  useEffect(()=>{if(!searchParams.has('territory'))updateParams({territory:JSON.stringify(focusBounds),place:returnPlace});},[searchParams.get('territory'),focusBounds,returnPlace,updateParams]);
 
   const legacyArea=searchParams.get('area');
   const areaQuery=useQuery({queryKey:['explorer-saved-area',legacyArea],queryFn:()=>apiClient.getArea(legacyArea!),enabled:!!legacyArea,retry:false});
@@ -204,9 +209,10 @@ export const ExplorerPage: React.FC = () => {
     : {};
 
   const clusterQuery = useQuery({
-    queryKey: ['explorerVisualClusters', viewport, zoom, startDate, endDate, afterUtc, sensor, satellite, hasCircle, centerLat, centerLon, radiusKm],
+    queryKey: ['explorerVisualClusters', queryBounds, boundsFilter, zoom, startDate, endDate, afterUtc, sensor, satellite, hasCircle, centerLat, centerLon, radiusKm],
     queryFn: ({ signal }) => apiClient.getExplorerClusters({
-      bbox: viewport,
+      bbox: queryBounds,
+      bounds:boundsFilter,
       zoom: Math.min(22, Math.max(0, Math.round(zoom))),
       start_date: startDate || undefined,
       end_date: endDate || undefined,
@@ -217,13 +223,13 @@ export const ExplorerPage: React.FC = () => {
       ...circleParams,
     }, signal),
     enabled: fireVisible && source==='archive' && hasValidViewport && hasValidDates && !invalidCircle,
-    placeholderData:(previous,query)=>query?.queryKey[3]===startDate&&query.queryKey[4]===endDate&&query.queryKey[5]===afterUtc&&query.queryKey[6]===sensor&&query.queryKey[7]===satellite&&query.queryKey[8]===hasCircle&&query.queryKey[9]===(hasCircle?centerLat:null)&&query.queryKey[10]===(hasCircle?centerLon:null)&&query.queryKey[11]===(hasCircle?radiusKm:null)?previous:undefined,
   });
 
   const candidateQuery = useQuery({
-    queryKey: ['explorerCandidates', candidateSearch, viewport, candidatePage, startDate, endDate, afterUtc, sensor, satellite, hasCircle, centerLat, centerLon, radiusKm],
+    queryKey: ['explorerCandidates', candidateSearch, queryBounds, boundsFilter, candidatePage, startDate, endDate, afterUtc, sensor, satellite, hasCircle, centerLat, centerLon, radiusKm],
     queryFn: ({ signal }) => apiClient.getExplorerEvents({
-      bbox: hasCircle ? '-180,-90,180,90' : viewport,
+      bbox: queryBounds,
+      bounds:boundsFilter,
       start_date: startDate || undefined,
       end_date: endDate || undefined,
       sensor: aggregateSensor,
@@ -241,10 +247,9 @@ export const ExplorerPage: React.FC = () => {
   const refine=useRef(false);
   const hotspotQuery=useQuery({
     queryKey:['explorerHotspots',source,queryBounds,focusBounds,startDate,endDate,sensor,satellite,hasCircle,hasCircle ? centerLat : null,hasCircle ? centerLon : null,hasCircle ? radiusKm : null,source==='archive' ? afterUtc : null],
-    queryFn:({signal})=>source==='online' ? loadObservations({bbox:queryBounds,start_date:startDate,end_date:endDate,sensor:aggregateSensor,satellite},refine.current,signal) : apiClient.getExplorerHotspots({bbox:queryBounds,start_date:startDate || undefined,end_date:endDate || undefined,
+    queryFn:({signal})=>source==='online' ? loadSelectedObservations(hasCircle?[queryBounds.split(',').map(Number)]:territoryBoxes,{start_date:startDate,end_date:endDate,sensor:aggregateSensor,satellite},refine.current,signal) : apiClient.getExplorerHotspots({bbox:queryBounds,bounds:boundsFilter,start_date:startDate || undefined,end_date:endDate || undefined,
       sensor:aggregateSensor,satellite,after_utc:source==='archive' ? afterUtc : undefined,...(source==='archive' ? circleParams : {})},false,signal),
     enabled:(fireVisible || (source==='online' && candidatesVisible)) && supportedDates && !!queryBounds && hasValidViewport && hasValidDates && !invalidCircle && (source==='online' ? !!startDate && !!endDate : zoom>=10),
-    placeholderData:(previous,query)=>query?.queryKey[1]===source&&query.queryKey[3]===focusBounds&&query.queryKey[4]===startDate&&query.queryKey[5]===endDate&&query.queryKey[6]===sensor&&query.queryKey[7]===satellite?previous:undefined,
     retry:(attempt,error)=>attempt===0 && (error as {response?:{status?:number}}).response?.status===429,
     retryDelay:(_attempt,error)=>{
       const hint=(error as {response?:{headers?:Record<string,string>}}).response?.headers?.['retry-after'];
@@ -323,19 +328,14 @@ export const ExplorerPage: React.FC = () => {
     updateParams({ period, start: range.start, end: range.end, candidatePage: undefined, event: undefined });
   };
 
-  const firstViewport=useRef(true);
-  const onViewportChange = useCallback((bbox: string, nextZoom: number, center?:[number,number]) => {
+  const onViewportChange = useCallback((bbox:string,nextZoom:number)=>{
     clearTimeout(timer.current);
-    const covered=source==='online' && hasValidDates && supportedDates && hasLocalObservations({bbox,start_date:startDate,end_date:endDate,sensor:aggregateSensor,satellite});
-    const delay=firstViewport.current || covered ? 0 : 350;
     timer.current=setTimeout(()=>{
-      firstViewport.current=false;
-      setViewport(current=>current===bbox ? current : bbox);
-      setZoom(current=>current===nextZoom ? current : nextZoom);
-      if(center) setMapCenter(current=>current[0]===center[0]&&current[1]===center[1]?current:center);
+      setViewport(current=>current===bbox?current:bbox);
+      setZoom(current=>current===nextZoom?current:nextZoom);
       updateParams({map:bbox,z:String(nextZoom)});
-    },delay);
-  }, [updateParams,source,hasValidDates,supportedDates,startDate,endDate,aggregateSensor,satellite]);
+    },150);
+  },[updateParams]);
   const shiftPeriod=(direction:number)=>{
     const start=startDate || endDate || cutoff;
     const end=endDate || start;
@@ -347,7 +347,7 @@ export const ExplorerPage: React.FC = () => {
   const findLocation=async(event:React.FormEvent)=>{
     event.preventDefault();setSearchError('');
     const coords=search.split(',').map(Number);
-    if(coords.length===2 && coords.every(Number.isFinite) && Math.abs(coords[0])<=85 && Math.abs(coords[1])<=180){setFocusBounds(undefined);setFocusPosition([coords[0],coords[1]]);return;}
+    if(coords.length===2 && coords.every(Number.isFinite) && Math.abs(coords[0])<=85 && Math.abs(coords[1])<=180){selectTerritory(locationBounds({name:search,lat:coords[0],lon:coords[1]}),searchPlaceLabel(search));return;}
     try{const result=await apiClient.searchLocations(search);setSearchResults(result.results);if(!result.results.length)setSearchError('No location found. Try latitude, longitude.');}
     catch{setSearchError('Search unavailable. Enter latitude, longitude.');}
   };
@@ -369,13 +369,13 @@ export const ExplorerPage: React.FC = () => {
         <Link className="explorer-tool" to={"/datasets?returnTo="+encodeURIComponent(returnTo)}>Data &amp; Sources</Link>
         <button className="explorer-tool" aria-expanded={layersOpen} aria-controls="map-layer-manager" onClick={()=>{setLayersOpen(v=>!v);if(window.innerWidth<1024)setSidebarOpen(false);}}><Layers3 size={16} aria-hidden="true" /> Layers</button>
         <button className="explorer-tool" onClick={()=>{localStorage.setItem('afterfire-view',window.location.search);setNotice('View saved on this device');}}>Save view</button>
-        <button className="explorer-tool" onClick={()=>{const saved=localStorage.getItem('afterfire-view');if(saved){clearTimeout(timer.current);const params=new URLSearchParams(saved);setInitialBounds(parseViewBounds(params.get('map')));const z=parseNumber(params.get('z'),5);setInitialZoom(Math.max(0,Math.min(19,z)));setSearchParams(params);setViewGeneration(v=>v+1);setNotice('Saved view restored');}else setNotice('No saved view yet');}}>Restore</button>
+        <button className="explorer-tool" onClick={()=>{const saved=localStorage.getItem('afterfire-view');if(saved){clearTimeout(timer.current);const params=new URLSearchParams(saved);setFocusBounds(restoredTerritory(params.get('territory')));setReturnPlace(params.get('place')||'Italy');setInitialBounds(parseViewBounds(params.get('map')));const z=parseNumber(params.get('z'),5);setInitialZoom(Math.max(0,Math.min(19,z)));setSearchParams(params);setViewGeneration(v=>v+1);setNotice('Saved view restored');}else setNotice('No saved view yet');}}>Restore</button>
         <button className="explorer-tool" onClick={()=>{navigator.clipboard.writeText(window.location.href).then(()=>setNotice('Share link copied')).catch(()=>setNotice('Copy the address bar to share this view'));}}>Share</button>
       </header>
       {notice && <div className="explorer-notice"><span role="status">{notice}</span><button aria-label="Dismiss message" onClick={()=>setNotice('')}><X size={16} aria-hidden="true" /></button></div>}
       {legacyArea&&<p className="px-3 text-xs">{areaQuery.data?<>Saved territory: {areaQuery.data.name} · <Link className="text-emerald-300 underline" to={'/territory/'+encodeURIComponent(legacyArea)}>Open preserved area report</Link></>:areaQuery.isError?'Saved area unavailable; its identifier remains in the URL.':'Loading saved territory…'}</p>}
       <main className="explorer-workspace">
-        {(searchResults.length>0 || searchError) && <div className="explorer-search-results">{searchResults.map((r,i)=><button key={i} onClick={()=>{setFocusPosition(undefined);setFocusBounds(paddedLocationBounds(r));setSearchResults([]);}}>{r.name}</button>)}{searchError}<small>Search © OpenStreetMap contributors / Photon (ODbL) · country extents © Natural Earth</small></div>}
+        {(searchResults.length>0 || searchError) && <div className="explorer-search-results">{searchResults.map((r,i)=><button key={i} onClick={()=>{selectTerritory(locationBounds(r),searchPlaceLabel(search||r.short_name||r.name));setSearchResults([]);}}>{r.name}</button>)}{searchError}<small>Search © OpenStreetMap contributors / Photon (ODbL) · country extents © Natural Earth</small></div>}
         <aside id="fire-data-filters" aria-label="Fire data filters" className={`explorer-sidebar ${sidebarOpen ? 'is-open' : ''}`}>
           <section>
             <details open><summary>Area, dates and sensor filters</summary>
@@ -400,7 +400,7 @@ export const ExplorerPage: React.FC = () => {
               <label className="block text-xs">Data source<select aria-label="Fire data source" value={source} onChange={e=>{const range=rangeForPeriod('7d');updateParams({source:e.target.value,...(e.target.value==='online' ? {period:'7d',start:range.start,end:range.end,lat:undefined,lon:undefined,radius:undefined} : {}),candidatePage:undefined,event:undefined});setDrawingCircle(false);}} className="mt-1 w-full rounded bg-dark-800 p-2"><option value="archive">Imported historical archive</option><option value="online">NASA FIRMS on demand</option></select></label>
               <p className="text-[11px] text-slate-400">NASA FIRMS on demand supports bounded areas and up to 7 selected days, subject to provider coverage and a backend key. The optional local archive may be empty; missing records do not establish absence of fire.</p>
 
-              <p className="explorer-area-mode">{hasCircle ? 'Search circle' : 'Map viewport'} / {selectedPeriod === 'all' ? 'All available dates' : 'Filtered dates'}</p>
+              <p className="explorer-area-mode">{hasCircle ? 'Search circle' : returnPlace+' · selected territory'} / {selectedPeriod === 'all' ? 'All available dates' : 'Filtered dates'}</p>
               <div className="flex items-center justify-between gap-2">
                 <h2 className="text-xs font-semibold text-slate-200">Time period</h2>
                 <span className="text-[10px] text-slate-500">
@@ -547,7 +547,7 @@ export const ExplorerPage: React.FC = () => {
                 </p>
               )}
               </>
-              {source==='online' && <p className="text-xs text-slate-400">{hasCircle ? 'Shows observations and candidate centers inside the circle. Candidate totals describe the whole grouping.' : focusBounds ? 'Results are restricted to the selected territory bounds.' : outlinedBox ? 'Query area: Italy bounding box.' : regionalBox ? 'Query area: a 12° window around the map centre.' : 'Query area: visible map viewport.'}</p>}
+              <p className="text-xs text-slate-400">Hotspots are requested only inside the selected bounding box{hasCircle?' and filtered to the circle':''}. Moving the map does not change this selection.</p>
             </div>
             </details>
           </section>
@@ -564,7 +564,7 @@ export const ExplorerPage: React.FC = () => {
             </div>
             <CandidateSearch value={candidateSearch} onChange={q=>updateParams({q:q || undefined,candidatePage:undefined})}/>
             {(source==='online' ? hotspotQuery.isFetching : candidateQuery.isFetching) && <p role="status" className="py-3 text-xs text-slate-400">Searching candidates…</p>}
-            {(source==='online' ? hotspotQuery.isError : candidateQuery.isError) && <p role="alert" className="py-3 text-sm text-slate-300">{firmsKeyMissing ? 'Online candidates require a FIRMS key.' : 'Could not load candidate events. Narrow the date range or viewport and retry.'}</p>}
+            {(source==='online' ? hotspotQuery.isError : candidateQuery.isError) && <p role="alert" className="py-3 text-sm text-slate-300">{firmsKeyMissing ? 'Online candidates require a FIRMS key.' : 'Could not load candidate events. Narrow the date range or selected territory and retry.'}</p>}
             {candidateData?.truncated && (
               <p role="status" className="mt-3 rounded border border-amber-800 bg-amber-950/40 p-2 text-xs text-amber-200">
                 The candidate index is incomplete. Inspect Data Coverage before interpreting these results.
@@ -647,7 +647,7 @@ export const ExplorerPage: React.FC = () => {
               </span>
             </div>
             {clusterQuery.isFetching && <p role="status" className="py-2 text-xs text-slate-400">Updating visible map…</p>}
-            {clusterQuery.isError && <p role="alert" className="py-2 text-xs text-red-300">Could not load visual aggregates for this viewport.</p>}
+            {clusterQuery.isError && <p role="alert" className="py-2 text-xs text-red-300">Could not load visual aggregates for the selected territory.</p>}
             {mapCoverage && (
               <p role="status" className={`mt-2 text-xs ${mapCoverage.status === 'observations_present' ? 'text-emerald-300' : 'text-amber-300'}`}>
                 {mapCoverage.detail || mapCoverage.message || mapCoverage.status}
@@ -687,7 +687,6 @@ export const ExplorerPage: React.FC = () => {
             <p className="text-[11px] text-emerald-200">Area filter: {hasCircle ? 'search circle' : focusBounds ? 'selected territory' : 'visible viewport'}</p>
           </div>}
           <div className="explorer-map-status" aria-label="Observation query status" hidden={!!activityPoints}>
-          {source === 'online' && !hasCircle && tooWide && !outlinedBox && !regionalBox && <p role="status" className="explorer-status-message">Zoom in to search a region up to 30° wide and high.</p>}
           {hotspotQuery.isFetching && <p role="status" className="explorer-status-message">{hotspotQuery.failureCount ? 'Retrying the observation request…' : 'Loading satellite observations…'}</p>}
           {hotspotQuery.isError && <div className="explorer-status-message">
             <p role="alert">{firmsKeyMissing ? 'Live observations require a NASA FIRMS key.' : observationErrorText || 'Could not load hotspot observations.'}</p>
@@ -698,7 +697,7 @@ export const ExplorerPage: React.FC = () => {
           </div>}
           {hotspotQuery.data?.truncated && <div role="status" className="explorer-status-message">Partial acquisition. <button className="underline" disabled={hotspotQuery.isFetching} onClick={async()=>{refine.current=true;try{await hotspotQuery.refetch();}finally{refine.current=false;}}}>Load more of this area</button></div>}
           {source==='online' && hotspotQuery.data && hasValidDates && <details className="explorer-status-message">
-            <summary>{detections.length} online observations in {hasCircle ? 'the search circle' : focusBounds ? 'the selected territory' : outlinedBox ? 'Italy' : regionalBox ? 'the regional window' : 'the visible area'}</summary>
+            <summary>{detections.length} online observations in {hasCircle ? 'the search circle' : 'the selected territory'}</summary>
             {hotspotQuery.data.coverage?.state === 'cached' && <p>Results loaded from cache.</p>}
             {hotspotQuery.data.coverage?.message.includes('partially') && <p>Partial coverage.</p>}
             <p>{hotspotQuery.data.coverage?.message}. Candidate totals describe their original acquisition window.</p>
@@ -727,14 +726,13 @@ export const ExplorerPage: React.FC = () => {
             contextDate={endDate || dateOnly(new Date())}
             visualClusters={!activityPoints && fireVisible && source==='archive' && hasValidDates && !invalidCircle ? visibleClusters : []}
             focusedEvent={!activityPoints && candidatesVisible && selectedEventId ? (focusedEvent?.id === selectedEventId ? focusedEvent : eventCandidates.find((event) => event.id === selectedEventId)) : undefined}
-            onReturnToItaly={() => {
-              setFocusBounds(undefined);
-              setFocusPosition(undefined);
+            onReturnToPlace={() => {
               setFocusedEvent(undefined);
               setDrawingCircle(false);
               updateParams({ lat: undefined, lon: undefined, radius: undefined, event: undefined, candidatePage: undefined });
             }}
-            showReturnToItaly
+            showReturnToPlace
+            returnPlace={returnPlace}
             visibleLayers={visibleLayers}
             selectedEventId={selectedEventId}
             returnTo={returnTo}
@@ -772,7 +770,7 @@ export const ExplorerPage: React.FC = () => {
             </details>
           </div>
         </section>
-          {activityOpen&&<React.Suspense fallback={<div className="absolute left-3 top-3 z-[1100] rounded bg-slate-900 p-3 text-sm" role="status">Loading fire activity calendar…</div>}><FireActivityPanel key={activitySelectionRevision} onArea={area=>{setFocusBounds(undefined);setInitialZoom(undefined);setActivityGeometry(area.geometry);setFocusPosition(undefined);setInitialBounds(parseViewBounds(area.bbox.join(',')));setViewGeneration(v=>v+1);updateParams({map:area.bbox.join(','),italyOutline:'off',lat:area.circle?String(area.circle.lat):undefined,lon:area.circle?String(area.circle.lon):undefined,radius:area.circle?String(area.circle.radius_km):undefined});}} bbox={circleBox||outlinedBox||regionalBox||viewport} circle={hasCircle ? {lat:centerLat,lon:centerLon,radius_km:radiusKm} : undefined} onClose={()=>setActivityOpen(false)} onMonth={showActivityMonth}
+          {activityOpen&&<React.Suspense fallback={<div className="absolute left-3 top-3 z-[1100] rounded bg-slate-900 p-3 text-sm" role="status">Loading fire activity calendar…</div>}><FireActivityPanel key={activitySelectionRevision} onArea={area=>{const boxes:LocationMapBounds[]=[[[area.bbox[1],area.bbox[0]],[area.bbox[3],area.bbox[2]]]];const place=JSON.stringify(boxes)===JSON.stringify(focusBounds)?returnPlace:'Study area';setReturnPlace(place);setFocusBounds(current=>JSON.stringify(current)===JSON.stringify(boxes)?current:boxes);setInitialZoom(undefined);setActivityGeometry(area.geometry);setFocusPosition(undefined);setInitialBounds(parseViewBounds(area.bbox.join(',')));setViewGeneration(v=>v+1);updateParams({territory:JSON.stringify(boxes),place,map:area.bbox.join(','),italyOutline:'off',lat:area.circle?String(area.circle.lat):undefined,lon:area.circle?String(area.circle.lon):undefined,radius:area.circle?String(area.circle.radius_km):undefined});}} bbox={queryBounds} circle={hasCircle ? {lat:centerLat,lon:centerLon,radius_km:radiusKm} : undefined} onClose={()=>setActivityOpen(false)} onMonth={showActivityMonth}
             onCandidates={(start,end,area)=>{setActivityPoints(null);setFocusPosition(undefined);setInitialBounds(parseViewBounds(area.join(',')));setViewGeneration(v=>v+1);updateParams({start,end:end>cutoff?cutoff:end,source:'online',period:'custom',candidates:'on',lat:undefined,lon:undefined,radius:undefined,italyOutline:'off',map:area.join(',')});}}/></React.Suspense>}
       </main>
       <div className="explorer-timeline" aria-label="Fire observation timeline">

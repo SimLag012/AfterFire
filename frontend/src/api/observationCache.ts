@@ -5,7 +5,7 @@ import type { EventMapItem, FireDetection } from '../types';
 
 type Result = Awaited<ReturnType<typeof apiClient.getExplorerHotspots>>;
 type Box = [number, number, number, number];
-interface Filters { bbox:string; start_date:string; end_date:string; sensor?:string; satellite?:string }
+interface Filters { bbox:string; start_date:string; end_date:string; sensor?:string; satellite?:string; strict_bounds?:boolean }
 interface Entry { key:string; filters:Filters; data:Result; expires:number; size:number }
 interface Window { box:Box; start:string; end:string; platforms:string[] }
 const entries = new Map<string,Entry>();
@@ -94,11 +94,11 @@ function missing(f:Filters, rows:Entry[]) {
   }
   return windows;
 }
-async function acquire(f:Filters,db:IDBDatabase|null){
+async function acquire(f:Filters,db:IDBDatabase|null,signal?:AbortSignal){
   const key=JSON.stringify([f.bbox,f.start_date,f.end_date,f.sensor,f.satellite]);
   const existing=pending.get(key);
   if(existing) return existing;
-  const work=apiClient.getExplorerHotspots({...f},true).catch(error=>{
+  const work=apiClient.getExplorerHotspots({...f,strict_bounds:undefined},true,signal).catch(error=>{
     if(!axios.isAxiosError(error) || error.response?.status!==413) throw error;
     return {detections:[],events:[],truncated:true,coverage:{state:'partial',message:'This region exceeded the provider transfer limit. Load smaller regions progressively.'}} as Result;
   }).then(data=>{
@@ -162,11 +162,11 @@ export async function loadObservations(f:Filters,refine=false,signal?:AbortSigna
       if(identical(box)) break;
     }
     // One small margin on a new finely zoomed region anticipates nearby pans.
-    if(!rows.length && box[2]-box[0]<2 && box[3]-box[1]<2){
+    if(!f.strict_bounds && !rows.length && box[2]-box[0]<2 && box[3]-box[1]<2){
       const x=(box[2]-box[0])*0.08, y=(box[3]-box[1])*0.08;
       box=[Math.max(-180,box[0]-x),Math.max(-90,box[1]-y),Math.min(180,box[2]+x),Math.min(90,box[3]+y)];
     }
-    try {await acquire({...f,bbox:box.join(','),sensor,satellite,start_date:gap.start,end_date:gap.end},db);}
+    try {await acquire({...f,bbox:box.join(','),sensor,satellite,start_date:gap.start,end_date:gap.end},db,signal);}
     catch(error){if(!requests && !rows.length) throw error; return {...snapshot(f,rows,true,requests),coverage:{state:'partial',message:'Some windows could not be updated. Loaded observations are retained. Retry after the provider is available.'}};}
     requests++;rows=current();
   }

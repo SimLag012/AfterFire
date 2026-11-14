@@ -93,12 +93,12 @@ export const apiClient = {
     const res = await api.get(online ? '/global/hotspots' : '/explorer/hotspots', { params, signal, timeout: online ? 85000 : 30000 });
     return res.data;
   },
-  searchLocations: async (q: string): Promise<{results: {name:string;lat:number;lon:number;bbox?:[number,number,number,number];bounds?:[number,number,number,number][]}[];attribution:string}> => {
+  searchLocations: async (q: string): Promise<{results: {name:string;short_name?:string;lat:number;lon:number;bbox?:[number,number,number,number];bounds?:[number,number,number,number][]}[];attribution:string}> => {
     const res = await api.get('/explorer/search', {params:{q}}); return res.data;
   },
 
   getExplorerClusters: async (params: {
-    bbox: string;
+    bbox: string; bounds?: string;
     zoom: number;
     scope?: 'all' | 'italy';
     start_date?: string;
@@ -116,7 +116,7 @@ export const apiClient = {
 
   getExplorerEvents: async (params: {
     q?: string;
-    bbox: string; start_date?: string; end_date?: string; sensor?: 'MODIS' | 'VIIRS'; satellite?: string; after_utc?: string;
+    bbox: string; bounds?: string; start_date?: string; end_date?: string; sensor?: 'MODIS' | 'VIIRS'; satellite?: string; after_utc?: string;
     scope?: 'all' | 'italy'; center_lat?: number; center_lon?: number; radius_km?: number;
     limit: number; offset: number;
   }, signal?: AbortSignal): Promise<EventSearchResponse> => {
