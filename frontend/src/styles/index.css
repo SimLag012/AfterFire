@@ -145,6 +145,7 @@
   background: var(--color-paper-2);
   border-bottom: 1px solid var(--color-rule);
 }
+.explorer-brand { margin-right: 12px; }
 .explorer-toolbar h1 { margin-right: 12px; flex: 0 0 auto; font-size: 1.125rem; font-weight: 630; }
 .explorer-tool, .explorer-timeline button, .explorer-notice button, .explorer-panel-title button {
   display: inline-flex;
@@ -271,8 +272,6 @@
 
 /* The calendar is a first-class sibling of the map, rather than a map overlay. */
 .explorer-workspace > .fire-activity-panel {position:relative;inset:auto;flex:0 0 auto;width:430px;max-height:none;border-radius:0;box-shadow:none;resize:horizontal;min-width:350px;max-width:52vw;order:2;z-index:1100;}
-.explorer-sources{position:fixed;right:16px;top:76px;z-index:1600;padding:20px;width:min(460px,calc(100vw - 32px));max-height:80dvh;overflow:auto;background:var(--color-paper-2);border:1px solid var(--color-rule-strong);border-radius:0;font-size:13px;box-shadow:0 10px 40px #0009}
-.explorer-sources h2{font-size:20px;font-weight:700}.explorer-sources p{margin:12px 0}.explorer-sources button{float:right}.explorer-sources a{color:var(--color-accent-2);text-decoration:underline}
 @media(max-width:1023px){.explorer-workspace > .fire-activity-panel{position:absolute;inset:auto 0 0;width:100%;min-width:0;max-width:100%;max-height:66%;resize:none;border-radius:14px 14px 0 0;box-shadow:0 -8px 35px #0009}.afterfire-explorer{min-height:0}.explorer-toolbar .explorer-tool[aria-expanded]{min-height:38px}.explorer-map{min-height:280px}}
 @media print {
   .app-header, .app-footer { display: none; }

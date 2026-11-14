@@ -4,13 +4,14 @@ import { QueryClient, QueryClientProvider, useQuery } from '@tanstack/react-quer
 import { Navbar } from '../components/layout/Navbar';
 import { recoveryApi } from '../api/recovery';
 import { Footer } from '../components/layout/Footer';
+const DatasetsPage = lazy(() => import('../pages/DatasetsPage').then(m => ({default: m.DatasetsPage})));
 const HomePage = lazy(() => import('../pages/HomePage').then(m => ({default: m.HomePage})));
 const ExplorerPage = lazy(() => import('../pages/ExplorerPage').then(m => ({default: m.ExplorerPage})));
 const TerritoryPage = lazy(() => import('../pages/TerritoryPage').then(m => ({default: m.TerritoryPage})));
 const ReportPage = lazy(() => import('../pages/ReportPage').then(m => ({default: m.ReportPage})));
 const EventAnalysisPage = lazy(() => import('../pages/EventAnalysisPage').then(m => ({default: m.EventAnalysisPage})));
 
-function LegacyExplorerRedirect({reburn=false,sources=false}:{reburn?:boolean;sources?:boolean}) {
+function LegacyExplorerRedirect({reburn=false}:{reburn?:boolean}) {
   const location=useLocation(); const {eventId,areaId}=useParams();
   const params=new URLSearchParams(location.search);
   const requested=eventId || params.get('event') || params.get('eventId');
@@ -19,9 +20,16 @@ function LegacyExplorerRedirect({reburn=false,sources=false}:{reburn?:boolean;so
   const event=requested || assessments.data?.find(a=>saved.includes(a.assessment_id))?.event_id;
   if(!requested&&saved.length>0&&assessments.isPending)return <p role="status" className="p-8">Opening saved scientific comparison…</p>;
   if(areaId) params.set('area',areaId);
-  if(sources) params.set('sources','on');
   if(reburn) params.set('view','reburn');
   return <Navigate replace to={(event ? '/events/'+encodeURIComponent(event) : '/explorer')+'?'+params.toString()+(reburn&&event?'#reburn':'')}/>;
+}
+
+function ContextNavbar(){const {pathname}=useLocation();return pathname==='/'||pathname==='/explorer'?null:<Navbar/>;}
+
+function ExplorerRoute(){
+  const {search}=useLocation();const params=new URLSearchParams(search);
+  if(params.get('sources')==='on'){params.delete('sources');const back='/explorer'+(params.size?'?'+params.toString():'');return <Navigate replace to={'/datasets?returnTo='+encodeURIComponent(back)}/>;}
+  return <ExplorerPage/>;
 }
 
 function ContextFooter(){const {pathname}=useLocation();return pathname==='/'||pathname==='/explorer'?null:<Footer/>;}
@@ -42,12 +50,12 @@ export const App: React.FC = () => {
       <BrowserRouter>
         <div className="app-shell min-h-screen flex flex-col bg-dark-950 text-slate-100 font-sans">
           <div className="app-viewport">
-          <Navbar />
+          <ContextNavbar />
           <div className="app-route">
             <Suspense fallback={<p role="status" aria-live="polite" className="p-8">Loading page…</p>}><Routes>
-              <Route path="/" element={<ExplorerPage />} />
+              <Route path="/" element={<ExplorerRoute />} />
               <Route path="/about" element={<HomePage />} />
-              <Route path="/explorer" element={<ExplorerPage />} />
+              <Route path="/explorer" element={<ExplorerRoute />} />
               <Route path="/events/:eventId" element={<EventAnalysisPage />} />
               <Route path="/territory/:areaId" element={<TerritoryPage />} />
               <Route path="/recovery" element={<LegacyExplorerRedirect />} />
@@ -57,7 +65,7 @@ export const App: React.FC = () => {
               <Route path="/recurrence/:areaId" element={<LegacyExplorerRedirect reburn />} />
               <Route path="/compare" element={<LegacyExplorerRedirect />} />
               <Route path="/report/:areaId" element={<ReportPage />} />
-              <Route path="/datasets" element={<LegacyExplorerRedirect sources />} />
+              <Route path="/datasets" element={<DatasetsPage />} />
               <Route path="*" element={<Navigate to="/" replace />} />
             </Routes></Suspense>
           </div>

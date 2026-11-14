@@ -60,7 +60,7 @@ export const DatasetsPage: React.FC = () => {
     <main className="field-page">
       <header className="field-header split">
         <div>
-          <h1>Satellite data sources</h1>
+          <h1>Data &amp; Sources</h1>
           <p>Product versions, observation cadence and coverage used by AfterFire.</p>
         </div>
         <a className="field-link" href="#csv-import">Import a FIRMS CSV</a>

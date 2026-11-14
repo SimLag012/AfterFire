@@ -4,7 +4,7 @@ import L from 'leaflet';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Link, useLocation, useSearchParams } from 'react-router-dom';
-import { CalendarDays, ChevronLeft, ChevronRight, CircleDot, Crosshair, Layers3, RotateCcw, Search, SlidersHorizontal, X } from 'lucide-react';
+import { Flame, CalendarDays, ChevronLeft, ChevronRight, CircleDot, Crosshair, Layers3, RotateCcw, Search, SlidersHorizontal, X } from 'lucide-react';
 import { hasLocalObservations, loadObservations } from '../api/observationCache';
 import { satelliteApi } from '../api/satellite';
 import { apiClient } from '../api/client';
@@ -103,8 +103,6 @@ export const ExplorerPage: React.FC = () => {
   const [activitySelectionRevision,setActivitySelectionRevision]=useState(0);
   const [activityGeometry,setActivityGeometry]=useState<GeoJSON.Geometry>();
   const [activityMonth,setActivityMonth]=useState('');
-  const [sourcesOpen,setSourcesOpen]=useState(searchParams.get('sources')==='on');
-  useEffect(()=>{if(searchParams.get('sources')==='on')setSourcesOpen(true);},[searchParams.get('sources')]);
   const showActivityMonth=useCallback((points:FireDetection[]|null,month:string)=>{setActivityPoints(points);setActivityMonth(month);if(points?.length)setFocusPosition([points[0].latitude,points[0].longitude]);},[]);
   // Request only the actual Leaflet viewport, including shared/saved views.
   const [viewport, setViewport] = useState('');
@@ -358,7 +356,8 @@ export const ExplorerPage: React.FC = () => {
   return (
     <div className="afterfire-explorer flex flex-col bg-dark-950 text-slate-100">
       <header className="explorer-toolbar">
-        <h1>Fire explorer</h1>
+        <Link to="/explorer" className="app-brand explorer-brand" aria-label="AfterFire Explorer"><Flame size={20} aria-hidden="true"/><span>AfterFire</span></Link>
+        <h1 className="sr-only">Fire explorer</h1>
         <button aria-expanded={sidebarOpen} aria-controls="fire-data-filters" onClick={()=>setSidebarOpen(v=>!v)} className="explorer-tool">
           <SlidersHorizontal size={16} aria-hidden="true" /> <span>Fire data</span>
         </button>
@@ -367,14 +366,13 @@ export const ExplorerPage: React.FC = () => {
           <button type="submit" aria-label="Search location"><Search size={18} aria-hidden="true" /></button>
         </form>
         <button className="explorer-tool" aria-expanded={activityOpen} onClick={()=>{setActivityOpen(v=>!v);if(window.innerWidth<1024)setSidebarOpen(false);}}><CalendarDays className="inline h-4 w-4"/> Fire Activity Calendar</button>
-        <button className="explorer-tool" onClick={()=>setSourcesOpen(v=>!v)} aria-expanded={sourcesOpen}>Data &amp; Sources</button>
+        <Link className="explorer-tool" to={"/datasets?returnTo="+encodeURIComponent(returnTo)}>Data &amp; Sources</Link>
         <button className="explorer-tool" aria-expanded={layersOpen} aria-controls="map-layer-manager" onClick={()=>{setLayersOpen(v=>!v);if(window.innerWidth<1024)setSidebarOpen(false);}}><Layers3 size={16} aria-hidden="true" /> Layers</button>
         <button className="explorer-tool" onClick={()=>{localStorage.setItem('afterfire-view',window.location.search);setNotice('View saved on this device');}}>Save view</button>
         <button className="explorer-tool" onClick={()=>{const saved=localStorage.getItem('afterfire-view');if(saved){clearTimeout(timer.current);const params=new URLSearchParams(saved);setInitialBounds(parseViewBounds(params.get('map')));const z=parseNumber(params.get('z'),5);setInitialZoom(Math.max(0,Math.min(19,z)));setSearchParams(params);setViewGeneration(v=>v+1);setNotice('Saved view restored');}else setNotice('No saved view yet');}}>Restore</button>
         <button className="explorer-tool" onClick={()=>{navigator.clipboard.writeText(window.location.href).then(()=>setNotice('Share link copied')).catch(()=>setNotice('Copy the address bar to share this view'));}}>Share</button>
       </header>
       {notice && <div className="explorer-notice"><span role="status">{notice}</span><button aria-label="Dismiss message" onClick={()=>setNotice('')}><X size={16} aria-hidden="true" /></button></div>}
-      {sourcesOpen&&<section role="dialog" aria-label="Data & Sources" className="explorer-sources"><button onClick={()=>setSourcesOpen(false)} aria-label="Close data sources">✕</button><h2>Data &amp; Sources</h2><p>Original hotspots: NASA LANCE FIRMS MODIS / VIIRS. Historical archive completeness does not establish clear-sky coverage or physical fire counts.</p><p>Reference activity: Aqua daytime occupied 10 km equal-area cell-days. Conversion domains and uncertainty are reported with each calendar result. Unsupported missions remain original observations.</p><p>Event vegetation: existing MOD13Q1, MCD64A1, HLS, Sentinel-2 and Landsat analyses, with their own QA and provenance. Fire activity never recalculates Recovery.</p><a href="https://firms.modaps.eosdis.nasa.gov/api/area/" target="_blank" rel="noreferrer">NASA FIRMS API &amp; quota policy ↗</a><p>Availability, actual acquired periods, provider status and CSV/JSON downloads are in Fire Activity Calendar.</p></section>}
       {legacyArea&&<p className="px-3 text-xs">{areaQuery.data?<>Saved territory: {areaQuery.data.name} · <Link className="text-emerald-300 underline" to={'/territory/'+encodeURIComponent(legacyArea)}>Open preserved area report</Link></>:areaQuery.isError?'Saved area unavailable; its identifier remains in the URL.':'Loading saved territory…'}</p>}
       <main className="explorer-workspace">
         {(searchResults.length>0 || searchError) && <div className="explorer-search-results">{searchResults.map((r,i)=><button key={i} onClick={()=>{setFocusPosition(undefined);setFocusBounds(paddedLocationBounds(r));setSearchResults([]);}}>{r.name}</button>)}{searchError}<small>Search © OpenStreetMap contributors / Photon (ODbL) · country extents © Natural Earth</small></div>}

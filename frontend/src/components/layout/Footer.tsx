@@ -24,7 +24,7 @@ export const Footer: React.FC = () => {
             <ul className="space-y-2 text-xs">
               <li><Link to="/explorer" className="hover:text-white transition-colors">Interactive Explorer</Link></li>
               <li><Link to="/about" className="hover:text-white transition-colors">About AfterFire & historical cases</Link></li>
-              <li><Link to="/explorer?sources=on" className="hover:text-white transition-colors">NASA Datasets & Status</Link></li>
+              <li><Link to="/datasets" className="hover:text-white transition-colors">NASA Datasets & Status</Link></li>
             </ul>
           </div>
 

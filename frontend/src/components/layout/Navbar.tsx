@@ -6,6 +6,7 @@ import { apiClient } from '../../api/client';
 
 const destinations = [
   { to: '/explorer', label: 'Explorer' },
+  { to: '/datasets', label: 'Data & Sources' },
 ];
 
 const firmsLabels = {
@@ -17,7 +18,9 @@ const firmsLabels = {
 };
 
 export const Navbar: React.FC = () => {
-  const { pathname } = useLocation();
+  const { pathname, search } = useLocation();
+  const requestedReturn=new URLSearchParams(search).get('returnTo');
+  const explorerReturn=requestedReturn && /^\/explorer(?:\?|$)/.test(requestedReturn) ? requestedReturn : '/explorer';
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { data: health, isError } = useQuery({
     queryKey: ['systemHealth'],
@@ -43,7 +46,7 @@ export const Navbar: React.FC = () => {
         </button>
         <div id="app-destinations" className={`app-destinations${mobileMenuOpen ? ' is-open' : ''}`}>
           {destinations.map(({ to, label }) => (
-            <Link key={to} to={to} aria-current={current === to ? 'page' : undefined}
+            <Link key={to} to={to==='/explorer'?explorerReturn:to} aria-current={current === to ? 'page' : undefined}
               onClick={() => setMobileMenuOpen(false)}>{label}</Link>
           ))}
         </div>
