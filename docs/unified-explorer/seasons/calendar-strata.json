@@ -1,0 +1,380 @@
+{
+  "scope": "Exploratory calendar-stratum fits from retained authentic NASA samples only.\n\nKeeps the original training/interval/geographic/temporal folds and all numeric\nacceptance gates. This experiment follows the pooled test result: its holdouts\nare reused, so it is NOT an independent confirmatory model release. No NASA\nrequests, database writes, or production artifact installation.\n",
+  "strata": [
+    {
+      "calendar_months": [
+        12,
+        1,
+        2
+      ],
+      "sample_n": 72,
+      "candidate": {
+        "version": "fire-activity-1.0.0",
+        "status": "validation_failed",
+        "units": "MODIS Aqua-equivalent daytime occupied 10 km equal-area cell-days",
+        "reference": "Aqua",
+        "input_satellite": "SNPP",
+        "processing": "SP",
+        "daynight": "D",
+        "estimator": "log_linear",
+        "coefficients": [
+          0.0,
+          0.8803993640980775
+        ],
+        "cv_mae": {
+          "identity": 21.66666666666667,
+          "log_linear": 4.466706485167549
+        },
+        "validation": {
+          "temporal": {
+            "n": 12,
+            "mae": 9.676624276003395,
+            "bias": -3.342234179835113,
+            "rmse": 20.93340432400749,
+            "relative_bias": -0.29930455341806983,
+            "identity_mae": 10.416666666666666,
+            "interval_coverage": 0.6666666666666666
+          },
+          "geographic": {
+            "n": 24,
+            "mae": 16.4699769907872,
+            "bias": 16.4699769907872,
+            "rmse": 19.608132282888622,
+            "relative_bias": 1.7725535774838241,
+            "identity_mae": 26.708333333333332,
+            "interval_coverage": 0.3333333333333333
+          }
+        },
+        "log_residual_q80": 0.6100735825712462,
+        "interval_n": 12,
+        "training_n": 24,
+        "training_years": [
+          2019,
+          2020,
+          2021,
+          2022
+        ],
+        "geographic_holdout": [
+          "north_america",
+          "southern_africa"
+        ],
+        "domain_viirs_density": [
+          0.0,
+          251.90111341573325
+        ],
+        "domain_area_km2": [
+          37923.83031741626,
+          48357.252006537106
+        ],
+        "density_normalization_km2": 10000,
+        "domain_calendar_months": [],
+        "domain_years": [
+          2019,
+          2024
+        ],
+        "samples_sha256": "9fc98e14583f59f3b449a5bd83e799fd08fc0ebf184d2fe46a75321fa6056ad2",
+        "limitations": [
+          "Conditional on detected activity and archive completeness; clear-sky opportunities unavailable.",
+          "Conformal interval assumes exchangeability; spatial/temporal dependence may weaken coverage.",
+          "Aqua orbital drift and product changes are not explicitly corrected.",
+          "Only tested 2-degree rectangular supports. No validated local, polygon, Terra-era or recent mission bridge.",
+          "No land-cover/biome attribution was available; geographic holdouts do not prove biome transfer."
+        ],
+        "pooled_validation_status": "validation_failed",
+        "seasonal_validation": {
+          "1": {
+            "passed": false,
+            "tests": {
+              "temporal": {
+                "n": 4,
+                "mae": 2.642457809744761,
+                "rmse": 4.17471833412054,
+                "bias": -1.427518404029447,
+                "relative_bias": -0.23791973400490785,
+                "identity_mae": 1.75,
+                "interval_coverage": 1.0
+              },
+              "geographic": {
+                "n": 12,
+                "mae": 11.108910927395343,
+                "rmse": 11.965439143177196,
+                "bias": 11.108910927395343,
+                "relative_bias": 1.433407861599399,
+                "identity_mae": 17.75,
+                "interval_coverage": 0.4166666666666667
+              }
+            }
+          },
+          "2": {
+            "passed": false,
+            "tests": {
+              "temporal": {
+                "n": 4,
+                "mae": 20.11137759051092,
+                "rmse": 35.18254977883485,
+                "bias": -14.87522156323039,
+                "relative_bias": -0.6761464346922904,
+                "identity_mae": 19.5,
+                "interval_coverage": 0.25
+              },
+              "geographic": {
+                "n": 6,
+                "mae": 14.793077334613463,
+                "rmse": 17.798270681249136,
+                "bias": 14.793077334613463,
+                "relative_bias": 2.773702000240024,
+                "identity_mae": 22.333333333333332,
+                "interval_coverage": 0.3333333333333333
+              }
+            }
+          },
+          "12": {
+            "passed": false,
+            "tests": {
+              "temporal": {
+                "n": 4,
+                "mae": 6.276037427754499,
+                "rmse": 7.705982589371237,
+                "bias": 6.276037427754499,
+                "relative_bias": 1.1410977141371816,
+                "identity_mae": 10.0,
+                "interval_coverage": 0.75
+              },
+              "geographic": {
+                "n": 6,
+                "mae": 28.869008773744653,
+                "rmse": 30.574392871680534,
+                "bias": 28.869008773744653,
+                "relative_bias": 1.7674903330864074,
+                "identity_mae": 49.0,
+                "interval_coverage": 0.16666666666666666
+              }
+            }
+          }
+        },
+        "all_seasons_validated": false,
+        "domain_square_side_degrees": 2.0,
+        "domain_years_by_month": {
+          "1": [
+            2019,
+            2024
+          ],
+          "2": [
+            2021,
+            2024
+          ],
+          "12": [
+            2021,
+            2024
+          ]
+        },
+        "design": "Fixed six regions; all 12 months 2021/2023/2024 plus original 2019\u20132024 January/August. Pooled log-density model with separate monthly holdout gates, unchanged thresholds.",
+        "id": "fe80ec270db73f9501029a880bee67a1f71c660d8609b889797e3d1bbe347c45"
+      },
+      "release_status": "exploratory_only_requires_new_confirmatory_holdout"
+    },
+    {
+      "calendar_months": [
+        3,
+        4,
+        5
+      ],
+      "sample_n": 54,
+      "candidate": {
+        "version": "fire-activity-1.0.0",
+        "status": "insufficient_calibration",
+        "sample_n": 54
+      },
+      "release_status": "exploratory_only_requires_new_confirmatory_holdout"
+    },
+    {
+      "calendar_months": [
+        6,
+        7,
+        8
+      ],
+      "sample_n": 72,
+      "candidate": {
+        "version": "fire-activity-1.0.0",
+        "status": "validated",
+        "units": "MODIS Aqua-equivalent daytime occupied 10 km equal-area cell-days",
+        "reference": "Aqua",
+        "input_satellite": "SNPP",
+        "processing": "SP",
+        "daynight": "D",
+        "estimator": "log_linear",
+        "coefficients": [
+          0.0,
+          0.7349189149770621
+        ],
+        "cv_mae": {
+          "identity": 52.458333333333336,
+          "log_linear": 35.51911209843979
+        },
+        "validation": {
+          "temporal": {
+            "n": 12,
+            "mae": 16.218195961175105,
+            "bias": -12.556464033593654,
+            "rmse": 29.24931778191154,
+            "relative_bias": -0.3348390408958308,
+            "identity_mae": 31.833333333333332,
+            "interval_coverage": 0.8333333333333334
+          },
+          "geographic": {
+            "n": 24,
+            "mae": 28.72454952281049,
+            "bias": -17.042038764331025,
+            "rmse": 55.40493543791971,
+            "relative_bias": -0.2585391468672216,
+            "identity_mae": 74.70833333333333,
+            "interval_coverage": 0.75
+          }
+        },
+        "log_residual_q80": 0.795532558521448,
+        "interval_n": 12,
+        "training_n": 24,
+        "training_years": [
+          2019,
+          2020,
+          2021,
+          2022
+        ],
+        "geographic_holdout": [
+          "north_america",
+          "southern_africa"
+        ],
+        "domain_viirs_density": [
+          0.0,
+          122.62896988435905
+        ],
+        "domain_area_km2": [
+          37923.83031741626,
+          48357.252006537106
+        ],
+        "density_normalization_km2": 10000,
+        "domain_calendar_months": [
+          6,
+          8
+        ],
+        "domain_years": [
+          2019,
+          2024
+        ],
+        "samples_sha256": "db9ebf27a83abd38dcb2c7e4f1193be9d8f32c33957f212a6d749276f552fd6c",
+        "limitations": [
+          "Conditional on detected activity and archive completeness; clear-sky opportunities unavailable.",
+          "Conformal interval assumes exchangeability; spatial/temporal dependence may weaken coverage.",
+          "Aqua orbital drift and product changes are not explicitly corrected.",
+          "Only tested 2-degree rectangular supports. No validated local, polygon, Terra-era or recent mission bridge.",
+          "No land-cover/biome attribution was available; geographic holdouts do not prove biome transfer."
+        ],
+        "pooled_validation_status": "validated",
+        "seasonal_validation": {
+          "6": {
+            "passed": true,
+            "tests": {
+              "temporal": {
+                "n": 4,
+                "mae": 16.07138814545685,
+                "rmse": 27.89400215854765,
+                "bias": -12.305772170094736,
+                "relative_bias": -0.3259807197376089,
+                "identity_mae": 32.25,
+                "interval_coverage": 0.75
+              },
+              "geographic": {
+                "n": 6,
+                "mae": 11.345394315752122,
+                "rmse": 13.2885821640098,
+                "bias": 5.282692025411449,
+                "relative_bias": 0.16859655400249304,
+                "identity_mae": 61.0,
+                "interval_coverage": 0.8333333333333334
+              }
+            }
+          },
+          "7": {
+            "passed": false,
+            "tests": {
+              "temporal": {
+                "n": 4,
+                "mae": 9.057157406574877,
+                "rmse": 15.792770638284166,
+                "bias": -8.539659043847386,
+                "relative_bias": -0.3926280020159718,
+                "identity_mae": 7.0,
+                "interval_coverage": 1.0
+              },
+              "geographic": {
+                "n": 6,
+                "mae": 41.46332623434692,
+                "rmse": 48.144989845693566,
+                "bias": -37.9678671443317,
+                "relative_bias": -0.4330935415703236,
+                "identity_mae": 60.0,
+                "interval_coverage": 0.6666666666666666
+              }
+            }
+          },
+          "8": {
+            "passed": true,
+            "tests": {
+              "temporal": {
+                "n": 4,
+                "mae": 23.526042331493596,
+                "rmse": 39.231120443688944,
+                "bias": -16.823960886838844,
+                "relative_bias": -0.31743322427997817,
+                "identity_mae": 56.25,
+                "interval_coverage": 0.75
+              },
+              "geographic": {
+                "n": 12,
+                "mae": 31.04473877057146,
+                "rmse": 69.94390974326726,
+                "bias": -17.74148996920192,
+                "relative_bias": -0.24527405487375922,
+                "identity_mae": 88.91666666666667,
+                "interval_coverage": 0.75
+              }
+            }
+          }
+        },
+        "all_seasons_validated": false,
+        "domain_square_side_degrees": 2.0,
+        "domain_years_by_month": {
+          "6": [
+            2021,
+            2024
+          ],
+          "7": [
+            2021,
+            2024
+          ],
+          "8": [
+            2019,
+            2024
+          ]
+        },
+        "design": "Fixed six regions; all 12 months 2021/2023/2024 plus original 2019\u20132024 January/August. Pooled log-density model with separate monthly holdout gates, unchanged thresholds.",
+        "id": "c29f459b23d9dc9b8ef7c41df72f7a3c0b921afe494736dc78fd34666f2d883c"
+      },
+      "release_status": "exploratory_only_requires_new_confirmatory_holdout"
+    },
+    {
+      "calendar_months": [
+        9,
+        10,
+        11
+      ],
+      "sample_n": 54,
+      "candidate": {
+        "version": "fire-activity-1.0.0",
+        "status": "insufficient_calibration",
+        "sample_n": 54
+      },
+      "release_status": "exploratory_only_requires_new_confirmatory_holdout"
+    }
+  ]
+}

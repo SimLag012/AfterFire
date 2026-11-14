@@ -1,0 +1,30 @@
+{
+  "region": "italy",
+  "bbox": [
+    8,
+    39,
+    10,
+    41
+  ],
+  "year": 2024,
+  "month": 7,
+  "modis": 14,
+  "viirs": 24,
+  "complete": true,
+  "checks": [
+    {
+      "product": "MODIS_SP",
+      "raw_count": 57,
+      "occupied_cell_days": 14,
+      "raw_sha256": "3273d2149fb76266572a096c2dd198897feffab70d557861925390e608591bfe",
+      "independent_match": true
+    },
+    {
+      "product": "VIIRS_SNPP_SP",
+      "raw_count": 158,
+      "occupied_cell_days": 24,
+      "raw_sha256": "1d01f704c38c67f782288b910ecfaa5b1d9d646d84dea965863c66dde5b2a3da",
+      "independent_match": true
+    }
+  ]
+}

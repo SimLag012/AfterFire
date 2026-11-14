@@ -1,0 +1,30 @@
+{
+  "region": "southern_africa",
+  "bbox": [
+    31,
+    -25,
+    33,
+    -23
+  ],
+  "year": 2024,
+  "month": 9,
+  "modis": 84,
+  "viirs": 187,
+  "complete": true,
+  "checks": [
+    {
+      "product": "MODIS_SP",
+      "raw_count": 231,
+      "occupied_cell_days": 84,
+      "raw_sha256": "5b67274c9af908d30ade629d019467796f1d0af36778b624f51de279d74571f7",
+      "independent_match": true
+    },
+    {
+      "product": "VIIRS_SNPP_SP",
+      "raw_count": 736,
+      "occupied_cell_days": 187,
+      "raw_sha256": "5f9d4ef36bfb8cf84efbbb4fc8e42754ca82ed26e6edce2317b3a9fdcdc15cd9",
+      "independent_match": true
+    }
+  ]
+}

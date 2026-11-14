@@ -1,0 +1,494 @@
+{
+  "status": "passed",
+  "base": "http://127.0.0.1:3000",
+  "records": [
+    {
+      "test": "desktop_initial",
+      "url": "http://127.0.0.1:3000/?start=2026-07-17&end=2026-07-17&period=custom&map=-9.58008%2C28.34306%2C34.80469%2C52.05249&z=5",
+      "viewport": [
+        1440,
+        900
+      ],
+      "map": {
+        "x": 0,
+        "y": 121,
+        "width": 1010,
+        "height": 719,
+        "top": 121,
+        "right": 1010,
+        "bottom": 840,
+        "left": 0
+      },
+      "calendar": {
+        "x": 1010,
+        "y": 121,
+        "width": 430,
+        "height": 719,
+        "top": 121,
+        "right": 1440,
+        "bottom": 840,
+        "left": 1010
+      },
+      "overflow": false,
+      "bodyHeight": 900,
+      "nav": [
+        "AfterFire",
+        "Explorer"
+      ],
+      "automaticActivityPosts": 0,
+      "timeToMapCalendarAndFirstTileMs": 717,
+      "performance": {
+        "navigation": {
+          "name": "http://127.0.0.1:3000/",
+          "entryType": "navigation",
+          "startTime": 0,
+          "duration": 225.5,
+          "navigationId": 5988,
+          "initiatorType": "navigation",
+          "deliveryType": "",
+          "nextHopProtocol": "http/1.1",
+          "renderBlockingStatus": "non-blocking",
+          "contentType": "text/html",
+          "contentEncoding": "",
+          "workerStart": 0,
+          "workerRouterEvaluationStart": 0,
+          "workerCacheLookupStart": 0,
+          "workerMatchedSourceType": "",
+          "workerFinalSourceType": "",
+          "redirectStart": 0,
+          "redirectEnd": 0,
+          "fetchStart": 0.30000000004656613,
+          "domainLookupStart": 1.5,
+          "domainLookupEnd": 1.5999999998603016,
+          "connectStart": 1.5999999998603016,
+          "secureConnectionStart": 0,
+          "connectEnd": 1.8000000000465661,
+          "requestStart": 1.8999999999068677,
+          "responseStart": 2.199999999953434,
+          "firstInterimResponseStart": 0,
+          "finalResponseHeadersStart": 2.199999999953434,
+          "responseEnd": 3.3999999999068677,
+          "transferSize": 1757,
+          "encodedBodySize": 1457,
+          "decodedBodySize": 1457,
+          "responseStatus": 200,
+          "serverTiming": [],
+          "unloadEventStart": 0,
+          "unloadEventEnd": 0,
+          "domInteractive": 15.099999999860302,
+          "domContentLoadedEventStart": 225.39999999990687,
+          "domContentLoadedEventEnd": 225.39999999990687,
+          "domComplete": 225.5,
+          "loadEventStart": 225.5,
+          "loadEventEnd": 225.5,
+          "type": "navigate",
+          "redirectCount": 0,
+          "activationStart": 0,
+          "criticalCHRestart": 0,
+          "notRestoredReasons": null,
+          "confidence": {
+            "randomizedTriggerRate": 0.4994798,
+            "value": "high"
+          }
+        },
+        "jsHeapBytes": 10000000,
+        "scope": "Fresh browser context; local warmed backend; includes first real basemap tile, not a worst-case network benchmark."
+      }
+    },
+    {
+      "test": "desktop_anomaly",
+      "url": "http://127.0.0.1:3000/?start=2026-07-17&end=2026-07-17&period=custom&map=6.22375%2C38.47939%2C11.77185%2C41.50446&z=8&study=fcff3f3165eb2317c1feffb937628338f256655967e790566c1b77d40eb78dac&italyOutline=off&month=2019-01",
+      "viewport": [
+        1440,
+        900
+      ],
+      "map": {
+        "x": 0,
+        "y": 121,
+        "width": 1010,
+        "height": 719,
+        "top": 121,
+        "right": 1010,
+        "bottom": 840,
+        "left": 0
+      },
+      "calendar": {
+        "x": 1010,
+        "y": 121,
+        "width": 430,
+        "height": 719,
+        "top": 121,
+        "right": 1440,
+        "bottom": 840,
+        "left": 1010
+      },
+      "overflow": false,
+      "bodyHeight": 900,
+      "nav": [
+        "AfterFire",
+        "Explorer"
+      ],
+      "detail": "2019-01 · 0\n\nreference_observed · MODIS Aqua · uncertainty: Unavailable – Unavailable\n\nVIIRS on the reference scale: 2.2 · interval 0 – 15.6 · calibrated_estimate. Direct Aqua is preferred when available; estimates are never added together.\n\nOriginal records: MODIS 0; VIIRS 30. 30 records; shown on map.\n\nCoverage by NASA product\n\nHistorical median: 0 · anomaly: 0 (Unavailable) · 5 comparable years. supported.\n\n"
+    },
+    {
+      "test": "desktop_month_changed",
+      "url": "http://127.0.0.1:3000/?start=2026-07-17&end=2026-07-17&period=custom&map=6.22375%2C38.47939%2C11.77185%2C41.50446&z=8&study=fcff3f3165eb2317c1feffb937628338f256655967e790566c1b77d40eb78dac&italyOutline=off&month=2024-08",
+      "viewport": [
+        1440,
+        900
+      ],
+      "map": {
+        "x": 0,
+        "y": 121,
+        "width": 1010,
+        "height": 719,
+        "top": 121,
+        "right": 1010,
+        "bottom": 840,
+        "left": 0
+      },
+      "calendar": {
+        "x": 1010,
+        "y": 121,
+        "width": 430,
+        "height": 719,
+        "top": 121,
+        "right": 1440,
+        "bottom": 840,
+        "left": 1010
+      },
+      "overflow": false,
+      "bodyHeight": 900,
+      "nav": [
+        "AfterFire",
+        "Explorer"
+      ]
+    },
+    {
+      "test": "desktop_authentic_month",
+      "url": "http://127.0.0.1:3000/?start=2026-07-17&end=2026-07-17&period=custom&map=8.33244%2C39.15509%2C9.02596%2C39.53688&z=11&study=f275a42e8ec934dfbaa1cc0934862d6207d1fd2ad6e25f901b7b94e5d24c0968&italyOutline=off&lat=39.346&lon=8.6792&radius=14.2&month=2026-07",
+      "viewport": [
+        1440,
+        900
+      ],
+      "map": {
+        "x": 0,
+        "y": 121,
+        "width": 1010,
+        "height": 719,
+        "top": 121,
+        "right": 1010,
+        "bottom": 840,
+        "left": 0
+      },
+      "calendar": {
+        "x": 1010,
+        "y": 121,
+        "width": 430,
+        "height": 719,
+        "top": 121,
+        "right": 1440,
+        "bottom": 840,
+        "left": 1010
+      },
+      "overflow": false,
+      "bodyHeight": 900,
+      "nav": [
+        "AfterFire",
+        "Explorer"
+      ],
+      "detail": "2026-07 · 3\n\nreference_observed · MODIS Aqua · uncertainty: Unavailable – Unavailable\n\nVIIRS on the reference scale: Unavailable · interval Unavailable – Unavailable · selection_shape_not_calibrated. Direct Aqua is preferred when available; estimates are never added together.\n\nOriginal records: MODIS 11; VIIRS 20. 31 records; shown on map.\n\nCoverage by NASA product\n\nHistorical median: Unavailable · anomaly: Unavailable (Unavailable) · 0 comparable years. insufficient_comparable_history.\n\n"
+    },
+    {
+      "test": "desktop_recovery",
+      "url": "http://127.0.0.1:3000/events/global-730fd3db3b65e67698840df5cf924b77?returnTo=%2Fexplorer%3Fstart%3D2026-07-17%26end%3D2026-07-17%26period%3Dcustom%26map%3D8.33244%252C39.15509%252C9.02596%252C39.53688%26z%3D11%26study%3Df275a42e8ec934dfbaa1cc0934862d6207d1fd2ad6e25f901b7b94e5d24c0968%26italyOutline%3Doff%26lat%3D39.346%26lon%3D8.6792%26radius%3D14.2%26month%3D2026-07",
+      "viewport": [
+        1440,
+        900
+      ],
+      "map": {
+        "x": 525.078125,
+        "y": 570.78125,
+        "width": 774.734375,
+        "height": 478,
+        "top": 570.78125,
+        "right": 1299.8125,
+        "bottom": 1048.78125,
+        "left": 525.078125
+      },
+      "overflow": false,
+      "bodyHeight": 6622,
+      "nav": [
+        "AfterFire",
+        "Explorer",
+        "Before / After",
+        "Recovery timeline",
+        "Territory map",
+        "Reburn history"
+      ],
+      "headings": [
+        "Candidate activity Jul 2026 (1d, 8 pts)",
+        "Vegetation after the fire",
+        "Before / After",
+        "NDVI recovery timeline",
+        "Explore dated observations",
+        "Recovery Intelligence",
+        "Reburn History & Recovery Gap",
+        "Reburn History",
+        "Burned Area",
+        "Sources & Scientific Limitations",
+        "AfterFire",
+        "Pages",
+        "NASA data sources"
+      ]
+    },
+    {
+      "test": "desktop_return",
+      "url": "http://127.0.0.1:3000/explorer?start=2026-07-17&end=2026-07-17&period=custom&map=8.33244%2C39.15509%2C9.02596%2C39.53688&z=11&study=f275a42e8ec934dfbaa1cc0934862d6207d1fd2ad6e25f901b7b94e5d24c0968&italyOutline=off&lat=39.346&lon=8.6792&radius=14.2&month=2026-07",
+      "viewport": [
+        1440,
+        900
+      ],
+      "map": {
+        "x": 0,
+        "y": 121,
+        "width": 1010,
+        "height": 719,
+        "top": 121,
+        "right": 1010,
+        "bottom": 840,
+        "left": 0
+      },
+      "calendar": {
+        "x": 1010,
+        "y": 121,
+        "width": 430,
+        "height": 719,
+        "top": 121,
+        "right": 1440,
+        "bottom": 840,
+        "left": 1010
+      },
+      "overflow": false,
+      "bodyHeight": 900,
+      "nav": [
+        "AfterFire",
+        "Explorer"
+      ]
+    },
+    {
+      "test": "legacy_event_redirect",
+      "url": "http://127.0.0.1:3000/events/global-730fd3db3b65e67698840df5cf924b77?event=global-730fd3db3b65e67698840df5cf924b77&assessment=preserve-this-id"
+    },
+    {
+      "test": "legacy_sources_redirect",
+      "url": "http://127.0.0.1:3000/explorer?sources=on&start=2026-07-17&end=2026-07-17&period=custom&map=-19.02832%2C28.34306%2C44.25293%2C52.05249&z=5"
+    },
+    {
+      "test": "legacy_saved_assessment_redirect",
+      "url": "http://127.0.0.1:3000/events/global-730fd3db3b65e67698840df5cf924b77?assessment=21f918e5a3b51892b67386c0bac17fbbb0822c8846436728db7047ac4c092810&assessment=2d7538568e2efb5ea345f04ee96af9cc77e126b642c9f126480dbfe124fe98a4&returnTo=%2Fexplorer",
+      "assessmentIds": [
+        "21f918e5a3b51892b67386c0bac17fbbb0822c8846436728db7047ac4c092810",
+        "2d7538568e2efb5ea345f04ee96af9cc77e126b642c9f126480dbfe124fe98a4"
+      ]
+    },
+    {
+      "test": "mobile_initial",
+      "url": "http://127.0.0.1:3000/?start=2026-07-17&end=2026-07-17&period=custom&map=4.04297%2C31.76554%2C21.18164%2C49.55373&z=5",
+      "viewport": [
+        390,
+        844
+      ],
+      "map": {
+        "x": 0,
+        "y": 245,
+        "width": 390,
+        "height": 539,
+        "top": 245,
+        "right": 390,
+        "bottom": 784,
+        "left": 0
+      },
+      "overflow": false,
+      "bodyHeight": 844,
+      "nav": [
+        "AfterFire",
+        "Explorer"
+      ]
+    },
+    {
+      "test": "mobile_one_tap_calendar",
+      "url": "http://127.0.0.1:3000/?start=2026-07-17&end=2026-07-17&period=custom&map=4.04297%2C31.76554%2C21.18164%2C49.55373&z=5",
+      "viewport": [
+        390,
+        844
+      ],
+      "map": {
+        "x": 0,
+        "y": 245,
+        "width": 390,
+        "height": 539,
+        "top": 245,
+        "right": 390,
+        "bottom": 784,
+        "left": 0
+      },
+      "calendar": {
+        "x": 0,
+        "y": 428.265625,
+        "width": 390,
+        "height": 355.734375,
+        "top": 428.265625,
+        "right": 390,
+        "bottom": 784,
+        "left": 0
+      },
+      "overflow": false,
+      "bodyHeight": 844,
+      "nav": [
+        "AfterFire",
+        "Explorer"
+      ],
+      "openCalendarMs": 152
+    },
+    {
+      "test": "mobile_touch_circle",
+      "url": "http://127.0.0.1:3000/?start=2026-07-17&end=2026-07-17&period=custom&map=4.04297%2C32.02671%2C21.18164%2C49.75288&z=5&lat=39.70719&lon=12.61230&radius=194.7",
+      "viewport": [
+        390,
+        844
+      ],
+      "map": {
+        "x": 0,
+        "y": 245,
+        "width": 390,
+        "height": 539,
+        "top": 245,
+        "right": 390,
+        "bottom": 784,
+        "left": 0
+      },
+      "overflow": false,
+      "bodyHeight": 844,
+      "nav": [
+        "AfterFire",
+        "Explorer"
+      ]
+    },
+    {
+      "test": "mobile_authentic_month",
+      "url": "http://127.0.0.1:3000/?start=2026-07-17&end=2026-07-17&period=custom&map=7.58606%2C38.17775%2C9.72839%2C40.46785&z=8&lat=39.346&lon=8.6792&radius=14.2&study=f275a42e8ec934dfbaa1cc0934862d6207d1fd2ad6e25f901b7b94e5d24c0968&italyOutline=off&month=2026-07",
+      "viewport": [
+        390,
+        844
+      ],
+      "map": {
+        "x": 0,
+        "y": 245,
+        "width": 390,
+        "height": 539,
+        "top": 245,
+        "right": 390,
+        "bottom": 784,
+        "left": 0
+      },
+      "calendar": {
+        "x": 0,
+        "y": 428.265625,
+        "width": 390,
+        "height": 355.734375,
+        "top": 428.265625,
+        "right": 390,
+        "bottom": 784,
+        "left": 0
+      },
+      "overflow": false,
+      "bodyHeight": 844,
+      "nav": [
+        "AfterFire",
+        "Explorer"
+      ],
+      "detail": "2026-07 · 3\n\nreference_observed · MODIS Aqua · uncertainty: Unavailable – Unavailable\n\nVIIRS on the reference scale: Unavailable · interval Unavailable – Unavailable · selection_shape_not_calibrated. Direct Aqua is preferred when available; estimates are never added together.\n\nOriginal records: MODIS 11; VIIRS 20. 31 records; shown on map.\n\nCoverage by NASA product\n\nHistorical median: Unavailable · anomaly: Unavailable (Unavailable) · 0 comparable years. insufficient_comparable_history.\n\n"
+    },
+    {
+      "test": "mobile_recovery",
+      "url": "http://127.0.0.1:3000/events/global-730fd3db3b65e67698840df5cf924b77?returnTo=%2Fexplorer%3Fstart%3D2026-07-17%26end%3D2026-07-17%26period%3Dcustom%26map%3D7.58606%252C38.17775%252C9.72839%252C40.46785%26z%3D8%26lat%3D39.346%26lon%3D8.6792%26radius%3D14.2%26study%3Df275a42e8ec934dfbaa1cc0934862d6207d1fd2ad6e25f901b7b94e5d24c0968%26italyOutline%3Doff%26month%3D2026-07",
+      "viewport": [
+        390,
+        844
+      ],
+      "map": {
+        "x": 17,
+        "y": 1242.1875,
+        "width": 356,
+        "height": 270,
+        "top": 1242.1875,
+        "right": 373,
+        "bottom": 1512.1875,
+        "left": 17
+      },
+      "overflow": false,
+      "bodyHeight": 9585,
+      "nav": [
+        "AfterFire",
+        "Explorer",
+        "Before / After",
+        "Recovery timeline",
+        "Territory map",
+        "Reburn history"
+      ],
+      "headings": [
+        "Candidate activity Jul 2026 (1d, 8 pts)",
+        "Vegetation after the fire",
+        "Before / After",
+        "NDVI recovery timeline",
+        "Explore dated observations",
+        "Recovery Intelligence",
+        "Reburn History & Recovery Gap",
+        "Reburn History",
+        "Burned Area",
+        "Sources & Scientific Limitations",
+        "AfterFire",
+        "Pages",
+        "NASA data sources"
+      ]
+    },
+    {
+      "test": "mobile_return",
+      "url": "http://127.0.0.1:3000/explorer?start=2026-07-17&end=2026-07-17&period=custom&map=8.41141%2C39.05972%2C8.94699%2C39.63213&z=10&lat=39.346&lon=8.6792&radius=14.2&study=f275a42e8ec934dfbaa1cc0934862d6207d1fd2ad6e25f901b7b94e5d24c0968&italyOutline=off&month=2026-07",
+      "viewport": [
+        390,
+        844
+      ],
+      "map": {
+        "x": 0,
+        "y": 245,
+        "width": 390,
+        "height": 539,
+        "top": 245,
+        "right": 390,
+        "bottom": 784,
+        "left": 0
+      },
+      "calendar": {
+        "x": 0,
+        "y": 428.265625,
+        "width": 390,
+        "height": 355.734375,
+        "top": 428.265625,
+        "right": 390,
+        "bottom": 784,
+        "left": 0
+      },
+      "overflow": false,
+      "bodyHeight": 844,
+      "nav": [
+        "AfterFire",
+        "Explorer"
+      ]
+    }
+  ],
+  "errors": [],
+  "activityPosts": 0,
+  "scope": "Production frontend and actual local NASA-backed API. Read-only cache, touch circle, calendar, anomaly, month, original event, Recovery and redirects. Fresh provider acquisition tested separately."
+}

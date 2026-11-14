@@ -1,0 +1,30 @@
+{
+  "region": "australia",
+  "bbox": [
+    148,
+    -37,
+    150,
+    -35
+  ],
+  "year": 2021,
+  "month": 11,
+  "modis": 0,
+  "viirs": 1,
+  "complete": true,
+  "checks": [
+    {
+      "product": "MODIS_SP",
+      "raw_count": 1,
+      "occupied_cell_days": 0,
+      "raw_sha256": "27eb34cba364851ea0f71820a0ee394ee90d3b42e7710d467704e15e8166736c",
+      "independent_match": true
+    },
+    {
+      "product": "VIIRS_SNPP_SP",
+      "raw_count": 1,
+      "occupied_cell_days": 1,
+      "raw_sha256": "3b9bdf43b4a9065f2cf4d730d1ac08dc2dce5df906fd70a39fc9ffac3bcd7df2",
+      "independent_match": true
+    }
+  ]
+}

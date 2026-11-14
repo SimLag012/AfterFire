@@ -1,0 +1,30 @@
+{
+  "region": "brazil",
+  "bbox": [
+    -55,
+    -12,
+    -53,
+    -10
+  ],
+  "year": 2024,
+  "month": 11,
+  "modis": 13,
+  "viirs": 25,
+  "complete": true,
+  "checks": [
+    {
+      "product": "MODIS_SP",
+      "raw_count": 35,
+      "occupied_cell_days": 13,
+      "raw_sha256": "32ea45c566572fa9e56d366a5242be385b3834f5a6b56714760f874d5ed513be",
+      "independent_match": true
+    },
+    {
+      "product": "VIIRS_SNPP_SP",
+      "raw_count": 81,
+      "occupied_cell_days": 25,
+      "raw_sha256": "414ead8985a1159eef47d7a3ce23f808f441c755c4bf3fd83e27149b99cbd84f",
+      "independent_match": true
+    }
+  ]
+}

@@ -1,3 +1,5 @@
+> **14 November 2026 update:** the calendar is now a visible Explorer panel on desktop and a one-tap mobile bottom sheet. The original overlay-only UX described in this historical milestone is superseded. See [Unified Explorer implementation](UNIFIED_EXPLORER_IMPLEMENTATION.md) for current tests, coverage and remaining scientific criteria.
+
 # Historical Fire Activity Calendar
 
 The existing Explorer map now has a **Fire activity** toolbar control and overlay
@@ -105,3 +107,25 @@ archive. Antimeridian requests must be split; geographic requests are limited to
 observed reference but cannot receive an extrapolated VIIRS conversion. Quota
 failure leaves a partial request that can be resumed after NASA's 10-minute
 interval; UI does not promise instant completion.
+
+## Unified Explorer update
+
+Only Explorer remains in primary navigation. Event Story/Recovery Intelligence/Reburn/Recovery Gap and comparisons remain in event context; legacy navigation redirects preserve event, area and assessment identifiers. Data & Sources opens a panel. The calendar and heavy charts remain separate lazy bundles, but the desktop calendar is open at entry.
+
+The initial calendar shows 2000–today without invented values. Cached studies are chosen explicitly; a previous local-storage study cannot overwrite a newly drawn area. `study` and `month` URL parameters preserve the selected context on event return, including on mobile. Drawing or editing coordinates clears the association with the previous study. Pan/zoom does not start historical acquisition.
+
+Study requests now accept `circle: {lat, lon, radius_km}` or a WGS84 Polygon/MultiPolygon `geometry` inside the source bbox. Shape identity is part of the checkpoint scope. The frontend accepts custom bbox coordinates or GeoJSON and displays the selection. A circle uses exact geodesic point membership; its displayed area approximates the geodesic boundary with 180 vertices. A small AOI retains original data and direct Aqua observations, with the 10 km support limitation explicit; an unvalidated shape conversion stays null.
+
+`POST /studies/{id}/pause` fences in-flight publication. Status includes server configuration, actual product-window counts and update time. Resume uses that server configuration. Provider/quota/capacity failures have explicit messages. History yields to due/expired Recovery jobs at checkpoints; a window has a 45-second scheduling budget. Completed windows and original CSVs survive interruption. NRT windows fully covered by an available SP product are marked `standard_processing_preferred` and are not fetched redundantly. Existing NRT originals remain retained and distinguishable.
+
+Verified historical SP windows containing a smaller bbox can supply original observations to a new selection. The source hashes and complete day coverage are checked, the points are cropped anew, and source window IDs/checkpoint times are recorded. No regional aggregate is assigned to the local AOI, no NRT cross-area reuse is enabled, and no acquisition is launched for a read-only calendar request.
+
+Source transfers use per-window locks and two shared transfer slots, while keeping NASA's existing quota reserve. A separate configurable activity observation guard defaults to 512 MiB (`AFTERFIRE_ACTIVITY_MAX_STORE_MB`); it does not change Recovery budgets or NASA quotas. Old windows can receive derived size accounting using `scripts/backfill_activity_accounting.py`; their raw observations and source hashes do not change. The source CSV budget remains 512 MiB. Full archive lifecycle management remains outside this bounded store.
+
+Monthly display separates provider failure, partial query, missing period, unsupported estimate and verified-query zero. Product versions/processing and reused source checkpoints are exported with completeness. Annual totals require 12 complete months with one method/calibration identity. Trend/anomaly support thresholds remain unchanged; short or partial histories do not become trends.
+
+## Current design and actual cached coverage
+
+The remote frontend redesign `f67ba4f` is the visual base. Map, event analysis and calendar share its tokens and accessible controls; the primary navigation contains only Explorer. The calendar always renders the 2000–current-year grid, including when a shorter cached study is selected. Months outside that study remain unavailable. Empty/missing measurements and different calibration identities cannot produce a numeric comparison.
+
+The six 2019–2025 regional study views now retain 44 complete Aqua months each (84 requested), including all months of 2021/2023/2024, original January/August samples and new June 2022/2025. Study state remains partial. All-season and June conversion candidates failed independent validation and are not applied. Raw observations and direct reference measurements remain usable. A bounded November 2000 local study completed pause/resume/cache verification, while its pre-Aqua harmonized series stays null. Complete details and real desktop/mobile/browser evidence are in [the implementation report](UNIFIED_EXPLORER_IMPLEMENTATION.md).

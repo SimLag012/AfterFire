@@ -1,3 +1,5 @@
+> **Follow-up, 14 November 2026:** the report below is the preserved initial pilot milestone. Current unified UX, larger sample acquisition, failed multiscale validation, current publication inventory and final test evidence are in [UNIFIED_EXPLORER_IMPLEMENTATION.md](UNIFIED_EXPLORER_IMPLEMENTATION.md). Initial sample counts below must not be read as the current archive inventory.
+
 # Fire Activity Intelligence — reproducible validation report
 
 Session: 2026-11-13–14 (Europe/Rome); NASA source snapshot: November 13 UTC. Work starts at commit `ac02204` on main and is isolated on
@@ -221,3 +223,11 @@ calibration/validation, not visual interpolation or invented zeroes.
 - `95b7ab8`: defer calendar/chart assets until explicit panel opening.
 
 All commits are local on `feature/fire-activity-intelligence`; no push to main or other remote branch was performed. Documentation and reproducible evidence are recorded by the following documentation commit in the same branch.
+
+## Expanded validation outcome, 14 November 2026
+
+The all-month campaign is complete: 252 region-month units / 292,401 original NASA records. Its pooled model is rejected (temporal relative bias −36.0816%; geographic interval coverage 67.8571%). The thresholds remain |relative bias| ≤35%, interval coverage ≥70%, MAE no worse than the identity cell-day baseline, and the predeclared minimum independent test support.
+
+Exploratory calendar strata preserve those folds/gates and expose failures and insufficient support. A separate prospective June confirmation freezes the summer candidate before retrieving previously unseen June 2022/2025 for all six original regions. All twelve units are independent of that candidate's training, interval calibration and previous tests. It too fails: geographic relative bias +43.2180%. No failed or retrospectively explored candidate is installed in production. Exact metrics, coefficient fingerprints, original-record hashes and frozen designs are in `unified-explorer/seasons/` and `unified-explorer/june-confirmation/`.
+
+The combined 264 units / 301,575 original records support broader actual observed coverage, not an all-season or universal conversion claim. The unchanged January/August pilot is the released VIIRS conversion. Raw data, directly observed Aqua values and explicit mission/scale gaps remain available. SQLite/PostGIS, real browser, independent CSV/coordinate replay, payload/raster fingerprints, native Recovery replay and measured performance evidence are detailed in [the implementation report](UNIFIED_EXPLORER_IMPLEMENTATION.md).

@@ -1,0 +1,61 @@
+{
+  "regions": {
+    "italy": [
+      8,
+      39,
+      10,
+      41
+    ],
+    "mediterranean": [
+      27,
+      35,
+      29,
+      37
+    ],
+    "brazil": [
+      -55,
+      -12,
+      -53,
+      -10
+    ],
+    "australia": [
+      148,
+      -37,
+      150,
+      -35
+    ],
+    "southern_africa": [
+      31,
+      -25,
+      33,
+      -23
+    ],
+    "north_america": [
+      -122,
+      39,
+      -120,
+      41
+    ]
+  },
+  "years": [
+    2019,
+    2020,
+    2021,
+    2022,
+    2023,
+    2024
+  ],
+  "months": [
+    1,
+    8
+  ],
+  "square_side_degrees": [
+    0.05,
+    0.1,
+    0.25,
+    0.5,
+    1.0,
+    2.0
+  ],
+  "policy": "Separate per-scale models; no cross-fold overlapping geography; >=8 positive training units and >=2 positive target units in each independent test group, plus unchanged pilot gates."
+}

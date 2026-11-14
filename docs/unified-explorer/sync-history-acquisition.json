@@ -1,0 +1,170 @@
+{
+  "study": "fafb9d0c5ea60193d7a14cff5039b07beea33dfa11de6987d26370e6a8ee7fdf",
+  "request": {
+    "bbox": [
+      8.6,
+      39.2,
+      8.8,
+      39.4
+    ],
+    "start_date": "2000-11-01",
+    "end_date": "2000-11-30",
+    "window_budget": 2
+  },
+  "steps": [
+    {
+      "test": "enqueue",
+      "state": "queued"
+    },
+    {
+      "test": "pause",
+      "result": {
+        "id": "fafb9d0c5ea60193d7a14cff5039b07beea33dfa11de6987d26370e6a8ee7fdf",
+        "state": "partial"
+      }
+    },
+    {
+      "test": "resume",
+      "state": "queued"
+    },
+    {
+      "test": "first_bounded_batch",
+      "status": {
+        "id": "fafb9d0c5ea60193d7a14cff5039b07beea33dfa11de6987d26370e6a8ee7fdf",
+        "state": "partial",
+        "progress": 33,
+        "error": "Acquisition budget reached; resume to fetch missing windows.",
+        "configuration": {
+          "bbox": [
+            8.6,
+            39.2,
+            8.8,
+            39.4
+          ],
+          "start_date": "2000-11-01",
+          "end_date": "2000-11-30",
+          "methodology_version": "fire-activity-1.0.0",
+          "window_budget": 2,
+          "batch_calls": 2
+        },
+        "updated_at": "2026-11-14T14:44:20.834068Z",
+        "windows": {
+          "requested": 48,
+          "acquired": 2,
+          "not_available": 12,
+          "missing": 32,
+          "standard_preferred": 2,
+          "provider_unavailable": 0
+        }
+      }
+    },
+    {
+      "test": "resume_completed_checkpoints",
+      "prior": {
+        "id": "fafb9d0c5ea60193d7a14cff5039b07beea33dfa11de6987d26370e6a8ee7fdf",
+        "state": "partial",
+        "progress": 33,
+        "error": "Acquisition budget reached; resume to fetch missing windows.",
+        "configuration": {
+          "bbox": [
+            8.6,
+            39.2,
+            8.8,
+            39.4
+          ],
+          "start_date": "2000-11-01",
+          "end_date": "2000-11-30",
+          "methodology_version": "fire-activity-1.0.0",
+          "window_budget": 2,
+          "batch_calls": 2
+        },
+        "updated_at": "2026-11-14T14:44:20.834068Z",
+        "windows": {
+          "requested": 48,
+          "acquired": 2,
+          "not_available": 12,
+          "missing": 32,
+          "standard_preferred": 2,
+          "provider_unavailable": 0
+        }
+      },
+      "new_state": "queued"
+    },
+    {
+      "test": "resume_second_batch",
+      "prior": {
+        "id": "fafb9d0c5ea60193d7a14cff5039b07beea33dfa11de6987d26370e6a8ee7fdf",
+        "state": "partial",
+        "progress": 66,
+        "error": "Acquisition budget reached; resume to fetch missing windows.",
+        "configuration": {
+          "bbox": [
+            8.6,
+            39.2,
+            8.8,
+            39.4
+          ],
+          "start_date": "2000-11-01",
+          "end_date": "2000-11-30",
+          "methodology_version": "fire-activity-1.0.0",
+          "window_budget": 2,
+          "batch_calls": 2
+        },
+        "updated_at": "2026-11-14T14:46:47.692210Z",
+        "windows": {
+          "requested": 48,
+          "acquired": 4,
+          "not_available": 24,
+          "missing": 16,
+          "standard_preferred": 4,
+          "provider_unavailable": 0
+        }
+      },
+      "new_state": "queued"
+    },
+    {
+      "test": "completed_and_reused",
+      "status": {
+        "id": "fafb9d0c5ea60193d7a14cff5039b07beea33dfa11de6987d26370e6a8ee7fdf",
+        "state": "completed",
+        "progress": 100,
+        "error": null,
+        "configuration": {
+          "bbox": [
+            8.6,
+            39.2,
+            8.8,
+            39.4
+          ],
+          "start_date": "2000-11-01",
+          "end_date": "2000-11-30",
+          "methodology_version": "fire-activity-1.0.0",
+          "window_budget": 2,
+          "batch_calls": 2
+        },
+        "updated_at": "2026-11-14T14:47:37.019947Z",
+        "windows": {
+          "requested": 48,
+          "acquired": 6,
+          "not_available": 36,
+          "missing": 0,
+          "standard_preferred": 6,
+          "provider_unavailable": 0
+        }
+      },
+      "raw_counts": {
+        "MODIS": 2,
+        "VIIRS": null
+      },
+      "harmonized": {
+        "value": null,
+        "lower": null,
+        "upper": null,
+        "status": "reference_not_yet_available",
+        "sensors": [],
+        "calibration_id": null
+      },
+      "cached_state": "completed"
+    }
+  ]
+}

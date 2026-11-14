@@ -1,0 +1,30 @@
+{
+  "region": "mediterranean",
+  "bbox": [
+    27,
+    35,
+    29,
+    37
+  ],
+  "year": 2023,
+  "month": 6,
+  "modis": 0,
+  "viirs": 2,
+  "complete": true,
+  "checks": [
+    {
+      "product": "MODIS_SP",
+      "raw_count": 1,
+      "occupied_cell_days": 0,
+      "raw_sha256": "f4e0e4b18f1beb5afe19197e083077f78cf801e1c850251ce602bdf6800cd7f4",
+      "independent_match": true
+    },
+    {
+      "product": "VIIRS_SNPP_SP",
+      "raw_count": 2,
+      "occupied_cell_days": 2,
+      "raw_sha256": "625618560591a29f5789790fe3e3546adbedabcc23667e8e09ef07b276fa7210",
+      "independent_match": true
+    }
+  ]
+}

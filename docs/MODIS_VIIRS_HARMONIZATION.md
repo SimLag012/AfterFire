@@ -1,3 +1,5 @@
+> **14 November 2026 update:** this document retains the original pilot methodology. Subsequent scale/season tests and the exact released domain are documented in [Unified Explorer implementation](UNIFIED_EXPLORER_IMPLEMENTATION.md). Unsupported estimates remain null; UI coverage is not scientific validation.
+
 # Fire Activity Intelligence — MODIS/VIIRS harmonization
 
 Implementation version: `fire-activity-1.0.0`. This is a separate thermal-activity
@@ -165,7 +167,23 @@ Expired activity leases resume after restart. Complete windows are reused; faile
 truncated and unavailable windows can be retried explicitly. There is no periodic
 whole-history catalog scan. Account quota is checked before uncached transfers,
 with a 500-transaction reserve. Local transfers serialize across worker processes.
-The activity observation store is capped at 256 MiB; shared root provider CSVs at
+The separate activity observation guard defaults to 512 MiB (`AFTERFIRE_ACTIVITY_MAX_STORE_MB`); shared root provider CSVs at
 512 MiB; neither policy deletes Recovery rasters or cache. Administrators should
 export/archive old studies when the bounded pilot store fills. Automatic long-term
 partitioned archive lifecycle management is not implemented.
+
+## Follow-up validation and spatial support
+
+The original calibration artifact is preserved. Six nested square supports were independently reconstructed from authentic retained NASA dictionaries without downloads. Supports of 0.05°, 0.1° and 0.25° lack positive-activity support; 0.5° and 1° fail validation. Only the original 2° support passes. Coefficients and all failures are retained in `unified-explorer/scales/calibrations.json`; these are not released as local conversions.
+
+The fixed seasonal campaign adds all twelve months in 2021/2023/2024 across the original six regions, retaining the original pilot units and independent temporal/geographic folds. A supplementary artifact must pass pooled gates and separate monthly holdout gates. It has per-month temporal limits and an explicit 2° square-support requirement; no automatic deployment of candidate coefficients occurs. See the current report for actual completion and the supported months, rather than assuming all months passed.
+
+Geodesic circles and valid polygon selections are supported for original observations and directly observed Aqua cell-days. Their estimates do not inherit the bbox calibration. Reuse of enclosing complete historical SP queries crops original points, not aggregate values; SHA-256 and day coverage must match. Native 10 km support and unquantified detection/clear-sky uncertainty remain explicit, especially for very small AOIs.
+
+Terra's FIRMS record begins 2000-11-01; [Aqua begins 2002-07-03](https://firms.modaps.eosdis.nasa.gov/content/descriptions/FIRMS_MODIS_Firehotspots.html), making August the first full reference month. The [official FIRMS archive](https://firms.modaps.eosdis.nasa.gov/download/) lists S-NPP 2012-01-20–2026-11-02, NOAA-20 from 2018-04-01 and NOAA-21 from 2023-03-01. Live SP/NRT availability is exported separately. Terra-to-Aqua, NOAA mission and SP/NRT conversions remain unsupported until independently validated; none is silently substituted. No Recovery formula, index, QA or publication depends on this activity proxy.
+
+## Completed all-month evaluation, 14 November 2026
+
+The expanded campaign contains 252 authentic region-month pairs (292,401 original records), covering all twelve months in 2021/2023/2024 and the original January/August 2019–2024 pilot. The pooled `[0, 0.7509136050942067]` model fails the unchanged bias/interval coverage gates. Exploratory calendar strata are retained in `unified-explorer/seasons/calendar-strata.json`; they are not independently confirmed model releases.
+
+The frozen summer candidate received a prospective June test on twelve unseen 2022/2025 region-month pairs (9,174 additional records). Its geographic relative bias of +43.2180% fails the fixed ±35% gate. No June or all-season conversion is enabled. Failed models are not installed in `backend/app/fire_activity/`; the original validated pilot is preserved. All-season original observations and directly observed Aqua cell-days are available in the calendar, independently of conversion support. See [the implementation report](UNIFIED_EXPLORER_IMPLEMENTATION.md) for exact MAE/RMSE/bias/coverage, temporal domains, archive inventory and remaining mission/scale limits.

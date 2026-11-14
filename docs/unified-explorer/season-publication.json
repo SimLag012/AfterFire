@@ -1,0 +1,50 @@
+[
+  {
+    "region": "italy",
+    "study": "fcff3f3165eb2317c1feffb937628338f256655967e790566c1b77d40eb78dac",
+    "new_validated_samples": 30,
+    "complete_reference_months": 42,
+    "months_in_request": 72,
+    "state": "partial"
+  },
+  {
+    "region": "australia",
+    "study": "80aa82b7211c5edf29cab4333b258819f921af4ad8bc19abd7d304fa8f2906d3",
+    "new_validated_samples": 30,
+    "complete_reference_months": 42,
+    "months_in_request": 72,
+    "state": "partial"
+  },
+  {
+    "region": "brazil",
+    "study": "00040e19c45a2c5239383cc08c73f794b51769cbbc6028675d5d05f384b014c1",
+    "new_validated_samples": 30,
+    "complete_reference_months": 42,
+    "months_in_request": 72,
+    "state": "partial"
+  },
+  {
+    "region": "mediterranean",
+    "study": "2c0ea33731fd8d3037b468537d4c25532b23932090af417c5922cf5138723f04",
+    "new_validated_samples": 30,
+    "complete_reference_months": 42,
+    "months_in_request": 72,
+    "state": "partial"
+  },
+  {
+    "region": "north_america",
+    "study": "5819a1b370b4f8d512ccb11fdc9af2860b6709da9fffac2be67514976f15e39c",
+    "new_validated_samples": 30,
+    "complete_reference_months": 42,
+    "months_in_request": 72,
+    "state": "partial"
+  },
+  {
+    "region": "southern_africa",
+    "study": "099a3cf9a3a10d3e865a66dd655c323269f74ffbc37b55af3e53ee6228feb210",
+    "new_validated_samples": 30,
+    "complete_reference_months": 42,
+    "months_in_request": 72,
+    "state": "partial"
+  }
+]

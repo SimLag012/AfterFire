@@ -1,0 +1,338 @@
+{
+  "request": {
+    "bbox": [
+      8,
+      39,
+      10,
+      41
+    ],
+    "geometry": {
+      "type": "Polygon",
+      "coordinates": [
+        [
+          [
+            8,
+            39
+          ],
+          [
+            10,
+            39
+          ],
+          [
+            8,
+            41
+          ],
+          [
+            8,
+            39
+          ]
+        ]
+      ]
+    },
+    "start_date": "2021-07-15",
+    "end_date": "2021-07-19",
+    "window_budget": 28
+  },
+  "response": {
+    "id": "9f5b67b62f51e718fcf1d3f3036329e09c97f788015575f49ecf2cd1a02c5328",
+    "state": "queued",
+    "configuration": {
+      "bbox": [
+        8.0,
+        39.0,
+        10.0,
+        41.0
+      ],
+      "start_date": "2021-07-15",
+      "end_date": "2021-07-19",
+      "methodology_version": "fire-activity-1.0.0",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              8,
+              39
+            ],
+            [
+              10,
+              39
+            ],
+            [
+              8,
+              41
+            ],
+            [
+              8,
+              39
+            ]
+          ]
+        ]
+      },
+      "window_budget": 28
+    }
+  },
+  "status": {
+    "id": "9f5b67b62f51e718fcf1d3f3036329e09c97f788015575f49ecf2cd1a02c5328",
+    "state": "completed",
+    "progress": 100,
+    "error": null,
+    "configuration": {
+      "bbox": [
+        8.0,
+        39.0,
+        10.0,
+        41.0
+      ],
+      "start_date": "2021-07-15",
+      "end_date": "2021-07-19",
+      "methodology_version": "fire-activity-1.0.0",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              8,
+              39
+            ],
+            [
+              10,
+              39
+            ],
+            [
+              8,
+              41
+            ],
+            [
+              8,
+              39
+            ]
+          ]
+        ]
+      },
+      "window_budget": 28,
+      "batch_calls": 3
+    },
+    "updated_at": "2026-11-14T14:52:39.560929Z",
+    "windows": {
+      "requested": 8,
+      "acquired": 3,
+      "not_available": 2,
+      "missing": 0,
+      "standard_preferred": 3,
+      "provider_unavailable": 0
+    }
+  },
+  "area": {
+    "bbox": [
+      8.0,
+      39.0,
+      10.0,
+      41.0
+    ],
+    "circle": null,
+    "geometry": {
+      "type": "Polygon",
+      "coordinates": [
+        [
+          [
+            8,
+            39
+          ],
+          [
+            10,
+            39
+          ],
+          [
+            8,
+            41
+          ],
+          [
+            8,
+            39
+          ]
+        ]
+      ]
+    },
+    "area_km2": 19238.59791523059,
+    "selection": "GeoJSON geometry"
+  },
+  "month": {
+    "month": "2021-07",
+    "products": {
+      "MODIS_SP": {
+        "complete_days": 5,
+        "expected_days": 5,
+        "states": [
+          "complete"
+        ],
+        "product_versions": [
+          "6.03"
+        ],
+        "reused_from_windows": [
+          "994b6e09de9d8919e5640ffef526a5d8d83af5a5e402f1258f6f6c1f07fab080",
+          "bff9163f835ac54a4ea46afcdfd80b5e9c8e1b62f89553ef1aa5b4190300d058"
+        ],
+        "parent_checkpoint_acquired_at": [
+          "2026-11-14T10:25:00.373314Z",
+          "2026-11-14T10:25:10.966817Z"
+        ],
+        "processing": "SP",
+        "archive_fraction": 0.16129032258064516
+      },
+      "MODIS_NRT": {
+        "complete_days": 0,
+        "expected_days": 5,
+        "states": [
+          "standard_processing_preferred"
+        ],
+        "product_versions": [],
+        "reused_from_windows": [],
+        "parent_checkpoint_acquired_at": [],
+        "processing": "NRT",
+        "archive_fraction": 0.0
+      },
+      "VIIRS_SNPP_SP": {
+        "complete_days": 5,
+        "expected_days": 5,
+        "states": [
+          "complete"
+        ],
+        "product_versions": [
+          "2"
+        ],
+        "reused_from_windows": [
+          "1b20c06e1b55b8cdb878fd3a83eaf6a4453d094649f5e75932224dc0a464572e",
+          "4fdd4c79c55f1ec635a980abf0778563cbac08cf489a2dea2c9945a0ebc25656"
+        ],
+        "parent_checkpoint_acquired_at": [
+          "2026-11-14T10:25:03.234783Z",
+          "2026-11-14T10:25:13.791057Z"
+        ],
+        "processing": "SP",
+        "archive_fraction": 0.16129032258064516
+      },
+      "VIIRS_SNPP_NRT": {
+        "complete_days": 0,
+        "expected_days": 5,
+        "states": [
+          "standard_processing_preferred"
+        ],
+        "product_versions": [],
+        "reused_from_windows": [],
+        "parent_checkpoint_acquired_at": [],
+        "processing": "NRT",
+        "archive_fraction": 0.0
+      },
+      "VIIRS_NOAA20_SP": {
+        "complete_days": 5,
+        "expected_days": 5,
+        "states": [
+          "complete"
+        ],
+        "product_versions": [
+          "2"
+        ],
+        "reused_from_windows": [
+          "e54f1a8d313fb33f3673943dfc43e3b1b10e85c1d99ca37fee0f1d5e507d4589",
+          "f0a1e3e34bd62ad7bb5c60a9fdae491344888cf20a33dcafe830115f148025fe"
+        ],
+        "parent_checkpoint_acquired_at": [
+          "2026-11-14T10:25:06.977419Z",
+          "2026-11-14T10:25:16.545685Z"
+        ],
+        "processing": "SP",
+        "archive_fraction": 0.16129032258064516
+      },
+      "VIIRS_NOAA20_NRT": {
+        "complete_days": 0,
+        "expected_days": 5,
+        "states": [
+          "standard_processing_preferred"
+        ],
+        "product_versions": [],
+        "reused_from_windows": [],
+        "parent_checkpoint_acquired_at": [],
+        "processing": "NRT",
+        "archive_fraction": 0.0
+      },
+      "VIIRS_NOAA21_SP": {
+        "complete_days": 0,
+        "expected_days": 5,
+        "states": [
+          "not_available"
+        ],
+        "product_versions": [],
+        "reused_from_windows": [],
+        "parent_checkpoint_acquired_at": [],
+        "processing": "SP",
+        "archive_fraction": 0.0
+      },
+      "VIIRS_NOAA21_NRT": {
+        "complete_days": 0,
+        "expected_days": 5,
+        "states": [
+          "not_available"
+        ],
+        "product_versions": [],
+        "reused_from_windows": [],
+        "parent_checkpoint_acquired_at": [],
+        "processing": "NRT",
+        "archive_fraction": 0.0
+      }
+    },
+    "original_counts": {
+      "MODIS": 4,
+      "VIIRS": 31
+    },
+    "occupied_cell_days": {
+      "Terra": 0,
+      "Aqua": 2,
+      "SNPP": 4,
+      "NOAA20": 3
+    },
+    "daytime_only": true,
+    "grid_crs": "EPSG:6933",
+    "cell_size_m": 10000,
+    "area_km2": 19238.59791523059,
+    "selection_supported_for_conversion": false,
+    "bbox": [
+      8.0,
+      39.0,
+      10.0,
+      41.0
+    ],
+    "raw_record_counts": {
+      "MODIS": 4,
+      "VIIRS": 31
+    },
+    "harmonized": {
+      "value": null,
+      "status": "insufficient_calibration_or_coverage",
+      "lower": null,
+      "upper": null,
+      "sensors": [],
+      "calibration_id": "f37cf74985ad11f5e3c6a64feecd8b75bd190dfaadcb70c68b7e0d18df49cd40"
+    },
+    "complete": false,
+    "archive_complete_products": [],
+    "observational_coverage": null,
+    "viirs_on_reference_scale": {
+      "value": null,
+      "status": "insufficient_calibration_or_coverage",
+      "lower": null,
+      "upper": null,
+      "sensors": [],
+      "calibration_id": "f37cf74985ad11f5e3c6a64feecd8b75bd190dfaadcb70c68b7e0d18df49cd40"
+    },
+    "coverage_limitation": "FIRMS points do not measure cloud-free observation opportunities.",
+    "anomaly": {
+      "historical_n": 0,
+      "median": null,
+      "absolute": null,
+      "relative_percent": null,
+      "status": "insufficient_comparable_history",
+      "reference_policy": "same calendar month, leave target year out, >=5 complete comparable years"
+    }
+  }
+}

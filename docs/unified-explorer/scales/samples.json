@@ -1,0 +1,7358 @@
+{
+  "0.05": [
+    {
+      "region": "italy",
+      "year": 2019,
+      "month": 1,
+      "bbox": [
+        8.975,
+        39.975,
+        9.025,
+        40.025
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "italy",
+      "year": 2019,
+      "month": 8,
+      "bbox": [
+        8.975,
+        39.975,
+        9.025,
+        40.025
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "italy",
+      "year": 2020,
+      "month": 1,
+      "bbox": [
+        8.975,
+        39.975,
+        9.025,
+        40.025
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "italy",
+      "year": 2020,
+      "month": 8,
+      "bbox": [
+        8.975,
+        39.975,
+        9.025,
+        40.025
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "italy",
+      "year": 2021,
+      "month": 1,
+      "bbox": [
+        8.975,
+        39.975,
+        9.025,
+        40.025
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "italy",
+      "year": 2021,
+      "month": 8,
+      "bbox": [
+        8.975,
+        39.975,
+        9.025,
+        40.025
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "italy",
+      "year": 2022,
+      "month": 1,
+      "bbox": [
+        8.975,
+        39.975,
+        9.025,
+        40.025
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "italy",
+      "year": 2022,
+      "month": 8,
+      "bbox": [
+        8.975,
+        39.975,
+        9.025,
+        40.025
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "italy",
+      "year": 2023,
+      "month": 1,
+      "bbox": [
+        8.975,
+        39.975,
+        9.025,
+        40.025
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "italy",
+      "year": 2023,
+      "month": 8,
+      "bbox": [
+        8.975,
+        39.975,
+        9.025,
+        40.025
+      ],
+      "complete": true,
+      "modis": 2,
+      "viirs": 0,
+      "raw_count": 5,
+      "original_sha256": "094ea7434f553fbdff4f85d09542d6bbbd457f7f566629815cc04db71de36c8b",
+      "independent_match": true
+    },
+    {
+      "region": "italy",
+      "year": 2024,
+      "month": 1,
+      "bbox": [
+        8.975,
+        39.975,
+        9.025,
+        40.025
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "italy",
+      "year": 2024,
+      "month": 8,
+      "bbox": [
+        8.975,
+        39.975,
+        9.025,
+        40.025
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "mediterranean",
+      "year": 2019,
+      "month": 1,
+      "bbox": [
+        27.975,
+        35.975,
+        28.025,
+        36.025
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "mediterranean",
+      "year": 2019,
+      "month": 8,
+      "bbox": [
+        27.975,
+        35.975,
+        28.025,
+        36.025
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "mediterranean",
+      "year": 2020,
+      "month": 1,
+      "bbox": [
+        27.975,
+        35.975,
+        28.025,
+        36.025
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "mediterranean",
+      "year": 2020,
+      "month": 8,
+      "bbox": [
+        27.975,
+        35.975,
+        28.025,
+        36.025
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "mediterranean",
+      "year": 2021,
+      "month": 1,
+      "bbox": [
+        27.975,
+        35.975,
+        28.025,
+        36.025
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "mediterranean",
+      "year": 2021,
+      "month": 8,
+      "bbox": [
+        27.975,
+        35.975,
+        28.025,
+        36.025
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "mediterranean",
+      "year": 2022,
+      "month": 1,
+      "bbox": [
+        27.975,
+        35.975,
+        28.025,
+        36.025
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "mediterranean",
+      "year": 2022,
+      "month": 8,
+      "bbox": [
+        27.975,
+        35.975,
+        28.025,
+        36.025
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "mediterranean",
+      "year": 2023,
+      "month": 1,
+      "bbox": [
+        27.975,
+        35.975,
+        28.025,
+        36.025
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "mediterranean",
+      "year": 2023,
+      "month": 8,
+      "bbox": [
+        27.975,
+        35.975,
+        28.025,
+        36.025
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "mediterranean",
+      "year": 2024,
+      "month": 1,
+      "bbox": [
+        27.975,
+        35.975,
+        28.025,
+        36.025
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "mediterranean",
+      "year": 2024,
+      "month": 8,
+      "bbox": [
+        27.975,
+        35.975,
+        28.025,
+        36.025
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "brazil",
+      "year": 2019,
+      "month": 1,
+      "bbox": [
+        -54.025,
+        -11.025,
+        -53.975,
+        -10.975
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "brazil",
+      "year": 2019,
+      "month": 8,
+      "bbox": [
+        -54.025,
+        -11.025,
+        -53.975,
+        -10.975
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "brazil",
+      "year": 2020,
+      "month": 1,
+      "bbox": [
+        -54.025,
+        -11.025,
+        -53.975,
+        -10.975
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "brazil",
+      "year": 2020,
+      "month": 8,
+      "bbox": [
+        -54.025,
+        -11.025,
+        -53.975,
+        -10.975
+      ],
+      "complete": true,
+      "modis": 10,
+      "viirs": 12,
+      "raw_count": 119,
+      "original_sha256": "a25a7544260b646597a99a0694d1f645a821304c5d694c10ed2f544f47673ffe",
+      "independent_match": true
+    },
+    {
+      "region": "brazil",
+      "year": 2021,
+      "month": 1,
+      "bbox": [
+        -54.025,
+        -11.025,
+        -53.975,
+        -10.975
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "brazil",
+      "year": 2021,
+      "month": 8,
+      "bbox": [
+        -54.025,
+        -11.025,
+        -53.975,
+        -10.975
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "brazil",
+      "year": 2022,
+      "month": 1,
+      "bbox": [
+        -54.025,
+        -11.025,
+        -53.975,
+        -10.975
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "brazil",
+      "year": 2022,
+      "month": 8,
+      "bbox": [
+        -54.025,
+        -11.025,
+        -53.975,
+        -10.975
+      ],
+      "complete": true,
+      "modis": 7,
+      "viirs": 16,
+      "raw_count": 236,
+      "original_sha256": "37fd3936b04a24a3f0021b9fd263b45673f52172dd9a0e7b2c96c8dc24a605b6",
+      "independent_match": true
+    },
+    {
+      "region": "brazil",
+      "year": 2023,
+      "month": 1,
+      "bbox": [
+        -54.025,
+        -11.025,
+        -53.975,
+        -10.975
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "brazil",
+      "year": 2023,
+      "month": 8,
+      "bbox": [
+        -54.025,
+        -11.025,
+        -53.975,
+        -10.975
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "brazil",
+      "year": 2024,
+      "month": 1,
+      "bbox": [
+        -54.025,
+        -11.025,
+        -53.975,
+        -10.975
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "brazil",
+      "year": 2024,
+      "month": 8,
+      "bbox": [
+        -54.025,
+        -11.025,
+        -53.975,
+        -10.975
+      ],
+      "complete": true,
+      "modis": 5,
+      "viirs": 6,
+      "raw_count": 41,
+      "original_sha256": "4915c4148f096247b254f22b68353d3505a39e35430f17528269ee91329e6072",
+      "independent_match": true
+    },
+    {
+      "region": "australia",
+      "year": 2019,
+      "month": 1,
+      "bbox": [
+        148.975,
+        -36.025,
+        149.025,
+        -35.975
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "australia",
+      "year": 2019,
+      "month": 8,
+      "bbox": [
+        148.975,
+        -36.025,
+        149.025,
+        -35.975
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "australia",
+      "year": 2020,
+      "month": 1,
+      "bbox": [
+        148.975,
+        -36.025,
+        149.025,
+        -35.975
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "australia",
+      "year": 2020,
+      "month": 8,
+      "bbox": [
+        148.975,
+        -36.025,
+        149.025,
+        -35.975
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "australia",
+      "year": 2021,
+      "month": 1,
+      "bbox": [
+        148.975,
+        -36.025,
+        149.025,
+        -35.975
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "australia",
+      "year": 2021,
+      "month": 8,
+      "bbox": [
+        148.975,
+        -36.025,
+        149.025,
+        -35.975
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 1,
+      "raw_count": 1,
+      "original_sha256": "483f7d1cb1a23d3db82f2676fde1b42539a11e923b7a09ec4f29772e16692beb",
+      "independent_match": true
+    },
+    {
+      "region": "australia",
+      "year": 2022,
+      "month": 1,
+      "bbox": [
+        148.975,
+        -36.025,
+        149.025,
+        -35.975
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "australia",
+      "year": 2022,
+      "month": 8,
+      "bbox": [
+        148.975,
+        -36.025,
+        149.025,
+        -35.975
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "australia",
+      "year": 2023,
+      "month": 1,
+      "bbox": [
+        148.975,
+        -36.025,
+        149.025,
+        -35.975
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "australia",
+      "year": 2023,
+      "month": 8,
+      "bbox": [
+        148.975,
+        -36.025,
+        149.025,
+        -35.975
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "australia",
+      "year": 2024,
+      "month": 1,
+      "bbox": [
+        148.975,
+        -36.025,
+        149.025,
+        -35.975
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "australia",
+      "year": 2024,
+      "month": 8,
+      "bbox": [
+        148.975,
+        -36.025,
+        149.025,
+        -35.975
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "southern_africa",
+      "year": 2019,
+      "month": 1,
+      "bbox": [
+        31.975,
+        -24.025,
+        32.025,
+        -23.975
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "southern_africa",
+      "year": 2019,
+      "month": 8,
+      "bbox": [
+        31.975,
+        -24.025,
+        32.025,
+        -23.975
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "southern_africa",
+      "year": 2020,
+      "month": 1,
+      "bbox": [
+        31.975,
+        -24.025,
+        32.025,
+        -23.975
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "southern_africa",
+      "year": 2020,
+      "month": 8,
+      "bbox": [
+        31.975,
+        -24.025,
+        32.025,
+        -23.975
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "southern_africa",
+      "year": 2021,
+      "month": 1,
+      "bbox": [
+        31.975,
+        -24.025,
+        32.025,
+        -23.975
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "southern_africa",
+      "year": 2021,
+      "month": 8,
+      "bbox": [
+        31.975,
+        -24.025,
+        32.025,
+        -23.975
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "southern_africa",
+      "year": 2022,
+      "month": 1,
+      "bbox": [
+        31.975,
+        -24.025,
+        32.025,
+        -23.975
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "southern_africa",
+      "year": 2022,
+      "month": 8,
+      "bbox": [
+        31.975,
+        -24.025,
+        32.025,
+        -23.975
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "southern_africa",
+      "year": 2023,
+      "month": 1,
+      "bbox": [
+        31.975,
+        -24.025,
+        32.025,
+        -23.975
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "southern_africa",
+      "year": 2023,
+      "month": 8,
+      "bbox": [
+        31.975,
+        -24.025,
+        32.025,
+        -23.975
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "southern_africa",
+      "year": 2024,
+      "month": 1,
+      "bbox": [
+        31.975,
+        -24.025,
+        32.025,
+        -23.975
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "southern_africa",
+      "year": 2024,
+      "month": 8,
+      "bbox": [
+        31.975,
+        -24.025,
+        32.025,
+        -23.975
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "north_america",
+      "year": 2019,
+      "month": 1,
+      "bbox": [
+        -121.025,
+        39.975,
+        -120.975,
+        40.025
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "north_america",
+      "year": 2019,
+      "month": 8,
+      "bbox": [
+        -121.025,
+        39.975,
+        -120.975,
+        40.025
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "north_america",
+      "year": 2020,
+      "month": 1,
+      "bbox": [
+        -121.025,
+        39.975,
+        -120.975,
+        40.025
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "north_america",
+      "year": 2020,
+      "month": 8,
+      "bbox": [
+        -121.025,
+        39.975,
+        -120.975,
+        40.025
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "north_america",
+      "year": 2021,
+      "month": 1,
+      "bbox": [
+        -121.025,
+        39.975,
+        -120.975,
+        40.025
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "north_america",
+      "year": 2021,
+      "month": 8,
+      "bbox": [
+        -121.025,
+        39.975,
+        -120.975,
+        40.025
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "north_america",
+      "year": 2022,
+      "month": 1,
+      "bbox": [
+        -121.025,
+        39.975,
+        -120.975,
+        40.025
+      ],
+      "complete": true,
+      "modis": 2,
+      "viirs": 4,
+      "raw_count": 18,
+      "original_sha256": "ecc533d5a99327501eabf092c9dd0fd3b663368d02c1a2107151084c7b9f6c9c",
+      "independent_match": true
+    },
+    {
+      "region": "north_america",
+      "year": 2022,
+      "month": 8,
+      "bbox": [
+        -121.025,
+        39.975,
+        -120.975,
+        40.025
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "north_america",
+      "year": 2023,
+      "month": 1,
+      "bbox": [
+        -121.025,
+        39.975,
+        -120.975,
+        40.025
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 9,
+      "original_sha256": "1ae18f45b4826b02e69d30c342fdf251c73664c5aa934e727f615a46520a69c2",
+      "independent_match": true
+    },
+    {
+      "region": "north_america",
+      "year": 2023,
+      "month": 8,
+      "bbox": [
+        -121.025,
+        39.975,
+        -120.975,
+        40.025
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "north_america",
+      "year": 2024,
+      "month": 1,
+      "bbox": [
+        -121.025,
+        39.975,
+        -120.975,
+        40.025
+      ],
+      "complete": true,
+      "modis": 1,
+      "viirs": 2,
+      "raw_count": 5,
+      "original_sha256": "f166da182a4e67f140e1b44967921268db3b758029f9270c4a7cdc4cd5c56a58",
+      "independent_match": true
+    },
+    {
+      "region": "north_america",
+      "year": 2024,
+      "month": 8,
+      "bbox": [
+        -121.025,
+        39.975,
+        -120.975,
+        40.025
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    }
+  ],
+  "0.1": [
+    {
+      "region": "italy",
+      "year": 2019,
+      "month": 1,
+      "bbox": [
+        8.95,
+        39.95,
+        9.05,
+        40.05
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "italy",
+      "year": 2019,
+      "month": 8,
+      "bbox": [
+        8.95,
+        39.95,
+        9.05,
+        40.05
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "italy",
+      "year": 2020,
+      "month": 1,
+      "bbox": [
+        8.95,
+        39.95,
+        9.05,
+        40.05
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "italy",
+      "year": 2020,
+      "month": 8,
+      "bbox": [
+        8.95,
+        39.95,
+        9.05,
+        40.05
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "italy",
+      "year": 2021,
+      "month": 1,
+      "bbox": [
+        8.95,
+        39.95,
+        9.05,
+        40.05
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "italy",
+      "year": 2021,
+      "month": 8,
+      "bbox": [
+        8.95,
+        39.95,
+        9.05,
+        40.05
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "italy",
+      "year": 2022,
+      "month": 1,
+      "bbox": [
+        8.95,
+        39.95,
+        9.05,
+        40.05
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "italy",
+      "year": 2022,
+      "month": 8,
+      "bbox": [
+        8.95,
+        39.95,
+        9.05,
+        40.05
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "italy",
+      "year": 2023,
+      "month": 1,
+      "bbox": [
+        8.95,
+        39.95,
+        9.05,
+        40.05
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "italy",
+      "year": 2023,
+      "month": 8,
+      "bbox": [
+        8.95,
+        39.95,
+        9.05,
+        40.05
+      ],
+      "complete": true,
+      "modis": 3,
+      "viirs": 2,
+      "raw_count": 9,
+      "original_sha256": "ed1c6eb6f8f9c7066d43a99dcf1dad460674a1ca9b3b011b99b782698a1c22c8",
+      "independent_match": true
+    },
+    {
+      "region": "italy",
+      "year": 2024,
+      "month": 1,
+      "bbox": [
+        8.95,
+        39.95,
+        9.05,
+        40.05
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "italy",
+      "year": 2024,
+      "month": 8,
+      "bbox": [
+        8.95,
+        39.95,
+        9.05,
+        40.05
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "mediterranean",
+      "year": 2019,
+      "month": 1,
+      "bbox": [
+        27.95,
+        35.95,
+        28.05,
+        36.05
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "mediterranean",
+      "year": 2019,
+      "month": 8,
+      "bbox": [
+        27.95,
+        35.95,
+        28.05,
+        36.05
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "mediterranean",
+      "year": 2020,
+      "month": 1,
+      "bbox": [
+        27.95,
+        35.95,
+        28.05,
+        36.05
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "mediterranean",
+      "year": 2020,
+      "month": 8,
+      "bbox": [
+        27.95,
+        35.95,
+        28.05,
+        36.05
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "mediterranean",
+      "year": 2021,
+      "month": 1,
+      "bbox": [
+        27.95,
+        35.95,
+        28.05,
+        36.05
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "mediterranean",
+      "year": 2021,
+      "month": 8,
+      "bbox": [
+        27.95,
+        35.95,
+        28.05,
+        36.05
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "mediterranean",
+      "year": 2022,
+      "month": 1,
+      "bbox": [
+        27.95,
+        35.95,
+        28.05,
+        36.05
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "mediterranean",
+      "year": 2022,
+      "month": 8,
+      "bbox": [
+        27.95,
+        35.95,
+        28.05,
+        36.05
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "mediterranean",
+      "year": 2023,
+      "month": 1,
+      "bbox": [
+        27.95,
+        35.95,
+        28.05,
+        36.05
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "mediterranean",
+      "year": 2023,
+      "month": 8,
+      "bbox": [
+        27.95,
+        35.95,
+        28.05,
+        36.05
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "mediterranean",
+      "year": 2024,
+      "month": 1,
+      "bbox": [
+        27.95,
+        35.95,
+        28.05,
+        36.05
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "mediterranean",
+      "year": 2024,
+      "month": 8,
+      "bbox": [
+        27.95,
+        35.95,
+        28.05,
+        36.05
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "brazil",
+      "year": 2019,
+      "month": 1,
+      "bbox": [
+        -54.05,
+        -11.05,
+        -53.95,
+        -10.95
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "brazil",
+      "year": 2019,
+      "month": 8,
+      "bbox": [
+        -54.05,
+        -11.05,
+        -53.95,
+        -10.95
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "brazil",
+      "year": 2020,
+      "month": 1,
+      "bbox": [
+        -54.05,
+        -11.05,
+        -53.95,
+        -10.95
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "brazil",
+      "year": 2020,
+      "month": 8,
+      "bbox": [
+        -54.05,
+        -11.05,
+        -53.95,
+        -10.95
+      ],
+      "complete": true,
+      "modis": 11,
+      "viirs": 15,
+      "raw_count": 158,
+      "original_sha256": "d58430a3735c398a9c0a9f3cca60767b07874c0f195cdaeff47077866259f470",
+      "independent_match": true
+    },
+    {
+      "region": "brazil",
+      "year": 2021,
+      "month": 1,
+      "bbox": [
+        -54.05,
+        -11.05,
+        -53.95,
+        -10.95
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "brazil",
+      "year": 2021,
+      "month": 8,
+      "bbox": [
+        -54.05,
+        -11.05,
+        -53.95,
+        -10.95
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "brazil",
+      "year": 2022,
+      "month": 1,
+      "bbox": [
+        -54.05,
+        -11.05,
+        -53.95,
+        -10.95
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "brazil",
+      "year": 2022,
+      "month": 8,
+      "bbox": [
+        -54.05,
+        -11.05,
+        -53.95,
+        -10.95
+      ],
+      "complete": true,
+      "modis": 14,
+      "viirs": 22,
+      "raw_count": 614,
+      "original_sha256": "a64ab3f99f9b6d3cfa771f5647d74d2ae638d1c02dd3a42a3d5eeac8074c21e1",
+      "independent_match": true
+    },
+    {
+      "region": "brazil",
+      "year": 2023,
+      "month": 1,
+      "bbox": [
+        -54.05,
+        -11.05,
+        -53.95,
+        -10.95
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "brazil",
+      "year": 2023,
+      "month": 8,
+      "bbox": [
+        -54.05,
+        -11.05,
+        -53.95,
+        -10.95
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "brazil",
+      "year": 2024,
+      "month": 1,
+      "bbox": [
+        -54.05,
+        -11.05,
+        -53.95,
+        -10.95
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "brazil",
+      "year": 2024,
+      "month": 8,
+      "bbox": [
+        -54.05,
+        -11.05,
+        -53.95,
+        -10.95
+      ],
+      "complete": true,
+      "modis": 5,
+      "viirs": 7,
+      "raw_count": 52,
+      "original_sha256": "d20ce43630f8990b8e15fde58589e86e63dfe9ed4328ccdae763b98c69e48632",
+      "independent_match": true
+    },
+    {
+      "region": "australia",
+      "year": 2019,
+      "month": 1,
+      "bbox": [
+        148.95,
+        -36.05,
+        149.05,
+        -35.95
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "australia",
+      "year": 2019,
+      "month": 8,
+      "bbox": [
+        148.95,
+        -36.05,
+        149.05,
+        -35.95
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "australia",
+      "year": 2020,
+      "month": 1,
+      "bbox": [
+        148.95,
+        -36.05,
+        149.05,
+        -35.95
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "australia",
+      "year": 2020,
+      "month": 8,
+      "bbox": [
+        148.95,
+        -36.05,
+        149.05,
+        -35.95
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "australia",
+      "year": 2021,
+      "month": 1,
+      "bbox": [
+        148.95,
+        -36.05,
+        149.05,
+        -35.95
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "australia",
+      "year": 2021,
+      "month": 8,
+      "bbox": [
+        148.95,
+        -36.05,
+        149.05,
+        -35.95
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 1,
+      "raw_count": 1,
+      "original_sha256": "483f7d1cb1a23d3db82f2676fde1b42539a11e923b7a09ec4f29772e16692beb",
+      "independent_match": true
+    },
+    {
+      "region": "australia",
+      "year": 2022,
+      "month": 1,
+      "bbox": [
+        148.95,
+        -36.05,
+        149.05,
+        -35.95
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "australia",
+      "year": 2022,
+      "month": 8,
+      "bbox": [
+        148.95,
+        -36.05,
+        149.05,
+        -35.95
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "australia",
+      "year": 2023,
+      "month": 1,
+      "bbox": [
+        148.95,
+        -36.05,
+        149.05,
+        -35.95
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "australia",
+      "year": 2023,
+      "month": 8,
+      "bbox": [
+        148.95,
+        -36.05,
+        149.05,
+        -35.95
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "australia",
+      "year": 2024,
+      "month": 1,
+      "bbox": [
+        148.95,
+        -36.05,
+        149.05,
+        -35.95
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "australia",
+      "year": 2024,
+      "month": 8,
+      "bbox": [
+        148.95,
+        -36.05,
+        149.05,
+        -35.95
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "southern_africa",
+      "year": 2019,
+      "month": 1,
+      "bbox": [
+        31.95,
+        -24.05,
+        32.05,
+        -23.95
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "southern_africa",
+      "year": 2019,
+      "month": 8,
+      "bbox": [
+        31.95,
+        -24.05,
+        32.05,
+        -23.95
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "southern_africa",
+      "year": 2020,
+      "month": 1,
+      "bbox": [
+        31.95,
+        -24.05,
+        32.05,
+        -23.95
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "southern_africa",
+      "year": 2020,
+      "month": 8,
+      "bbox": [
+        31.95,
+        -24.05,
+        32.05,
+        -23.95
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "southern_africa",
+      "year": 2021,
+      "month": 1,
+      "bbox": [
+        31.95,
+        -24.05,
+        32.05,
+        -23.95
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "southern_africa",
+      "year": 2021,
+      "month": 8,
+      "bbox": [
+        31.95,
+        -24.05,
+        32.05,
+        -23.95
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "southern_africa",
+      "year": 2022,
+      "month": 1,
+      "bbox": [
+        31.95,
+        -24.05,
+        32.05,
+        -23.95
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "southern_africa",
+      "year": 2022,
+      "month": 8,
+      "bbox": [
+        31.95,
+        -24.05,
+        32.05,
+        -23.95
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "southern_africa",
+      "year": 2023,
+      "month": 1,
+      "bbox": [
+        31.95,
+        -24.05,
+        32.05,
+        -23.95
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "southern_africa",
+      "year": 2023,
+      "month": 8,
+      "bbox": [
+        31.95,
+        -24.05,
+        32.05,
+        -23.95
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "southern_africa",
+      "year": 2024,
+      "month": 1,
+      "bbox": [
+        31.95,
+        -24.05,
+        32.05,
+        -23.95
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "southern_africa",
+      "year": 2024,
+      "month": 8,
+      "bbox": [
+        31.95,
+        -24.05,
+        32.05,
+        -23.95
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "north_america",
+      "year": 2019,
+      "month": 1,
+      "bbox": [
+        -121.05,
+        39.95,
+        -120.95,
+        40.05
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "north_america",
+      "year": 2019,
+      "month": 8,
+      "bbox": [
+        -121.05,
+        39.95,
+        -120.95,
+        40.05
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "north_america",
+      "year": 2020,
+      "month": 1,
+      "bbox": [
+        -121.05,
+        39.95,
+        -120.95,
+        40.05
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "north_america",
+      "year": 2020,
+      "month": 8,
+      "bbox": [
+        -121.05,
+        39.95,
+        -120.95,
+        40.05
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "north_america",
+      "year": 2021,
+      "month": 1,
+      "bbox": [
+        -121.05,
+        39.95,
+        -120.95,
+        40.05
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "north_america",
+      "year": 2021,
+      "month": 8,
+      "bbox": [
+        -121.05,
+        39.95,
+        -120.95,
+        40.05
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 1,
+      "raw_count": 5,
+      "original_sha256": "c180f73278aab005dd6aeaf0f82628ca99e930700d70a09cd66e101996ef5e44",
+      "independent_match": true
+    },
+    {
+      "region": "north_america",
+      "year": 2022,
+      "month": 1,
+      "bbox": [
+        -121.05,
+        39.95,
+        -120.95,
+        40.05
+      ],
+      "complete": true,
+      "modis": 2,
+      "viirs": 4,
+      "raw_count": 18,
+      "original_sha256": "ecc533d5a99327501eabf092c9dd0fd3b663368d02c1a2107151084c7b9f6c9c",
+      "independent_match": true
+    },
+    {
+      "region": "north_america",
+      "year": 2022,
+      "month": 8,
+      "bbox": [
+        -121.05,
+        39.95,
+        -120.95,
+        40.05
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "north_america",
+      "year": 2023,
+      "month": 1,
+      "bbox": [
+        -121.05,
+        39.95,
+        -120.95,
+        40.05
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 9,
+      "original_sha256": "1ae18f45b4826b02e69d30c342fdf251c73664c5aa934e727f615a46520a69c2",
+      "independent_match": true
+    },
+    {
+      "region": "north_america",
+      "year": 2023,
+      "month": 8,
+      "bbox": [
+        -121.05,
+        39.95,
+        -120.95,
+        40.05
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "north_america",
+      "year": 2024,
+      "month": 1,
+      "bbox": [
+        -121.05,
+        39.95,
+        -120.95,
+        40.05
+      ],
+      "complete": true,
+      "modis": 1,
+      "viirs": 3,
+      "raw_count": 6,
+      "original_sha256": "1f8c9792a2b2f5ca5c5e441ae9aea52d027070e93029ba2b34ed9507daac5093",
+      "independent_match": true
+    },
+    {
+      "region": "north_america",
+      "year": 2024,
+      "month": 8,
+      "bbox": [
+        -121.05,
+        39.95,
+        -120.95,
+        40.05
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    }
+  ],
+  "0.25": [
+    {
+      "region": "italy",
+      "year": 2019,
+      "month": 1,
+      "bbox": [
+        8.875,
+        39.875,
+        9.125,
+        40.125
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "italy",
+      "year": 2019,
+      "month": 8,
+      "bbox": [
+        8.875,
+        39.875,
+        9.125,
+        40.125
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 2,
+      "raw_count": 6,
+      "original_sha256": "3e35655659be3e72e7ed2796786cea196a7ad3160b573aa2d2c65b3491d2d852",
+      "independent_match": true
+    },
+    {
+      "region": "italy",
+      "year": 2020,
+      "month": 1,
+      "bbox": [
+        8.875,
+        39.875,
+        9.125,
+        40.125
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "italy",
+      "year": 2020,
+      "month": 8,
+      "bbox": [
+        8.875,
+        39.875,
+        9.125,
+        40.125
+      ],
+      "complete": true,
+      "modis": 1,
+      "viirs": 0,
+      "raw_count": 1,
+      "original_sha256": "c3ff23a2c6ade7b9cd6d7c0293ff989e45dd202ba073c4ad2508914a242bd70d",
+      "independent_match": true
+    },
+    {
+      "region": "italy",
+      "year": 2021,
+      "month": 1,
+      "bbox": [
+        8.875,
+        39.875,
+        9.125,
+        40.125
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "italy",
+      "year": 2021,
+      "month": 8,
+      "bbox": [
+        8.875,
+        39.875,
+        9.125,
+        40.125
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "italy",
+      "year": 2022,
+      "month": 1,
+      "bbox": [
+        8.875,
+        39.875,
+        9.125,
+        40.125
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "italy",
+      "year": 2022,
+      "month": 8,
+      "bbox": [
+        8.875,
+        39.875,
+        9.125,
+        40.125
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "italy",
+      "year": 2023,
+      "month": 1,
+      "bbox": [
+        8.875,
+        39.875,
+        9.125,
+        40.125
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "italy",
+      "year": 2023,
+      "month": 8,
+      "bbox": [
+        8.875,
+        39.875,
+        9.125,
+        40.125
+      ],
+      "complete": true,
+      "modis": 3,
+      "viirs": 2,
+      "raw_count": 9,
+      "original_sha256": "ed1c6eb6f8f9c7066d43a99dcf1dad460674a1ca9b3b011b99b782698a1c22c8",
+      "independent_match": true
+    },
+    {
+      "region": "italy",
+      "year": 2024,
+      "month": 1,
+      "bbox": [
+        8.875,
+        39.875,
+        9.125,
+        40.125
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "italy",
+      "year": 2024,
+      "month": 8,
+      "bbox": [
+        8.875,
+        39.875,
+        9.125,
+        40.125
+      ],
+      "complete": true,
+      "modis": 2,
+      "viirs": 0,
+      "raw_count": 3,
+      "original_sha256": "23496c6b9ad72bf7522e20596edd89e53777999290b09d48227f1c5c7cd2f7c4",
+      "independent_match": true
+    },
+    {
+      "region": "mediterranean",
+      "year": 2019,
+      "month": 1,
+      "bbox": [
+        27.875,
+        35.875,
+        28.125,
+        36.125
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "mediterranean",
+      "year": 2019,
+      "month": 8,
+      "bbox": [
+        27.875,
+        35.875,
+        28.125,
+        36.125
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "mediterranean",
+      "year": 2020,
+      "month": 1,
+      "bbox": [
+        27.875,
+        35.875,
+        28.125,
+        36.125
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "mediterranean",
+      "year": 2020,
+      "month": 8,
+      "bbox": [
+        27.875,
+        35.875,
+        28.125,
+        36.125
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "mediterranean",
+      "year": 2021,
+      "month": 1,
+      "bbox": [
+        27.875,
+        35.875,
+        28.125,
+        36.125
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "mediterranean",
+      "year": 2021,
+      "month": 8,
+      "bbox": [
+        27.875,
+        35.875,
+        28.125,
+        36.125
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "mediterranean",
+      "year": 2022,
+      "month": 1,
+      "bbox": [
+        27.875,
+        35.875,
+        28.125,
+        36.125
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "mediterranean",
+      "year": 2022,
+      "month": 8,
+      "bbox": [
+        27.875,
+        35.875,
+        28.125,
+        36.125
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "mediterranean",
+      "year": 2023,
+      "month": 1,
+      "bbox": [
+        27.875,
+        35.875,
+        28.125,
+        36.125
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "mediterranean",
+      "year": 2023,
+      "month": 8,
+      "bbox": [
+        27.875,
+        35.875,
+        28.125,
+        36.125
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "mediterranean",
+      "year": 2024,
+      "month": 1,
+      "bbox": [
+        27.875,
+        35.875,
+        28.125,
+        36.125
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "mediterranean",
+      "year": 2024,
+      "month": 8,
+      "bbox": [
+        27.875,
+        35.875,
+        28.125,
+        36.125
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "brazil",
+      "year": 2019,
+      "month": 1,
+      "bbox": [
+        -54.125,
+        -11.125,
+        -53.875,
+        -10.875
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "brazil",
+      "year": 2019,
+      "month": 8,
+      "bbox": [
+        -54.125,
+        -11.125,
+        -53.875,
+        -10.875
+      ],
+      "complete": true,
+      "modis": 13,
+      "viirs": 36,
+      "raw_count": 271,
+      "original_sha256": "8ffa39739bce6cd04b367526f5039e18258196d37bdad78e635b8bad87d9b11a",
+      "independent_match": true
+    },
+    {
+      "region": "brazil",
+      "year": 2020,
+      "month": 1,
+      "bbox": [
+        -54.125,
+        -11.125,
+        -53.875,
+        -10.875
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 3,
+      "raw_count": 9,
+      "original_sha256": "5afbd78267823bf72bfa45d572a6583c059b6aaa138c655e24645bfc2cbaa977",
+      "independent_match": true
+    },
+    {
+      "region": "brazil",
+      "year": 2020,
+      "month": 8,
+      "bbox": [
+        -54.125,
+        -11.125,
+        -53.875,
+        -10.875
+      ],
+      "complete": true,
+      "modis": 25,
+      "viirs": 42,
+      "raw_count": 472,
+      "original_sha256": "721dc756d5f5cbdecdfcca49c911362f5fbf329caaf0a50fe19aea84cae56a9a",
+      "independent_match": true
+    },
+    {
+      "region": "brazil",
+      "year": 2021,
+      "month": 1,
+      "bbox": [
+        -54.125,
+        -11.125,
+        -53.875,
+        -10.875
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "brazil",
+      "year": 2021,
+      "month": 8,
+      "bbox": [
+        -54.125,
+        -11.125,
+        -53.875,
+        -10.875
+      ],
+      "complete": true,
+      "modis": 6,
+      "viirs": 6,
+      "raw_count": 92,
+      "original_sha256": "cbeb761d69583d454c9d4dfb1872260188cad55fcff8b6ccd8577e7539138f68",
+      "independent_match": true
+    },
+    {
+      "region": "brazil",
+      "year": 2022,
+      "month": 1,
+      "bbox": [
+        -54.125,
+        -11.125,
+        -53.875,
+        -10.875
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 1,
+      "original_sha256": "30c3feab54ac45b91956a2289464dc743099a1b1207e0137c67759ab7b109684",
+      "independent_match": true
+    },
+    {
+      "region": "brazil",
+      "year": 2022,
+      "month": 8,
+      "bbox": [
+        -54.125,
+        -11.125,
+        -53.875,
+        -10.875
+      ],
+      "complete": true,
+      "modis": 47,
+      "viirs": 60,
+      "raw_count": 1650,
+      "original_sha256": "f75ced22a442fbf8f9744bb615820e041ef1872e69687fd571a0f16d22124ead",
+      "independent_match": true
+    },
+    {
+      "region": "brazil",
+      "year": 2023,
+      "month": 1,
+      "bbox": [
+        -54.125,
+        -11.125,
+        -53.875,
+        -10.875
+      ],
+      "complete": true,
+      "modis": 2,
+      "viirs": 0,
+      "raw_count": 2,
+      "original_sha256": "c9b603e04625a5383f9fac449734e4937cd099b7ccc0048b9e74a461753b85f7",
+      "independent_match": true
+    },
+    {
+      "region": "brazil",
+      "year": 2023,
+      "month": 8,
+      "bbox": [
+        -54.125,
+        -11.125,
+        -53.875,
+        -10.875
+      ],
+      "complete": true,
+      "modis": 2,
+      "viirs": 3,
+      "raw_count": 41,
+      "original_sha256": "0409f53621686abb6d41e191148f5ec1eff1e589c62900ae7df7c83e6adfbed4",
+      "independent_match": true
+    },
+    {
+      "region": "brazil",
+      "year": 2024,
+      "month": 1,
+      "bbox": [
+        -54.125,
+        -11.125,
+        -53.875,
+        -10.875
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 1,
+      "raw_count": 1,
+      "original_sha256": "c038b972d609df10a4be1242c2e602b8381d2d0e683f11f4cecd47e7d0983674",
+      "independent_match": true
+    },
+    {
+      "region": "brazil",
+      "year": 2024,
+      "month": 8,
+      "bbox": [
+        -54.125,
+        -11.125,
+        -53.875,
+        -10.875
+      ],
+      "complete": true,
+      "modis": 5,
+      "viirs": 7,
+      "raw_count": 53,
+      "original_sha256": "66db18a2ddd8b8a664152f9ebff972b847c700fe88423cffd5294c44d55addb9",
+      "independent_match": true
+    },
+    {
+      "region": "australia",
+      "year": 2019,
+      "month": 1,
+      "bbox": [
+        148.875,
+        -36.125,
+        149.125,
+        -35.875
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "australia",
+      "year": 2019,
+      "month": 8,
+      "bbox": [
+        148.875,
+        -36.125,
+        149.125,
+        -35.875
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "australia",
+      "year": 2020,
+      "month": 1,
+      "bbox": [
+        148.875,
+        -36.125,
+        149.125,
+        -35.875
+      ],
+      "complete": true,
+      "modis": 7,
+      "viirs": 9,
+      "raw_count": 500,
+      "original_sha256": "7a9a2087f1b9c997560f525eb53a52629b3d1e943bf5b5384b45da01264b73d1",
+      "independent_match": true
+    },
+    {
+      "region": "australia",
+      "year": 2020,
+      "month": 8,
+      "bbox": [
+        148.875,
+        -36.125,
+        149.125,
+        -35.875
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "australia",
+      "year": 2021,
+      "month": 1,
+      "bbox": [
+        148.875,
+        -36.125,
+        149.125,
+        -35.875
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "australia",
+      "year": 2021,
+      "month": 8,
+      "bbox": [
+        148.875,
+        -36.125,
+        149.125,
+        -35.875
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 1,
+      "raw_count": 1,
+      "original_sha256": "483f7d1cb1a23d3db82f2676fde1b42539a11e923b7a09ec4f29772e16692beb",
+      "independent_match": true
+    },
+    {
+      "region": "australia",
+      "year": 2022,
+      "month": 1,
+      "bbox": [
+        148.875,
+        -36.125,
+        149.125,
+        -35.875
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "australia",
+      "year": 2022,
+      "month": 8,
+      "bbox": [
+        148.875,
+        -36.125,
+        149.125,
+        -35.875
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "australia",
+      "year": 2023,
+      "month": 1,
+      "bbox": [
+        148.875,
+        -36.125,
+        149.125,
+        -35.875
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "australia",
+      "year": 2023,
+      "month": 8,
+      "bbox": [
+        148.875,
+        -36.125,
+        149.125,
+        -35.875
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "australia",
+      "year": 2024,
+      "month": 1,
+      "bbox": [
+        148.875,
+        -36.125,
+        149.125,
+        -35.875
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "australia",
+      "year": 2024,
+      "month": 8,
+      "bbox": [
+        148.875,
+        -36.125,
+        149.125,
+        -35.875
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 1,
+      "raw_count": 9,
+      "original_sha256": "7213af54a43d08f3a8fc996ad490414db167d2d5d34d0c19e2755e23a3accba8",
+      "independent_match": true
+    },
+    {
+      "region": "southern_africa",
+      "year": 2019,
+      "month": 1,
+      "bbox": [
+        31.875,
+        -24.125,
+        32.125,
+        -23.875
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "southern_africa",
+      "year": 2019,
+      "month": 8,
+      "bbox": [
+        31.875,
+        -24.125,
+        32.125,
+        -23.875
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 1,
+      "raw_count": 1,
+      "original_sha256": "a55678ca54443eaf1c6d813bac90129cbde4c202fd84d823dc40a6011ef1e18c",
+      "independent_match": true
+    },
+    {
+      "region": "southern_africa",
+      "year": 2020,
+      "month": 1,
+      "bbox": [
+        31.875,
+        -24.125,
+        32.125,
+        -23.875
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "southern_africa",
+      "year": 2020,
+      "month": 8,
+      "bbox": [
+        31.875,
+        -24.125,
+        32.125,
+        -23.875
+      ],
+      "complete": true,
+      "modis": 1,
+      "viirs": 1,
+      "raw_count": 6,
+      "original_sha256": "048e6a5642ae32beea6386e2e7bad361439e702d0c38967fd493f6e6aa633189",
+      "independent_match": true
+    },
+    {
+      "region": "southern_africa",
+      "year": 2021,
+      "month": 1,
+      "bbox": [
+        31.875,
+        -24.125,
+        32.125,
+        -23.875
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "southern_africa",
+      "year": 2021,
+      "month": 8,
+      "bbox": [
+        31.875,
+        -24.125,
+        32.125,
+        -23.875
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "southern_africa",
+      "year": 2022,
+      "month": 1,
+      "bbox": [
+        31.875,
+        -24.125,
+        32.125,
+        -23.875
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "southern_africa",
+      "year": 2022,
+      "month": 8,
+      "bbox": [
+        31.875,
+        -24.125,
+        32.125,
+        -23.875
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "southern_africa",
+      "year": 2023,
+      "month": 1,
+      "bbox": [
+        31.875,
+        -24.125,
+        32.125,
+        -23.875
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "southern_africa",
+      "year": 2023,
+      "month": 8,
+      "bbox": [
+        31.875,
+        -24.125,
+        32.125,
+        -23.875
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "southern_africa",
+      "year": 2024,
+      "month": 1,
+      "bbox": [
+        31.875,
+        -24.125,
+        32.125,
+        -23.875
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "southern_africa",
+      "year": 2024,
+      "month": 8,
+      "bbox": [
+        31.875,
+        -24.125,
+        32.125,
+        -23.875
+      ],
+      "complete": true,
+      "modis": 1,
+      "viirs": 0,
+      "raw_count": 1,
+      "original_sha256": "a3372ea96e92be080931a3b4a7f61fda746950dea89da08da8f5525b35d080ee",
+      "independent_match": true
+    },
+    {
+      "region": "north_america",
+      "year": 2019,
+      "month": 1,
+      "bbox": [
+        -121.125,
+        39.875,
+        -120.875,
+        40.125
+      ],
+      "complete": true,
+      "modis": 1,
+      "viirs": 1,
+      "raw_count": 3,
+      "original_sha256": "f5e2f46dd2b5c3e0b1dd8c07c7624e9d73c80b88dd56bf0d272cd706bfcf62e0",
+      "independent_match": true
+    },
+    {
+      "region": "north_america",
+      "year": 2019,
+      "month": 8,
+      "bbox": [
+        -121.125,
+        39.875,
+        -120.875,
+        40.125
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "north_america",
+      "year": 2020,
+      "month": 1,
+      "bbox": [
+        -121.125,
+        39.875,
+        -120.875,
+        40.125
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "north_america",
+      "year": 2020,
+      "month": 8,
+      "bbox": [
+        -121.125,
+        39.875,
+        -120.875,
+        40.125
+      ],
+      "complete": true,
+      "modis": 2,
+      "viirs": 6,
+      "raw_count": 305,
+      "original_sha256": "cce73439e6081251e52f8ce8537568c0a4b78b7a929a1ae7acac22fe9b4298e9",
+      "independent_match": true
+    },
+    {
+      "region": "north_america",
+      "year": 2021,
+      "month": 1,
+      "bbox": [
+        -121.125,
+        39.875,
+        -120.875,
+        40.125
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "north_america",
+      "year": 2021,
+      "month": 8,
+      "bbox": [
+        -121.125,
+        39.875,
+        -120.875,
+        40.125
+      ],
+      "complete": true,
+      "modis": 25,
+      "viirs": 40,
+      "raw_count": 1576,
+      "original_sha256": "b63b768b8dff09acdb1101efb82baba8367cd1ab495efaca98b633a36e83dc4d",
+      "independent_match": true
+    },
+    {
+      "region": "north_america",
+      "year": 2022,
+      "month": 1,
+      "bbox": [
+        -121.125,
+        39.875,
+        -120.875,
+        40.125
+      ],
+      "complete": true,
+      "modis": 2,
+      "viirs": 4,
+      "raw_count": 18,
+      "original_sha256": "ecc533d5a99327501eabf092c9dd0fd3b663368d02c1a2107151084c7b9f6c9c",
+      "independent_match": true
+    },
+    {
+      "region": "north_america",
+      "year": 2022,
+      "month": 8,
+      "bbox": [
+        -121.125,
+        39.875,
+        -120.875,
+        40.125
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "north_america",
+      "year": 2023,
+      "month": 1,
+      "bbox": [
+        -121.125,
+        39.875,
+        -120.875,
+        40.125
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 9,
+      "original_sha256": "1ae18f45b4826b02e69d30c342fdf251c73664c5aa934e727f615a46520a69c2",
+      "independent_match": true
+    },
+    {
+      "region": "north_america",
+      "year": 2023,
+      "month": 8,
+      "bbox": [
+        -121.125,
+        39.875,
+        -120.875,
+        40.125
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "north_america",
+      "year": 2024,
+      "month": 1,
+      "bbox": [
+        -121.125,
+        39.875,
+        -120.875,
+        40.125
+      ],
+      "complete": true,
+      "modis": 1,
+      "viirs": 4,
+      "raw_count": 14,
+      "original_sha256": "f52fe2f3e269c227b3a3bd5d83eb646041e53029f9b9ce1d2732db58925e8c96",
+      "independent_match": true
+    },
+    {
+      "region": "north_america",
+      "year": 2024,
+      "month": 8,
+      "bbox": [
+        -121.125,
+        39.875,
+        -120.875,
+        40.125
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    }
+  ],
+  "0.5": [
+    {
+      "region": "italy",
+      "year": 2019,
+      "month": 1,
+      "bbox": [
+        8.75,
+        39.75,
+        9.25,
+        40.25
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 1,
+      "raw_count": 1,
+      "original_sha256": "3354f91884ad8dc08566645e77ef2c6332483f07be37c705997747de4375bfab",
+      "independent_match": true
+    },
+    {
+      "region": "italy",
+      "year": 2019,
+      "month": 8,
+      "bbox": [
+        8.75,
+        39.75,
+        9.25,
+        40.25
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 4,
+      "raw_count": 15,
+      "original_sha256": "0ff43964c09b67bed3bd968e2eb105dd52fb5c67985b4165f90b764c1e977506",
+      "independent_match": true
+    },
+    {
+      "region": "italy",
+      "year": 2020,
+      "month": 1,
+      "bbox": [
+        8.75,
+        39.75,
+        9.25,
+        40.25
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "italy",
+      "year": 2020,
+      "month": 8,
+      "bbox": [
+        8.75,
+        39.75,
+        9.25,
+        40.25
+      ],
+      "complete": true,
+      "modis": 2,
+      "viirs": 3,
+      "raw_count": 15,
+      "original_sha256": "facfec7f20b9dc0e072007d7529c023faa29b9d3e3fc84d0d264c04eceee1e08",
+      "independent_match": true
+    },
+    {
+      "region": "italy",
+      "year": 2021,
+      "month": 1,
+      "bbox": [
+        8.75,
+        39.75,
+        9.25,
+        40.25
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "italy",
+      "year": 2021,
+      "month": 8,
+      "bbox": [
+        8.75,
+        39.75,
+        9.25,
+        40.25
+      ],
+      "complete": true,
+      "modis": 2,
+      "viirs": 3,
+      "raw_count": 18,
+      "original_sha256": "7dfa0f0a34f925d538840296d810a947e207f997b253d6ca4991f6d3134ec554",
+      "independent_match": true
+    },
+    {
+      "region": "italy",
+      "year": 2022,
+      "month": 1,
+      "bbox": [
+        8.75,
+        39.75,
+        9.25,
+        40.25
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 1,
+      "raw_count": 1,
+      "original_sha256": "95fa964230821eb23f4ac4ea37ea3eef1ec00b0de11d678da47a1429986fa30f",
+      "independent_match": true
+    },
+    {
+      "region": "italy",
+      "year": 2022,
+      "month": 8,
+      "bbox": [
+        8.75,
+        39.75,
+        9.25,
+        40.25
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 2,
+      "raw_count": 3,
+      "original_sha256": "a2ad149c2e050c3af7068851130b537fe4ce96054994b3a20479e30e8ba47d61",
+      "independent_match": true
+    },
+    {
+      "region": "italy",
+      "year": 2023,
+      "month": 1,
+      "bbox": [
+        8.75,
+        39.75,
+        9.25,
+        40.25
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "italy",
+      "year": 2023,
+      "month": 8,
+      "bbox": [
+        8.75,
+        39.75,
+        9.25,
+        40.25
+      ],
+      "complete": true,
+      "modis": 3,
+      "viirs": 3,
+      "raw_count": 10,
+      "original_sha256": "7ddcb5b3bc16b066d1b04c5ced5a0a11e115562691291a9ec0d19f7b62dff95f",
+      "independent_match": true
+    },
+    {
+      "region": "italy",
+      "year": 2024,
+      "month": 1,
+      "bbox": [
+        8.75,
+        39.75,
+        9.25,
+        40.25
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "italy",
+      "year": 2024,
+      "month": 8,
+      "bbox": [
+        8.75,
+        39.75,
+        9.25,
+        40.25
+      ],
+      "complete": true,
+      "modis": 4,
+      "viirs": 1,
+      "raw_count": 11,
+      "original_sha256": "a23effb28e74c1dc2e06ac5f8f2bc43ad18a9e4c8fd5adaf59a8cfd2c011d24a",
+      "independent_match": true
+    },
+    {
+      "region": "mediterranean",
+      "year": 2019,
+      "month": 1,
+      "bbox": [
+        27.75,
+        35.75,
+        28.25,
+        36.25
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "mediterranean",
+      "year": 2019,
+      "month": 8,
+      "bbox": [
+        27.75,
+        35.75,
+        28.25,
+        36.25
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "mediterranean",
+      "year": 2020,
+      "month": 1,
+      "bbox": [
+        27.75,
+        35.75,
+        28.25,
+        36.25
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "mediterranean",
+      "year": 2020,
+      "month": 8,
+      "bbox": [
+        27.75,
+        35.75,
+        28.25,
+        36.25
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "mediterranean",
+      "year": 2021,
+      "month": 1,
+      "bbox": [
+        27.75,
+        35.75,
+        28.25,
+        36.25
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "mediterranean",
+      "year": 2021,
+      "month": 8,
+      "bbox": [
+        27.75,
+        35.75,
+        28.25,
+        36.25
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "mediterranean",
+      "year": 2022,
+      "month": 1,
+      "bbox": [
+        27.75,
+        35.75,
+        28.25,
+        36.25
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "mediterranean",
+      "year": 2022,
+      "month": 8,
+      "bbox": [
+        27.75,
+        35.75,
+        28.25,
+        36.25
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "mediterranean",
+      "year": 2023,
+      "month": 1,
+      "bbox": [
+        27.75,
+        35.75,
+        28.25,
+        36.25
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "mediterranean",
+      "year": 2023,
+      "month": 8,
+      "bbox": [
+        27.75,
+        35.75,
+        28.25,
+        36.25
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "mediterranean",
+      "year": 2024,
+      "month": 1,
+      "bbox": [
+        27.75,
+        35.75,
+        28.25,
+        36.25
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "mediterranean",
+      "year": 2024,
+      "month": 8,
+      "bbox": [
+        27.75,
+        35.75,
+        28.25,
+        36.25
+      ],
+      "complete": true,
+      "modis": 1,
+      "viirs": 0,
+      "raw_count": 1,
+      "original_sha256": "9d396c3f6347c1ca685503a126864cd36fd9fabb351e3ea5497e91f728ea7ce6",
+      "independent_match": true
+    },
+    {
+      "region": "brazil",
+      "year": 2019,
+      "month": 1,
+      "bbox": [
+        -54.25,
+        -11.25,
+        -53.75,
+        -10.75
+      ],
+      "complete": true,
+      "modis": 1,
+      "viirs": 3,
+      "raw_count": 25,
+      "original_sha256": "267e2ba35c5844763b5a3e55baba86e3b4aee1320cfb1012e04f98d3d6c70353",
+      "independent_match": true
+    },
+    {
+      "region": "brazil",
+      "year": 2019,
+      "month": 8,
+      "bbox": [
+        -54.25,
+        -11.25,
+        -53.75,
+        -10.75
+      ],
+      "complete": true,
+      "modis": 23,
+      "viirs": 71,
+      "raw_count": 624,
+      "original_sha256": "e7e4c2d32a782e502ae60e7fac11a1717dce79359e6a11a60a7827f8c44c40d6",
+      "independent_match": true
+    },
+    {
+      "region": "brazil",
+      "year": 2020,
+      "month": 1,
+      "bbox": [
+        -54.25,
+        -11.25,
+        -53.75,
+        -10.75
+      ],
+      "complete": true,
+      "modis": 4,
+      "viirs": 8,
+      "raw_count": 32,
+      "original_sha256": "3f6d876efcb843097ce7405f965f6621fa74c84bd143011b639afe17784c869a",
+      "independent_match": true
+    },
+    {
+      "region": "brazil",
+      "year": 2020,
+      "month": 8,
+      "bbox": [
+        -54.25,
+        -11.25,
+        -53.75,
+        -10.75
+      ],
+      "complete": true,
+      "modis": 37,
+      "viirs": 69,
+      "raw_count": 1002,
+      "original_sha256": "3d853291a1ebcb76208f0eb36d6a30e12ba58859a98b2e639d2a5edf152340f8",
+      "independent_match": true
+    },
+    {
+      "region": "brazil",
+      "year": 2021,
+      "month": 1,
+      "bbox": [
+        -54.25,
+        -11.25,
+        -53.75,
+        -10.75
+      ],
+      "complete": true,
+      "modis": 3,
+      "viirs": 5,
+      "raw_count": 12,
+      "original_sha256": "c209ae8f1859b364be8cd446f7c1adda4128481f19177c7fa9e5669ad7f05f88",
+      "independent_match": true
+    },
+    {
+      "region": "brazil",
+      "year": 2021,
+      "month": 8,
+      "bbox": [
+        -54.25,
+        -11.25,
+        -53.75,
+        -10.75
+      ],
+      "complete": true,
+      "modis": 12,
+      "viirs": 20,
+      "raw_count": 233,
+      "original_sha256": "1f1c9bed291a36ff3c8f65b88e4f025332fb17b9d34ec857b5cc796af5a85a8f",
+      "independent_match": true
+    },
+    {
+      "region": "brazil",
+      "year": 2022,
+      "month": 1,
+      "bbox": [
+        -54.25,
+        -11.25,
+        -53.75,
+        -10.75
+      ],
+      "complete": true,
+      "modis": 4,
+      "viirs": 2,
+      "raw_count": 8,
+      "original_sha256": "751419618ccdefd0b181ba8cb2b9efd0010841a0caa76559f8a80bab6bae03fc",
+      "independent_match": true
+    },
+    {
+      "region": "brazil",
+      "year": 2022,
+      "month": 8,
+      "bbox": [
+        -54.25,
+        -11.25,
+        -53.75,
+        -10.75
+      ],
+      "complete": true,
+      "modis": 68,
+      "viirs": 85,
+      "raw_count": 2482,
+      "original_sha256": "9fbc53cc16821bc25212f31d54b930ec0679dd304d8c34327cebdfdef52196ff",
+      "independent_match": true
+    },
+    {
+      "region": "brazil",
+      "year": 2023,
+      "month": 1,
+      "bbox": [
+        -54.25,
+        -11.25,
+        -53.75,
+        -10.75
+      ],
+      "complete": true,
+      "modis": 4,
+      "viirs": 1,
+      "raw_count": 7,
+      "original_sha256": "b310a72ee57c38827ee4be167493aab52ca55b74c57191758bb6d1bcb317af51",
+      "independent_match": true
+    },
+    {
+      "region": "brazil",
+      "year": 2023,
+      "month": 8,
+      "bbox": [
+        -54.25,
+        -11.25,
+        -53.75,
+        -10.75
+      ],
+      "complete": true,
+      "modis": 7,
+      "viirs": 7,
+      "raw_count": 164,
+      "original_sha256": "03f1c7d33e5f28b215749929163bcc8fa048e6f9df6e0b5b3c9cd2bb789d691a",
+      "independent_match": true
+    },
+    {
+      "region": "brazil",
+      "year": 2024,
+      "month": 1,
+      "bbox": [
+        -54.25,
+        -11.25,
+        -53.75,
+        -10.75
+      ],
+      "complete": true,
+      "modis": 2,
+      "viirs": 5,
+      "raw_count": 22,
+      "original_sha256": "96563410a49f919a0a876a74078645054fbc7c70cb0850aa484aa49c245fe370",
+      "independent_match": true
+    },
+    {
+      "region": "brazil",
+      "year": 2024,
+      "month": 8,
+      "bbox": [
+        -54.25,
+        -11.25,
+        -53.75,
+        -10.75
+      ],
+      "complete": true,
+      "modis": 11,
+      "viirs": 32,
+      "raw_count": 514,
+      "original_sha256": "4a9073c45c3b40e2f51908a2f27da3fb5e16ddc8f710003fdb2e036f3326c567",
+      "independent_match": true
+    },
+    {
+      "region": "australia",
+      "year": 2019,
+      "month": 1,
+      "bbox": [
+        148.75,
+        -36.25,
+        149.25,
+        -35.75
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "australia",
+      "year": 2019,
+      "month": 8,
+      "bbox": [
+        148.75,
+        -36.25,
+        149.25,
+        -35.75
+      ],
+      "complete": true,
+      "modis": 2,
+      "viirs": 4,
+      "raw_count": 10,
+      "original_sha256": "a866c0858ca008e67e5c197a182600e7d29e3f984f1caa55959aaef7ee82df28",
+      "independent_match": true
+    },
+    {
+      "region": "australia",
+      "year": 2020,
+      "month": 1,
+      "bbox": [
+        148.75,
+        -36.25,
+        149.25,
+        -35.75
+      ],
+      "complete": true,
+      "modis": 26,
+      "viirs": 41,
+      "raw_count": 1943,
+      "original_sha256": "0ab59fdb42ded79b49f884e626b91ed0c658d907548a94ae928eb46a02055cc9",
+      "independent_match": true
+    },
+    {
+      "region": "australia",
+      "year": 2020,
+      "month": 8,
+      "bbox": [
+        148.75,
+        -36.25,
+        149.25,
+        -35.75
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 1,
+      "raw_count": 2,
+      "original_sha256": "b51440a0083dc43716026121cb44a810f7c3dac81e974e35a65ff1f776253c45",
+      "independent_match": true
+    },
+    {
+      "region": "australia",
+      "year": 2021,
+      "month": 1,
+      "bbox": [
+        148.75,
+        -36.25,
+        149.25,
+        -35.75
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "australia",
+      "year": 2021,
+      "month": 8,
+      "bbox": [
+        148.75,
+        -36.25,
+        149.25,
+        -35.75
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 2,
+      "raw_count": 2,
+      "original_sha256": "ae5d74ff9be5feefeb551c16a737adc90f3c3fcf55a39de7e14e196f0294c82d",
+      "independent_match": true
+    },
+    {
+      "region": "australia",
+      "year": 2022,
+      "month": 1,
+      "bbox": [
+        148.75,
+        -36.25,
+        149.25,
+        -35.75
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "australia",
+      "year": 2022,
+      "month": 8,
+      "bbox": [
+        148.75,
+        -36.25,
+        149.25,
+        -35.75
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "australia",
+      "year": 2023,
+      "month": 1,
+      "bbox": [
+        148.75,
+        -36.25,
+        149.25,
+        -35.75
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "australia",
+      "year": 2023,
+      "month": 8,
+      "bbox": [
+        148.75,
+        -36.25,
+        149.25,
+        -35.75
+      ],
+      "complete": true,
+      "modis": 1,
+      "viirs": 3,
+      "raw_count": 8,
+      "original_sha256": "2e78fa4c2fe93415e3871106ee2f0238a374babceaf7abafa1b8d03573570cf3",
+      "independent_match": true
+    },
+    {
+      "region": "australia",
+      "year": 2024,
+      "month": 1,
+      "bbox": [
+        148.75,
+        -36.25,
+        149.25,
+        -35.75
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "australia",
+      "year": 2024,
+      "month": 8,
+      "bbox": [
+        148.75,
+        -36.25,
+        149.25,
+        -35.75
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 3,
+      "raw_count": 18,
+      "original_sha256": "082f603c4b83d544f6140ba03d17c3acee07365b6ec4305ae73c5c8c0170d3a1",
+      "independent_match": true
+    },
+    {
+      "region": "southern_africa",
+      "year": 2019,
+      "month": 1,
+      "bbox": [
+        31.75,
+        -24.25,
+        32.25,
+        -23.75
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "southern_africa",
+      "year": 2019,
+      "month": 8,
+      "bbox": [
+        31.75,
+        -24.25,
+        32.25,
+        -23.75
+      ],
+      "complete": true,
+      "modis": 3,
+      "viirs": 4,
+      "raw_count": 51,
+      "original_sha256": "f1b8ae69f609f48367a24caad61cf46296062ed4c6fa8641cb5fae811127ebf8",
+      "independent_match": true
+    },
+    {
+      "region": "southern_africa",
+      "year": 2020,
+      "month": 1,
+      "bbox": [
+        31.75,
+        -24.25,
+        32.25,
+        -23.75
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "southern_africa",
+      "year": 2020,
+      "month": 8,
+      "bbox": [
+        31.75,
+        -24.25,
+        32.25,
+        -23.75
+      ],
+      "complete": true,
+      "modis": 1,
+      "viirs": 2,
+      "raw_count": 9,
+      "original_sha256": "8e808c7121a1f639c8cd6184143d1e45985e99c7441326362e5682c069da82dc",
+      "independent_match": true
+    },
+    {
+      "region": "southern_africa",
+      "year": 2021,
+      "month": 1,
+      "bbox": [
+        31.75,
+        -24.25,
+        32.25,
+        -23.75
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "southern_africa",
+      "year": 2021,
+      "month": 8,
+      "bbox": [
+        31.75,
+        -24.25,
+        32.25,
+        -23.75
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "southern_africa",
+      "year": 2022,
+      "month": 1,
+      "bbox": [
+        31.75,
+        -24.25,
+        32.25,
+        -23.75
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "southern_africa",
+      "year": 2022,
+      "month": 8,
+      "bbox": [
+        31.75,
+        -24.25,
+        32.25,
+        -23.75
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 1,
+      "raw_count": 1,
+      "original_sha256": "b8c5cacd710f3ecd85865814380aa772278c4c0327455d137659345e37b244d1",
+      "independent_match": true
+    },
+    {
+      "region": "southern_africa",
+      "year": 2023,
+      "month": 1,
+      "bbox": [
+        31.75,
+        -24.25,
+        32.25,
+        -23.75
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "southern_africa",
+      "year": 2023,
+      "month": 8,
+      "bbox": [
+        31.75,
+        -24.25,
+        32.25,
+        -23.75
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 1,
+      "raw_count": 7,
+      "original_sha256": "cea3f2e11fd53dc5677c21fdc85b8aff90159f83c4e75efb07c6b02d678c7be1",
+      "independent_match": true
+    },
+    {
+      "region": "southern_africa",
+      "year": 2024,
+      "month": 1,
+      "bbox": [
+        31.75,
+        -24.25,
+        32.25,
+        -23.75
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "southern_africa",
+      "year": 2024,
+      "month": 8,
+      "bbox": [
+        31.75,
+        -24.25,
+        32.25,
+        -23.75
+      ],
+      "complete": true,
+      "modis": 1,
+      "viirs": 1,
+      "raw_count": 4,
+      "original_sha256": "5b6881fa7c03fa5694857ba18d1d84344d73c1b32ebf347f83951a2c72b94e7a",
+      "independent_match": true
+    },
+    {
+      "region": "north_america",
+      "year": 2019,
+      "month": 1,
+      "bbox": [
+        -121.25,
+        39.75,
+        -120.75,
+        40.25
+      ],
+      "complete": true,
+      "modis": 2,
+      "viirs": 2,
+      "raw_count": 7,
+      "original_sha256": "20cb98f6d3d31a10a61d4cdeb0b7b80da607724334c5fb389b9a1b179c40028d",
+      "independent_match": true
+    },
+    {
+      "region": "north_america",
+      "year": 2019,
+      "month": 8,
+      "bbox": [
+        -121.25,
+        39.75,
+        -120.75,
+        40.25
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "north_america",
+      "year": 2020,
+      "month": 1,
+      "bbox": [
+        -121.25,
+        39.75,
+        -120.75,
+        40.25
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "north_america",
+      "year": 2020,
+      "month": 8,
+      "bbox": [
+        -121.25,
+        39.75,
+        -120.75,
+        40.25
+      ],
+      "complete": true,
+      "modis": 33,
+      "viirs": 59,
+      "raw_count": 2659,
+      "original_sha256": "e8d2fdb6e88ff89af7849fa5dd6a7966d101977119660d53594889b3a32f21da",
+      "independent_match": true
+    },
+    {
+      "region": "north_america",
+      "year": 2021,
+      "month": 1,
+      "bbox": [
+        -121.25,
+        39.75,
+        -120.75,
+        40.25
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "north_america",
+      "year": 2021,
+      "month": 8,
+      "bbox": [
+        -121.25,
+        39.75,
+        -120.75,
+        40.25
+      ],
+      "complete": true,
+      "modis": 106,
+      "viirs": 150,
+      "raw_count": 10927,
+      "original_sha256": "e58bd92d3b295e4540719408b0bca32050f3e0ea0745088ee5f12c0bc9d77f91",
+      "independent_match": true
+    },
+    {
+      "region": "north_america",
+      "year": 2022,
+      "month": 1,
+      "bbox": [
+        -121.25,
+        39.75,
+        -120.75,
+        40.25
+      ],
+      "complete": true,
+      "modis": 2,
+      "viirs": 4,
+      "raw_count": 26,
+      "original_sha256": "da03aa699341b88e16a4eef72ce861d1ced106b1df1dd08e5f51d0ca192c071c",
+      "independent_match": true
+    },
+    {
+      "region": "north_america",
+      "year": 2022,
+      "month": 8,
+      "bbox": [
+        -121.25,
+        39.75,
+        -120.75,
+        40.25
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "north_america",
+      "year": 2023,
+      "month": 1,
+      "bbox": [
+        -121.25,
+        39.75,
+        -120.75,
+        40.25
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 9,
+      "original_sha256": "1ae18f45b4826b02e69d30c342fdf251c73664c5aa934e727f615a46520a69c2",
+      "independent_match": true
+    },
+    {
+      "region": "north_america",
+      "year": 2023,
+      "month": 8,
+      "bbox": [
+        -121.25,
+        39.75,
+        -120.75,
+        40.25
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "north_america",
+      "year": 2024,
+      "month": 1,
+      "bbox": [
+        -121.25,
+        39.75,
+        -120.75,
+        40.25
+      ],
+      "complete": true,
+      "modis": 5,
+      "viirs": 6,
+      "raw_count": 22,
+      "original_sha256": "bf3a5aebda3e17a3907f76d8c37bc1322591342b12c0420b0db013053ba6fd13",
+      "independent_match": true
+    },
+    {
+      "region": "north_america",
+      "year": 2024,
+      "month": 8,
+      "bbox": [
+        -121.25,
+        39.75,
+        -120.75,
+        40.25
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    }
+  ],
+  "1.0": [
+    {
+      "region": "italy",
+      "year": 2019,
+      "month": 1,
+      "bbox": [
+        8.5,
+        39.5,
+        9.5,
+        40.5
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 2,
+      "raw_count": 2,
+      "original_sha256": "f5ce6f8b7907c2171a83efcffa0490ed9f0576380bc9848b5e34352d34fe65c8",
+      "independent_match": true
+    },
+    {
+      "region": "italy",
+      "year": 2019,
+      "month": 8,
+      "bbox": [
+        8.5,
+        39.5,
+        9.5,
+        40.5
+      ],
+      "complete": true,
+      "modis": 3,
+      "viirs": 16,
+      "raw_count": 54,
+      "original_sha256": "b9acceabe5951a15f632642918a573f5807b07791bfad0c4138fbc85b253e90d",
+      "independent_match": true
+    },
+    {
+      "region": "italy",
+      "year": 2020,
+      "month": 1,
+      "bbox": [
+        8.5,
+        39.5,
+        9.5,
+        40.5
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 4,
+      "original_sha256": "75d1108893fe7bd68dc83687649bf4f1a4c63248b14215b02339f9e2a0f5f5dc",
+      "independent_match": true
+    },
+    {
+      "region": "italy",
+      "year": 2020,
+      "month": 8,
+      "bbox": [
+        8.5,
+        39.5,
+        9.5,
+        40.5
+      ],
+      "complete": true,
+      "modis": 6,
+      "viirs": 17,
+      "raw_count": 120,
+      "original_sha256": "ef82819256e65574cea2a251b3283229ab24bc85616a8a5d2a56412fcbf08a8c",
+      "independent_match": true
+    },
+    {
+      "region": "italy",
+      "year": 2021,
+      "month": 1,
+      "bbox": [
+        8.5,
+        39.5,
+        9.5,
+        40.5
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "italy",
+      "year": 2021,
+      "month": 8,
+      "bbox": [
+        8.5,
+        39.5,
+        9.5,
+        40.5
+      ],
+      "complete": true,
+      "modis": 6,
+      "viirs": 14,
+      "raw_count": 66,
+      "original_sha256": "24b33d2c64c3198afed2f298610092b8ad2bfb063278c4e55231afdcb498c689",
+      "independent_match": true
+    },
+    {
+      "region": "italy",
+      "year": 2022,
+      "month": 1,
+      "bbox": [
+        8.5,
+        39.5,
+        9.5,
+        40.5
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 2,
+      "raw_count": 3,
+      "original_sha256": "2488aab8af9d0b0c249d90ca75455cf904a46ce71860433d38fde346b56967f8",
+      "independent_match": true
+    },
+    {
+      "region": "italy",
+      "year": 2022,
+      "month": 8,
+      "bbox": [
+        8.5,
+        39.5,
+        9.5,
+        40.5
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 7,
+      "raw_count": 12,
+      "original_sha256": "c5f2aa955e167e8ef5f264364c360612d4e693774284a924560e0efd51826933",
+      "independent_match": true
+    },
+    {
+      "region": "italy",
+      "year": 2023,
+      "month": 1,
+      "bbox": [
+        8.5,
+        39.5,
+        9.5,
+        40.5
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 2,
+      "raw_count": 5,
+      "original_sha256": "3c1d9a9e4a1b6dd14f1957a341799505db7097f6334667a4f7f5b7990ff48d73",
+      "independent_match": true
+    },
+    {
+      "region": "italy",
+      "year": 2023,
+      "month": 8,
+      "bbox": [
+        8.5,
+        39.5,
+        9.5,
+        40.5
+      ],
+      "complete": true,
+      "modis": 4,
+      "viirs": 8,
+      "raw_count": 30,
+      "original_sha256": "71041e10740f432e4037cdc93d5e0b37e7ae525003f84bf586774fcdb500ab16",
+      "independent_match": true
+    },
+    {
+      "region": "italy",
+      "year": 2024,
+      "month": 1,
+      "bbox": [
+        8.5,
+        39.5,
+        9.5,
+        40.5
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 1,
+      "original_sha256": "f437ce0e48d7ba7e15a6354cd4e062a6f0d14106c3791f532744ff3e84f86e61",
+      "independent_match": true
+    },
+    {
+      "region": "italy",
+      "year": 2024,
+      "month": 8,
+      "bbox": [
+        8.5,
+        39.5,
+        9.5,
+        40.5
+      ],
+      "complete": true,
+      "modis": 11,
+      "viirs": 7,
+      "raw_count": 43,
+      "original_sha256": "e41daa3d75675d73f0bb404c71fadd30ce435c9c820a09b3a9aab979ef57a6d7",
+      "independent_match": true
+    },
+    {
+      "region": "mediterranean",
+      "year": 2019,
+      "month": 1,
+      "bbox": [
+        27.5,
+        35.5,
+        28.5,
+        36.5
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "mediterranean",
+      "year": 2019,
+      "month": 8,
+      "bbox": [
+        27.5,
+        35.5,
+        28.5,
+        36.5
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "mediterranean",
+      "year": 2020,
+      "month": 1,
+      "bbox": [
+        27.5,
+        35.5,
+        28.5,
+        36.5
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "mediterranean",
+      "year": 2020,
+      "month": 8,
+      "bbox": [
+        27.5,
+        35.5,
+        28.5,
+        36.5
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "mediterranean",
+      "year": 2021,
+      "month": 1,
+      "bbox": [
+        27.5,
+        35.5,
+        28.5,
+        36.5
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "mediterranean",
+      "year": 2021,
+      "month": 8,
+      "bbox": [
+        27.5,
+        35.5,
+        28.5,
+        36.5
+      ],
+      "complete": true,
+      "modis": 2,
+      "viirs": 1,
+      "raw_count": 56,
+      "original_sha256": "5898950d82cd16ddee7162c7ab4916bec9efc36d93a65f6babf016b25b57b2fc",
+      "independent_match": true
+    },
+    {
+      "region": "mediterranean",
+      "year": 2022,
+      "month": 1,
+      "bbox": [
+        27.5,
+        35.5,
+        28.5,
+        36.5
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 1,
+      "raw_count": 1,
+      "original_sha256": "2d99622b4e2bc6743837281e1a39acce46aa26218a95de962dfe9d728ee9c697",
+      "independent_match": true
+    },
+    {
+      "region": "mediterranean",
+      "year": 2022,
+      "month": 8,
+      "bbox": [
+        27.5,
+        35.5,
+        28.5,
+        36.5
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "mediterranean",
+      "year": 2023,
+      "month": 1,
+      "bbox": [
+        27.5,
+        35.5,
+        28.5,
+        36.5
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "mediterranean",
+      "year": 2023,
+      "month": 8,
+      "bbox": [
+        27.5,
+        35.5,
+        28.5,
+        36.5
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "mediterranean",
+      "year": 2024,
+      "month": 1,
+      "bbox": [
+        27.5,
+        35.5,
+        28.5,
+        36.5
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "mediterranean",
+      "year": 2024,
+      "month": 8,
+      "bbox": [
+        27.5,
+        35.5,
+        28.5,
+        36.5
+      ],
+      "complete": true,
+      "modis": 1,
+      "viirs": 0,
+      "raw_count": 1,
+      "original_sha256": "9d396c3f6347c1ca685503a126864cd36fd9fabb351e3ea5497e91f728ea7ce6",
+      "independent_match": true
+    },
+    {
+      "region": "brazil",
+      "year": 2019,
+      "month": 1,
+      "bbox": [
+        -54.5,
+        -11.5,
+        -53.5,
+        -10.5
+      ],
+      "complete": true,
+      "modis": 7,
+      "viirs": 10,
+      "raw_count": 55,
+      "original_sha256": "ba53f356d4ec745ecb3611d4d4e98d97fabbba624317a221388e484beb6954bf",
+      "independent_match": true
+    },
+    {
+      "region": "brazil",
+      "year": 2019,
+      "month": 8,
+      "bbox": [
+        -54.5,
+        -11.5,
+        -53.5,
+        -10.5
+      ],
+      "complete": true,
+      "modis": 41,
+      "viirs": 119,
+      "raw_count": 1064,
+      "original_sha256": "232ad612fc76981704e9a47152a094292429c72ffd773d6de8e454c3e47dfbbc",
+      "independent_match": true
+    },
+    {
+      "region": "brazil",
+      "year": 2020,
+      "month": 1,
+      "bbox": [
+        -54.5,
+        -11.5,
+        -53.5,
+        -10.5
+      ],
+      "complete": true,
+      "modis": 12,
+      "viirs": 17,
+      "raw_count": 95,
+      "original_sha256": "5d937dc68886980fb77696371fc2c66a9ed347484c9d5dd98b0fe6451b9bca80",
+      "independent_match": true
+    },
+    {
+      "region": "brazil",
+      "year": 2020,
+      "month": 8,
+      "bbox": [
+        -54.5,
+        -11.5,
+        -53.5,
+        -10.5
+      ],
+      "complete": true,
+      "modis": 82,
+      "viirs": 187,
+      "raw_count": 2291,
+      "original_sha256": "8d0e5654e4535111566f727aa34ff9b6d61a7adb0b375d5672d005ee383f1b21",
+      "independent_match": true
+    },
+    {
+      "region": "brazil",
+      "year": 2021,
+      "month": 1,
+      "bbox": [
+        -54.5,
+        -11.5,
+        -53.5,
+        -10.5
+      ],
+      "complete": true,
+      "modis": 8,
+      "viirs": 19,
+      "raw_count": 83,
+      "original_sha256": "6496b03e86f787250a16b89351065d0fcce2d189c03976d1a9fdc13cca1196d1",
+      "independent_match": true
+    },
+    {
+      "region": "brazil",
+      "year": 2021,
+      "month": 8,
+      "bbox": [
+        -54.5,
+        -11.5,
+        -53.5,
+        -10.5
+      ],
+      "complete": true,
+      "modis": 49,
+      "viirs": 122,
+      "raw_count": 1188,
+      "original_sha256": "26c98f00d6f3399cf097c47aa2b2e80af06e2aad6a19e87c0b575961e181fc2b",
+      "independent_match": true
+    },
+    {
+      "region": "brazil",
+      "year": 2022,
+      "month": 1,
+      "bbox": [
+        -54.5,
+        -11.5,
+        -53.5,
+        -10.5
+      ],
+      "complete": true,
+      "modis": 16,
+      "viirs": 10,
+      "raw_count": 42,
+      "original_sha256": "31e062ee40fa67caaaa2e1cc7153772c577dff2a577339d008e09a990634dfe2",
+      "independent_match": true
+    },
+    {
+      "region": "brazil",
+      "year": 2022,
+      "month": 8,
+      "bbox": [
+        -54.5,
+        -11.5,
+        -53.5,
+        -10.5
+      ],
+      "complete": true,
+      "modis": 170,
+      "viirs": 252,
+      "raw_count": 5671,
+      "original_sha256": "76512e8e0e4b352bb0c1865bfebed030a788d83913a6bf3325de5bb3aa0a270f",
+      "independent_match": true
+    },
+    {
+      "region": "brazil",
+      "year": 2023,
+      "month": 1,
+      "bbox": [
+        -54.5,
+        -11.5,
+        -53.5,
+        -10.5
+      ],
+      "complete": true,
+      "modis": 7,
+      "viirs": 3,
+      "raw_count": 16,
+      "original_sha256": "78fdb54fc2ef51efcc643bbf72bbcfccd1cf5e361347bb996a1077e78079750e",
+      "independent_match": true
+    },
+    {
+      "region": "brazil",
+      "year": 2023,
+      "month": 8,
+      "bbox": [
+        -54.5,
+        -11.5,
+        -53.5,
+        -10.5
+      ],
+      "complete": true,
+      "modis": 22,
+      "viirs": 47,
+      "raw_count": 506,
+      "original_sha256": "3a38149c5e2b8bc0098dd9571310247d344bcd3ab9356f779c6c40f194126b9c",
+      "independent_match": true
+    },
+    {
+      "region": "brazil",
+      "year": 2024,
+      "month": 1,
+      "bbox": [
+        -54.5,
+        -11.5,
+        -53.5,
+        -10.5
+      ],
+      "complete": true,
+      "modis": 9,
+      "viirs": 8,
+      "raw_count": 51,
+      "original_sha256": "ec2832cef4cd7cbe2b305f9685d8e9d8d00218b94b95866bb18d68364d07a660",
+      "independent_match": true
+    },
+    {
+      "region": "brazil",
+      "year": 2024,
+      "month": 8,
+      "bbox": [
+        -54.5,
+        -11.5,
+        -53.5,
+        -10.5
+      ],
+      "complete": true,
+      "modis": 64,
+      "viirs": 154,
+      "raw_count": 2066,
+      "original_sha256": "247ad255ab7f587c384c174ec043b02c0e29feeb1da49015d2db179325db8c9f",
+      "independent_match": true
+    },
+    {
+      "region": "australia",
+      "year": 2019,
+      "month": 1,
+      "bbox": [
+        148.5,
+        -36.5,
+        149.5,
+        -35.5
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "australia",
+      "year": 2019,
+      "month": 8,
+      "bbox": [
+        148.5,
+        -36.5,
+        149.5,
+        -35.5
+      ],
+      "complete": true,
+      "modis": 9,
+      "viirs": 16,
+      "raw_count": 62,
+      "original_sha256": "60a0acd8e8d07aa1b99d90f01e5ac5e2e5eaf6b6cfed7bf4a93eab7a770a9869",
+      "independent_match": true
+    },
+    {
+      "region": "australia",
+      "year": 2020,
+      "month": 1,
+      "bbox": [
+        148.5,
+        -36.5,
+        149.5,
+        -35.5
+      ],
+      "complete": true,
+      "modis": 173,
+      "viirs": 246,
+      "raw_count": 12218,
+      "original_sha256": "d8257b931f46c05f0a2eb251021335d1bbc449932651edc5c4b24300a2898023",
+      "independent_match": true
+    },
+    {
+      "region": "australia",
+      "year": 2020,
+      "month": 8,
+      "bbox": [
+        148.5,
+        -36.5,
+        149.5,
+        -35.5
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 1,
+      "raw_count": 2,
+      "original_sha256": "b51440a0083dc43716026121cb44a810f7c3dac81e974e35a65ff1f776253c45",
+      "independent_match": true
+    },
+    {
+      "region": "australia",
+      "year": 2021,
+      "month": 1,
+      "bbox": [
+        148.5,
+        -36.5,
+        149.5,
+        -35.5
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "australia",
+      "year": 2021,
+      "month": 8,
+      "bbox": [
+        148.5,
+        -36.5,
+        149.5,
+        -35.5
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 5,
+      "raw_count": 12,
+      "original_sha256": "21740bdc9b3aa761ca98f509dfb20b34b8f220f8e39e24413ca2aaa71fdc0305",
+      "independent_match": true
+    },
+    {
+      "region": "australia",
+      "year": 2022,
+      "month": 1,
+      "bbox": [
+        148.5,
+        -36.5,
+        149.5,
+        -35.5
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "australia",
+      "year": 2022,
+      "month": 8,
+      "bbox": [
+        148.5,
+        -36.5,
+        149.5,
+        -35.5
+      ],
+      "complete": true,
+      "modis": 1,
+      "viirs": 2,
+      "raw_count": 3,
+      "original_sha256": "aa94e9d47ccd7d6d2c8c112d1d77f20a433574bfb8bf7cd7fcb73b9894fa8d30",
+      "independent_match": true
+    },
+    {
+      "region": "australia",
+      "year": 2023,
+      "month": 1,
+      "bbox": [
+        148.5,
+        -36.5,
+        149.5,
+        -35.5
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 1,
+      "original_sha256": "52d30d91adcc9932c086d04b212c38ededf4bea99278dc4ceebc0f5eb0d0edb7",
+      "independent_match": true
+    },
+    {
+      "region": "australia",
+      "year": 2023,
+      "month": 8,
+      "bbox": [
+        148.5,
+        -36.5,
+        149.5,
+        -35.5
+      ],
+      "complete": true,
+      "modis": 1,
+      "viirs": 8,
+      "raw_count": 27,
+      "original_sha256": "b23c230f1e235ebc9c6bce061c796420ac0f3270cba3d9f5222aa97810e24c3c",
+      "independent_match": true
+    },
+    {
+      "region": "australia",
+      "year": 2024,
+      "month": 1,
+      "bbox": [
+        148.5,
+        -36.5,
+        149.5,
+        -35.5
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "australia",
+      "year": 2024,
+      "month": 8,
+      "bbox": [
+        148.5,
+        -36.5,
+        149.5,
+        -35.5
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 7,
+      "raw_count": 26,
+      "original_sha256": "d3f0fed4cdf31b0c9e8acda13dfb47949992f07d6aa32f7fd342a1ed78e13d71",
+      "independent_match": true
+    },
+    {
+      "region": "southern_africa",
+      "year": 2019,
+      "month": 1,
+      "bbox": [
+        31.5,
+        -24.5,
+        32.5,
+        -23.5
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 1,
+      "original_sha256": "945c3d9fe37752a4cc7a1bcc8582232d0c36d6a212f3ec70746ee464f6e4321c",
+      "independent_match": true
+    },
+    {
+      "region": "southern_africa",
+      "year": 2019,
+      "month": 8,
+      "bbox": [
+        31.5,
+        -24.5,
+        32.5,
+        -23.5
+      ],
+      "complete": true,
+      "modis": 3,
+      "viirs": 6,
+      "raw_count": 55,
+      "original_sha256": "09f6313ebdff1a18ffdd5f5c70c749d025caff953ed94fb418421c3fa7489486",
+      "independent_match": true
+    },
+    {
+      "region": "southern_africa",
+      "year": 2020,
+      "month": 1,
+      "bbox": [
+        31.5,
+        -24.5,
+        32.5,
+        -23.5
+      ],
+      "complete": true,
+      "modis": 1,
+      "viirs": 0,
+      "raw_count": 1,
+      "original_sha256": "a59ae5a2b0e7856f1806a577e827509544e8d52bee69083b1cc0ad882cd77589",
+      "independent_match": true
+    },
+    {
+      "region": "southern_africa",
+      "year": 2020,
+      "month": 8,
+      "bbox": [
+        31.5,
+        -24.5,
+        32.5,
+        -23.5
+      ],
+      "complete": true,
+      "modis": 1,
+      "viirs": 7,
+      "raw_count": 17,
+      "original_sha256": "7ecadb7f2104533cae4543ecfee5db5eb1912daff99bb053ed627a13d66923ba",
+      "independent_match": true
+    },
+    {
+      "region": "southern_africa",
+      "year": 2021,
+      "month": 1,
+      "bbox": [
+        31.5,
+        -24.5,
+        32.5,
+        -23.5
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 1,
+      "raw_count": 1,
+      "original_sha256": "62ce0a3a50eac3502047890bb1f17c66a127d5b72d88b90a8b2da029798ec1f8",
+      "independent_match": true
+    },
+    {
+      "region": "southern_africa",
+      "year": 2021,
+      "month": 8,
+      "bbox": [
+        31.5,
+        -24.5,
+        32.5,
+        -23.5
+      ],
+      "complete": true,
+      "modis": 13,
+      "viirs": 20,
+      "raw_count": 502,
+      "original_sha256": "57efd273faa2b405b332eec03b6eba386d8713719fc22aee2fa09b1774701747",
+      "independent_match": true
+    },
+    {
+      "region": "southern_africa",
+      "year": 2022,
+      "month": 1,
+      "bbox": [
+        31.5,
+        -24.5,
+        32.5,
+        -23.5
+      ],
+      "complete": true,
+      "modis": 1,
+      "viirs": 3,
+      "raw_count": 6,
+      "original_sha256": "d0dce64638033da69f742fbb0f44ad03267fdd62b15d4bf292a1edae8190ad02",
+      "independent_match": true
+    },
+    {
+      "region": "southern_africa",
+      "year": 2022,
+      "month": 8,
+      "bbox": [
+        31.5,
+        -24.5,
+        32.5,
+        -23.5
+      ],
+      "complete": true,
+      "modis": 6,
+      "viirs": 16,
+      "raw_count": 81,
+      "original_sha256": "cb6acac9c2aabf7a164eef2b8ac5a26ea319f6556e64161c09c3d7b1c12adfdd",
+      "independent_match": true
+    },
+    {
+      "region": "southern_africa",
+      "year": 2023,
+      "month": 1,
+      "bbox": [
+        31.5,
+        -24.5,
+        32.5,
+        -23.5
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 3,
+      "raw_count": 10,
+      "original_sha256": "59dcf62f0879b5f8ccc97abddbd8076ea2c244645da8ad03deb8aec146b3d48a",
+      "independent_match": true
+    },
+    {
+      "region": "southern_africa",
+      "year": 2023,
+      "month": 8,
+      "bbox": [
+        31.5,
+        -24.5,
+        32.5,
+        -23.5
+      ],
+      "complete": true,
+      "modis": 17,
+      "viirs": 27,
+      "raw_count": 617,
+      "original_sha256": "b0f01d2487e9d1a8e066af4e455a83b0b691331e7c81b217aeeaeaaafcd36467",
+      "independent_match": true
+    },
+    {
+      "region": "southern_africa",
+      "year": 2024,
+      "month": 1,
+      "bbox": [
+        31.5,
+        -24.5,
+        32.5,
+        -23.5
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 1,
+      "raw_count": 1,
+      "original_sha256": "bc47bd615220dd08d746e1ec650a6979c01630ebf2779668eeac0cf0b3728a86",
+      "independent_match": true
+    },
+    {
+      "region": "southern_africa",
+      "year": 2024,
+      "month": 8,
+      "bbox": [
+        31.5,
+        -24.5,
+        32.5,
+        -23.5
+      ],
+      "complete": true,
+      "modis": 2,
+      "viirs": 7,
+      "raw_count": 24,
+      "original_sha256": "1a3637e49d081192efb4ca145b8c24c6e589834e9acf2f93580eb8a67dacf99f",
+      "independent_match": true
+    },
+    {
+      "region": "north_america",
+      "year": 2019,
+      "month": 1,
+      "bbox": [
+        -121.5,
+        39.5,
+        -120.5,
+        40.5
+      ],
+      "complete": true,
+      "modis": 2,
+      "viirs": 2,
+      "raw_count": 7,
+      "original_sha256": "20cb98f6d3d31a10a61d4cdeb0b7b80da607724334c5fb389b9a1b179c40028d",
+      "independent_match": true
+    },
+    {
+      "region": "north_america",
+      "year": 2019,
+      "month": 8,
+      "bbox": [
+        -121.5,
+        39.5,
+        -120.5,
+        40.5
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 1,
+      "raw_count": 4,
+      "original_sha256": "41c9c8e6fe40d52d231c06672f26bb23e058ea1db57c1b5fdb02a18f206a70ae",
+      "independent_match": true
+    },
+    {
+      "region": "north_america",
+      "year": 2020,
+      "month": 1,
+      "bbox": [
+        -121.5,
+        39.5,
+        -120.5,
+        40.5
+      ],
+      "complete": true,
+      "modis": 3,
+      "viirs": 3,
+      "raw_count": 10,
+      "original_sha256": "142079d1393b115ffc17bd63bcd1cce2459936af8e67636fe167be703d80b398",
+      "independent_match": true
+    },
+    {
+      "region": "north_america",
+      "year": 2020,
+      "month": 8,
+      "bbox": [
+        -121.5,
+        39.5,
+        -120.5,
+        40.5
+      ],
+      "complete": true,
+      "modis": 49,
+      "viirs": 107,
+      "raw_count": 5099,
+      "original_sha256": "7cb3b8254bd545ab89ebfa286db338188b948139cafff257e3b98cc468bf3900",
+      "independent_match": true
+    },
+    {
+      "region": "north_america",
+      "year": 2021,
+      "month": 1,
+      "bbox": [
+        -121.5,
+        39.5,
+        -120.5,
+        40.5
+      ],
+      "complete": true,
+      "modis": 3,
+      "viirs": 7,
+      "raw_count": 21,
+      "original_sha256": "a9c8328e240187d6b1f173f183c195088978f323320506093dadca6d7fb801e8",
+      "independent_match": true
+    },
+    {
+      "region": "north_america",
+      "year": 2021,
+      "month": 8,
+      "bbox": [
+        -121.5,
+        39.5,
+        -120.5,
+        40.5
+      ],
+      "complete": true,
+      "modis": 332,
+      "viirs": 488,
+      "raw_count": 41210,
+      "original_sha256": "d65ea6bd7914ad6f141d567e951edd5493b506a2ad0c586df0497b876ca2cea6",
+      "independent_match": true
+    },
+    {
+      "region": "north_america",
+      "year": 2022,
+      "month": 1,
+      "bbox": [
+        -121.5,
+        39.5,
+        -120.5,
+        40.5
+      ],
+      "complete": true,
+      "modis": 4,
+      "viirs": 9,
+      "raw_count": 43,
+      "original_sha256": "c22a16ea97dfa6342f5f9284a829e486aec1a346e3e28451dcf8a4f5d7edf0ca",
+      "independent_match": true
+    },
+    {
+      "region": "north_america",
+      "year": 2022,
+      "month": 8,
+      "bbox": [
+        -121.5,
+        39.5,
+        -120.5,
+        40.5
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 1,
+      "original_sha256": "7d6f38f0555f04ecd51d68b449641cbecd081c567347bc0422cddc8884d24b1d",
+      "independent_match": true
+    },
+    {
+      "region": "north_america",
+      "year": 2023,
+      "month": 1,
+      "bbox": [
+        -121.5,
+        39.5,
+        -120.5,
+        40.5
+      ],
+      "complete": true,
+      "modis": 2,
+      "viirs": 2,
+      "raw_count": 27,
+      "original_sha256": "ac9fa08dca2d54e2bab9f0835a1596f60556da357bff195533dfd92f70fa973a",
+      "independent_match": true
+    },
+    {
+      "region": "north_america",
+      "year": 2023,
+      "month": 8,
+      "bbox": [
+        -121.5,
+        39.5,
+        -120.5,
+        40.5
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "north_america",
+      "year": 2024,
+      "month": 1,
+      "bbox": [
+        -121.5,
+        39.5,
+        -120.5,
+        40.5
+      ],
+      "complete": true,
+      "modis": 8,
+      "viirs": 12,
+      "raw_count": 70,
+      "original_sha256": "0142a7afb79d7070b6d05fe77f59cb5aca027e16ad59e5c9477788208ea1f588",
+      "independent_match": true
+    },
+    {
+      "region": "north_america",
+      "year": 2024,
+      "month": 8,
+      "bbox": [
+        -121.5,
+        39.5,
+        -120.5,
+        40.5
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 3,
+      "raw_count": 31,
+      "original_sha256": "d9ff86c69d07c9dd0f8522a0b55b1a0153a3a60f4234e4d5975b9b41465104e4",
+      "independent_match": true
+    }
+  ],
+  "2.0": [
+    {
+      "region": "italy",
+      "year": 2019,
+      "month": 1,
+      "bbox": [
+        8.0,
+        39.0,
+        10.0,
+        41.0
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 3,
+      "raw_count": 30,
+      "original_sha256": "e5a5cd388653e507a809dac9276f0fe4320797260850192c000aff2c0acfb272",
+      "independent_match": true
+    },
+    {
+      "region": "italy",
+      "year": 2019,
+      "month": 8,
+      "bbox": [
+        8.0,
+        39.0,
+        10.0,
+        41.0
+      ],
+      "complete": true,
+      "modis": 7,
+      "viirs": 30,
+      "raw_count": 107,
+      "original_sha256": "54a409e91362a788fed703297caa5a5ea79e01b3b53aeb837d0ebf1e81f49670",
+      "independent_match": true
+    },
+    {
+      "region": "italy",
+      "year": 2020,
+      "month": 1,
+      "bbox": [
+        8.0,
+        39.0,
+        10.0,
+        41.0
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 3,
+      "raw_count": 26,
+      "original_sha256": "d3be849cf57a69aacc4d4edd2924cc8683a7e3ea1253138aa0e0f3aa4c8645c9",
+      "independent_match": true
+    },
+    {
+      "region": "italy",
+      "year": 2020,
+      "month": 8,
+      "bbox": [
+        8.0,
+        39.0,
+        10.0,
+        41.0
+      ],
+      "complete": true,
+      "modis": 12,
+      "viirs": 30,
+      "raw_count": 201,
+      "original_sha256": "365e648dc829e3aa0f32884a8d49f4bd8e5d342328d489479573f2956405e861",
+      "independent_match": true
+    },
+    {
+      "region": "italy",
+      "year": 2021,
+      "month": 1,
+      "bbox": [
+        8.0,
+        39.0,
+        10.0,
+        41.0
+      ],
+      "complete": true,
+      "modis": 1,
+      "viirs": 2,
+      "raw_count": 13,
+      "original_sha256": "e621580e70ada7b15978526fae79614919ba50780973ded8b888833c376259f6",
+      "independent_match": true
+    },
+    {
+      "region": "italy",
+      "year": 2021,
+      "month": 8,
+      "bbox": [
+        8.0,
+        39.0,
+        10.0,
+        41.0
+      ],
+      "complete": true,
+      "modis": 7,
+      "viirs": 27,
+      "raw_count": 123,
+      "original_sha256": "0010d3d3f2707c3b138f6ab7c7bf52ed91e3383e43a5e81c7f1cd1e763c14317",
+      "independent_match": true
+    },
+    {
+      "region": "italy",
+      "year": 2022,
+      "month": 1,
+      "bbox": [
+        8.0,
+        39.0,
+        10.0,
+        41.0
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 5,
+      "raw_count": 32,
+      "original_sha256": "fca4e43201803cedef721f441948905784b7eaf61552a723cd7081cc7e9e46bf",
+      "independent_match": true
+    },
+    {
+      "region": "italy",
+      "year": 2022,
+      "month": 8,
+      "bbox": [
+        8.0,
+        39.0,
+        10.0,
+        41.0
+      ],
+      "complete": true,
+      "modis": 2,
+      "viirs": 18,
+      "raw_count": 50,
+      "original_sha256": "6c3ad6ffd238bc6bc1dcfb8319eb0e969c52f7525ffd1c56c279ebbdc20f61d0",
+      "independent_match": true
+    },
+    {
+      "region": "italy",
+      "year": 2023,
+      "month": 1,
+      "bbox": [
+        8.0,
+        39.0,
+        10.0,
+        41.0
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 3,
+      "raw_count": 28,
+      "original_sha256": "c47ea617b185383453df48663b20c6f15c76d8fc49c8d39dd7921a6bad90af92",
+      "independent_match": true
+    },
+    {
+      "region": "italy",
+      "year": 2023,
+      "month": 8,
+      "bbox": [
+        8.0,
+        39.0,
+        10.0,
+        41.0
+      ],
+      "complete": true,
+      "modis": 11,
+      "viirs": 43,
+      "raw_count": 214,
+      "original_sha256": "fdffd52990f19f424d14f6ece652e7b83f05d504393195f8e740cb2a21a4fcfa",
+      "independent_match": true
+    },
+    {
+      "region": "italy",
+      "year": 2024,
+      "month": 1,
+      "bbox": [
+        8.0,
+        39.0,
+        10.0,
+        41.0
+      ],
+      "complete": true,
+      "modis": 1,
+      "viirs": 2,
+      "raw_count": 35,
+      "original_sha256": "ab3c085d4a1687a7eb8c2c96c59c01291c8806400dc7a53a8f240abe37ebad40",
+      "independent_match": true
+    },
+    {
+      "region": "italy",
+      "year": 2024,
+      "month": 8,
+      "bbox": [
+        8.0,
+        39.0,
+        10.0,
+        41.0
+      ],
+      "complete": true,
+      "modis": 16,
+      "viirs": 24,
+      "raw_count": 94,
+      "original_sha256": "a6ffb741fdb79514f6c54464c833f0f4f62c5fa8d3901f329b37a7ea8978828b",
+      "independent_match": true
+    },
+    {
+      "region": "mediterranean",
+      "year": 2019,
+      "month": 1,
+      "bbox": [
+        27.0,
+        35.0,
+        29.0,
+        37.0
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "mediterranean",
+      "year": 2019,
+      "month": 8,
+      "bbox": [
+        27.0,
+        35.0,
+        29.0,
+        37.0
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 1,
+      "raw_count": 4,
+      "original_sha256": "6aa2581bba5e794a1dc14e79c8d2da0767199734cb59dc16e9a62bda73092292",
+      "independent_match": true
+    },
+    {
+      "region": "mediterranean",
+      "year": 2020,
+      "month": 1,
+      "bbox": [
+        27.0,
+        35.0,
+        29.0,
+        37.0
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 2,
+      "original_sha256": "7365a869c8347967aa4a4eed8e6c9588fb3d86bc57a6169607f895e69210bc16",
+      "independent_match": true
+    },
+    {
+      "region": "mediterranean",
+      "year": 2020,
+      "month": 8,
+      "bbox": [
+        27.0,
+        35.0,
+        29.0,
+        37.0
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 2,
+      "raw_count": 10,
+      "original_sha256": "20925425c4c5877f61b71f0c61a99e9e62d0e22ed7b4e727327a8953a2647ece",
+      "independent_match": true
+    },
+    {
+      "region": "mediterranean",
+      "year": 2021,
+      "month": 1,
+      "bbox": [
+        27.0,
+        35.0,
+        29.0,
+        37.0
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "mediterranean",
+      "year": 2021,
+      "month": 8,
+      "bbox": [
+        27.0,
+        35.0,
+        29.0,
+        37.0
+      ],
+      "complete": true,
+      "modis": 18,
+      "viirs": 24,
+      "raw_count": 604,
+      "original_sha256": "1eca86c06e3eda662bef085202bdedcf33afdedd04699aedb316088bb7be3c41",
+      "independent_match": true
+    },
+    {
+      "region": "mediterranean",
+      "year": 2022,
+      "month": 1,
+      "bbox": [
+        27.0,
+        35.0,
+        29.0,
+        37.0
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 1,
+      "raw_count": 1,
+      "original_sha256": "2d99622b4e2bc6743837281e1a39acce46aa26218a95de962dfe9d728ee9c697",
+      "independent_match": true
+    },
+    {
+      "region": "mediterranean",
+      "year": 2022,
+      "month": 8,
+      "bbox": [
+        27.0,
+        35.0,
+        29.0,
+        37.0
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 1,
+      "original_sha256": "7524f49ac47d6919db48caa38c3457e393b41da03c0c64ccee2351e869456545",
+      "independent_match": true
+    },
+    {
+      "region": "mediterranean",
+      "year": 2023,
+      "month": 1,
+      "bbox": [
+        27.0,
+        35.0,
+        29.0,
+        37.0
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "mediterranean",
+      "year": 2023,
+      "month": 8,
+      "bbox": [
+        27.0,
+        35.0,
+        29.0,
+        37.0
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 11,
+      "original_sha256": "38d3e7c128212a14b27b8e0d130c0393ea8d6d0f6310fcc1244f40ac5f9ec577",
+      "independent_match": true
+    },
+    {
+      "region": "mediterranean",
+      "year": 2024,
+      "month": 1,
+      "bbox": [
+        27.0,
+        35.0,
+        29.0,
+        37.0
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 0,
+      "raw_count": 0,
+      "original_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "independent_match": true
+    },
+    {
+      "region": "mediterranean",
+      "year": 2024,
+      "month": 8,
+      "bbox": [
+        27.0,
+        35.0,
+        29.0,
+        37.0
+      ],
+      "complete": true,
+      "modis": 1,
+      "viirs": 2,
+      "raw_count": 4,
+      "original_sha256": "c2e4983df132e938235d213089202f17ede5e576b4a889c787860e94cfc401ac",
+      "independent_match": true
+    },
+    {
+      "region": "brazil",
+      "year": 2019,
+      "month": 1,
+      "bbox": [
+        -55.0,
+        -12.0,
+        -53.0,
+        -10.0
+      ],
+      "complete": true,
+      "modis": 25,
+      "viirs": 34,
+      "raw_count": 195,
+      "original_sha256": "ea45fa992afe1fdd0c78a63ee34fb5f8f9edc375f23a87063a9b22ab218ac7d7",
+      "independent_match": true
+    },
+    {
+      "region": "brazil",
+      "year": 2019,
+      "month": 8,
+      "bbox": [
+        -55.0,
+        -12.0,
+        -53.0,
+        -10.0
+      ],
+      "complete": true,
+      "modis": 130,
+      "viirs": 331,
+      "raw_count": 2927,
+      "original_sha256": "ca98f176c94bf7396a0691e758fc167661f8d9600bc2c2bbb625e34758c668cc",
+      "independent_match": true
+    },
+    {
+      "region": "brazil",
+      "year": 2020,
+      "month": 1,
+      "bbox": [
+        -55.0,
+        -12.0,
+        -53.0,
+        -10.0
+      ],
+      "complete": true,
+      "modis": 36,
+      "viirs": 44,
+      "raw_count": 212,
+      "original_sha256": "89493ef9afc02124a9b761a7b8c28ec57fc8d32add26e6fd2e9bbcc129f26f7a",
+      "independent_match": true
+    },
+    {
+      "region": "brazil",
+      "year": 2020,
+      "month": 8,
+      "bbox": [
+        -55.0,
+        -12.0,
+        -53.0,
+        -10.0
+      ],
+      "complete": true,
+      "modis": 158,
+      "viirs": 410,
+      "raw_count": 4476,
+      "original_sha256": "d58a927c825b3a6a3cfce2e7fcf02502a8fc523b7821f2ac5a90f61e55cd34f3",
+      "independent_match": true
+    },
+    {
+      "region": "brazil",
+      "year": 2021,
+      "month": 1,
+      "bbox": [
+        -55.0,
+        -12.0,
+        -53.0,
+        -10.0
+      ],
+      "complete": true,
+      "modis": 32,
+      "viirs": 55,
+      "raw_count": 276,
+      "original_sha256": "c30b5b9c5214d7a1d2837453666bf5c4dc8577d2d9d0106a108331eebc46d762",
+      "independent_match": true
+    },
+    {
+      "region": "brazil",
+      "year": 2021,
+      "month": 8,
+      "bbox": [
+        -55.0,
+        -12.0,
+        -53.0,
+        -10.0
+      ],
+      "complete": true,
+      "modis": 87,
+      "viirs": 215,
+      "raw_count": 2276,
+      "original_sha256": "b90cd13cd07745d9a6847531d586e5eefe4c923e7a99df450ecca326f5c71934",
+      "independent_match": true
+    },
+    {
+      "region": "brazil",
+      "year": 2022,
+      "month": 1,
+      "bbox": [
+        -55.0,
+        -12.0,
+        -53.0,
+        -10.0
+      ],
+      "complete": true,
+      "modis": 49,
+      "viirs": 37,
+      "raw_count": 189,
+      "original_sha256": "fa22026fb87cab14f102b5440596493e0385aa129cf9a17463b48d062103f968",
+      "independent_match": true
+    },
+    {
+      "region": "brazil",
+      "year": 2022,
+      "month": 8,
+      "bbox": [
+        -55.0,
+        -12.0,
+        -53.0,
+        -10.0
+      ],
+      "complete": true,
+      "modis": 382,
+      "viirs": 593,
+      "raw_count": 12978,
+      "original_sha256": "f554eea6318f36e03981e5f17995e704eac2084579760c83916d876885c5ca3c",
+      "independent_match": true
+    },
+    {
+      "region": "brazil",
+      "year": 2023,
+      "month": 1,
+      "bbox": [
+        -55.0,
+        -12.0,
+        -53.0,
+        -10.0
+      ],
+      "complete": true,
+      "modis": 21,
+      "viirs": 12,
+      "raw_count": 54,
+      "original_sha256": "45bb2697fe1174cf6a7a553503ab0be3badbe1afdff64cc9bc95f657fb99c11b",
+      "independent_match": true
+    },
+    {
+      "region": "brazil",
+      "year": 2023,
+      "month": 8,
+      "bbox": [
+        -55.0,
+        -12.0,
+        -53.0,
+        -10.0
+      ],
+      "complete": true,
+      "modis": 50,
+      "viirs": 90,
+      "raw_count": 1442,
+      "original_sha256": "4559e50f5dea8992e51f08550e015f7f35ec491f1c69b7eb076743efa4b52d06",
+      "independent_match": true
+    },
+    {
+      "region": "brazil",
+      "year": 2024,
+      "month": 1,
+      "bbox": [
+        -55.0,
+        -12.0,
+        -53.0,
+        -10.0
+      ],
+      "complete": true,
+      "modis": 23,
+      "viirs": 19,
+      "raw_count": 165,
+      "original_sha256": "2f8e8cb74474b7af0aa8bce0fa86e38e2ebb515766ae71eed350be72fda6ea76",
+      "independent_match": true
+    },
+    {
+      "region": "brazil",
+      "year": 2024,
+      "month": 8,
+      "bbox": [
+        -55.0,
+        -12.0,
+        -53.0,
+        -10.0
+      ],
+      "complete": true,
+      "modis": 194,
+      "viirs": 384,
+      "raw_count": 7106,
+      "original_sha256": "8ea1dc043ce631fc0909950bb6b7ed105faf5ecf0849ed27ff9969afe87181da",
+      "independent_match": true
+    },
+    {
+      "region": "australia",
+      "year": 2019,
+      "month": 1,
+      "bbox": [
+        148.0,
+        -37.0,
+        150.0,
+        -35.0
+      ],
+      "complete": true,
+      "modis": 11,
+      "viirs": 19,
+      "raw_count": 854,
+      "original_sha256": "0930d7cf2a104fce5ddf45eb45860cc8e1ff6315eb30c026ce3f8d3cf957d9bb",
+      "independent_match": true
+    },
+    {
+      "region": "australia",
+      "year": 2019,
+      "month": 8,
+      "bbox": [
+        148.0,
+        -37.0,
+        150.0,
+        -35.0
+      ],
+      "complete": true,
+      "modis": 12,
+      "viirs": 35,
+      "raw_count": 106,
+      "original_sha256": "7047b9f7795c2cb7f7ee252e21dcd1bec4e7ff74239d430ffe933a32b27e84e1",
+      "independent_match": true
+    },
+    {
+      "region": "australia",
+      "year": 2020,
+      "month": 1,
+      "bbox": [
+        148.0,
+        -37.0,
+        150.0,
+        -35.0
+      ],
+      "complete": true,
+      "modis": 575,
+      "viirs": 1008,
+      "raw_count": 48655,
+      "original_sha256": "818f6d8c4a7b9b4ea9dd7a8bbb5a0e7a01a5972385efe0d01b9814be107cc290",
+      "independent_match": true
+    },
+    {
+      "region": "australia",
+      "year": 2020,
+      "month": 8,
+      "bbox": [
+        148.0,
+        -37.0,
+        150.0,
+        -35.0
+      ],
+      "complete": true,
+      "modis": 2,
+      "viirs": 14,
+      "raw_count": 35,
+      "original_sha256": "5b071bea3612a5f27fc1452694b031253e1be02492684db36153530bbd915669",
+      "independent_match": true
+    },
+    {
+      "region": "australia",
+      "year": 2021,
+      "month": 1,
+      "bbox": [
+        148.0,
+        -37.0,
+        150.0,
+        -35.0
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 1,
+      "raw_count": 6,
+      "original_sha256": "f4812a267c57b5084524e757495dc2050f89380b1a3fd2f99a4de3424380e2f6",
+      "independent_match": true
+    },
+    {
+      "region": "australia",
+      "year": 2021,
+      "month": 8,
+      "bbox": [
+        148.0,
+        -37.0,
+        150.0,
+        -35.0
+      ],
+      "complete": true,
+      "modis": 5,
+      "viirs": 29,
+      "raw_count": 58,
+      "original_sha256": "f7e4085d22cfc152be1997bf586b3f6f29adaf88964f95ddd5073b8354da29fc",
+      "independent_match": true
+    },
+    {
+      "region": "australia",
+      "year": 2022,
+      "month": 1,
+      "bbox": [
+        148.0,
+        -37.0,
+        150.0,
+        -35.0
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 1,
+      "raw_count": 2,
+      "original_sha256": "ffbfc3b64200f312d5fcbc3f8817a1045ac61849ff08a6681fa52e3d54dac975",
+      "independent_match": true
+    },
+    {
+      "region": "australia",
+      "year": 2022,
+      "month": 8,
+      "bbox": [
+        148.0,
+        -37.0,
+        150.0,
+        -35.0
+      ],
+      "complete": true,
+      "modis": 7,
+      "viirs": 9,
+      "raw_count": 28,
+      "original_sha256": "137f72e266b673effdd42df0fe7dd4153d09e0fada9d18a7735385c99741ed19",
+      "independent_match": true
+    },
+    {
+      "region": "australia",
+      "year": 2023,
+      "month": 1,
+      "bbox": [
+        148.0,
+        -37.0,
+        150.0,
+        -35.0
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 4,
+      "raw_count": 5,
+      "original_sha256": "9102122d1d66d0b0be9fb7e91cf3abf0fee8e197c7717a166c3b370a6e1b47d9",
+      "independent_match": true
+    },
+    {
+      "region": "australia",
+      "year": 2023,
+      "month": 8,
+      "bbox": [
+        148.0,
+        -37.0,
+        150.0,
+        -35.0
+      ],
+      "complete": true,
+      "modis": 3,
+      "viirs": 33,
+      "raw_count": 70,
+      "original_sha256": "370f6374ab37b66677844de2a6e3588180a9189f4d87d82414bf070173f4c311",
+      "independent_match": true
+    },
+    {
+      "region": "australia",
+      "year": 2024,
+      "month": 1,
+      "bbox": [
+        148.0,
+        -37.0,
+        150.0,
+        -35.0
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 2,
+      "raw_count": 6,
+      "original_sha256": "91df6debdd99e86aadb1e52554dc8bd2869956d8226e3eb6b0ded804c5c52bdd",
+      "independent_match": true
+    },
+    {
+      "region": "australia",
+      "year": 2024,
+      "month": 8,
+      "bbox": [
+        148.0,
+        -37.0,
+        150.0,
+        -35.0
+      ],
+      "complete": true,
+      "modis": 1,
+      "viirs": 27,
+      "raw_count": 75,
+      "original_sha256": "4ad86b734cddce718ed70fdf12bc13a278b01944dca610efef3d5dd3bfc3fb60",
+      "independent_match": true
+    },
+    {
+      "region": "southern_africa",
+      "year": 2019,
+      "month": 1,
+      "bbox": [
+        31.0,
+        -25.0,
+        33.0,
+        -23.0
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 6,
+      "raw_count": 15,
+      "original_sha256": "f67a87fdb37aa642e421e400e219ffdf6409e32d648d00fd21fea85b437acf39",
+      "independent_match": true
+    },
+    {
+      "region": "southern_africa",
+      "year": 2019,
+      "month": 8,
+      "bbox": [
+        31.0,
+        -25.0,
+        33.0,
+        -23.0
+      ],
+      "complete": true,
+      "modis": 30,
+      "viirs": 75,
+      "raw_count": 265,
+      "original_sha256": "770bc4d2c82cf4af0c57eedec7cf020a1d6faaaaeee16f3d3f1343099ccd5149",
+      "independent_match": true
+    },
+    {
+      "region": "southern_africa",
+      "year": 2020,
+      "month": 1,
+      "bbox": [
+        31.0,
+        -25.0,
+        33.0,
+        -23.0
+      ],
+      "complete": true,
+      "modis": 2,
+      "viirs": 18,
+      "raw_count": 67,
+      "original_sha256": "c5562c602eb0a5fa6356bc65a3a6b381bdbe5df0a2433c30abafcd754b50f261",
+      "independent_match": true
+    },
+    {
+      "region": "southern_africa",
+      "year": 2020,
+      "month": 8,
+      "bbox": [
+        31.0,
+        -25.0,
+        33.0,
+        -23.0
+      ],
+      "complete": true,
+      "modis": 37,
+      "viirs": 181,
+      "raw_count": 1135,
+      "original_sha256": "42921d27131de4403cc13105ed498f31d49542cc7267b090730ada0aa2a15ca9",
+      "independent_match": true
+    },
+    {
+      "region": "southern_africa",
+      "year": 2021,
+      "month": 1,
+      "bbox": [
+        31.0,
+        -25.0,
+        33.0,
+        -23.0
+      ],
+      "complete": true,
+      "modis": 0,
+      "viirs": 15,
+      "raw_count": 22,
+      "original_sha256": "71316c8db1bb12a07c44993c499aff07ae8b9f87d1ff46171e6b9423f559f781",
+      "independent_match": true
+    },
+    {
+      "region": "southern_africa",
+      "year": 2021,
+      "month": 8,
+      "bbox": [
+        31.0,
+        -25.0,
+        33.0,
+        -23.0
+      ],
+      "complete": true,
+      "modis": 124,
+      "viirs": 250,
+      "raw_count": 1838,
+      "original_sha256": "06dff61bd99602a6350a27335e2a929af59979052dfebce9f05f1f149b6b25ee",
+      "independent_match": true
+    },
+    {
+      "region": "southern_africa",
+      "year": 2022,
+      "month": 1,
+      "bbox": [
+        31.0,
+        -25.0,
+        33.0,
+        -23.0
+      ],
+      "complete": true,
+      "modis": 2,
+      "viirs": 9,
+      "raw_count": 18,
+      "original_sha256": "79000ed8ba32aa205272bd1493a810860c620809d7c7bcf82489ea59f889f50e",
+      "independent_match": true
+    },
+    {
+      "region": "southern_africa",
+      "year": 2022,
+      "month": 8,
+      "bbox": [
+        31.0,
+        -25.0,
+        33.0,
+        -23.0
+      ],
+      "complete": true,
+      "modis": 43,
+      "viirs": 145,
+      "raw_count": 752,
+      "original_sha256": "769f2099a2912e514b54dc62ab7aa3950b0704e42839072c1afd19426146ac97",
+      "independent_match": true
+    },
+    {
+      "region": "southern_africa",
+      "year": 2023,
+      "month": 1,
+      "bbox": [
+        31.0,
+        -25.0,
+        33.0,
+        -23.0
+      ],
+      "complete": true,
+      "modis": 3,
+      "viirs": 21,
+      "raw_count": 52,
+      "original_sha256": "bfb0dabea6e23516ca1d1da77115e5ea777db1332ddd5b5f228ca5820c24b4d0",
+      "independent_match": true
+    },
+    {
+      "region": "southern_africa",
+      "year": 2023,
+      "month": 8,
+      "bbox": [
+        31.0,
+        -25.0,
+        33.0,
+        -23.0
+      ],
+      "complete": true,
+      "modis": 79,
+      "viirs": 190,
+      "raw_count": 2318,
+      "original_sha256": "792d7f9ccfdbec31db442f5f2ec23c1e74a41f54b60c54a00d2ca3ace2683b94",
+      "independent_match": true
+    },
+    {
+      "region": "southern_africa",
+      "year": 2024,
+      "month": 1,
+      "bbox": [
+        31.0,
+        -25.0,
+        33.0,
+        -23.0
+      ],
+      "complete": true,
+      "modis": 1,
+      "viirs": 14,
+      "raw_count": 21,
+      "original_sha256": "ffa1253398e5fd6bb796a4037f23677d296e942539bfe33bb8b8acbff2792f53",
+      "independent_match": true
+    },
+    {
+      "region": "southern_africa",
+      "year": 2024,
+      "month": 8,
+      "bbox": [
+        31.0,
+        -25.0,
+        33.0,
+        -23.0
+      ],
+      "complete": true,
+      "modis": 76,
+      "viirs": 218,
+      "raw_count": 826,
+      "original_sha256": "b6994656b2c9e5394ece747d745a34197daa99242618c9eba75045af9de41baf",
+      "independent_match": true
+    },
+    {
+      "region": "north_america",
+      "year": 2019,
+      "month": 1,
+      "bbox": [
+        -122.0,
+        39.0,
+        -120.0,
+        41.0
+      ],
+      "complete": true,
+      "modis": 10,
+      "viirs": 21,
+      "raw_count": 58,
+      "original_sha256": "fba17e2e14106851e0cf7c1dc84f05bd78d5ff18f99af6f681e310a91d514536",
+      "independent_match": true
+    },
+    {
+      "region": "north_america",
+      "year": 2019,
+      "month": 8,
+      "bbox": [
+        -122.0,
+        39.0,
+        -120.0,
+        41.0
+      ],
+      "complete": true,
+      "modis": 4,
+      "viirs": 32,
+      "raw_count": 103,
+      "original_sha256": "f0d2c6ea55de1142abd1d5ca283d17e2a32e48573bd5cb14ab951b3bad00cde3",
+      "independent_match": true
+    },
+    {
+      "region": "north_america",
+      "year": 2020,
+      "month": 1,
+      "bbox": [
+        -122.0,
+        39.0,
+        -120.0,
+        41.0
+      ],
+      "complete": true,
+      "modis": 8,
+      "viirs": 25,
+      "raw_count": 60,
+      "original_sha256": "ba4b4290e66d6c12878c53aef875f4878c3fb3793be04c348c7ef4c3e648ca1a",
+      "independent_match": true
+    },
+    {
+      "region": "north_america",
+      "year": 2020,
+      "month": 8,
+      "bbox": [
+        -122.0,
+        39.0,
+        -120.0,
+        41.0
+      ],
+      "complete": true,
+      "modis": 56,
+      "viirs": 147,
+      "raw_count": 6456,
+      "original_sha256": "53c8ff7e4218449bf9743a246d0e9c67489b86ad2c1ee574a10ede0c9cee4143",
+      "independent_match": true
+    },
+    {
+      "region": "north_america",
+      "year": 2021,
+      "month": 1,
+      "bbox": [
+        -122.0,
+        39.0,
+        -120.0,
+        41.0
+      ],
+      "complete": true,
+      "modis": 16,
+      "viirs": 45,
+      "raw_count": 148,
+      "original_sha256": "69d3a56eb24922996dc4019c8c9b6970fe3f9e275d725279a8333ec0021d777d",
+      "independent_match": true
+    },
+    {
+      "region": "north_america",
+      "year": 2021,
+      "month": 8,
+      "bbox": [
+        -122.0,
+        39.0,
+        -120.0,
+        41.0
+      ],
+      "complete": true,
+      "modis": 380,
+      "viirs": 553,
+      "raw_count": 49854,
+      "original_sha256": "ee8063eb4d6e5f8f082969e9be712aa636617ee0e704de987d1d94ce32c590f1",
+      "independent_match": true
+    },
+    {
+      "region": "north_america",
+      "year": 2022,
+      "month": 1,
+      "bbox": [
+        -122.0,
+        39.0,
+        -120.0,
+        41.0
+      ],
+      "complete": true,
+      "modis": 27,
+      "viirs": 70,
+      "raw_count": 223,
+      "original_sha256": "d959429f41c0a70ec729aa9714b24e6ff6baf8c146cbdb6955b8ce89ff44be44",
+      "independent_match": true
+    },
+    {
+      "region": "north_america",
+      "year": 2022,
+      "month": 8,
+      "bbox": [
+        -122.0,
+        39.0,
+        -120.0,
+        41.0
+      ],
+      "complete": true,
+      "modis": 3,
+      "viirs": 19,
+      "raw_count": 62,
+      "original_sha256": "544a21c13f7ce30244dbd0735a1d253a628117601db3f121c0bc15e4356d1129",
+      "independent_match": true
+    },
+    {
+      "region": "north_america",
+      "year": 2023,
+      "month": 1,
+      "bbox": [
+        -122.0,
+        39.0,
+        -120.0,
+        41.0
+      ],
+      "complete": true,
+      "modis": 13,
+      "viirs": 29,
+      "raw_count": 109,
+      "original_sha256": "6cf1ecc57c4d69bd0affa43fcad3a985fccefcb3d232b6f91950c1a7f015cd14",
+      "independent_match": true
+    },
+    {
+      "region": "north_america",
+      "year": 2023,
+      "month": 8,
+      "bbox": [
+        -122.0,
+        39.0,
+        -120.0,
+        41.0
+      ],
+      "complete": true,
+      "modis": 9,
+      "viirs": 62,
+      "raw_count": 156,
+      "original_sha256": "b64075b04afeab1513cad11d193636f28fd2c868988611667d0222f66ca33c3d",
+      "independent_match": true
+    },
+    {
+      "region": "north_america",
+      "year": 2024,
+      "month": 1,
+      "bbox": [
+        -122.0,
+        39.0,
+        -120.0,
+        41.0
+      ],
+      "complete": true,
+      "modis": 11,
+      "viirs": 33,
+      "raw_count": 122,
+      "original_sha256": "cd69b2fcbcb74f3bf6a03dfecbf5d8264f8e502d1bf3cc221c98a82cbb5b0c4b",
+      "independent_match": true
+    },
+    {
+      "region": "north_america",
+      "year": 2024,
+      "month": 8,
+      "bbox": [
+        -122.0,
+        39.0,
+        -120.0,
+        41.0
+      ],
+      "complete": true,
+      "modis": 27,
+      "viirs": 63,
+      "raw_count": 3208,
+      "original_sha256": "c8634e50de3860e870243f4a2d4852e086f01aab5630fe5ff54f8514c2376bac",
+      "independent_match": true
+    }
+  ]
+}

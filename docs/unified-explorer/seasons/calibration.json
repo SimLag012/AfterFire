@@ -1,0 +1,406 @@
+{
+  "version": "fire-activity-1.0.0",
+  "status": "validation_failed",
+  "units": "MODIS Aqua-equivalent daytime occupied 10 km equal-area cell-days",
+  "reference": "Aqua",
+  "input_satellite": "SNPP",
+  "processing": "SP",
+  "daynight": "D",
+  "estimator": "log_linear",
+  "coefficients": [
+    0.0,
+    0.7509136050942067
+  ],
+  "cv_mae": {
+    "identity": 36.54166666666666,
+    "log_linear": 20.227561480643708
+  },
+  "validation": {
+    "temporal": {
+      "n": 48,
+      "mae": 16.207096387729322,
+      "bias": -11.546103170044214,
+      "rmse": 45.04316219706919,
+      "relative_bias": -0.3608157240638817,
+      "identity_mae": 29.083333333333332,
+      "interval_coverage": 0.7708333333333334
+    },
+    "geographic": {
+      "n": 84,
+      "mae": 16.5834262491751,
+      "bias": -0.6956570741147374,
+      "rmse": 32.81194148545999,
+      "relative_bias": -0.01709631194430601,
+      "identity_mae": 62.79761904761905,
+      "interval_coverage": 0.6785714285714286
+    }
+  },
+  "log_residual_q80": 0.6314366367170378,
+  "interval_n": 48,
+  "training_n": 72,
+  "training_years": [
+    2019,
+    2020,
+    2021,
+    2022
+  ],
+  "geographic_holdout": [
+    "north_america",
+    "southern_africa"
+  ],
+  "domain_viirs_density": [
+    0.0,
+    251.90111341573325
+  ],
+  "domain_area_km2": [
+    37923.83031741626,
+    48357.252006537106
+  ],
+  "density_normalization_km2": 10000,
+  "domain_calendar_months": [],
+  "domain_years": [
+    2019,
+    2024
+  ],
+  "samples_sha256": "592925c865fdb89eecafb379f6c05803a1663ff835978b37c4a72027e5fd653a",
+  "limitations": [
+    "Conditional on detected activity and archive completeness; clear-sky opportunities unavailable.",
+    "Conformal interval assumes exchangeability; spatial/temporal dependence may weaken coverage.",
+    "Aqua orbital drift and product changes are not explicitly corrected.",
+    "Only tested 2-degree rectangular supports. No validated local, polygon, Terra-era or recent mission bridge.",
+    "No land-cover/biome attribution was available; geographic holdouts do not prove biome transfer."
+  ],
+  "pooled_validation_status": "validation_failed",
+  "seasonal_validation": {
+    "1": {
+      "passed": false,
+      "tests": {
+        "temporal": {
+          "n": 4,
+          "mae": 3.4147858420634085,
+          "rmse": 5.9541662753156235,
+          "bias": -2.4929460983664873,
+          "relative_bias": -0.41549101639441455,
+          "identity_mae": 1.75,
+          "interval_coverage": 1.0
+        },
+        "geographic": {
+          "n": 12,
+          "mae": 5.683847547045521,
+          "rmse": 6.170238564705246,
+          "bias": 5.683847547045521,
+          "relative_bias": 0.7333996834897447,
+          "identity_mae": 17.75,
+          "interval_coverage": 0.5833333333333334
+        }
+      }
+    },
+    "2": {
+      "passed": false,
+      "tests": {
+        "temporal": {
+          "n": 4,
+          "mae": 20.597646785789777,
+          "rmse": 37.27130773387069,
+          "bias": -16.56432450529134,
+          "relative_bias": -0.7529238411496063,
+          "identity_mae": 19.5,
+          "interval_coverage": 0.5
+        },
+        "geographic": {
+          "n": 6,
+          "mae": 8.739177633214256,
+          "rmse": 10.457013112440759,
+          "bias": 8.739177633214256,
+          "relative_bias": 1.638595806227673,
+          "identity_mae": 22.333333333333332,
+          "interval_coverage": 0.5
+        }
+      }
+    },
+    "3": {
+      "passed": false,
+      "tests": {
+        "temporal": {
+          "n": 4,
+          "mae": 23.009408268511798,
+          "rmse": 42.99339898402644,
+          "bias": -19.90760069482836,
+          "relative_bias": -0.6421806675751084,
+          "identity_mae": 25.0,
+          "interval_coverage": 0.75
+        },
+        "geographic": {
+          "n": 6,
+          "mae": 8.397187683280464,
+          "rmse": 10.05621978637609,
+          "bias": 8.397187683280464,
+          "relative_bias": 0.9506250207487318,
+          "identity_mae": 26.333333333333332,
+          "interval_coverage": 0.8333333333333334
+        }
+      }
+    },
+    "4": {
+      "passed": false,
+      "tests": {
+        "temporal": {
+          "n": 4,
+          "mae": 4.77273895085517,
+          "rmse": 6.691940293537992,
+          "bias": -1.7467580483463978,
+          "relative_bias": -0.1145415113669769,
+          "identity_mae": 19.75,
+          "interval_coverage": 0.75
+        },
+        "geographic": {
+          "n": 6,
+          "mae": 13.384391894684688,
+          "rmse": 16.38695774864315,
+          "bias": 13.384391894684688,
+          "relative_bias": 0.8635091544957862,
+          "identity_mae": 51.166666666666664,
+          "interval_coverage": 0.6666666666666666
+        }
+      }
+    },
+    "5": {
+      "passed": false,
+      "tests": {
+        "temporal": {
+          "n": 4,
+          "mae": 17.480523190149746,
+          "rmse": 29.040005262835095,
+          "bias": -11.217804957182635,
+          "relative_bias": -0.30524639339272475,
+          "identity_mae": 23.5,
+          "interval_coverage": 0.75
+        },
+        "geographic": {
+          "n": 6,
+          "mae": 9.645217464702498,
+          "rmse": 12.146551620623798,
+          "bias": 5.394894075604131,
+          "relative_bias": 0.18819397938153945,
+          "identity_mae": 50.166666666666664,
+          "interval_coverage": 0.6666666666666666
+        }
+      }
+    },
+    "6": {
+      "passed": false,
+      "tests": {
+        "temporal": {
+          "n": 4,
+          "mae": 14.63585034819254,
+          "rmse": 25.054948928687054,
+          "bias": -10.688404347807582,
+          "relative_bias": -0.28313653901477037,
+          "identity_mae": 32.25,
+          "interval_coverage": 0.75
+        },
+        "geographic": {
+          "n": 6,
+          "mae": 12.140548125017505,
+          "rmse": 13.678233167021551,
+          "bias": 7.437857700166596,
+          "relative_bias": 0.23737843723935945,
+          "identity_mae": 61.0,
+          "interval_coverage": 0.5
+        }
+      }
+    },
+    "7": {
+      "passed": false,
+      "tests": {
+        "temporal": {
+          "n": 4,
+          "mae": 8.44220126650967,
+          "rmse": 14.830427727073976,
+          "bias": -7.897573528306744,
+          "relative_bias": -0.3631068288876664,
+          "identity_mae": 7.0,
+          "interval_coverage": 1.0
+        },
+        "geographic": {
+          "n": 6,
+          "mae": 38.55480248527828,
+          "rmse": 45.39827709816288,
+          "bias": -34.746773693603714,
+          "relative_bias": -0.39635103072551764,
+          "identity_mae": 60.0,
+          "interval_coverage": 0.3333333333333333
+        }
+      }
+    },
+    "8": {
+      "passed": false,
+      "tests": {
+        "temporal": {
+          "n": 4,
+          "mae": 21.34343878940828,
+          "rmse": 34.93287755555352,
+          "bias": -14.323943095701377,
+          "relative_bias": -0.27026307727738447,
+          "identity_mae": 56.25,
+          "interval_coverage": 0.75
+        },
+        "geographic": {
+          "n": 12,
+          "mae": 30.26914783784528,
+          "rmse": 66.43628879937897,
+          "bias": -14.027237277344073,
+          "relative_bias": -0.19392493931812083,
+          "identity_mae": 88.91666666666667,
+          "interval_coverage": 0.6666666666666666
+        }
+      }
+    },
+    "9": {
+      "passed": false,
+      "tests": {
+        "temporal": {
+          "n": 4,
+          "mae": 71.95857617401626,
+          "rmse": 134.4190384675134,
+          "bias": -62.31890946239964,
+          "relative_bias": -0.4757168661251881,
+          "identity_mae": 112.0,
+          "interval_coverage": 0.5
+        },
+        "geographic": {
+          "n": 6,
+          "mae": 34.17972319211756,
+          "rmse": 52.58314034660906,
+          "bias": -24.57421418748466,
+          "relative_bias": -0.22930837499985687,
+          "identity_mae": 139.0,
+          "interval_coverage": 1.0
+        }
+      }
+    },
+    "10": {
+      "passed": true,
+      "tests": {
+        "temporal": {
+          "n": 4,
+          "mae": 4.415212564037735,
+          "rmse": 5.650391006159049,
+          "bias": 4.415212564037735,
+          "relative_bias": 0.23547800341534586,
+          "identity_mae": 36.75,
+          "interval_coverage": 0.75
+        },
+        "geographic": {
+          "n": 6,
+          "mae": 10.385581639770683,
+          "rmse": 11.9056541756903,
+          "bias": 2.172458779094216,
+          "relative_bias": 0.03630850327176963,
+          "identity_mae": 107.66666666666667,
+          "interval_coverage": 1.0
+        }
+      }
+    },
+    "11": {
+      "passed": true,
+      "tests": {
+        "temporal": {
+          "n": 4,
+          "mae": 1.297647879534567,
+          "rmse": 1.428440320362586,
+          "bias": 1.0726875399793672,
+          "relative_bias": 0.20432143618654613,
+          "identity_mae": 5.25,
+          "interval_coverage": 1.0
+        },
+        "geographic": {
+          "n": 6,
+          "mae": 11.188570017430067,
+          "rmse": 12.658526785014402,
+          "bias": 7.0958239548609825,
+          "relative_bias": 0.14530697518486654,
+          "identity_mae": 99.16666666666667,
+          "interval_coverage": 0.8333333333333334
+        }
+      }
+    },
+    "12": {
+      "passed": false,
+      "tests": {
+        "temporal": {
+          "n": 4,
+          "mae": 3.11712659368287,
+          "rmse": 3.8801386641198765,
+          "bias": 3.11712659368287,
+          "relative_bias": 0.5667502897605218,
+          "identity_mae": 10.0,
+          "interval_coverage": 0.75
+        },
+        "geographic": {
+          "n": 6,
+          "mae": 13.646776583173851,
+          "rmse": 15.080101897453572,
+          "bias": 13.646776583173851,
+          "relative_bias": 0.8355169336637052,
+          "identity_mae": 49.0,
+          "interval_coverage": 0.6666666666666666
+        }
+      }
+    }
+  },
+  "all_seasons_validated": false,
+  "domain_square_side_degrees": 2.0,
+  "domain_years_by_month": {
+    "1": [
+      2019,
+      2024
+    ],
+    "2": [
+      2021,
+      2024
+    ],
+    "3": [
+      2021,
+      2024
+    ],
+    "4": [
+      2021,
+      2024
+    ],
+    "5": [
+      2021,
+      2024
+    ],
+    "6": [
+      2021,
+      2024
+    ],
+    "7": [
+      2021,
+      2024
+    ],
+    "8": [
+      2019,
+      2024
+    ],
+    "9": [
+      2021,
+      2024
+    ],
+    "10": [
+      2021,
+      2024
+    ],
+    "11": [
+      2021,
+      2024
+    ],
+    "12": [
+      2021,
+      2024
+    ]
+  },
+  "design": "Fixed six regions; all 12 months 2021/2023/2024 plus original 2019\u20132024 January/August. Pooled log-density model with separate monthly holdout gates, unchanged thresholds.",
+  "id": "3e78a74cb799c94f45d14d1825336dc6a86a0d9d809192a2887a1b05e81dfff1"
+}

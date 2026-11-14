@@ -1,0 +1,17 @@
+{
+  "before": {
+    "x": 1010,
+    "y": 121,
+    "width": 430,
+    "height": 719
+  },
+  "after": {
+    "x": 1080,
+    "y": 121,
+    "width": 360,
+    "height": 719
+  },
+  "errors": [],
+  "status": "passed",
+  "scope": "Native Chromium horizontal panel resize by mouse drag; production frontend, no simulated API."
+}

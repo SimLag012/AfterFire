@@ -1,0 +1,65 @@
+{
+  "scope": "Warm local HTTP calendar reads on current source API, concurrent NASA validation workload; five requests per study. Not a cold acquisition or render benchmark.",
+  "results": [
+    {
+      "study": "2fe91a7219633a7dcfc0053f073f1907b6f349987f2e1241aa4d273fe6fd8579",
+      "state": "partial",
+      "months": 1,
+      "bytes": 7789,
+      "median_ms": 22.90012499997829,
+      "max_ms": 29.42286500001501,
+      "sample_ms": [
+        29.42286500001501,
+        24.657892000050197,
+        21.86964500015165,
+        22.90012499997829,
+        15.31470400004764
+      ]
+    },
+    {
+      "study": "1a25d8adbbd276755ac5b8c1921223a02c11bd84cabdaaf24f470508d5e56e24",
+      "state": "completed",
+      "months": 1,
+      "bytes": 7559,
+      "median_ms": 14.477328000339185,
+      "max_ms": 15.748907000215695,
+      "sample_ms": [
+        14.27210300016668,
+        15.748907000215695,
+        15.282480999758263,
+        14.477328000339185,
+        13.445618999867293
+      ]
+    },
+    {
+      "study": "a3539d942c1190edd7c3e0bfe880caae32f40df1cb10626c6469409791505fe9",
+      "state": "partial",
+      "months": 313,
+      "bytes": 723335,
+      "median_ms": 799.1163519996007,
+      "max_ms": 844.4804539999495,
+      "sample_ms": [
+        768.0978589996812,
+        844.4804539999495,
+        700.0773889999437,
+        799.1163519996007,
+        815.4245279997667
+      ]
+    },
+    {
+      "study": "cf11c7cd9a6171178af946b2b1e236e1ac14f3e5d0d3ae5d592c133b838a0f62",
+      "state": "completed",
+      "months": 1,
+      "bytes": 7766,
+      "median_ms": 14.502786000321066,
+      "max_ms": 15.95845499969073,
+      "sample_ms": [
+        15.95845499969073,
+        14.502786000321066,
+        13.194608000048902,
+        14.047670999843831,
+        15.270318000148109
+      ]
+    }
+  ]
+}

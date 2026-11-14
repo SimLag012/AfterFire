@@ -1,0 +1,59 @@
+{
+  "candidate_id": "c29f459b23d9dc9b8ef7c41df72f7a3c0b921afe494736dc78fd34666f2d883c",
+  "coefficients": [
+    0.0,
+    0.7349189149770621
+  ],
+  "log_residual_q80": 0.795532558521448,
+  "months": [
+    6
+  ],
+  "years": [
+    2022,
+    2025
+  ],
+  "regions": {
+    "italy": [
+      8,
+      39,
+      10,
+      41
+    ],
+    "mediterranean": [
+      27,
+      35,
+      29,
+      37
+    ],
+    "brazil": [
+      -55,
+      -12,
+      -53,
+      -10
+    ],
+    "australia": [
+      148,
+      -37,
+      150,
+      -35
+    ],
+    "southern_africa": [
+      31,
+      -25,
+      33,
+      -23
+    ],
+    "north_america": [
+      -122,
+      39,
+      -120,
+      41
+    ]
+  },
+  "geographic_holdout": [
+    "north_america",
+    "southern_africa"
+  ],
+  "gates": "Each seen-region and geographic group: n >= 4, MAE <= identity MAE, |relative bias| <= .35, interval coverage >= .70. Frozen before acquisition.",
+  "policy": "No refitting. Only June may be released if confirmation passes. Other months remain unchanged."
+}

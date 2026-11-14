@@ -1,0 +1,30 @@
+{
+  "region": "north_america",
+  "bbox": [
+    -122,
+    39,
+    -120,
+    41
+  ],
+  "year": 2023,
+  "month": 11,
+  "modis": 56,
+  "viirs": 130,
+  "complete": true,
+  "checks": [
+    {
+      "product": "MODIS_SP",
+      "raw_count": 126,
+      "occupied_cell_days": 56,
+      "raw_sha256": "ea6d6f6377570463e50e0e52af3562b8470359b199d5e65954eadc8a27a11b3d",
+      "independent_match": true
+    },
+    {
+      "product": "VIIRS_SNPP_SP",
+      "raw_count": 391,
+      "occupied_cell_days": 130,
+      "raw_sha256": "143fe0585d75d6d7f3737ff7c04932d3f160927ecb439b3d3705064e815a0075",
+      "independent_match": true
+    }
+  ]
+}
