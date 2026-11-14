@@ -1,4 +1,3 @@
-import { FireActivityPanel } from '../components/fireActivity/FireActivityPanel';
 import type { FireDetection } from '../types';
 import { CandidateSearch } from '../components/common/CandidateSearch';
 import L from 'leaflet';
@@ -10,6 +9,8 @@ import { hasLocalObservations, loadObservations } from '../api/observationCache'
 import { satelliteApi } from '../api/satellite';
 import { apiClient } from '../api/client';
 import { LeafletMap } from '../components/map/LeafletMap';
+
+const FireActivityPanel = React.lazy(() => import('../components/fireActivity/FireActivityPanel').then(module => ({ default: module.FireActivityPanel })));
 
 type Period = 'today' | '24h' | 'all' | '7d' | '30d' | '12mo' | 'custom';
 
@@ -653,8 +654,8 @@ export const ExplorerPage: React.FC = () => {
 
           </div>
 
-          {activityOpen&&<FireActivityPanel bbox={circleBox||outlinedBox||regionalBox||viewport} onClose={()=>setActivityOpen(false)} onMonth={showActivityMonth}
-            onCandidates={(start,end,area)=>{setActivityPoints(null);setActivityOpen(false);setFocusPosition(undefined);setInitialBounds(parseViewBounds(area.join(',')));setViewGeneration(v=>v+1);updateParams({start,end:end>cutoff?cutoff:end,source:'online',period:'custom',candidates:'on',lat:undefined,lon:undefined,radius:undefined,italyOutline:'off',map:area.join(',')});}}/>}
+          {activityOpen&&<React.Suspense fallback={<div className="absolute left-3 top-3 z-[1100] rounded bg-slate-900 p-3 text-sm" role="status">Loading fire activity calendar…</div>}><FireActivityPanel bbox={circleBox||outlinedBox||regionalBox||viewport} onClose={()=>setActivityOpen(false)} onMonth={showActivityMonth}
+            onCandidates={(start,end,area)=>{setActivityPoints(null);setActivityOpen(false);setFocusPosition(undefined);setInitialBounds(parseViewBounds(area.join(',')));setViewGeneration(v=>v+1);updateParams({start,end:end>cutoff?cutoff:end,source:'online',period:'custom',candidates:'on',lat:undefined,lon:undefined,radius:undefined,italyOutline:'off',map:area.join(',')});}}/></React.Suspense>}
           {activityPoints&&<div className="absolute right-4 bottom-24 z-[660] rounded bg-slate-900 p-2 text-xs">Original FIRMS observations · {activityMonth}<button className="ml-2 underline" onClick={()=>setActivityPoints(null)}>Return to Explorer observations</button></div>}
           <LeafletMap
             key={viewGeneration}
