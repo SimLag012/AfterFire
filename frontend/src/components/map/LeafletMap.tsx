@@ -22,10 +22,11 @@ interface LeafletMapProps {
   scientificResult?: SatelliteResult;
   scientificObservation?: SatelliteObservation;
   showScientificBurned?: boolean;
-  observationBounds?: [[number,number],[number,number]];
+  observationBounds?: [[number,number],[number,number]][];
   initialZoom?: number;
   initialBounds?: [[number,number],[number,number]];
   focusPosition?: [number,number];
+  focusBounds?: [[number,number],[number,number]];
   colorMode?: 'confidence' | 'sensor' | 'date';
   labels?: boolean;
   terrain?: boolean;
@@ -80,9 +81,12 @@ function MapViewportReporter({ onViewportChange }: { onViewportChange?: (bbox: s
   return null;
 }
 
-function SearchFocus({position}: {position?: [number,number]}) {
+function SearchFocus({position,bounds}: {position?: [number,number];bounds?: [[number,number],[number,number]][]}) {
   const map=useMap();
-  useEffect(()=>{if(position) map.setView(position,8);},[position,map]);
+  useEffect(()=>{
+    if(bounds?.length) map.fitBounds(L.latLngBounds(bounds.flatMap(([southWest,northEast])=>[southWest,northEast])),{padding:[35,35],maxZoom:12});
+    else if(position) map.setView(position,8);
+  },[position,bounds,map]);
   return null;
 }
 
@@ -492,7 +496,7 @@ function DetectionPopup({ detection, events }: { detection: FireDetection; event
 
 export const LeafletMap: React.FC<LeafletMapProps> = ({
   showLegend = true, scientificResult, scientificObservation, showScientificBurned = false,
-  initialZoom, initialBounds, focusPosition, colorMode = 'confidence', labels = false, terrain = false, opacity = 0.85,
+  initialZoom, initialBounds, focusPosition, focusBounds, colorMode = 'confidence', labels = false, terrain = false, opacity = 0.85,
   area,
   detections = [],
   events = [],
@@ -540,8 +544,8 @@ export const LeafletMap: React.FC<LeafletMapProps> = ({
         worldCopyJump
       >
         <MapViewController bounds={selectionBounds || bounds || initialBounds || ITALY_BOUNDS} maxZoom={initialBounds ? 19 : area || selectionBounds ? 13 : 7} restore={!!initialBounds} restoreZoom={initialZoom} />
-        {observationBounds && <Rectangle bounds={observationBounds} interactive={false} pathOptions={{color:"#d6e6e1", weight:1, dashArray:"5 6", fill:false}} />}
-        <SearchFocus position={focusPosition} />
+        {observationBounds?.map((outline,index)=><Rectangle key={`territory-outline-${index}`} bounds={outline} interactive={false} pathOptions={{color:"#d6e6e1", weight:1, dashArray:"5 6", fill:false}} />)}
+        <SearchFocus position={focusPosition} bounds={focusBounds} />
         <CircleViewController circle={selectionCircle} />
         <CandidateFocus event={focusedEvent} returnTo={returnTo} />
         {events.filter(e=>e.id!==focusedEvent?.id).map(event=><CircleMarker key={'candidate-'+event.id} center={[event.center_lat,event.center_lon]} radius={7} pathOptions={{color:'#34d399',weight:2,fillOpacity:0.2}}><Tooltip>Candidate: {event.name}</Tooltip><Popup><strong>{event.place || event.name}</strong><p className="break-all">{event.id}</p><p>{event.start_date} to {event.end_date} ({event.detection_count} observations)</p><Link to={`/events/${encodeURIComponent(event.id)}?returnTo=${encodeURIComponent(returnTo || '/explorer')}`}>Analyze candidate</Link><p>Algorithmic grouping, not an official perimeter.</p></Popup></CircleMarker>)}

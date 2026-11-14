@@ -13,6 +13,19 @@ type Period = 'today' | '24h' | 'all' | '7d' | '30d' | '12mo' | 'custom';
 
 const ITALY_BBOX = '6.3,35.3,18.9,47.2';
 const PAGE_SIZE = 10;
+type LocationResult = {name:string;lat:number;lon:number;bbox?:[number,number,number,number];bounds?:[number,number,number,number][]};
+type LocationMapBounds = [[number,number],[number,number]];
+
+function paddedLocationBounds(result: LocationResult): LocationMapBounds[] {
+  const boxes=result.bounds ?? [result.bbox ?? [result.lon-0.05,result.lat-0.05,result.lon+0.05,result.lat+0.05]];
+  return boxes.map(([west,south,east,north])=>{
+    const midLat=(south+north)/2;
+    const lonScale=Math.max(0.2,Math.cos(midLat*Math.PI/180));
+    const latPad=Math.max((north-south)*0.1,0.02);
+    const lonPad=Math.max((east-west)*0.1,0.02/lonScale);
+    return [[Math.max(-90,south-latPad),Math.max(-180,west-lonPad)],[Math.min(90,north+latPad),Math.min(180,east+lonPad)]] as LocationMapBounds;
+  });
+}
 
 const parseNumber = (value: string | null, fallback: number): number => {
   if (value === null || value.trim() === '') return fallback;
@@ -58,9 +71,10 @@ export const ExplorerPage: React.FC = () => {
   const [sidebarOpen,setSidebarOpen]=useState(window.innerWidth>=1024);
   const [layersOpen,setLayersOpen]=useState(false);
   const [search,setSearch]=useState('');
-  const [searchResults,setSearchResults]=useState<{name:string;lat:number;lon:number}[]>([]);
+  const [searchResults,setSearchResults]=useState<LocationResult[]>([]);
   const [searchError,setSearchError]=useState('');
   const [focusPosition,setFocusPosition]=useState<[number,number]>();
+  const [focusBounds,setFocusBounds]=useState<LocationMapBounds[]>();
   const [notice,setNotice]=useState('');
   const [initialZoom,setInitialZoom]=useState(()=>{const z=parseNumber(searchParams.get('z'),NaN);return Number.isInteger(z) && z>=0 && z<=19 ? z : undefined;});
   const [initialBounds,setInitialBounds]=useState(()=>parseViewBounds(searchParams.get('map')));
@@ -304,7 +318,7 @@ export const ExplorerPage: React.FC = () => {
   const findLocation=async(event:React.FormEvent)=>{
     event.preventDefault();setSearchError('');
     const coords=search.split(',').map(Number);
-    if(coords.length===2 && coords.every(Number.isFinite) && Math.abs(coords[0])<=85 && Math.abs(coords[1])<=180){setFocusPosition([coords[0],coords[1]]);return;}
+    if(coords.length===2 && coords.every(Number.isFinite) && Math.abs(coords[0])<=85 && Math.abs(coords[1])<=180){setFocusBounds(undefined);setFocusPosition([coords[0],coords[1]]);return;}
     try{const result=await apiClient.searchLocations(search);setSearchResults(result.results);if(!result.results.length)setSearchError('No location found. Try latitude, longitude.');}
     catch{setSearchError('Search unavailable. Enter latitude, longitude.');}
   };
@@ -328,7 +342,7 @@ export const ExplorerPage: React.FC = () => {
       </header>
       {notice && <div className="explorer-notice"><span role="status">{notice}</span><button aria-label="Dismiss message" onClick={()=>setNotice('')}><X size={16} aria-hidden="true" /></button></div>}
       <main className="explorer-workspace">
-        {(searchResults.length>0 || searchError) && <div className="explorer-search-results">{searchResults.map((r,i)=><button key={i} onClick={()=>{setFocusPosition([r.lat,r.lon]);setSearchResults([]);}}>{r.name}</button>)}{searchError}<small>Search © OpenStreetMap contributors / Photon (ODbL)</small></div>}
+        {(searchResults.length>0 || searchError) && <div className="explorer-search-results">{searchResults.map((r,i)=><button key={i} onClick={()=>{setFocusPosition(undefined);setFocusBounds(paddedLocationBounds(r));setSearchResults([]);}}>{r.name}</button>)}{searchError}<small>Search © OpenStreetMap contributors / Photon (ODbL) · country extents © Natural Earth</small></div>}
         <aside id="fire-data-filters" aria-label="Fire data filters" className={`explorer-sidebar ${sidebarOpen ? 'is-open' : ''}`}>
           <section>
             <details open><summary>Area, dates and sensor filters</summary>
@@ -620,7 +634,7 @@ export const ExplorerPage: React.FC = () => {
         <section className="explorer-map" aria-label="Satellite observation map">
           {layersOpen && <div id="map-layer-manager" className="explorer-layers" aria-label="Map layer manager">
             <div className="explorer-panel-title"><h2>Map layers</h2><button onClick={()=>setLayersOpen(false)} aria-label="Close layers"><X size={18} aria-hidden="true" /></button></div>
-            <label className="block py-2"><input type="checkbox" checked={searchParams.get('italyOutline') !== 'off'} onChange={e=>updateParams({italyOutline:e.target.checked ? undefined : 'off'})}/> Italy outline</label>
+            <label className="block py-2"><input type="checkbox" checked={searchParams.get('italyOutline') !== 'off'} onChange={e=>updateParams({italyOutline:e.target.checked ? undefined : 'off'})}/> Territory outline</label>
             {([['fire','Hotspots / visual clusters',fireVisible],['candidates','Candidate fire events',candidatesVisible],['labels','Borders and place labels',labels],['terrain','Terrain basemap',terrain],['imagery','Dated NASA true color',context]] as const).map(([key,label,checked])=><label key={key} className="block py-2"><input type="checkbox" checked={checked} onChange={e=>updateParams({[key]:e.target.checked ? (key==='fire'||key==='candidates' ? undefined : 'on') : (key==='fire'||key==='candidates' ? 'off' : undefined)})}/> {label}</label>)}
             <p className="text-[11px] text-slate-400">Base imagery dates vary. NASA overlay requests {endDate || 'today'}; imagery availability is independent of fire observations.</p>
             <label className="block py-2">Hotspot color<select aria-label="Hotspot color" value={colorMode} onChange={e=>updateParams({color:e.target.value})} className="ml-2 bg-dark-800"><option value="confidence">Confidence</option><option value="sensor">Instrument</option><option value="date">Observation date</option></select></label>
@@ -667,8 +681,9 @@ export const ExplorerPage: React.FC = () => {
             showScientificBurned={scienceLayer==='burned'}
             initialBounds={initialBounds}
             initialZoom={initialZoom}
-            observationBounds={searchParams.get('italyOutline') !== 'off' ? parseViewBounds(ITALY_BBOX) : undefined}
+            observationBounds={searchParams.get('italyOutline') !== 'off' ? focusBounds ?? [parseViewBounds(ITALY_BBOX)!] : undefined}
             focusPosition={focusPosition}
+            focusBounds={focusBounds}
             colorMode={colorMode}
             opacity={opacity}
             labels={labels}
@@ -677,6 +692,8 @@ export const ExplorerPage: React.FC = () => {
             visualClusters={fireVisible && source==='archive' && hasValidDates && !invalidCircle && (zoom<10 || hotspotQuery.data?.truncated) ? clusterQuery.data?.clusters ?? [] : []}
             focusedEvent={candidatesVisible && selectedEventId ? (focusedEvent?.id === selectedEventId ? focusedEvent : eventCandidates.find((event) => event.id === selectedEventId)) : undefined}
             onReturnToItaly={() => {
+              setFocusBounds(undefined);
+              setFocusPosition(undefined);
               setFocusedEvent(undefined);
               setDrawingCircle(false);
               updateParams({ lat: undefined, lon: undefined, radius: undefined, event: undefined, candidatePage: undefined });
