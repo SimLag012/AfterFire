@@ -51,22 +51,27 @@ async def explorer_clusters(
         from app.services.explorer_query import satellite_filter
         predicates.append(satellite_filter(satellite))
     west, south, east, north = validate_bbox(bbox)
-    # Mercator cells are shared across adjacent viewports, and shrink with zoom.
-    pixels = 256 * 2 ** zoom
+    # Keep cluster cells stable at high zoom, where individual detections remain
+    # available through the hotspot endpoint but a map aggregate still helps.
+    pixels = 256 * 2 ** min(zoom, 12)
     lat = case((FireDetection.latitude > 85.05112878, 85.05112878),
                (FireDetection.latitude < -85.05112878, -85.05112878),
                else_=FireDetection.latitude)
-    cell_x = func.floor((FireDetection.longitude + 180) / 360 * pixels / CLUSTER_CELL_PIXELS)
-    cell_y = func.floor((1 - func.ln(func.tan(math.pi / 4 + func.radians(lat) / 2))
-                         / math.pi) / 2 * pixels / CLUSTER_CELL_PIXELS)
-    rows = (await db.execute(select(
-        cell_x.label("x"), cell_y.label("y"), FireDetection.instrument,
-        func.count().label("n"), func.sum(FireDetection.latitude).label("lat_sum"),
-        func.sum(FireDetection.longitude).label("lon_sum"),
-        func.min(FireDetection.acq_date).label("start"),
-        func.max(FireDetection.acq_date).label("end"),
-    ).where(*predicates).group_by(cell_x, cell_y, FireDetection.instrument).limit(8193))).all()
-    if len(rows)>8192: raise HTTPException(413, "Viewport is too dense at this zoom; zoom out or narrow the date range")
+    cell_pixels=CLUSTER_CELL_PIXELS
+    while True:
+        cell_x = func.floor((FireDetection.longitude + 180) / 360 * pixels / cell_pixels)
+        cell_y = func.floor((1 - func.ln(func.tan(math.pi / 4 + func.radians(lat) / 2))
+                             / math.pi) / 2 * pixels / cell_pixels)
+        rows = (await db.execute(select(
+            cell_x.label("x"), cell_y.label("y"), FireDetection.instrument,
+            func.count().label("n"), func.sum(FireDetection.latitude).label("lat_sum"),
+            func.sum(FireDetection.longitude).label("lon_sum"),
+            func.min(FireDetection.acq_date).label("start"),
+            func.max(FireDetection.acq_date).label("end"),
+        ).where(*predicates).group_by(cell_x, cell_y, FireDetection.instrument).limit(8193))).all()
+        if len(rows)<=8192:
+            break
+        cell_pixels*=2
     cells = {}
     for row in rows:
         key = (int(row.x), int(row.y))
@@ -90,7 +95,7 @@ async def explorer_clusters(
         center_lat=center_lat, center_lon=center_lon, radius_km=radius_km,
     )
     result = dict(clusters=clusters, total_observations=total, zoom=zoom,
-                cluster_cell_pixels=CLUSTER_CELL_PIXELS, data_coverage=coverage,
+                cluster_cell_pixels=cell_pixels, data_coverage=coverage,
                 semantics="Visual observation clusters; not individual or official fire events.")
     if cacheable:
         _cluster_cache[cache_key]=(time.monotonic(),result)

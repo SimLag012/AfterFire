@@ -12,6 +12,7 @@ import { LeafletMap } from '../components/map/LeafletMap';
 type Period = 'today' | '24h' | 'all' | '7d' | '30d' | '12mo' | 'custom';
 
 const ITALY_BBOX = '6.3,35.3,18.9,47.2';
+const ITALY_CENTER: [number,number] = [41.25,12.6];
 const PAGE_SIZE = 10;
 type LocationResult = {name:string;lat:number;lon:number;bbox?:[number,number,number,number];bounds?:[number,number,number,number][]};
 type LocationMapBounds = [[number,number],[number,number]];
@@ -97,6 +98,7 @@ export const ExplorerPage: React.FC = () => {
   // Request only the actual Leaflet viewport, including shared/saved views.
   const [viewport, setViewport] = useState('');
   const [zoom, setZoom] = useState(5);
+  const [mapCenter,setMapCenter]=useState<[number,number]>(ITALY_CENTER);
   const source=searchParams.get('source')==='archive' ? 'archive' : 'online';
 
   const centerLat = parseNumber(searchParams.get('lat'), NaN);
@@ -154,9 +156,9 @@ export const ExplorerPage: React.FC = () => {
   const circleBox = bounds && [wrap(bounds.getWest()), Math.max(-90,bounds.getSouth()), wrap(bounds.getEast()), Math.min(90,bounds.getNorth())].map(v => v.toFixed(6)).join(',');
   const outlinedBox = italyOverview ? ITALY_BBOX : undefined;
   // At regional zoom, bound the FIRMS request independently of the Italy overlay.
-  const regionLat = Math.round((north + south) / 2);
-  const regionLon = Math.round(wrap(west + longitudeSpan / 2));
-  const regionalBox = zoom >= 4 && (longitudeSpan > 16 || north - south > 16)
+  const regionLat = Math.round(mapCenter[0]);
+  const regionLon = Math.round(wrap(mapCenter[1]));
+  const regionalBox = longitudeSpan > 16 || north - south > 16
     ? [wrap(regionLon - 6), Math.max(-90, regionLat - 6), wrap(regionLon + 6), Math.min(90, regionLat + 6)].join(',')
     : undefined;
   const onlineBounds = circleBox || outlinedBox || regionalBox || (tooWide ? '' : viewport);
@@ -202,6 +204,7 @@ export const ExplorerPage: React.FC = () => {
       ...circleParams,
     }, signal),
     enabled: fireVisible && source==='archive' && hasValidViewport && hasValidDates && !invalidCircle,
+    placeholderData:(previous,query)=>query?.queryKey[3]===startDate&&query.queryKey[4]===endDate&&query.queryKey[5]===afterUtc&&query.queryKey[6]===sensor&&query.queryKey[7]===satellite&&query.queryKey[8]===hasCircle&&query.queryKey[9]===(hasCircle?centerLat:null)&&query.queryKey[10]===(hasCircle?centerLon:null)&&query.queryKey[11]===(hasCircle?radiusKm:null)?previous:undefined,
   });
 
   const candidateQuery = useQuery({
@@ -228,7 +231,7 @@ export const ExplorerPage: React.FC = () => {
     queryFn:({signal})=>source==='online' ? loadObservations({bbox:queryBounds,start_date:startDate,end_date:endDate,sensor:aggregateSensor,satellite},refine.current,signal) : apiClient.getExplorerHotspots({bbox:queryBounds,start_date:startDate || undefined,end_date:endDate || undefined,
       sensor:aggregateSensor,satellite,after_utc:source==='archive' ? afterUtc : undefined,...(source==='archive' ? circleParams : {})},false,signal),
     enabled:(fireVisible || (source==='online' && candidatesVisible)) && supportedDates && !!queryBounds && hasValidViewport && hasValidDates && !invalidCircle && (source==='online' ? !!startDate && !!endDate : zoom>=10),
-    placeholderData:(previous,query)=>query?.queryKey[1]===source && query.queryKey[3]===startDate && query.queryKey[4]===endDate && query.queryKey[5]===sensor && query.queryKey[6]===satellite ? previous : undefined,
+    placeholderData:(previous,query)=>query?.queryKey[1]===source&&query.queryKey[3]===focusBounds&&query.queryKey[4]===startDate&&query.queryKey[5]===endDate&&query.queryKey[6]===sensor&&query.queryKey[7]===satellite?previous:undefined,
     retry:(attempt,error)=>attempt===0 && (error as {response?:{status?:number}}).response?.status===429,
     retryDelay:(_attempt,error)=>{
       const hint=(error as {response?:{headers?:Record<string,string>}}).response?.headers?.['retry-after'];
@@ -308,7 +311,7 @@ export const ExplorerPage: React.FC = () => {
   };
 
   const firstViewport=useRef(true);
-  const onViewportChange = useCallback((bbox: string, nextZoom: number) => {
+  const onViewportChange = useCallback((bbox: string, nextZoom: number, center?:[number,number]) => {
     clearTimeout(timer.current);
     const covered=source==='online' && hasValidDates && supportedDates && hasLocalObservations({bbox,start_date:startDate,end_date:endDate,sensor:aggregateSensor,satellite});
     const delay=firstViewport.current || covered ? 0 : 350;
@@ -316,6 +319,7 @@ export const ExplorerPage: React.FC = () => {
       firstViewport.current=false;
       setViewport(current=>current===bbox ? current : bbox);
       setZoom(current=>current===nextZoom ? current : nextZoom);
+      if(center) setMapCenter(current=>current[0]===center[0]&&current[1]===center[1]?current:center);
       updateParams({map:bbox,z:String(nextZoom)});
     },delay);
   }, [updateParams,source,hasValidDates,supportedDates,startDate,endDate,aggregateSensor,satellite]);
@@ -631,9 +635,9 @@ export const ExplorerPage: React.FC = () => {
                 {mapCoverage.detail || mapCoverage.message || mapCoverage.status}
               </p>
             )}
-            {!clusterQuery.isFetching && clusterQuery.data?.clusters.length === 0 && mapCoverage && (
+            {!clusterQuery.isFetching && visibleClusters.length === 0 && mapCoverage && (
               <p className="py-2 text-xs text-slate-400">
-                No real observations match the visible viewport and filters. Imported archive windows are not a completeness guarantee.
+                No real observations match the {hasCircle ? 'search circle' : focusBounds ? 'selected territory' : 'visible viewport'} and filters. Imported archive windows are not a completeness guarantee.
               </p>
             )}
             <p className="mt-2 text-[10px] text-slate-500">
@@ -686,7 +690,7 @@ export const ExplorerPage: React.FC = () => {
           <LeafletMap
             key={viewGeneration}
             showLegend={false}
-            detections={fireVisible ? detections : []}
+            detections={fireVisible && source==='online' ? detections : []}
             events={candidatesVisible ? eventCandidates : []}
             scientificResult={scienceLayer ? scienceResult.data : undefined}
             scientificObservation={scienceObservation}
@@ -701,7 +705,7 @@ export const ExplorerPage: React.FC = () => {
             labels={labels}
             terrain={terrain}
             contextDate={endDate || dateOnly(new Date())}
-            visualClusters={fireVisible && source==='archive' && hasValidDates && !invalidCircle && (zoom<10 || hotspotQuery.data?.truncated) ? visibleClusters : []}
+            visualClusters={fireVisible && source==='archive' && hasValidDates && !invalidCircle ? visibleClusters : []}
             focusedEvent={candidatesVisible && selectedEventId ? (focusedEvent?.id === selectedEventId ? focusedEvent : eventCandidates.find((event) => event.id === selectedEventId)) : undefined}
             onReturnToItaly={() => {
               setFocusBounds(undefined);
