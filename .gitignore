@@ -88,3 +88,7 @@ compose*.bak.*
 *.nc
 *.dump
 *.sql.gz
+
+# Native Windows runtime
+.local-runtime/
+.venv-windows/

@@ -281,3 +281,14 @@
 .app-shell .recharts-default-tooltip{background:var(--color-paper-3)!important;color:var(--color-ink)!important;border:1px solid var(--color-rule-strong)!important;border-radius:0}
 .app-shell .recharts-tooltip-label{color:var(--color-ink)!important}
 .return-to-place{max-width:calc(100% - 76px)}
+
+/* Candidates stay beside the map; opening filters never hides their list. */
+.explorer-candidate-panel{order:2;flex:0 0 340px;min-width:0;overflow-y:auto;background:var(--color-paper-2);border-left:1px solid var(--color-rule)}
+.explorer-candidate-panel>section{padding:16px;border-bottom:1px solid var(--color-rule)}
+.explorer-candidate-panel h2{font-weight:620}
+@media(max-width:900px){
+ .explorer-workspace{display:grid;grid-template-columns:minmax(0,1fr);grid-template-rows:minmax(260px,1fr) minmax(130px,35%)}
+ .explorer-map{grid-row:1;min-height:0}
+ .explorer-candidate-panel{grid-row:2;width:100%;border-left:0;border-top:1px solid var(--color-rule)}
+ .explorer-sidebar{max-height:100%}
+}

@@ -1,6 +1,6 @@
 """Expiring NASA metadata only; empty successes are cached, provider failures never are."""
 import asyncio
-import fcntl
+from app.core import file_locks as fcntl
 import hashlib
 import json
 import os

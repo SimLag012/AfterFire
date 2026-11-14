@@ -1,5 +1,5 @@
 """Persistent source cache with cross-process flock, atomic rename, quota and explicit eviction."""
-import fcntl
+from app.core import file_locks as fcntl
 import hashlib
 import json
 import os

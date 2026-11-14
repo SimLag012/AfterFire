@@ -1,6 +1,6 @@
 """Bounded FIRMS snapshots. Only explicitly selected candidates enter the database."""
 import asyncio
-import fcntl
+from app.core import file_locks as fcntl
 import gzip
 import hashlib
 import json

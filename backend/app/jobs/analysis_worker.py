@@ -99,8 +99,10 @@ async def main():
     await init_db()
     tasks=[asyncio.create_task(lane()) for _ in range(settings.AFTERFIRE_ANALYSIS_WORKERS)]
     loop=asyncio.get_running_loop()
-    for sig in (signal.SIGINT,signal.SIGTERM):
-        loop.add_signal_handler(sig,lambda:[t.cancel() for t in tasks])
+    # asyncio.run handles Ctrl+C on Windows; ProactorEventLoop has no signal handlers.
+    if os.name != 'nt':
+        for sig in (signal.SIGINT,signal.SIGTERM):
+            loop.add_signal_handler(sig,lambda:[t.cancel() for t in tasks])
     try:
         await asyncio.gather(*tasks)
     finally:

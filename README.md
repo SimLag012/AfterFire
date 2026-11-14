@@ -174,6 +174,42 @@ Open web application at: **http://localhost:3000** (or http://localhost:5173).
 
 ---
 
+
+### Windows: avvio da terminale senza Docker Desktop
+
+Dalla cartella del progetto (`nasa/afterfire` oppure `testnasa/AfterFire`), prepara una volta l'ambiente:
+
+```powershell
+python -m venv backend/.venv-windows
+backend/.venv-windows/Scripts/python.exe -m pip install -r backend/requirements.txt
+cd frontend
+npm ci
+cd ..
+```
+
+Avvio normale:
+
+```powershell
+backend/.venv-windows/Scripts/python.exe scripts/local.py
+```
+
+Il comando avvia API, worker e Vite su localhost, usa il database SQLite
+`backend/afterfire.db` di questo progetto e legge le credenziali dai suoi
+file `.env`. Il `DATABASE_URL` Docker viene sostituito solo nei processi locali:
+il server `db` esiste solo nella rete Compose. I dati dei volumi PostgreSQL Docker
+non vengono importati in SQLite. I log sono in `.local-runtime/`.
+Ctrl+C arresta i tre servizi; nessun motore Docker o macchina virtuale viene avviato.
+
+Per usare anche la seconda copia contemporaneamente:
+
+```powershell
+backend/.venv-windows/Scripts/python.exe scripts/local.py --api-port 8001 --web-port 3001
+```
+
+Se `docker compose up --build` segnala `dockerDesktopLinuxEngine` mancante,
+non sta cercando un file del repository: manca il canale verso il motore Docker.
+Compose richiede un motore attivo; `scripts/local.py` permette l'avvio nativo.
+
 ### Option B: Docker Compose
 
 ```bash

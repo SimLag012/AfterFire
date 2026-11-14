@@ -6,7 +6,7 @@ keep a reserve for the Explorer and Recovery users. Never log authenticated URLs
 """
 import asyncio
 from contextlib import asynccontextmanager
-import fcntl
+from app.core import file_locks as fcntl
 from datetime import datetime
 from pathlib import Path
 import httpx

@@ -5,7 +5,7 @@ The live probe uses at most three historical images per product over a tiny AOI.
 """
 import argparse
 import json
-import resource
+from app.core.resources import peak_rss_kib
 import time
 from datetime import datetime, timezone
 
@@ -86,7 +86,7 @@ def check(live=False):
                       message='Check SDK installation, Google credentials, project registration, API enablement and IAM. See docs/EARTH_ENGINE_LIVE_SETUP.md')
     report['explicit_api_operations'] = client.requests
     report['elapsed_seconds'] = round(time.monotonic()-started, 4)
-    report['process_peak_rss_kib'] = resource.getrusage(resource.RUSAGE_SELF).ru_maxrss
+    report['process_peak_rss_kib'] = peak_rss_kib()
     return report
 
 

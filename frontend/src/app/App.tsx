@@ -29,6 +29,17 @@ function ContextNavbar(){const {pathname}=useLocation();return pathname==='/'||p
 function ExplorerRoute(){
   const {search}=useLocation();const params=new URLSearchParams(search);
   if(params.get('sources')==='on'){params.delete('sources');const back='/explorer'+(params.size?'?'+params.toString():'');return <Navigate replace to={'/datasets?returnTo='+encodeURIComponent(back)}/>;}
+  // Explicit shared selections win. Bare navigation restores the last local view.
+  if(!params.has('territory')&&!params.has('area')){
+    try {
+      const saved=new URLSearchParams(localStorage.getItem('afterfire-last-explorer')||'');
+      if(saved.has('territory')){
+        if(!params.size)return <Navigate replace to={'/explorer?'+saved.toString()}/>;
+        for(const key of ['territory','place','map','z'])if(!params.has(key)&&saved.has(key))params.set(key,saved.get(key)!);
+        return <Navigate replace to={'/explorer?'+params.toString()}/>;
+      }
+    }catch{}
+  }
   return <ExplorerPage/>;
 }
 

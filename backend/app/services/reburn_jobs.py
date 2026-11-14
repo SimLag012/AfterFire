@@ -383,8 +383,8 @@ async def execute_reburn(job, progress):
         'Vegetation support comes from published native source rasters, which may cover only part of historical burned cells.',
         'Within-cell timing differences below the operational separation threshold are unresolved.']
     result['timings']={**timings,'total_seconds':time.monotonic()-started}
-    import resource
-    result['resources']={'worker_process_peak_rss_kib':resource.getrusage(resource.RUSAGE_SELF).ru_maxrss}
+    from app.core.resources import peak_rss_kib
+    result['resources']={'worker_process_peak_rss_kib':peak_rss_kib()}
     result['created_at']=datetime.utcnow().isoformat()+'Z'
     result['state']='partial' if coverage['incomplete_months'] or failures else 'completed'
     await progress('processing',0,phase='publishing',current_operation='Publishing reburn history',phase_progress_percent=None)

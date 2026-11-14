@@ -1,4 +1,4 @@
-import type { FireDetection } from '../types';
+import { ObservationCalendar } from '../components/fireActivity/ObservationCalendar';
 import { CandidateSearch } from '../components/common/CandidateSearch';
 import L from 'leaflet';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
@@ -10,7 +10,6 @@ import { satelliteApi } from '../api/satellite';
 import { apiClient } from '../api/client';
 import { LeafletMap } from '../components/map/LeafletMap';
 
-const FireActivityPanel = React.lazy(() => import('../components/fireActivity/FireActivityPanel').then(module => ({ default: module.FireActivityPanel })));
 
 type Period = 'today' | '24h' | 'all' | '7d' | '30d' | '12mo' | 'custom';
 
@@ -102,13 +101,11 @@ export const ExplorerPage: React.FC = () => {
   const colorMode=['sensor','date'].includes(searchParams.get('color') || '') ? searchParams.get('color') as 'sensor'|'date' : 'confidence';
   const opacity=Math.min(1,Math.max(0.1,parseNumber(searchParams.get('opacity'),0.85)));
   const [drawingCircle, setDrawingCircle] = useState(false);
-  const [activityOpen,setActivityOpen]=useState(window.innerWidth>=1024 || searchParams.has('month'));
-  const [activityPoints,setActivityPoints]=useState<FireDetection[]|null>(null);
-  const [activitySelectionRevision,setActivitySelectionRevision]=useState(0);
-  const [activityGeometry,setActivityGeometry]=useState<GeoJSON.Geometry>();
-  const [activityMonth,setActivityMonth]=useState('');
+  const [activityOpen,setActivityOpen]=useState(true);
   useEffect(()=>{const next=restoredTerritory(searchParams.get('territory'));setFocusBounds(current=>JSON.stringify(current)===JSON.stringify(next)?current:next);setReturnPlace(searchParams.get('place')||'Italy');},[searchParams.get('territory'),searchParams.get('place')]);
-  const showActivityMonth=useCallback((points:FireDetection[]|null,month:string)=>{setActivityPoints(points);setActivityMonth(month);if(points?.length)setFocusPosition([points[0].latitude,points[0].longitude]);},[]);
+  useEffect(()=>{
+    if(searchParams.has('territory'))try{localStorage.setItem('afterfire-last-explorer',searchParams.toString());}catch{}
+  },[searchParams]);
   // Camera state is separate from the pinned request territory.
   const [viewport, setViewport] = useState('');
   const [zoom, setZoom] = useState(5);
@@ -166,8 +163,9 @@ export const ExplorerPage: React.FC = () => {
   const territoryKey=JSON.stringify(territoryBoxes);
   const territoryEnvelope=[Math.min(...territoryBoxes.map(b=>b[0])),Math.min(...territoryBoxes.map(b=>b[1])),Math.max(...territoryBoxes.map(b=>b[2])),Math.max(...territoryBoxes.map(b=>b[3]))].join(',');
   const queryBounds = circleBox || territoryEnvelope;
-  const boundsFilter=hasCircle?undefined:territoryKey;
-  const insideSelectedTerritory=(latitude:number,longitude:number)=>hasCircle || !focusBounds || pointInsideBounds(latitude,longitude,focusBounds);
+  const boundsFilter=territoryKey;
+  const selectedBoxes=hasCircle ? territoryBoxes.flatMap(([w,s,e,n])=>{const [cw,cs,ce,cn]=queryBounds.split(',').map(Number);const circleParts=cw>ce?[[cw,cs,180,cn],[-180,cs,ce,cn]]:[[cw,cs,ce,cn]];return circleParts.map(([a,b,c,d])=>[Math.max(w,a),Math.max(s,b),Math.min(e,c),Math.min(n,d)]).filter(([a,b,c,d])=>a<c&&b<d);}) : territoryBoxes;
+  const insideSelectedTerritory=(latitude:number,longitude:number)=>!focusBounds || pointInsideBounds(latitude,longitude,focusBounds);
 
   const updateParams = useCallback((updates: Record<string, string | undefined>) => {
     // A delayed camera event must not navigate away from a different page.
@@ -184,7 +182,6 @@ export const ExplorerPage: React.FC = () => {
 
   const selectTerritory=(boxes:LocationMapBounds[],label:string)=>{
     setFocusBounds(boxes);setReturnPlace(label);setFocusPosition(undefined);
-    setActivityPoints(null);setActivityGeometry(undefined);setActivitySelectionRevision(v=>v+1);
     updateParams({territory:JSON.stringify(boxes),place:label,lat:undefined,lon:undefined,radius:undefined,study:undefined,month:undefined,event:undefined,candidatePage:undefined});
   };
 
@@ -247,9 +244,9 @@ export const ExplorerPage: React.FC = () => {
   const refine=useRef(false);
   const hotspotQuery=useQuery({
     queryKey:['explorerHotspots',source,queryBounds,focusBounds,startDate,endDate,sensor,satellite,hasCircle,hasCircle ? centerLat : null,hasCircle ? centerLon : null,hasCircle ? radiusKm : null,source==='archive' ? afterUtc : null],
-    queryFn:({signal})=>source==='online' ? loadSelectedObservations(hasCircle?[queryBounds.split(',').map(Number)]:territoryBoxes,{start_date:startDate,end_date:endDate,sensor:aggregateSensor,satellite},refine.current,signal) : apiClient.getExplorerHotspots({bbox:queryBounds,bounds:boundsFilter,start_date:startDate || undefined,end_date:endDate || undefined,
+    queryFn:({signal})=>source==='online' ? loadSelectedObservations(selectedBoxes,{start_date:startDate,end_date:endDate,sensor:aggregateSensor,satellite},refine.current,signal) : apiClient.getExplorerHotspots({bbox:queryBounds,bounds:boundsFilter,start_date:startDate || undefined,end_date:endDate || undefined,
       sensor:aggregateSensor,satellite,after_utc:source==='archive' ? afterUtc : undefined,...(source==='archive' ? circleParams : {})},false,signal),
-    enabled:(fireVisible || (source==='online' && candidatesVisible)) && supportedDates && !!queryBounds && hasValidViewport && hasValidDates && !invalidCircle && (source==='online' ? !!startDate && !!endDate : zoom>=10),
+    enabled:true && supportedDates && !!queryBounds && hasValidViewport && hasValidDates && !invalidCircle && (source==='online' ? !!startDate && !!endDate : true),
     retry:(attempt,error)=>attempt===0 && (error as {response?:{status?:number}}).response?.status===429,
     retryDelay:(_attempt,error)=>{
       const hint=(error as {response?:{headers?:Record<string,string>}}).response?.headers?.['retry-after'];
@@ -365,7 +362,7 @@ export const ExplorerPage: React.FC = () => {
           <input aria-label="Search location or latitude, longitude" placeholder="Search location or lat, lon" value={search} onChange={e=>setSearch(e.target.value)} minLength={2} maxLength={100}/>
           <button type="submit" aria-label="Search location"><Search size={18} aria-hidden="true" /></button>
         </form>
-        <button className="explorer-tool" aria-expanded={activityOpen} onClick={()=>{setActivityOpen(v=>!v);if(window.innerWidth<1024)setSidebarOpen(false);}}><CalendarDays className="inline h-4 w-4"/> Fire Activity Calendar</button>
+        <button className="explorer-tool" aria-expanded={activityOpen} onClick={()=>{setActivityOpen(v=>!v);if(window.innerWidth<1024)setSidebarOpen(false);}}><CalendarDays className="inline h-4 w-4"/> Hotspot calendar</button>
         <Link className="explorer-tool" to={"/datasets?returnTo="+encodeURIComponent(returnTo)}>Data &amp; Sources</Link>
         <button className="explorer-tool" aria-expanded={layersOpen} aria-controls="map-layer-manager" onClick={()=>{setLayersOpen(v=>!v);if(window.innerWidth<1024)setSidebarOpen(false);}}><Layers3 size={16} aria-hidden="true" /> Layers</button>
         <button className="explorer-tool" onClick={()=>{localStorage.setItem('afterfire-view',window.location.search);setNotice('View saved on this device');}}>Save view</button>
@@ -377,7 +374,7 @@ export const ExplorerPage: React.FC = () => {
       <main className="explorer-workspace">
         {(searchResults.length>0 || searchError) && <div className="explorer-search-results">{searchResults.map((r,i)=><button key={i} onClick={()=>{selectTerritory(locationBounds(r),searchPlaceLabel(search||r.short_name||r.name));setSearchResults([]);}}>{r.name}</button>)}{searchError}<small>Search © OpenStreetMap contributors / Photon (ODbL) · country extents © Natural Earth</small></div>}
         <aside id="fire-data-filters" aria-label="Fire data filters" className={`explorer-sidebar ${sidebarOpen ? 'is-open' : ''}`}>
-          <section>
+          <section hidden={!sidebarOpen}>
             <details open><summary>Area, dates and sensor filters</summary>
             {source === 'archive' && <div className="mb-4 rounded-lg border border-dark-700 bg-dark-950/70 p-3">
               <h2 className="text-xs font-semibold text-slate-200">Imported archive in Italy</h2>
@@ -492,7 +489,7 @@ export const ExplorerPage: React.FC = () => {
                     type="number" min="-90" max="90" step="0.0001"
                     value={searchParams.get('lat') ?? ''}
                     placeholder="e.g. 37.5"
-                    onChange={(event) => {showActivityMonth(null,'');setActivitySelectionRevision(v=>v+1);updateParams({ lat: event.target.value, candidatePage: undefined, event: undefined, study:undefined,month:undefined });}}
+                    onChange={(event) => {updateParams({ lat: event.target.value, candidatePage: undefined, event: undefined, study:undefined,month:undefined });}}
                     className="mt-1 w-full rounded border border-dark-700 bg-dark-950 px-2 py-1.5 font-mono text-white"
                   />
                 </label>
@@ -502,7 +499,7 @@ export const ExplorerPage: React.FC = () => {
                     type="number" min="-180" max="180" step="0.0001"
                     value={searchParams.get('lon') ?? ''}
                     placeholder="e.g. 15.1"
-                    onChange={(event) => {showActivityMonth(null,'');setActivitySelectionRevision(v=>v+1);updateParams({ lon: event.target.value, candidatePage: undefined, event: undefined, study:undefined,month:undefined });}}
+                    onChange={(event) => {updateParams({ lon: event.target.value, candidatePage: undefined, event: undefined, study:undefined,month:undefined });}}
                     className="mt-1 w-full rounded border border-dark-700 bg-dark-950 px-2 py-1.5 font-mono text-white"
                   />
                 </label>
@@ -513,7 +510,7 @@ export const ExplorerPage: React.FC = () => {
                   type="number" min="0.1" max="500" step="0.1"
                   value={searchParams.get('radius') ?? ''}
                   placeholder="25"
-                  onChange={(event) => {showActivityMonth(null,'');setActivitySelectionRevision(v=>v+1);updateParams({ radius: event.target.value, candidatePage: undefined, event: undefined, study:undefined,month:undefined });}}
+                  onChange={(event) => {updateParams({ radius: event.target.value, candidatePage: undefined, event: undefined, study:undefined,month:undefined });}}
                   className="mt-1 w-full rounded border border-dark-700 bg-dark-950 px-2 py-1.5 font-mono text-white"
                 />
               </label>
@@ -533,7 +530,7 @@ export const ExplorerPage: React.FC = () => {
                   type="button"
                   onClick={() => {
                     updateParams({ lat: undefined, lon: undefined, radius: undefined, event: undefined, candidatePage: undefined,study:undefined,month:undefined });
-                    showActivityMonth(null,'');setActivitySelectionRevision(v=>v+1);setActivityGeometry(undefined);setDrawingCircle(false);
+                    setActivityGeometry(undefined);setDrawingCircle(false);
                   }}
                   className="flex items-center justify-center gap-2 rounded border border-dark-700 px-3 py-2 text-xs text-slate-300 hover:bg-dark-800"
                 >
@@ -552,8 +549,9 @@ export const ExplorerPage: React.FC = () => {
             </details>
           </section>
 
-          {activityPoints&&<section className="rounded-xl border border-dark-700 bg-dark-900 p-4"><h2 className="font-semibold">Calendar observations</h2><p className="my-2 text-xs text-slate-300">The map shows original acquired records for {activityMonth}. Recovery links are in the selected calendar month.</p><button className="text-xs text-emerald-300 underline" onClick={()=>setActivityPoints(null)}>Return to Explorer observations</button></section>}
-          {!activityPoints && <section className="explorer-candidates">
+          </aside>
+          <aside className="explorer-candidate-panel" aria-label="Candidate events and hotspot calendar">
+          <section className="explorer-candidates">
             <div className="explorer-section-heading">
               <h2>Algorithmic candidate events</h2>
               {candidateData && (
@@ -638,8 +636,9 @@ export const ExplorerPage: React.FC = () => {
                 Candidate events are algorithmic groupings of real observations, not official fire perimeters or verified burned area.
               </p>
             )}
-          </section>}
-          {source === 'archive' && !activityPoints && <section className="rounded-xl border border-dark-700 bg-dark-900 p-4">
+          </section>
+          {activityOpen && <ObservationCalendar detections={detections} scope={hasCircle ? 'Selected circle' : returnPlace+' · selected bounding box'} startDate={startDate} endDate={endDate} loading={hotspotQuery.isFetching} unavailable={hotspotQuery.isError || !hasValidDates || invalidCircle} partial={!!hotspotQuery.data?.truncated}/>}
+          {source === 'archive' && <section className="rounded-xl border border-dark-700 bg-dark-900 p-4">
             <div className="flex items-center justify-between gap-2 border-b border-dark-700 pb-2">
               <h2 className="font-semibold">Map aggregates</h2>
               <span className="text-[11px] text-slate-400">
@@ -686,7 +685,7 @@ export const ExplorerPage: React.FC = () => {
             ))}</ul>
             <p className="text-[11px] text-emerald-200">Area filter: {hasCircle ? 'search circle' : focusBounds ? 'selected territory' : 'visible viewport'}</p>
           </div>}
-          <div className="explorer-map-status" aria-label="Observation query status" hidden={!!activityPoints}>
+          <div className="explorer-map-status" aria-label="Observation query status" >
           {hotspotQuery.isFetching && <p role="status" className="explorer-status-message">{hotspotQuery.failureCount ? 'Retrying the observation request…' : 'Loading satellite observations…'}</p>}
           {hotspotQuery.isError && <div className="explorer-status-message">
             <p role="alert">{firmsKeyMissing ? 'Live observations require a NASA FIRMS key.' : observationErrorText || 'Could not load hotspot observations.'}</p>
@@ -705,15 +704,14 @@ export const ExplorerPage: React.FC = () => {
 
           </div>
 
-          {activityPoints&&<div className="absolute right-4 bottom-24 z-[660] rounded bg-slate-900 p-2 text-xs">Original FIRMS observations · {activityMonth}<button className="ml-2 underline" onClick={()=>setActivityPoints(null)}>Return to Explorer observations</button></div>}
           <LeafletMap
             key={viewGeneration}
             showLegend={false}
-            detections={activityPoints ?? (fireVisible && source==='online' ? detections : [])}
-            events={!activityPoints && candidatesVisible ? eventCandidates : []}
-            scientificResult={!activityPoints && scienceLayer ? scienceResult.data : undefined}
-            scientificObservation={activityPoints ? undefined : scienceObservation}
-            showScientificBurned={!activityPoints && scienceLayer==='burned'}
+            detections={fireVisible ? detections : []}
+            events={candidatesVisible ? eventCandidates : []}
+            scientificResult={scienceLayer ? scienceResult.data : undefined}
+            scientificObservation={scienceObservation}
+            showScientificBurned={scienceLayer==='burned'}
             initialBounds={initialBounds}
             initialZoom={initialZoom}
             observationBounds={searchParams.get('italyOutline') !== 'off' ? focusBounds ?? [parseViewBounds(ITALY_BBOX)!] : undefined}
@@ -724,8 +722,8 @@ export const ExplorerPage: React.FC = () => {
             labels={labels}
             terrain={terrain}
             contextDate={endDate || dateOnly(new Date())}
-            visualClusters={!activityPoints && fireVisible && source==='archive' && hasValidDates && !invalidCircle ? visibleClusters : []}
-            focusedEvent={!activityPoints && candidatesVisible && selectedEventId ? (focusedEvent?.id === selectedEventId ? focusedEvent : eventCandidates.find((event) => event.id === selectedEventId)) : undefined}
+            visualClusters={[]}
+            focusedEvent={candidatesVisible && selectedEventId ? (focusedEvent?.id === selectedEventId ? focusedEvent : eventCandidates.find((event) => event.id === selectedEventId)) : undefined}
             onReturnToPlace={() => {
               setFocusedEvent(undefined);
               setDrawingCircle(false);
@@ -736,12 +734,11 @@ export const ExplorerPage: React.FC = () => {
             visibleLayers={visibleLayers}
             selectedEventId={selectedEventId}
             returnTo={returnTo}
-            selectionGeometry={activityGeometry}
             selectionCircle={hasCircle ? { center: [centerLat, centerLon], radiusKm } : undefined}
             circleSelectionEnabled={drawingCircle}
             onViewportChange={onViewportChange}
             onCircleSelected={(circle) => {
-              showActivityMonth(null,'');setActivitySelectionRevision(v=>v+1);
+              
               updateParams({
                 study:undefined,month:undefined,
                 lat: circle.center[0].toFixed(5),
@@ -750,7 +747,7 @@ export const ExplorerPage: React.FC = () => {
                 event: undefined,
                 candidatePage: undefined,
               });
-              setDrawingCircle(false);setActivityGeometry(undefined);
+              setDrawingCircle(false);
             }}
           />
           <div className="explorer-legend">
@@ -764,22 +761,20 @@ export const ExplorerPage: React.FC = () => {
                 </ul>
               )}
               <small>Marker size is symbolic. Aggregates show observation counts.</small>
-              {!activityPoints && candidatesVisible && <small>Green rings show candidate events. Official perimeters are separate.</small>}
-              {!activityPoints && scienceObservation && <small>{scienceLayer} ranges from −0.2 (brown) to 1 (green). Composite: {scienceObservation.date} to {scienceObservation.period_end}. Rejected pixels are transparent.</small>}
+              {candidatesVisible && <small>Green rings show candidate events. Official perimeters are separate.</small>}
+              {scienceObservation && <small>{scienceLayer} ranges from −0.2 (brown) to 1 (green). Composite: {scienceObservation.date} to {scienceObservation.period_end}. Rejected pixels are transparent.</small>}
               <small>{terrain ? 'Terrain' : 'Satellite'} basemap dates vary.</small>
             </details>
           </div>
         </section>
-          {activityOpen&&<React.Suspense fallback={<div className="absolute left-3 top-3 z-[1100] rounded bg-slate-900 p-3 text-sm" role="status">Loading fire activity calendar…</div>}><FireActivityPanel key={activitySelectionRevision} onArea={area=>{const boxes:LocationMapBounds[]=[[[area.bbox[1],area.bbox[0]],[area.bbox[3],area.bbox[2]]]];const place=JSON.stringify(boxes)===JSON.stringify(focusBounds)?returnPlace:'Study area';setReturnPlace(place);setFocusBounds(current=>JSON.stringify(current)===JSON.stringify(boxes)?current:boxes);setInitialZoom(undefined);setActivityGeometry(area.geometry);setFocusPosition(undefined);setInitialBounds(parseViewBounds(area.bbox.join(',')));setViewGeneration(v=>v+1);updateParams({territory:JSON.stringify(boxes),place,map:area.bbox.join(','),italyOutline:'off',lat:area.circle?String(area.circle.lat):undefined,lon:area.circle?String(area.circle.lon):undefined,radius:area.circle?String(area.circle.radius_km):undefined});}} bbox={queryBounds} circle={hasCircle ? {lat:centerLat,lon:centerLon,radius_km:radiusKm} : undefined} onClose={()=>setActivityOpen(false)} onMonth={showActivityMonth}
-            onCandidates={(start,end,area)=>{setActivityPoints(null);setFocusPosition(undefined);setInitialBounds(parseViewBounds(area.join(',')));setViewGeneration(v=>v+1);updateParams({start,end:end>cutoff?cutoff:end,source:'online',period:'custom',candidates:'on',lat:undefined,lon:undefined,radius:undefined,italyOutline:'off',map:area.join(',')});}}/></React.Suspense>}
       </main>
       <div className="explorer-timeline" aria-label="Fire observation timeline">
-        <button onClick={()=>shiftPeriod(-1)} disabled={!!activityPoints || !hasValidDates} aria-label="Previous period"><ChevronLeft size={18} aria-hidden="true" /><span>Previous period</span></button>
+        <button onClick={()=>shiftPeriod(-1)} disabled={!hasValidDates} aria-label="Previous period"><ChevronLeft size={18} aria-hidden="true" /><span>Previous period</span></button>
         <div className="explorer-time-window">
-          <span>{activityPoints ? 'Historical month observations' : source === 'online' ? 'NASA FIRMS' : 'Imported archive'} <span className="explorer-time-zone">UTC</span></span>
-          <strong>{activityPoints ? activityMonth : <>{startDate || archiveStart || 'Archive start'} <span>to</span> {endDate || archiveEnd || 'Latest imported date'}</>}</strong>
+          <span>{source === 'online' ? 'NASA FIRMS' : 'Imported archive'} <span className="explorer-time-zone">UTC</span></span>
+          <strong>{<>{startDate || archiveStart || 'Archive start'} <span>to</span> {endDate || archiveEnd || 'Latest imported date'}</>}</strong>
         </div>
-        <button onClick={()=>shiftPeriod(1)} disabled={!!activityPoints || !hasValidDates || endDate >= cutoff} aria-label="Next period"><span>Next period</span><ChevronRight size={18} aria-hidden="true" /></button>
+        <button onClick={()=>shiftPeriod(1)} disabled={!hasValidDates || endDate >= cutoff} aria-label="Next period"><span>Next period</span><ChevronRight size={18} aria-hidden="true" /></button>
       </div>
     </div>
   );

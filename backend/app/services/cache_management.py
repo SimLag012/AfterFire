@@ -1,5 +1,5 @@
 """Satellite-only inventory and LRU eviction, fenced by the existing process usage lease."""
-import fcntl
+from app.core import file_locks as fcntl
 import json
 import shutil
 import time

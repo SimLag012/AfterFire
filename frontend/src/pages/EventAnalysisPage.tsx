@@ -4,17 +4,20 @@ import { CoverageEvidence } from '../components/analysis/CoverageEvidence';
 import { RecoveryIntelligencePanel } from '../components/analysis/RecoveryIntelligencePanel';
 import { AnalysisProgressPanel } from '../components/analysis/AnalysisProgressPanel';
 import React, { lazy, Suspense, useCallback, useEffect, useMemo, useState } from 'react';
-import { Link, useParams, useSearchParams } from 'react-router-dom';
+import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
 import { apiClient } from '../api/client';
 import { satelliteApi } from '../api/satellite';
 import { SatelliteRecoveryChart } from '../components/charts/RecoveryChart';
+import { ObservationCalendar } from '../components/fireActivity/ObservationCalendar';
 import { EventSatelliteMap } from '../components/map/EventSatelliteMap';
 
 const ReburnIntelligencePanel = lazy(() => import('../components/analysis/ReburnIntelligencePanel').then(m=>({default:m.ReburnIntelligencePanel})));
 
 const RecoveryComparisonPanel = lazy(() => import('../components/analysis/RecoveryComparisonPanel').then(m=>({default:m.RecoveryComparisonPanel})));
+
+const FireActivityPanel = lazy(() => import('../components/fireActivity/FireActivityPanel').then(m=>({default:m.FireActivityPanel})));
 
 const panel = 'story-section space-y-4';
 const number = (value: number | null | undefined, digits = 3) => value == null ? 'Unavailable' : value.toFixed(digits);
@@ -30,6 +33,11 @@ function EventStory({eventId}:{eventId:string}) {
   const [params]=useSearchParams();
   const requestedReturn=params.get('returnTo');
   const returnTo=requestedReturn && /^\/explorer(?:\?|$)/.test(requestedReturn) ? requestedReturn : '/explorer';
+  const navigate=useNavigate();
+  const [historyOpen,setHistoryOpen]=useState(false);
+  const [historyPoints,setHistoryPoints]=useState<import('../types').FireDetection[]|null>(null);
+  const [historyMonth,setHistoryMonth]=useState('');
+  const showHistoryMonth=useCallback((points:import('../types').FireDetection[]|null,month:string)=>{setHistoryPoints(points);setHistoryMonth(month);},[]);
   const client=useQueryClient();
   const [downloadSection,setDownloadSection]=useState<HTMLDivElement | null>(null);
   const [comparisonOpen,setComparisonOpen]=useState(params.has('assessment'));
@@ -158,6 +166,14 @@ function EventStory({eventId}:{eventId:string}) {
         <p className="story-caption">Algorithmic fire candidate based on {detail.detections.length} FIRMS {detail.detections.length===1 ? 'observation' : 'observations'}.</p>
         {event.is_synthetic_demo==='true' && <p className="text-amber-300">This historical record contains synthetic observations.</p>}
       </header>
+      <section className="story-section candidate-activity" aria-label="Candidate fire activity">
+        <ObservationCalendar detections={historyPoints??detail.detections} scope={historyPoints?'Historical observations · '+historyMonth:'Candidate · '+(event.place||event.name)} startDate={historyPoints?'':event.start_date} endDate={historyPoints?'':event.end_date}/>
+        {historyPoints&&<button onClick={()=>setHistoryPoints(null)}>Return to candidate observations</button>}
+        <button aria-expanded={historyOpen} onClick={()=>setHistoryOpen(v=>!v)}>Historical Fire Activity Calendar</button>
+        {historyOpen&&<Suspense fallback={<p role="status">Loading historical calendar…</p>}><FireActivityPanel inline bbox={[bounds[0][1],bounds[0][0],bounds[1][1],bounds[1][0]].join(',')} onArea={()=>{}} onClose={()=>setHistoryOpen(false)} onMonth={showHistoryMonth} onCandidates={(start,end,box)=>{
+          const next=new URLSearchParams(returnTo.split('?')[1]||'');next.set('territory',JSON.stringify([[[box[1],box[0]],[box[3],box[2]]]]));next.set('place',event.place||event.name);next.set('start',start);next.set('end',end);next.set('source','online');next.set('period','custom');for(const key of ['lat','lon','radius','event','map','z','study','month'])next.delete(key);navigate('/explorer?'+next.toString());
+        }}/></Suspense>}
+      </section>
       {result && <nav aria-label="Recovery story chapters" className="story-nav">
         <a href="#before-after">Before / After</a><a href="#trajectory">Recovery timeline</a><a href="#territory">Territory map</a><a href="#reburn">Reburn history</a>
       </nav>}

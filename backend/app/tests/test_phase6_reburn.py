@@ -406,7 +406,8 @@ def test_concurrent_manifest_validation_deduplicates_hashes(tmp_path,monkeypatch
 
 
 def test_historical_bundle_read_holds_subset_writer_lock(tmp_path,monkeypatch):
-    import fcntl,threading
+    from app.core import file_locks as fcntl
+    import threading
     from concurrent.futures import ThreadPoolExecutor
     from app.services import reburn_jobs
     monkeypatch.setattr(settings,'AFTERFIRE_ANALYSIS_CACHE_DIR',str(tmp_path))
