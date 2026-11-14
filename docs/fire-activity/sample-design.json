@@ -1,0 +1,58 @@
+{
+  "regions": {
+    "italy": [
+      8,
+      39,
+      10,
+      41
+    ],
+    "mediterranean": [
+      27,
+      35,
+      29,
+      37
+    ],
+    "brazil": [
+      -55,
+      -12,
+      -53,
+      -10
+    ],
+    "australia": [
+      148,
+      -37,
+      150,
+      -35
+    ],
+    "southern_africa": [
+      31,
+      -25,
+      33,
+      -23
+    ],
+    "north_america": [
+      -122,
+      39,
+      -120,
+      41
+    ]
+  },
+  "years": [
+    2019,
+    2020,
+    2021,
+    2022,
+    2023,
+    2024
+  ],
+  "months": [
+    1,
+    8
+  ],
+  "products": [
+    "MODIS_SP",
+    "VIIRS_SNPP_SP"
+  ],
+  "selection": "Fixed spatial boxes and January/August every year; no selection by fire intensity.",
+  "version": "fire-activity-1.0.0"
+}

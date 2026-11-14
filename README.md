@@ -311,3 +311,18 @@ distinguishes verified software from the outstanding live scientific checks.
 source-specific grid verification, multiband source storage, early product availability
 and maps on demand. The isolated real three-year analysis took 22.84 s; the measured
 persistent-worker trial took 57.47 s. These are measured cases, not latency guarantees.
+
+### Historical thermal activity
+
+**Fire Activity → Historical Anomalies → Fire Candidate → Vegetation Recovery**
+
+Open **Explorer → Fire activity**, select a region and explicitly acquire historical
+NASA FIRMS windows. The calendar preserves original MODIS/VIIRS records, separates
+archive gaps from zero detections, and exposes the versioned reference-scale method,
+validation status, anomalies and scientific exports. Unsupported translations remain
+unavailable. Recovery uses its original candidates, observations and 30-day policy.
+This is retrospective observation and analysis, not fire prediction.
+
+See [harmonization](docs/MODIS_VIIRS_HARMONIZATION.md),
+[calendar/API](docs/FIRE_ACTIVITY_CALENDAR.md), and
+[validation evidence and limits](docs/HARMONIZATION_VALIDATION.md).

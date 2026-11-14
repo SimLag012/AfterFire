@@ -1,0 +1,2162 @@
+[
+  {
+    "region": "australia",
+    "bbox": [
+      148,
+      -37,
+      150,
+      -35
+    ],
+    "year": 2019,
+    "month": 1,
+    "modis": 11,
+    "viirs": 19,
+    "complete": true,
+    "checks": [
+      {
+        "product": "MODIS_SP",
+        "raw_count": 133,
+        "occupied_cell_days": 11,
+        "raw_sha256": "42ddfa2368823364fcb815cadbc84816121f7091eb35ebf3086ba27f4e768cdc",
+        "independent_match": true
+      },
+      {
+        "product": "VIIRS_SNPP_SP",
+        "raw_count": 721,
+        "occupied_cell_days": 19,
+        "raw_sha256": "7b7e3461f9efa2092b40cd5a5336899afa58b62a7b1a71fe689b7192f700bf25",
+        "independent_match": true
+      }
+    ]
+  },
+  {
+    "region": "australia",
+    "bbox": [
+      148,
+      -37,
+      150,
+      -35
+    ],
+    "year": 2019,
+    "month": 8,
+    "modis": 12,
+    "viirs": 35,
+    "complete": true,
+    "checks": [
+      {
+        "product": "MODIS_SP",
+        "raw_count": 28,
+        "occupied_cell_days": 12,
+        "raw_sha256": "d32f8983e9b836e48bd60ee47ef69be0b9251de97eb825a1c9e4d1f1fe201d94",
+        "independent_match": true
+      },
+      {
+        "product": "VIIRS_SNPP_SP",
+        "raw_count": 78,
+        "occupied_cell_days": 35,
+        "raw_sha256": "61e648cc743b5c7816bfea418e1265ab86e7cae9032d81f4413f374dcfbca4b7",
+        "independent_match": true
+      }
+    ]
+  },
+  {
+    "region": "australia",
+    "bbox": [
+      148,
+      -37,
+      150,
+      -35
+    ],
+    "year": 2020,
+    "month": 1,
+    "modis": 575,
+    "viirs": 1008,
+    "complete": true,
+    "checks": [
+      {
+        "product": "MODIS_SP",
+        "raw_count": 7577,
+        "occupied_cell_days": 575,
+        "raw_sha256": "5fa6d9389e1ebe45467df931ec0552a15e3f54f02895c40b248ade2e97a229f3",
+        "independent_match": true
+      },
+      {
+        "product": "VIIRS_SNPP_SP",
+        "raw_count": 41078,
+        "occupied_cell_days": 1008,
+        "raw_sha256": "d7ca7620aff2a1a2181d80bcef76447f71207918295a215d30627918d2757d07",
+        "independent_match": true
+      }
+    ]
+  },
+  {
+    "region": "australia",
+    "bbox": [
+      148,
+      -37,
+      150,
+      -35
+    ],
+    "year": 2020,
+    "month": 8,
+    "modis": 2,
+    "viirs": 14,
+    "complete": true,
+    "checks": [
+      {
+        "product": "MODIS_SP",
+        "raw_count": 3,
+        "occupied_cell_days": 2,
+        "raw_sha256": "4a410195d887771577969cd0f4cc78e05f4f9231069fff9ea7b1ea025e0d44a4",
+        "independent_match": true
+      },
+      {
+        "product": "VIIRS_SNPP_SP",
+        "raw_count": 32,
+        "occupied_cell_days": 14,
+        "raw_sha256": "1c8ceacdd506ea0a04bbe3941d8932cc7c4d2cfba8a6d7f1d90abfb59a7a1c8a",
+        "independent_match": true
+      }
+    ]
+  },
+  {
+    "region": "australia",
+    "bbox": [
+      148,
+      -37,
+      150,
+      -35
+    ],
+    "year": 2021,
+    "month": 1,
+    "modis": 0,
+    "viirs": 1,
+    "complete": true,
+    "checks": [
+      {
+        "product": "MODIS_SP",
+        "raw_count": 1,
+        "occupied_cell_days": 0,
+        "raw_sha256": "5a47806c19d765c1a58331b07950fada8ef11c61b8e936e2667754c5584a4641",
+        "independent_match": true
+      },
+      {
+        "product": "VIIRS_SNPP_SP",
+        "raw_count": 5,
+        "occupied_cell_days": 1,
+        "raw_sha256": "237401d7d8c6a85d3e82b77a224ec8e59ac0fc22fe013f6a8aab1c3b177e584c",
+        "independent_match": true
+      }
+    ]
+  },
+  {
+    "region": "australia",
+    "bbox": [
+      148,
+      -37,
+      150,
+      -35
+    ],
+    "year": 2021,
+    "month": 8,
+    "modis": 5,
+    "viirs": 29,
+    "complete": true,
+    "checks": [
+      {
+        "product": "MODIS_SP",
+        "raw_count": 7,
+        "occupied_cell_days": 5,
+        "raw_sha256": "c6e08ad2466b82866516ac7ebbf628b8e2d430fd67e72ba30920c2c00c3407ee",
+        "independent_match": true
+      },
+      {
+        "product": "VIIRS_SNPP_SP",
+        "raw_count": 51,
+        "occupied_cell_days": 29,
+        "raw_sha256": "26c238141cfd1518aa78fcce2eb2c8ec1548da331442bd1289e249cfccb0b284",
+        "independent_match": true
+      }
+    ]
+  },
+  {
+    "region": "australia",
+    "bbox": [
+      148,
+      -37,
+      150,
+      -35
+    ],
+    "year": 2022,
+    "month": 1,
+    "modis": 0,
+    "viirs": 1,
+    "complete": true,
+    "checks": [
+      {
+        "product": "MODIS_SP",
+        "raw_count": 0,
+        "occupied_cell_days": 0,
+        "raw_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "independent_match": true
+      },
+      {
+        "product": "VIIRS_SNPP_SP",
+        "raw_count": 2,
+        "occupied_cell_days": 1,
+        "raw_sha256": "62e6fc248603d80e3cd695d94ea32247b905f8be11308683927694391a13d280",
+        "independent_match": true
+      }
+    ]
+  },
+  {
+    "region": "australia",
+    "bbox": [
+      148,
+      -37,
+      150,
+      -35
+    ],
+    "year": 2022,
+    "month": 8,
+    "modis": 7,
+    "viirs": 9,
+    "complete": true,
+    "checks": [
+      {
+        "product": "MODIS_SP",
+        "raw_count": 13,
+        "occupied_cell_days": 7,
+        "raw_sha256": "8de8b8a9c2de2e085e45f4575cac6bb2d8854f909b6ba5a30974eef41c0f882b",
+        "independent_match": true
+      },
+      {
+        "product": "VIIRS_SNPP_SP",
+        "raw_count": 15,
+        "occupied_cell_days": 9,
+        "raw_sha256": "9c9b4b10584eea1ab71d4a1044fbbb7a0fef2f50d22c610c0eca3c55e2621aa8",
+        "independent_match": true
+      }
+    ]
+  },
+  {
+    "region": "australia",
+    "bbox": [
+      148,
+      -37,
+      150,
+      -35
+    ],
+    "year": 2023,
+    "month": 1,
+    "modis": 0,
+    "viirs": 4,
+    "complete": true,
+    "checks": [
+      {
+        "product": "MODIS_SP",
+        "raw_count": 0,
+        "occupied_cell_days": 0,
+        "raw_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "independent_match": true
+      },
+      {
+        "product": "VIIRS_SNPP_SP",
+        "raw_count": 5,
+        "occupied_cell_days": 4,
+        "raw_sha256": "2d5427b9abf97f2313321e0ca9697012505b513a28d4ea9f8cfd5030d6da534c",
+        "independent_match": true
+      }
+    ]
+  },
+  {
+    "region": "australia",
+    "bbox": [
+      148,
+      -37,
+      150,
+      -35
+    ],
+    "year": 2023,
+    "month": 8,
+    "modis": 3,
+    "viirs": 33,
+    "complete": true,
+    "checks": [
+      {
+        "product": "MODIS_SP",
+        "raw_count": 10,
+        "occupied_cell_days": 3,
+        "raw_sha256": "e14b567669758cf1893070d00508fcc536656903dad877d19dc685f56ad7c4d8",
+        "independent_match": true
+      },
+      {
+        "product": "VIIRS_SNPP_SP",
+        "raw_count": 60,
+        "occupied_cell_days": 33,
+        "raw_sha256": "7afba4360a6dd396817326fe3748a98f3c96bc2fa2abab7c2625022af01ce879",
+        "independent_match": true
+      }
+    ]
+  },
+  {
+    "region": "australia",
+    "bbox": [
+      148,
+      -37,
+      150,
+      -35
+    ],
+    "year": 2024,
+    "month": 1,
+    "modis": 0,
+    "viirs": 2,
+    "complete": true,
+    "checks": [
+      {
+        "product": "MODIS_SP",
+        "raw_count": 0,
+        "occupied_cell_days": 0,
+        "raw_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "independent_match": true
+      },
+      {
+        "product": "VIIRS_SNPP_SP",
+        "raw_count": 6,
+        "occupied_cell_days": 2,
+        "raw_sha256": "ef7e2035c37d8a9cddeb11360d6d9d4c62be466cf546f28d1a600e8658449700",
+        "independent_match": true
+      }
+    ]
+  },
+  {
+    "region": "australia",
+    "bbox": [
+      148,
+      -37,
+      150,
+      -35
+    ],
+    "year": 2024,
+    "month": 8,
+    "modis": 1,
+    "viirs": 27,
+    "complete": true,
+    "checks": [
+      {
+        "product": "MODIS_SP",
+        "raw_count": 6,
+        "occupied_cell_days": 1,
+        "raw_sha256": "97b70825021eb5c3bc07e393ab5647f9bf60cd7caeaca091e139f6708af3ecce",
+        "independent_match": true
+      },
+      {
+        "product": "VIIRS_SNPP_SP",
+        "raw_count": 69,
+        "occupied_cell_days": 27,
+        "raw_sha256": "c07cae6418064695583fc5ff47826be93a96810dfee441423b16d31720bed9cc",
+        "independent_match": true
+      }
+    ]
+  },
+  {
+    "region": "brazil",
+    "bbox": [
+      -55,
+      -12,
+      -53,
+      -10
+    ],
+    "year": 2019,
+    "month": 1,
+    "modis": 25,
+    "viirs": 34,
+    "complete": true,
+    "checks": [
+      {
+        "product": "MODIS_SP",
+        "raw_count": 94,
+        "occupied_cell_days": 25,
+        "raw_sha256": "d31ea5320c98e9d5ef46867528c3741bf28d24534120534c473f02894bd726f6",
+        "independent_match": true
+      },
+      {
+        "product": "VIIRS_SNPP_SP",
+        "raw_count": 101,
+        "occupied_cell_days": 34,
+        "raw_sha256": "db1dbd834fceab5d26b75599b24bdda2513765feaca9ce3bcd988e7088a2a8b8",
+        "independent_match": true
+      }
+    ]
+  },
+  {
+    "region": "brazil",
+    "bbox": [
+      -55,
+      -12,
+      -53,
+      -10
+    ],
+    "year": 2019,
+    "month": 8,
+    "modis": 130,
+    "viirs": 331,
+    "complete": true,
+    "checks": [
+      {
+        "product": "MODIS_SP",
+        "raw_count": 538,
+        "occupied_cell_days": 130,
+        "raw_sha256": "6adb93243ccc97bf61d0cbf179c79f1510b037245342871662351eecbc2f63d8",
+        "independent_match": true
+      },
+      {
+        "product": "VIIRS_SNPP_SP",
+        "raw_count": 2389,
+        "occupied_cell_days": 331,
+        "raw_sha256": "22b3567bb843d255bfddeb0052ac8f80126fb37a75a7341ab74e3968f3904ba6",
+        "independent_match": true
+      }
+    ]
+  },
+  {
+    "region": "brazil",
+    "bbox": [
+      -55,
+      -12,
+      -53,
+      -10
+    ],
+    "year": 2020,
+    "month": 1,
+    "modis": 36,
+    "viirs": 44,
+    "complete": true,
+    "checks": [
+      {
+        "product": "MODIS_SP",
+        "raw_count": 81,
+        "occupied_cell_days": 36,
+        "raw_sha256": "19096d0427e34323434895ec455b3eed2cbe39d235628620c4d90e8e88736002",
+        "independent_match": true
+      },
+      {
+        "product": "VIIRS_SNPP_SP",
+        "raw_count": 131,
+        "occupied_cell_days": 44,
+        "raw_sha256": "3a0ffab2882658a0e4d2eb36df669748978e8788903d870aeecf0c4d94651007",
+        "independent_match": true
+      }
+    ]
+  },
+  {
+    "region": "brazil",
+    "bbox": [
+      -55,
+      -12,
+      -53,
+      -10
+    ],
+    "year": 2020,
+    "month": 8,
+    "modis": 158,
+    "viirs": 410,
+    "complete": true,
+    "checks": [
+      {
+        "product": "MODIS_SP",
+        "raw_count": 933,
+        "occupied_cell_days": 158,
+        "raw_sha256": "3a6cb9fe94b760cf4f1688004f427e3f060df0feb264bfad2fac5ee065396476",
+        "independent_match": true
+      },
+      {
+        "product": "VIIRS_SNPP_SP",
+        "raw_count": 3543,
+        "occupied_cell_days": 410,
+        "raw_sha256": "198c89016a3cfc895665fefe67efaddf5c2d12cfb67a877b3be6bd143b728dfb",
+        "independent_match": true
+      }
+    ]
+  },
+  {
+    "region": "brazil",
+    "bbox": [
+      -55,
+      -12,
+      -53,
+      -10
+    ],
+    "year": 2021,
+    "month": 1,
+    "modis": 32,
+    "viirs": 55,
+    "complete": true,
+    "checks": [
+      {
+        "product": "MODIS_SP",
+        "raw_count": 98,
+        "occupied_cell_days": 32,
+        "raw_sha256": "ce84c11d0d4926fc3e6fb82247b9da73e6b7da4db3307cafc12e11444194e223",
+        "independent_match": true
+      },
+      {
+        "product": "VIIRS_SNPP_SP",
+        "raw_count": 178,
+        "occupied_cell_days": 55,
+        "raw_sha256": "40e657feb0e9c6b1dea31a3eafce1b945449a1d6a1a4265033abfb3524d855f1",
+        "independent_match": true
+      }
+    ]
+  },
+  {
+    "region": "brazil",
+    "bbox": [
+      -55,
+      -12,
+      -53,
+      -10
+    ],
+    "year": 2021,
+    "month": 8,
+    "modis": 87,
+    "viirs": 215,
+    "complete": true,
+    "checks": [
+      {
+        "product": "MODIS_SP",
+        "raw_count": 475,
+        "occupied_cell_days": 87,
+        "raw_sha256": "b7cbd9c796b4752c99caf672cff1398ef05f5b11f452bdd98c8bb013a8664133",
+        "independent_match": true
+      },
+      {
+        "product": "VIIRS_SNPP_SP",
+        "raw_count": 1801,
+        "occupied_cell_days": 215,
+        "raw_sha256": "a8f4d3b990dadac74eb5c34de18e183df4e75b935f9fb0a30ad8d421afa3aed7",
+        "independent_match": true
+      }
+    ]
+  },
+  {
+    "region": "brazil",
+    "bbox": [
+      -55,
+      -12,
+      -53,
+      -10
+    ],
+    "year": 2022,
+    "month": 1,
+    "modis": 49,
+    "viirs": 37,
+    "complete": true,
+    "checks": [
+      {
+        "product": "MODIS_SP",
+        "raw_count": 111,
+        "occupied_cell_days": 49,
+        "raw_sha256": "1a2cae48f6f1d289d27d1b04fd39388c8940ec7e39c85d12eae11f7dc451c54c",
+        "independent_match": true
+      },
+      {
+        "product": "VIIRS_SNPP_SP",
+        "raw_count": 78,
+        "occupied_cell_days": 37,
+        "raw_sha256": "ceba3cdaf013f981db0c8f3230944ffbb29aa0922164f655f843c5548176564d",
+        "independent_match": true
+      }
+    ]
+  },
+  {
+    "region": "brazil",
+    "bbox": [
+      -55,
+      -12,
+      -53,
+      -10
+    ],
+    "year": 2022,
+    "month": 8,
+    "modis": 382,
+    "viirs": 593,
+    "complete": true,
+    "checks": [
+      {
+        "product": "MODIS_SP",
+        "raw_count": 2763,
+        "occupied_cell_days": 382,
+        "raw_sha256": "10ac2104f7f5456fc08f5be873255514624719c8fb088231df0189769fcac4d5",
+        "independent_match": true
+      },
+      {
+        "product": "VIIRS_SNPP_SP",
+        "raw_count": 10215,
+        "occupied_cell_days": 593,
+        "raw_sha256": "4424455acdd2f0410ccaa09d9cb0e8cdc2fd5288cce32957072c766d627cfe73",
+        "independent_match": true
+      }
+    ]
+  },
+  {
+    "region": "brazil",
+    "bbox": [
+      -55,
+      -12,
+      -53,
+      -10
+    ],
+    "year": 2023,
+    "month": 1,
+    "modis": 21,
+    "viirs": 12,
+    "complete": true,
+    "checks": [
+      {
+        "product": "MODIS_SP",
+        "raw_count": 30,
+        "occupied_cell_days": 21,
+        "raw_sha256": "391b231013321970e9fed36fad17bc3f378b866adf83fea556c5405b03c1eb4a",
+        "independent_match": true
+      },
+      {
+        "product": "VIIRS_SNPP_SP",
+        "raw_count": 24,
+        "occupied_cell_days": 12,
+        "raw_sha256": "6417f2bd345c19e59a13258aa57473e27e9b4c41c0aeff372846b87cfd15f4e7",
+        "independent_match": true
+      }
+    ]
+  },
+  {
+    "region": "brazil",
+    "bbox": [
+      -55,
+      -12,
+      -53,
+      -10
+    ],
+    "year": 2023,
+    "month": 8,
+    "modis": 50,
+    "viirs": 90,
+    "complete": true,
+    "checks": [
+      {
+        "product": "MODIS_SP",
+        "raw_count": 306,
+        "occupied_cell_days": 50,
+        "raw_sha256": "5a06b7e719f3cf3feea79893a7a992459c322562eb3fce2425a5ee8444352210",
+        "independent_match": true
+      },
+      {
+        "product": "VIIRS_SNPP_SP",
+        "raw_count": 1136,
+        "occupied_cell_days": 90,
+        "raw_sha256": "92b7a7a08ea9b3dc52187f280a64ba9de31ca880844143244729f1033cb0fa42",
+        "independent_match": true
+      }
+    ]
+  },
+  {
+    "region": "brazil",
+    "bbox": [
+      -55,
+      -12,
+      -53,
+      -10
+    ],
+    "year": 2024,
+    "month": 1,
+    "modis": 23,
+    "viirs": 19,
+    "complete": true,
+    "checks": [
+      {
+        "product": "MODIS_SP",
+        "raw_count": 69,
+        "occupied_cell_days": 23,
+        "raw_sha256": "99aff556eeb84ca09f2cad8e24f7bbe23a9a20c02e056f34b6c7527f95568953",
+        "independent_match": true
+      },
+      {
+        "product": "VIIRS_SNPP_SP",
+        "raw_count": 96,
+        "occupied_cell_days": 19,
+        "raw_sha256": "8072c7df7520f16ee5ed54ac91b471cde5432e7c0192ff9f49eacfa73367db27",
+        "independent_match": true
+      }
+    ]
+  },
+  {
+    "region": "brazil",
+    "bbox": [
+      -55,
+      -12,
+      -53,
+      -10
+    ],
+    "year": 2024,
+    "month": 8,
+    "modis": 194,
+    "viirs": 384,
+    "complete": true,
+    "checks": [
+      {
+        "product": "MODIS_SP",
+        "raw_count": 1364,
+        "occupied_cell_days": 194,
+        "raw_sha256": "2d9cb1cbaddb7cf640e2fd6b05191f40991ba1cbf448a7e2ae7cdf4172c11d59",
+        "independent_match": true
+      },
+      {
+        "product": "VIIRS_SNPP_SP",
+        "raw_count": 5742,
+        "occupied_cell_days": 384,
+        "raw_sha256": "3663e86b463a8812a286bafa783b6362fbab281c927e1cb10624dcf457327053",
+        "independent_match": true
+      }
+    ]
+  },
+  {
+    "region": "italy",
+    "bbox": [
+      8,
+      39,
+      10,
+      41
+    ],
+    "year": 2019,
+    "month": 1,
+    "modis": 0,
+    "viirs": 3,
+    "complete": true,
+    "checks": [
+      {
+        "product": "MODIS_SP",
+        "raw_count": 0,
+        "occupied_cell_days": 0,
+        "raw_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "independent_match": true
+      },
+      {
+        "product": "VIIRS_SNPP_SP",
+        "raw_count": 30,
+        "occupied_cell_days": 3,
+        "raw_sha256": "0a18fbf13cbb24f23518a5cdd667cf306808838dcc1983bc2aa59f3ec7b68cbf",
+        "independent_match": true
+      }
+    ]
+  },
+  {
+    "region": "italy",
+    "bbox": [
+      8,
+      39,
+      10,
+      41
+    ],
+    "year": 2019,
+    "month": 8,
+    "modis": 7,
+    "viirs": 30,
+    "complete": true,
+    "checks": [
+      {
+        "product": "MODIS_SP",
+        "raw_count": 20,
+        "occupied_cell_days": 7,
+        "raw_sha256": "0d3fe7e8902c3958199e0d4aa2435b36444f9093751e49af8b91b414eaefd23d",
+        "independent_match": true
+      },
+      {
+        "product": "VIIRS_SNPP_SP",
+        "raw_count": 87,
+        "occupied_cell_days": 30,
+        "raw_sha256": "dbebaecc9d27105e80e305708bd34de903087863ca0c5803ca73e53957d9c985",
+        "independent_match": true
+      }
+    ]
+  },
+  {
+    "region": "italy",
+    "bbox": [
+      8,
+      39,
+      10,
+      41
+    ],
+    "year": 2020,
+    "month": 1,
+    "modis": 0,
+    "viirs": 3,
+    "complete": true,
+    "checks": [
+      {
+        "product": "MODIS_SP",
+        "raw_count": 3,
+        "occupied_cell_days": 0,
+        "raw_sha256": "7a161b07c3e8b6dfb457f2fef569fec063940c7b14031087952111d56b731c75",
+        "independent_match": true
+      },
+      {
+        "product": "VIIRS_SNPP_SP",
+        "raw_count": 23,
+        "occupied_cell_days": 3,
+        "raw_sha256": "d8545eab6d682fac78bc5b2a713784a9d8a3f4a12a1edb6ef978b67c452212a7",
+        "independent_match": true
+      }
+    ]
+  },
+  {
+    "region": "italy",
+    "bbox": [
+      8,
+      39,
+      10,
+      41
+    ],
+    "year": 2020,
+    "month": 8,
+    "modis": 12,
+    "viirs": 30,
+    "complete": true,
+    "checks": [
+      {
+        "product": "MODIS_SP",
+        "raw_count": 47,
+        "occupied_cell_days": 12,
+        "raw_sha256": "56e4fa07681c2bf9ec8e1611f5c53f8c1552a34a418398022789f7bcf51a0c5e",
+        "independent_match": true
+      },
+      {
+        "product": "VIIRS_SNPP_SP",
+        "raw_count": 154,
+        "occupied_cell_days": 30,
+        "raw_sha256": "6adabc5309cb990832c6b5b99d0fe877d5f60af63e8a95c8e8299761cc4050fd",
+        "independent_match": true
+      }
+    ]
+  },
+  {
+    "region": "italy",
+    "bbox": [
+      8,
+      39,
+      10,
+      41
+    ],
+    "year": 2021,
+    "month": 1,
+    "modis": 1,
+    "viirs": 2,
+    "complete": true,
+    "checks": [
+      {
+        "product": "MODIS_SP",
+        "raw_count": 1,
+        "occupied_cell_days": 1,
+        "raw_sha256": "715269b97fae92ae9abfa6a85116954920d1be264c28b294b599b105ac27b263",
+        "independent_match": true
+      },
+      {
+        "product": "VIIRS_SNPP_SP",
+        "raw_count": 12,
+        "occupied_cell_days": 2,
+        "raw_sha256": "b9a5e31b4039a255a3e2ed9559588f1fd979be8f16a3ecfd14a5d7c28189e04e",
+        "independent_match": true
+      }
+    ]
+  },
+  {
+    "region": "italy",
+    "bbox": [
+      8,
+      39,
+      10,
+      41
+    ],
+    "year": 2021,
+    "month": 8,
+    "modis": 7,
+    "viirs": 27,
+    "complete": true,
+    "checks": [
+      {
+        "product": "MODIS_SP",
+        "raw_count": 22,
+        "occupied_cell_days": 7,
+        "raw_sha256": "cf02097a062497af413218da3ddf2c990680b4b74173de1fcf523cb7a4851db9",
+        "independent_match": true
+      },
+      {
+        "product": "VIIRS_SNPP_SP",
+        "raw_count": 101,
+        "occupied_cell_days": 27,
+        "raw_sha256": "0add2eb07bbdc8fd9557eefa612dbfc772353cad9c0af7e974f08cb80f1a6e8e",
+        "independent_match": true
+      }
+    ]
+  },
+  {
+    "region": "italy",
+    "bbox": [
+      8,
+      39,
+      10,
+      41
+    ],
+    "year": 2022,
+    "month": 1,
+    "modis": 0,
+    "viirs": 5,
+    "complete": true,
+    "checks": [
+      {
+        "product": "MODIS_SP",
+        "raw_count": 0,
+        "occupied_cell_days": 0,
+        "raw_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "independent_match": true
+      },
+      {
+        "product": "VIIRS_SNPP_SP",
+        "raw_count": 32,
+        "occupied_cell_days": 5,
+        "raw_sha256": "628e4198830b846fdae4c4ffa21b28f6380d9e42dd1784fa7d6c04c914df94ff",
+        "independent_match": true
+      }
+    ]
+  },
+  {
+    "region": "italy",
+    "bbox": [
+      8,
+      39,
+      10,
+      41
+    ],
+    "year": 2022,
+    "month": 8,
+    "modis": 2,
+    "viirs": 18,
+    "complete": true,
+    "checks": [
+      {
+        "product": "MODIS_SP",
+        "raw_count": 5,
+        "occupied_cell_days": 2,
+        "raw_sha256": "9433026c1b94f2e0dad980392dd620af12f619ad478fce1a5a127ac46263cee1",
+        "independent_match": true
+      },
+      {
+        "product": "VIIRS_SNPP_SP",
+        "raw_count": 45,
+        "occupied_cell_days": 18,
+        "raw_sha256": "82e4051fbc12d3bb2398bba20d54258d7b75a41777781f767f4b7d1362ad5bda",
+        "independent_match": true
+      }
+    ]
+  },
+  {
+    "region": "italy",
+    "bbox": [
+      8,
+      39,
+      10,
+      41
+    ],
+    "year": 2023,
+    "month": 1,
+    "modis": 0,
+    "viirs": 3,
+    "complete": true,
+    "checks": [
+      {
+        "product": "MODIS_SP",
+        "raw_count": 0,
+        "occupied_cell_days": 0,
+        "raw_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "independent_match": true
+      },
+      {
+        "product": "VIIRS_SNPP_SP",
+        "raw_count": 28,
+        "occupied_cell_days": 3,
+        "raw_sha256": "b984a2e334e329c3da94436b01023e6552ceae20efbb7f6fe1f6a5d0e0cb803d",
+        "independent_match": true
+      }
+    ]
+  },
+  {
+    "region": "italy",
+    "bbox": [
+      8,
+      39,
+      10,
+      41
+    ],
+    "year": 2023,
+    "month": 8,
+    "modis": 11,
+    "viirs": 43,
+    "complete": true,
+    "checks": [
+      {
+        "product": "MODIS_SP",
+        "raw_count": 34,
+        "occupied_cell_days": 11,
+        "raw_sha256": "a74dae2906b0c2c18942cf23584dbeea00e0d9f7f2ca0b5469503755b70e48f4",
+        "independent_match": true
+      },
+      {
+        "product": "VIIRS_SNPP_SP",
+        "raw_count": 180,
+        "occupied_cell_days": 43,
+        "raw_sha256": "a0c22f0c7bc60dccfab6f5ae194c79fa3e1753e1fb42b63d726873079b7c9f43",
+        "independent_match": true
+      }
+    ]
+  },
+  {
+    "region": "italy",
+    "bbox": [
+      8,
+      39,
+      10,
+      41
+    ],
+    "year": 2024,
+    "month": 1,
+    "modis": 1,
+    "viirs": 2,
+    "complete": true,
+    "checks": [
+      {
+        "product": "MODIS_SP",
+        "raw_count": 2,
+        "occupied_cell_days": 1,
+        "raw_sha256": "356566f8cb03487723895e47f6c3de62de4f39146313bc909eb83ad0c42f9085",
+        "independent_match": true
+      },
+      {
+        "product": "VIIRS_SNPP_SP",
+        "raw_count": 33,
+        "occupied_cell_days": 2,
+        "raw_sha256": "a1731e6c4f5fd6634a799c263401fe44bc8af566b5ecba3991c56e49ca1726af",
+        "independent_match": true
+      }
+    ]
+  },
+  {
+    "region": "italy",
+    "bbox": [
+      8,
+      39,
+      10,
+      41
+    ],
+    "year": 2024,
+    "month": 8,
+    "modis": 16,
+    "viirs": 24,
+    "complete": true,
+    "checks": [
+      {
+        "product": "MODIS_SP",
+        "raw_count": 31,
+        "occupied_cell_days": 16,
+        "raw_sha256": "454478bb657dc3f90cdf4fcfc49a90837737d4bfaa599993c18c5c0a3cb8bf81",
+        "independent_match": true
+      },
+      {
+        "product": "VIIRS_SNPP_SP",
+        "raw_count": 63,
+        "occupied_cell_days": 24,
+        "raw_sha256": "ba3340506df93cb3fe9fe8f596a17d9687920a58d9760ed94827f3ae9eee2ce9",
+        "independent_match": true
+      }
+    ]
+  },
+  {
+    "region": "mediterranean",
+    "bbox": [
+      27,
+      35,
+      29,
+      37
+    ],
+    "year": 2019,
+    "month": 1,
+    "modis": 0,
+    "viirs": 0,
+    "complete": true,
+    "checks": [
+      {
+        "product": "MODIS_SP",
+        "raw_count": 0,
+        "occupied_cell_days": 0,
+        "raw_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "independent_match": true
+      },
+      {
+        "product": "VIIRS_SNPP_SP",
+        "raw_count": 0,
+        "occupied_cell_days": 0,
+        "raw_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "independent_match": true
+      }
+    ]
+  },
+  {
+    "region": "mediterranean",
+    "bbox": [
+      27,
+      35,
+      29,
+      37
+    ],
+    "year": 2019,
+    "month": 8,
+    "modis": 0,
+    "viirs": 1,
+    "complete": true,
+    "checks": [
+      {
+        "product": "MODIS_SP",
+        "raw_count": 0,
+        "occupied_cell_days": 0,
+        "raw_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "independent_match": true
+      },
+      {
+        "product": "VIIRS_SNPP_SP",
+        "raw_count": 4,
+        "occupied_cell_days": 1,
+        "raw_sha256": "3de6225bcc8cb54f1f6c58f2a0fea0b34a914c652b015c8fd884c25a261e6e3e",
+        "independent_match": true
+      }
+    ]
+  },
+  {
+    "region": "mediterranean",
+    "bbox": [
+      27,
+      35,
+      29,
+      37
+    ],
+    "year": 2020,
+    "month": 1,
+    "modis": 0,
+    "viirs": 0,
+    "complete": true,
+    "checks": [
+      {
+        "product": "MODIS_SP",
+        "raw_count": 0,
+        "occupied_cell_days": 0,
+        "raw_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "independent_match": true
+      },
+      {
+        "product": "VIIRS_SNPP_SP",
+        "raw_count": 2,
+        "occupied_cell_days": 0,
+        "raw_sha256": "a06f3eb99a12221f38a5ee510734bce42567365fdbceb12ab7cf7a5b674cc816",
+        "independent_match": true
+      }
+    ]
+  },
+  {
+    "region": "mediterranean",
+    "bbox": [
+      27,
+      35,
+      29,
+      37
+    ],
+    "year": 2020,
+    "month": 8,
+    "modis": 0,
+    "viirs": 2,
+    "complete": true,
+    "checks": [
+      {
+        "product": "MODIS_SP",
+        "raw_count": 2,
+        "occupied_cell_days": 0,
+        "raw_sha256": "e2e9c50e983a6c23088bfe83f9f25c5bb8835bd389dd07215db4d3e549579c29",
+        "independent_match": true
+      },
+      {
+        "product": "VIIRS_SNPP_SP",
+        "raw_count": 8,
+        "occupied_cell_days": 2,
+        "raw_sha256": "2ee9761f23f35931b0323ec2b9c92526daea0452179191f9e909fe0f7251a84a",
+        "independent_match": true
+      }
+    ]
+  },
+  {
+    "region": "mediterranean",
+    "bbox": [
+      27,
+      35,
+      29,
+      37
+    ],
+    "year": 2021,
+    "month": 1,
+    "modis": 0,
+    "viirs": 0,
+    "complete": true,
+    "checks": [
+      {
+        "product": "MODIS_SP",
+        "raw_count": 0,
+        "occupied_cell_days": 0,
+        "raw_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "independent_match": true
+      },
+      {
+        "product": "VIIRS_SNPP_SP",
+        "raw_count": 0,
+        "occupied_cell_days": 0,
+        "raw_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "independent_match": true
+      }
+    ]
+  },
+  {
+    "region": "mediterranean",
+    "bbox": [
+      27,
+      35,
+      29,
+      37
+    ],
+    "year": 2021,
+    "month": 8,
+    "modis": 18,
+    "viirs": 24,
+    "complete": true,
+    "checks": [
+      {
+        "product": "MODIS_SP",
+        "raw_count": 172,
+        "occupied_cell_days": 18,
+        "raw_sha256": "bc1077bb673054d761db16f39fcf6531705a469eea38e78e12d6831d82245631",
+        "independent_match": true
+      },
+      {
+        "product": "VIIRS_SNPP_SP",
+        "raw_count": 432,
+        "occupied_cell_days": 24,
+        "raw_sha256": "350449bf7f49fff285feab0942ab8beed77737d141b62c67ff9c3408285990d5",
+        "independent_match": true
+      }
+    ]
+  },
+  {
+    "region": "mediterranean",
+    "bbox": [
+      27,
+      35,
+      29,
+      37
+    ],
+    "year": 2022,
+    "month": 1,
+    "modis": 0,
+    "viirs": 1,
+    "complete": true,
+    "checks": [
+      {
+        "product": "MODIS_SP",
+        "raw_count": 0,
+        "occupied_cell_days": 0,
+        "raw_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "independent_match": true
+      },
+      {
+        "product": "VIIRS_SNPP_SP",
+        "raw_count": 1,
+        "occupied_cell_days": 1,
+        "raw_sha256": "4875184280657ea79267850c3a53e0aee3dae04289dcf063eeb29c3cae9adefb",
+        "independent_match": true
+      }
+    ]
+  },
+  {
+    "region": "mediterranean",
+    "bbox": [
+      27,
+      35,
+      29,
+      37
+    ],
+    "year": 2022,
+    "month": 8,
+    "modis": 0,
+    "viirs": 0,
+    "complete": true,
+    "checks": [
+      {
+        "product": "MODIS_SP",
+        "raw_count": 1,
+        "occupied_cell_days": 0,
+        "raw_sha256": "28de75380365a8f27619a75eb2945a2739deb4935b2cb963a9dac0abe6676071",
+        "independent_match": true
+      },
+      {
+        "product": "VIIRS_SNPP_SP",
+        "raw_count": 0,
+        "occupied_cell_days": 0,
+        "raw_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "independent_match": true
+      }
+    ]
+  },
+  {
+    "region": "mediterranean",
+    "bbox": [
+      27,
+      35,
+      29,
+      37
+    ],
+    "year": 2023,
+    "month": 1,
+    "modis": 0,
+    "viirs": 0,
+    "complete": true,
+    "checks": [
+      {
+        "product": "MODIS_SP",
+        "raw_count": 0,
+        "occupied_cell_days": 0,
+        "raw_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "independent_match": true
+      },
+      {
+        "product": "VIIRS_SNPP_SP",
+        "raw_count": 0,
+        "occupied_cell_days": 0,
+        "raw_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "independent_match": true
+      }
+    ]
+  },
+  {
+    "region": "mediterranean",
+    "bbox": [
+      27,
+      35,
+      29,
+      37
+    ],
+    "year": 2023,
+    "month": 8,
+    "modis": 0,
+    "viirs": 0,
+    "complete": true,
+    "checks": [
+      {
+        "product": "MODIS_SP",
+        "raw_count": 8,
+        "occupied_cell_days": 0,
+        "raw_sha256": "73c94ab8f0a59f4061f1367cff5cdd382f25aa67506056feb74c3f46584ccdbd",
+        "independent_match": true
+      },
+      {
+        "product": "VIIRS_SNPP_SP",
+        "raw_count": 3,
+        "occupied_cell_days": 0,
+        "raw_sha256": "7a354e9125ec59ecdbcfdf795d6de37af23b4b219f328ea71294b20f2ff158be",
+        "independent_match": true
+      }
+    ]
+  },
+  {
+    "region": "mediterranean",
+    "bbox": [
+      27,
+      35,
+      29,
+      37
+    ],
+    "year": 2024,
+    "month": 1,
+    "modis": 0,
+    "viirs": 0,
+    "complete": true,
+    "checks": [
+      {
+        "product": "MODIS_SP",
+        "raw_count": 0,
+        "occupied_cell_days": 0,
+        "raw_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "independent_match": true
+      },
+      {
+        "product": "VIIRS_SNPP_SP",
+        "raw_count": 0,
+        "occupied_cell_days": 0,
+        "raw_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "independent_match": true
+      }
+    ]
+  },
+  {
+    "region": "mediterranean",
+    "bbox": [
+      27,
+      35,
+      29,
+      37
+    ],
+    "year": 2024,
+    "month": 8,
+    "modis": 1,
+    "viirs": 2,
+    "complete": true,
+    "checks": [
+      {
+        "product": "MODIS_SP",
+        "raw_count": 1,
+        "occupied_cell_days": 1,
+        "raw_sha256": "496d0abd301cc5404fef8505f26feafb69e72ec95a5e71e748b93b02bc894489",
+        "independent_match": true
+      },
+      {
+        "product": "VIIRS_SNPP_SP",
+        "raw_count": 3,
+        "occupied_cell_days": 2,
+        "raw_sha256": "75337acc6bb7e5d6b2c5938cefe014cb7519e86681525f5656f55d1be61c940f",
+        "independent_match": true
+      }
+    ]
+  },
+  {
+    "region": "north_america",
+    "bbox": [
+      -122,
+      39,
+      -120,
+      41
+    ],
+    "year": 2019,
+    "month": 1,
+    "modis": 10,
+    "viirs": 21,
+    "complete": true,
+    "checks": [
+      {
+        "product": "MODIS_SP",
+        "raw_count": 14,
+        "occupied_cell_days": 10,
+        "raw_sha256": "918d8f76a0c2fd8e4e89c817d7feae8a934eb08bee5b5a281b0c47e5e9ffab37",
+        "independent_match": true
+      },
+      {
+        "product": "VIIRS_SNPP_SP",
+        "raw_count": 44,
+        "occupied_cell_days": 21,
+        "raw_sha256": "7d33a406d68ce95eaf47aa926b0c25436e9aa6dbc009811798fa8e8008553fbd",
+        "independent_match": true
+      }
+    ]
+  },
+  {
+    "region": "north_america",
+    "bbox": [
+      -122,
+      39,
+      -120,
+      41
+    ],
+    "year": 2019,
+    "month": 8,
+    "modis": 4,
+    "viirs": 32,
+    "complete": true,
+    "checks": [
+      {
+        "product": "MODIS_SP",
+        "raw_count": 28,
+        "occupied_cell_days": 4,
+        "raw_sha256": "b0c3d59f99a2ef46cf17a143b07eda86e1b5523667199e0f35e2f09fe5cdb525",
+        "independent_match": true
+      },
+      {
+        "product": "VIIRS_SNPP_SP",
+        "raw_count": 75,
+        "occupied_cell_days": 32,
+        "raw_sha256": "010357f70ebaf1e26c1cf72edf49ffdb6be6f91637b6b89bbbd64f149fec90f3",
+        "independent_match": true
+      }
+    ]
+  },
+  {
+    "region": "north_america",
+    "bbox": [
+      -122,
+      39,
+      -120,
+      41
+    ],
+    "year": 2020,
+    "month": 1,
+    "modis": 8,
+    "viirs": 25,
+    "complete": true,
+    "checks": [
+      {
+        "product": "MODIS_SP",
+        "raw_count": 14,
+        "occupied_cell_days": 8,
+        "raw_sha256": "7c2e8c10b1ca4113dffdd2162fa6cbf37e141832b528cc7750994a022384bd98",
+        "independent_match": true
+      },
+      {
+        "product": "VIIRS_SNPP_SP",
+        "raw_count": 46,
+        "occupied_cell_days": 25,
+        "raw_sha256": "54e5f04b96e0fdf69806aded7fc72ab412866d741900977e5318f41b7d96327f",
+        "independent_match": true
+      }
+    ]
+  },
+  {
+    "region": "north_america",
+    "bbox": [
+      -122,
+      39,
+      -120,
+      41
+    ],
+    "year": 2020,
+    "month": 8,
+    "modis": 56,
+    "viirs": 147,
+    "complete": true,
+    "checks": [
+      {
+        "product": "MODIS_SP",
+        "raw_count": 1037,
+        "occupied_cell_days": 56,
+        "raw_sha256": "3a53fdf7b1b9e05c75c94bc87358d8e1d9488530169182c011de79f76a835b73",
+        "independent_match": true
+      },
+      {
+        "product": "VIIRS_SNPP_SP",
+        "raw_count": 5419,
+        "occupied_cell_days": 147,
+        "raw_sha256": "847055ecb00c3eb9b4606219dae5671e9b445773109ef7569b03f5228d1fbcbd",
+        "independent_match": true
+      }
+    ]
+  },
+  {
+    "region": "north_america",
+    "bbox": [
+      -122,
+      39,
+      -120,
+      41
+    ],
+    "year": 2021,
+    "month": 1,
+    "modis": 16,
+    "viirs": 45,
+    "complete": true,
+    "checks": [
+      {
+        "product": "MODIS_SP",
+        "raw_count": 32,
+        "occupied_cell_days": 16,
+        "raw_sha256": "690249ab460f55aabb82bc98790c3eb323b555c68d52b79650884cf809741d62",
+        "independent_match": true
+      },
+      {
+        "product": "VIIRS_SNPP_SP",
+        "raw_count": 116,
+        "occupied_cell_days": 45,
+        "raw_sha256": "59a61118479396098dd805e3e2244919485ea9d028a866c66bc8831cd93304c3",
+        "independent_match": true
+      }
+    ]
+  },
+  {
+    "region": "north_america",
+    "bbox": [
+      -122,
+      39,
+      -120,
+      41
+    ],
+    "year": 2021,
+    "month": 8,
+    "modis": 380,
+    "viirs": 553,
+    "complete": true,
+    "checks": [
+      {
+        "product": "MODIS_SP",
+        "raw_count": 9010,
+        "occupied_cell_days": 380,
+        "raw_sha256": "415738f3a42ebac28db04e855dd34ceda93463fe4a19682e3260c4978160ab11",
+        "independent_match": true
+      },
+      {
+        "product": "VIIRS_SNPP_SP",
+        "raw_count": 40844,
+        "occupied_cell_days": 553,
+        "raw_sha256": "5aec1882a1b238710f853452514444a0f51ab6dc1bfae69ac4a81cf70040ce49",
+        "independent_match": true
+      }
+    ]
+  },
+  {
+    "region": "north_america",
+    "bbox": [
+      -122,
+      39,
+      -120,
+      41
+    ],
+    "year": 2022,
+    "month": 1,
+    "modis": 27,
+    "viirs": 70,
+    "complete": true,
+    "checks": [
+      {
+        "product": "MODIS_SP",
+        "raw_count": 49,
+        "occupied_cell_days": 27,
+        "raw_sha256": "4e937d56405d71501f71075fa261b7fd4f635b2955ca3f027e2d297e0f13771f",
+        "independent_match": true
+      },
+      {
+        "product": "VIIRS_SNPP_SP",
+        "raw_count": 174,
+        "occupied_cell_days": 70,
+        "raw_sha256": "723ff1cf959a6a044d92ebed0010ebdda18a1745cb594147bd8a9d4412a74630",
+        "independent_match": true
+      }
+    ]
+  },
+  {
+    "region": "north_america",
+    "bbox": [
+      -122,
+      39,
+      -120,
+      41
+    ],
+    "year": 2022,
+    "month": 8,
+    "modis": 3,
+    "viirs": 19,
+    "complete": true,
+    "checks": [
+      {
+        "product": "MODIS_SP",
+        "raw_count": 17,
+        "occupied_cell_days": 3,
+        "raw_sha256": "7e8b395bb3205ca7edaf8fcd759210d5f16c2d06bde50ef3b386da736d7fc24d",
+        "independent_match": true
+      },
+      {
+        "product": "VIIRS_SNPP_SP",
+        "raw_count": 45,
+        "occupied_cell_days": 19,
+        "raw_sha256": "1cb4f7dd992edc7765c7a90459669a7df351f004bd2818a581c060d73e3fa9d2",
+        "independent_match": true
+      }
+    ]
+  },
+  {
+    "region": "north_america",
+    "bbox": [
+      -122,
+      39,
+      -120,
+      41
+    ],
+    "year": 2023,
+    "month": 1,
+    "modis": 13,
+    "viirs": 29,
+    "complete": true,
+    "checks": [
+      {
+        "product": "MODIS_SP",
+        "raw_count": 24,
+        "occupied_cell_days": 13,
+        "raw_sha256": "6544d758db58f811c7e26540ab9f1dcbb241e253956ceb3ce6fc539df22a6a5d",
+        "independent_match": true
+      },
+      {
+        "product": "VIIRS_SNPP_SP",
+        "raw_count": 85,
+        "occupied_cell_days": 29,
+        "raw_sha256": "8c176da3ae151a17fc01d88b82888c8352a0728617ce847934060e703ee963cb",
+        "independent_match": true
+      }
+    ]
+  },
+  {
+    "region": "north_america",
+    "bbox": [
+      -122,
+      39,
+      -120,
+      41
+    ],
+    "year": 2023,
+    "month": 8,
+    "modis": 9,
+    "viirs": 62,
+    "complete": true,
+    "checks": [
+      {
+        "product": "MODIS_SP",
+        "raw_count": 30,
+        "occupied_cell_days": 9,
+        "raw_sha256": "6c0cedc72e1050e229c944e2a990018f53d4ab70b480303a02a4d44306b1bce3",
+        "independent_match": true
+      },
+      {
+        "product": "VIIRS_SNPP_SP",
+        "raw_count": 126,
+        "occupied_cell_days": 62,
+        "raw_sha256": "62122f850fb8380d6fa8325034e93621248300f1fd457f555142f72cc228295a",
+        "independent_match": true
+      }
+    ]
+  },
+  {
+    "region": "north_america",
+    "bbox": [
+      -122,
+      39,
+      -120,
+      41
+    ],
+    "year": 2024,
+    "month": 1,
+    "modis": 11,
+    "viirs": 33,
+    "complete": true,
+    "checks": [
+      {
+        "product": "MODIS_SP",
+        "raw_count": 17,
+        "occupied_cell_days": 11,
+        "raw_sha256": "4804a0fd1e5c7a09f9fbfe4f0e9066eec1cc38c67966a82484edb8bf51ee2d56",
+        "independent_match": true
+      },
+      {
+        "product": "VIIRS_SNPP_SP",
+        "raw_count": 105,
+        "occupied_cell_days": 33,
+        "raw_sha256": "f616636ec441201f1e0895cdd390a4239e62b6477a7b1603c38d5a29a834cebf",
+        "independent_match": true
+      }
+    ]
+  },
+  {
+    "region": "north_america",
+    "bbox": [
+      -122,
+      39,
+      -120,
+      41
+    ],
+    "year": 2024,
+    "month": 8,
+    "modis": 27,
+    "viirs": 63,
+    "complete": true,
+    "checks": [
+      {
+        "product": "MODIS_SP",
+        "raw_count": 615,
+        "occupied_cell_days": 27,
+        "raw_sha256": "2038e9b1f3af4aea6b7813404f9e9e685621f071101e8075d8b82a50caf2d1c1",
+        "independent_match": true
+      },
+      {
+        "product": "VIIRS_SNPP_SP",
+        "raw_count": 2593,
+        "occupied_cell_days": 63,
+        "raw_sha256": "ab3f90cfcfff1d754c15e8b02fa663afbbcaaec7e5f2153f405bdd1194a71e5a",
+        "independent_match": true
+      }
+    ]
+  },
+  {
+    "region": "southern_africa",
+    "bbox": [
+      31,
+      -25,
+      33,
+      -23
+    ],
+    "year": 2019,
+    "month": 1,
+    "modis": 0,
+    "viirs": 6,
+    "complete": true,
+    "checks": [
+      {
+        "product": "MODIS_SP",
+        "raw_count": 5,
+        "occupied_cell_days": 0,
+        "raw_sha256": "e8cd0a8cb7f7248e82bae4f82438ba845e917eb416dffbb7f6f3ab17f46ece9c",
+        "independent_match": true
+      },
+      {
+        "product": "VIIRS_SNPP_SP",
+        "raw_count": 10,
+        "occupied_cell_days": 6,
+        "raw_sha256": "12592c811f1379bee3ef6309fcff8084a0befb5b37d652d18981000a97c39d90",
+        "independent_match": true
+      }
+    ]
+  },
+  {
+    "region": "southern_africa",
+    "bbox": [
+      31,
+      -25,
+      33,
+      -23
+    ],
+    "year": 2019,
+    "month": 8,
+    "modis": 30,
+    "viirs": 75,
+    "complete": true,
+    "checks": [
+      {
+        "product": "MODIS_SP",
+        "raw_count": 53,
+        "occupied_cell_days": 30,
+        "raw_sha256": "e37fcdd2ff8ec2b348872998a4ba38bc1de6281e89ba67cb006291fcd20a3047",
+        "independent_match": true
+      },
+      {
+        "product": "VIIRS_SNPP_SP",
+        "raw_count": 212,
+        "occupied_cell_days": 75,
+        "raw_sha256": "c411cc63f4a93d46e351148bd7225714d166b28b2d18d39f21d8e0a7e5c5f90d",
+        "independent_match": true
+      }
+    ]
+  },
+  {
+    "region": "southern_africa",
+    "bbox": [
+      31,
+      -25,
+      33,
+      -23
+    ],
+    "year": 2020,
+    "month": 1,
+    "modis": 2,
+    "viirs": 18,
+    "complete": true,
+    "checks": [
+      {
+        "product": "MODIS_SP",
+        "raw_count": 5,
+        "occupied_cell_days": 2,
+        "raw_sha256": "42773b0c6b682b7ca993072142abf3a9258c6a251b1f2d1080020b11cf8c7858",
+        "independent_match": true
+      },
+      {
+        "product": "VIIRS_SNPP_SP",
+        "raw_count": 62,
+        "occupied_cell_days": 18,
+        "raw_sha256": "afb206cefde16f59d236225c35106a0da5c2d57c59fbc56232ad93fba27e9cd6",
+        "independent_match": true
+      }
+    ]
+  },
+  {
+    "region": "southern_africa",
+    "bbox": [
+      31,
+      -25,
+      33,
+      -23
+    ],
+    "year": 2020,
+    "month": 8,
+    "modis": 37,
+    "viirs": 181,
+    "complete": true,
+    "checks": [
+      {
+        "product": "MODIS_SP",
+        "raw_count": 138,
+        "occupied_cell_days": 37,
+        "raw_sha256": "096e5d54d0d667a47ccf1dfcc72e4a6084bd98efa8884d758e0cd88023347b99",
+        "independent_match": true
+      },
+      {
+        "product": "VIIRS_SNPP_SP",
+        "raw_count": 997,
+        "occupied_cell_days": 181,
+        "raw_sha256": "1dca5eb33846bd64be56c8bd3975c6e870ca836240439351601c947190488ab1",
+        "independent_match": true
+      }
+    ]
+  },
+  {
+    "region": "southern_africa",
+    "bbox": [
+      31,
+      -25,
+      33,
+      -23
+    ],
+    "year": 2021,
+    "month": 1,
+    "modis": 0,
+    "viirs": 15,
+    "complete": true,
+    "checks": [
+      {
+        "product": "MODIS_SP",
+        "raw_count": 2,
+        "occupied_cell_days": 0,
+        "raw_sha256": "c1a5d9cf9a6376e6d94fff6a82020e1dba7dcaa291666766ca7ada067dc92884",
+        "independent_match": true
+      },
+      {
+        "product": "VIIRS_SNPP_SP",
+        "raw_count": 20,
+        "occupied_cell_days": 15,
+        "raw_sha256": "a410a9892ae4f41323db14af9b13564a1c0aa53ae2fe8154dabc57e5d067b0da",
+        "independent_match": true
+      }
+    ]
+  },
+  {
+    "region": "southern_africa",
+    "bbox": [
+      31,
+      -25,
+      33,
+      -23
+    ],
+    "year": 2021,
+    "month": 8,
+    "modis": 124,
+    "viirs": 250,
+    "complete": true,
+    "checks": [
+      {
+        "product": "MODIS_SP",
+        "raw_count": 378,
+        "occupied_cell_days": 124,
+        "raw_sha256": "f8c5a1e387f6d8c3f07ec38ecabdc0ee933becb368a2272252076f1aa5cbb094",
+        "independent_match": true
+      },
+      {
+        "product": "VIIRS_SNPP_SP",
+        "raw_count": 1460,
+        "occupied_cell_days": 250,
+        "raw_sha256": "6e5102150b975496f2c5473c7b388b1cf6b2995ad832159e2fb3f7ccec3010c5",
+        "independent_match": true
+      }
+    ]
+  },
+  {
+    "region": "southern_africa",
+    "bbox": [
+      31,
+      -25,
+      33,
+      -23
+    ],
+    "year": 2022,
+    "month": 1,
+    "modis": 2,
+    "viirs": 9,
+    "complete": true,
+    "checks": [
+      {
+        "product": "MODIS_SP",
+        "raw_count": 4,
+        "occupied_cell_days": 2,
+        "raw_sha256": "83cfebe963e66f46981ba2fbca293d4f4a5a7d1c5fb80ef77bb9b917aa5af781",
+        "independent_match": true
+      },
+      {
+        "product": "VIIRS_SNPP_SP",
+        "raw_count": 14,
+        "occupied_cell_days": 9,
+        "raw_sha256": "01171d8dc53c3ff785c49327c13a2cb246439f994950e4500ccdb784c460d4b3",
+        "independent_match": true
+      }
+    ]
+  },
+  {
+    "region": "southern_africa",
+    "bbox": [
+      31,
+      -25,
+      33,
+      -23
+    ],
+    "year": 2022,
+    "month": 8,
+    "modis": 43,
+    "viirs": 145,
+    "complete": true,
+    "checks": [
+      {
+        "product": "MODIS_SP",
+        "raw_count": 111,
+        "occupied_cell_days": 43,
+        "raw_sha256": "db9624b8291e200d2bef31f7904b84a305ed24e1f29a5051eb7939059878d4be",
+        "independent_match": true
+      },
+      {
+        "product": "VIIRS_SNPP_SP",
+        "raw_count": 641,
+        "occupied_cell_days": 145,
+        "raw_sha256": "9d9c33115f97d659aa9a8bafb28ae5582242c645fb43f2447b977f79ed0001dc",
+        "independent_match": true
+      }
+    ]
+  },
+  {
+    "region": "southern_africa",
+    "bbox": [
+      31,
+      -25,
+      33,
+      -23
+    ],
+    "year": 2023,
+    "month": 1,
+    "modis": 3,
+    "viirs": 21,
+    "complete": true,
+    "checks": [
+      {
+        "product": "MODIS_SP",
+        "raw_count": 10,
+        "occupied_cell_days": 3,
+        "raw_sha256": "901fd526e4e4eadc975237ac8c02c183ea4024a4bb35ef93641a56c136730f3a",
+        "independent_match": true
+      },
+      {
+        "product": "VIIRS_SNPP_SP",
+        "raw_count": 42,
+        "occupied_cell_days": 21,
+        "raw_sha256": "a72a084034307fe5f886877446d47f7da6597b52702318cc268ef461aafad1ef",
+        "independent_match": true
+      }
+    ]
+  },
+  {
+    "region": "southern_africa",
+    "bbox": [
+      31,
+      -25,
+      33,
+      -23
+    ],
+    "year": 2023,
+    "month": 8,
+    "modis": 79,
+    "viirs": 190,
+    "complete": true,
+    "checks": [
+      {
+        "product": "MODIS_SP",
+        "raw_count": 416,
+        "occupied_cell_days": 79,
+        "raw_sha256": "a50a22849b403dca6285fa7e013eb75bb6327406c5c11fce3dfc74f89f22828d",
+        "independent_match": true
+      },
+      {
+        "product": "VIIRS_SNPP_SP",
+        "raw_count": 1902,
+        "occupied_cell_days": 190,
+        "raw_sha256": "38c84a7621a5a20886d324fca6bc57a393b0bbd90402f5565aa97ab86d1a3b12",
+        "independent_match": true
+      }
+    ]
+  },
+  {
+    "region": "southern_africa",
+    "bbox": [
+      31,
+      -25,
+      33,
+      -23
+    ],
+    "year": 2024,
+    "month": 1,
+    "modis": 1,
+    "viirs": 14,
+    "complete": true,
+    "checks": [
+      {
+        "product": "MODIS_SP",
+        "raw_count": 3,
+        "occupied_cell_days": 1,
+        "raw_sha256": "818289df5c38c5569ec6e9588bf83cbaa9ade35f670e3736d62b2ef56bea6f9e",
+        "independent_match": true
+      },
+      {
+        "product": "VIIRS_SNPP_SP",
+        "raw_count": 18,
+        "occupied_cell_days": 14,
+        "raw_sha256": "34cf02e2d1618981755f2d9e463f4ca1fd534582af025d225010c3eddca9f7e9",
+        "independent_match": true
+      }
+    ]
+  },
+  {
+    "region": "southern_africa",
+    "bbox": [
+      31,
+      -25,
+      33,
+      -23
+    ],
+    "year": 2024,
+    "month": 8,
+    "modis": 76,
+    "viirs": 218,
+    "complete": true,
+    "checks": [
+      {
+        "product": "MODIS_SP",
+        "raw_count": 133,
+        "occupied_cell_days": 76,
+        "raw_sha256": "a905e9f44caeff3b8c091097f3cbb3746ceb6bc806378aa51bc70477ce409bec",
+        "independent_match": true
+      },
+      {
+        "product": "VIIRS_SNPP_SP",
+        "raw_count": 693,
+        "occupied_cell_days": 218,
+        "raw_sha256": "b40f8f89c8a529e6e3d08f964fd8f333ae87099147b873ab0b843c56c504b121",
+        "independent_match": true
+      }
+    ]
+  }
+]

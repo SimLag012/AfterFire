@@ -1,0 +1,250 @@
+........................................................................ [ 57%]
+......................................................                   [100%]
+=============================== warnings summary ===============================
+app/tests/test_fire_activity.py: 35 warnings
+app/tests/test_phase5_recovery.py: 4 warnings
+app/tests/test_phase6_reburn.py: 7 warnings
+app/tests/test_post_fire_recovery.py: 12 warnings
+  /usr/local/lib/python3.12/site-packages/sqlalchemy/sql/schema.py:4362: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    return util.wrap_callable(lambda ctx: fn(), fn)  # type: ignore[call-arg, no-any-return, no-untyped-call]  # noqa: E501
+
+app/tests/test_fire_activity.py::test_partial_truncated_zero_resume_and_exports
+app/tests/test_fire_activity.py::test_partial_truncated_zero_resume_and_exports
+app/tests/test_fire_activity.py::test_partial_truncated_zero_resume_and_exports
+  /app/app/fire_activity/service.py:69: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    now=datetime.utcnow()
+
+app/tests/test_fire_activity.py: 14 warnings
+  /app/app/fire_activity/service.py:164: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    'source':'https://firms.modaps.eosdis.nasa.gov/api/area/', 'acquired_at':datetime.utcnow().isoformat()+'Z',
+
+app/tests/test_fire_activity.py: 114 warnings
+  /app/app/fire_activity/service.py:127: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    .values(progress=int(100*(index+1)/len(plans)),configuration={**cfg,'batch_calls':calls},lease_until=datetime.utcnow()+timedelta(minutes=3),updated_at=datetime.utcnow()))
+
+app/tests/test_fire_activity.py: 57 warnings
+  /app/app/fire_activity/service.py:132: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    row.state=state;row.observations=obs;row.evidence=evidence;row.updated_at=datetime.utcnow()
+
+app/tests/test_fire_activity.py::test_partial_truncated_zero_resume_and_exports
+app/tests/test_fire_activity.py::test_partial_truncated_zero_resume_and_exports
+  /app/app/fire_activity/service.py:144: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    .values(state='queued' if yielded else 'partial' if failed or budget_hit else 'completed',lease_until=None,updated_at=datetime.utcnow(),
+
+app/tests/test_phase5_recovery.py::test_planning_enqueue_fast_deduplicated_and_restart
+  /app/app/tests/test_phase5_recovery.py:187: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    a.state='fetching';a.owner='abandoned';a.lease_until=datetime.utcnow()-timedelta(seconds=1)
+
+app/tests/test_phase5_recovery.py::test_planning_enqueue_fast_deduplicated_and_restart
+app/tests/test_post_fire_recovery.py::test_persistent_queue_idempotence_lease_resume_atomic_result
+app/tests/test_post_fire_recovery.py::test_persistent_queue_idempotence_lease_resume_atomic_result
+app/tests/test_post_fire_recovery.py::test_persistent_queue_idempotence_lease_resume_atomic_result
+app/tests/test_post_fire_recovery.py::test_persistent_queue_idempotence_lease_resume_atomic_result
+app/tests/test_post_fire_recovery.py::test_deferred_job_survives_restart_and_waits_out_provider_limit
+app/tests/test_post_fire_recovery.py::test_deferred_job_survives_restart_and_waits_out_provider_limit
+app/tests/test_post_fire_recovery.py::test_deferred_job_survives_restart_and_waits_out_provider_limit
+  /app/app/services/analysis_jobs.py:73: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    now=datetime.utcnow()
+
+app/tests/test_phase5_recovery.py::test_planning_enqueue_fast_deduplicated_and_restart
+app/tests/test_phase6_reburn.py::test_persistent_job_replay_partial_publication_and_sse
+app/tests/test_phase6_reburn.py::test_persistent_job_replay_partial_publication_and_sse
+app/tests/test_phase6_reburn.py::test_persistent_job_replay_partial_publication_and_sse
+  /app/app/services/analysis_progress.py:139: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    values = {'updated_at': datetime.utcnow()}
+
+app/tests/test_phase5_recovery.py::test_planning_enqueue_fast_deduplicated_and_restart
+  /app/app/services/planning_jobs.py:69: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    .values(state='completed', progress=100, lease_until=None, updated_at=datetime.utcnow()))
+
+app/tests/test_phase5_recovery.py::test_planning_enqueue_fast_deduplicated_and_restart
+app/tests/test_phase5_recovery.py::test_planning_enqueue_fast_deduplicated_and_restart
+  /app/app/services/planning_jobs.py:50: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    if state == 'ready' and expires < datetime.utcnow():
+
+app/tests/test_phase5_recovery.py::test_planning_enqueue_fast_deduplicated_and_restart
+  /app/app/tests/test_phase5_recovery.py:199: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    ready.updated_at=datetime.utcnow()-timedelta(days=2);await db.commit()
+
+app/tests/test_phase5_recovery.py::test_planning_enqueue_fast_deduplicated_and_restart
+  /app/app/services/planning_jobs.py:37: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    expired = job.updated_at < datetime.utcnow() - timedelta(hours=settings.AFTERFIRE_PREFLIGHT_TTL_HOURS)
+
+app/tests/test_phase5_recovery.py::test_planning_enqueue_fast_deduplicated_and_restart
+  /app/app/services/planning_jobs.py:41: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    .values(state='queued', progress=0, error=None, owner=None, lease_until=None, updated_at=datetime.utcnow()))
+
+app/tests/test_phase5_recovery.py::test_native_pixel_baselines_nodata_crs_shift_and_multiband_export
+  /app/app/tests/test_phase5_recovery.py:216: PendingDeprecationWarning: Use `@` matmul instead of `*` mul operator for matrix multiplication
+    affine=tile_transform('h19v05',4800)*Affine.translation(800,1400)
+
+app/tests/test_phase5_recovery.py::test_native_pixel_baselines_nodata_crs_shift_and_multiband_export
+app/tests/test_phase5_recovery.py::test_native_pixel_baselines_nodata_crs_shift_and_multiband_export
+  /app/app/tests/test_phase5_recovery.py:217: PendingDeprecationWarning: Use `@` matmul instead of `*` mul operator for matrix multiplication
+    x0,y0=affine*(0,0);x1,y1=affine*(4,1)
+
+app/tests/test_phase5_recovery.py: 12 warnings
+app/tests/test_phase6_reburn.py: 58 warnings
+app/tests/test_post_fire_recovery.py: 54 warnings
+  /app/app/analysis/modis_science.py:55: DeprecationWarning: The 'shapely.ops.transform()' function is deprecated. Use 'shapely.transform()' or 'shapely.transform_coordseq()' instead. See https://shapely.readthedocs.io/en/latest/manual.html#shapely.ops.transform for more details.
+    result=transform(_transformer(source, target).transform, geom)
+
+app/tests/test_phase5_recovery.py: 109 warnings
+  /app/app/services/spatial_recovery.py:69: PendingDeprecationWarning: Use `@` matmul instead of `*` mul operator for matrix multiplication
+    col,row=~base*(src.transform.c,src.transform.f)
+
+app/tests/test_phase5_recovery.py::test_native_pixel_baselines_nodata_crs_shift_and_multiband_export
+app/tests/test_phase5_recovery.py::test_native_pixel_baselines_nodata_crs_shift_and_multiband_export
+app/tests/test_phase5_recovery.py::test_native_pixel_baselines_nodata_crs_shift_and_multiband_export
+app/tests/test_phase5_recovery.py::test_native_pixel_baselines_nodata_crs_shift_and_multiband_export
+app/tests/test_phase5_recovery.py::test_native_pixel_baselines_nodata_crs_shift_and_multiband_export
+app/tests/test_phase5_recovery.py::test_native_pixel_baselines_nodata_crs_shift_and_multiband_export
+app/tests/test_phase5_recovery.py::test_native_pixel_baselines_nodata_crs_shift_and_multiband_export
+app/tests/test_phase5_recovery.py::test_native_pixel_baselines_nodata_crs_shift_and_multiband_export
+  /app/app/services/spatial_recovery.py:80: PendingDeprecationWarning: Use `@` matmul instead of `*` mul operator for matrix multiplication
+    x,y=src.transform*(int(c),int(r))
+
+app/tests/test_phase5_recovery.py::test_native_pixel_baselines_nodata_crs_shift_and_multiband_export
+app/tests/test_phase5_recovery.py::test_native_pixel_baselines_nodata_crs_shift_and_multiband_export
+  /app/app/services/spatial_recovery.py:172: PendingDeprecationWarning: Use `@` matmul instead of `*` mul operator for matrix multiplication
+    affine=tile_transform(tile,4800)*rasterio.Affine.translation(c0,r0)
+
+app/tests/test_phase5_recovery.py::test_native_pixel_baselines_nodata_crs_shift_and_multiband_export
+  /app/app/tests/test_phase5_recovery.py:244: PendingDeprecationWarning: Use `@` matmul instead of `*` mul operator for matrix multiplication
+    with rasterio.open(first,'r+') as dst:dst.transform=affine*Affine.translation(.5,0)
+
+app/tests/test_phase6_reburn.py: 47 warnings
+  /app/app/analysis/reburn.py:42: PendingDeprecationWarning: Use `@` matmul instead of `*` mul operator for matrix multiplication
+    x, y = affine*(col % 2400, row % 2400)
+
+app/tests/test_phase6_reburn.py::test_shifted_vegetation_grid_rejected
+  /app/app/tests/test_phase6_reburn.py:230: PendingDeprecationWarning: Use `@` matmul instead of `*` mul operator for matrix multiplication
+    transform=tile_transform('h18v05',4800)*rasterio.Affine.translation(.5,0)) as dst:dst.write(np.ones((2,2),dtype='float32'),1)
+
+app/tests/test_phase6_reburn.py::test_shifted_vegetation_grid_rejected
+  /app/app/services/reburn_jobs.py:195: PendingDeprecationWarning: Use `@` matmul instead of `*` mul operator for matrix multiplication
+    col,row=~base*(src.transform.c,src.transform.f)
+
+app/tests/test_phase6_reburn.py::test_persistent_job_replay_partial_publication_and_sse
+  /app/app/services/reburn_jobs.py:388: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    result['created_at']=datetime.utcnow().isoformat()+'Z'
+
+app/tests/test_phase6_reburn.py::test_persistent_job_replay_partial_publication_and_sse
+  /app/app/services/reburn_jobs.py:393: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    EventAnalysisJob.state.in_(('processing','fetching'))).values(state=result['state'],progress=100,lease_until=None,updated_at=datetime.utcnow()))
+
+app/tests/test_phase6_reburn.py::test_invalid_burn_uncertainty_is_unknown_not_valid_zero_burn
+app/tests/test_phase6_reburn.py::test_invalid_burn_uncertainty_is_unknown_not_valid_zero_burn
+app/tests/test_phase6_reburn.py::test_invalid_burn_uncertainty_is_unknown_not_valid_zero_burn
+app/tests/test_phase6_reburn.py::test_invalid_burn_uncertainty_is_unknown_not_valid_zero_burn
+app/tests/test_phase6_reburn.py::test_invalid_burn_uncertainty_is_unknown_not_valid_zero_burn
+app/tests/test_phase6_reburn.py::test_invalid_burn_uncertainty_is_unknown_not_valid_zero_burn
+  /app/app/tests/test_phase6_reburn.py:485: PendingDeprecationWarning: Use `@` matmul instead of `*` mul operator for matrix multiplication
+    transform=tile_transform('h18v04',2400)*rasterio.Affine.translation(1800,400)) as dst:
+
+app/tests/test_phase6_reburn.py::test_invalid_burn_uncertainty_is_unknown_not_valid_zero_burn
+app/tests/test_phase6_reburn.py::test_invalid_burn_uncertainty_is_unknown_not_valid_zero_burn
+app/tests/test_phase6_reburn.py::test_invalid_burn_uncertainty_is_unknown_not_valid_zero_burn
+app/tests/test_phase6_reburn.py::test_invalid_burn_uncertainty_is_unknown_not_valid_zero_burn
+  /app/app/analysis/appeears_science.py:19: PendingDeprecationWarning: Use `@` matmul instead of `*` mul operator for matrix multiplication
+    x0,y0=tile*(0,0);x1,y1=tile*(dim,dim)
+
+app/tests/test_phase6_reburn.py::test_invalid_burn_uncertainty_is_unknown_not_valid_zero_burn
+app/tests/test_phase6_reburn.py::test_invalid_burn_uncertainty_is_unknown_not_valid_zero_burn
+app/tests/test_phase6_reburn.py::test_invalid_burn_uncertainty_is_unknown_not_valid_zero_burn
+app/tests/test_phase6_reburn.py::test_invalid_burn_uncertainty_is_unknown_not_valid_zero_burn
+app/tests/test_phase6_reburn.py::test_invalid_burn_uncertainty_is_unknown_not_valid_zero_burn
+app/tests/test_phase6_reburn.py::test_invalid_burn_uncertainty_is_unknown_not_valid_zero_burn
+  /app/app/analysis/appeears_science.py:37: PendingDeprecationWarning: Use `@` matmul instead of `*` mul operator for matrix multiplication
+    offset=~tile*(affine.c,affine.f)
+
+app/tests/test_phase6_reburn.py::test_invalid_burn_uncertainty_is_unknown_not_valid_zero_burn
+app/tests/test_phase6_reburn.py::test_invalid_burn_uncertainty_is_unknown_not_valid_zero_burn
+  /app/app/services/reburn_jobs.py:140: PendingDeprecationWarning: Use `@` matmul instead of `*` mul operator for matrix multiplication
+    c0,r0 = ~base*(affine.c,affine.f)
+
+app/tests/test_post_fire_recovery.py::test_burn_date_quality_and_grid_cell_area
+app/tests/test_post_fire_recovery.py::test_full_pipeline_with_controlled_native_rasters[False]
+app/tests/test_post_fire_recovery.py::test_full_pipeline_with_controlled_native_rasters[False]
+app/tests/test_post_fire_recovery.py::test_full_pipeline_with_controlled_native_rasters[False]
+app/tests/test_post_fire_recovery.py::test_full_pipeline_with_controlled_native_rasters[False]
+app/tests/test_post_fire_recovery.py::test_full_pipeline_with_controlled_native_rasters[True]
+app/tests/test_post_fire_recovery.py::test_full_pipeline_with_controlled_native_rasters[True]
+app/tests/test_post_fire_recovery.py::test_full_pipeline_with_controlled_native_rasters[True]
+app/tests/test_post_fire_recovery.py::test_full_pipeline_with_controlled_native_rasters[True]
+  /app/app/analysis/modis_science.py:211: PendingDeprecationWarning: Use `@` matmul instead of `*` mul operator for matrix multiplication
+    x0,y0 = affine * (int(col), int(row))
+
+app/tests/test_post_fire_recovery.py::test_burn_date_quality_and_grid_cell_area
+app/tests/test_post_fire_recovery.py::test_full_pipeline_with_controlled_native_rasters[False]
+app/tests/test_post_fire_recovery.py::test_full_pipeline_with_controlled_native_rasters[False]
+app/tests/test_post_fire_recovery.py::test_full_pipeline_with_controlled_native_rasters[False]
+app/tests/test_post_fire_recovery.py::test_full_pipeline_with_controlled_native_rasters[False]
+app/tests/test_post_fire_recovery.py::test_full_pipeline_with_controlled_native_rasters[True]
+app/tests/test_post_fire_recovery.py::test_full_pipeline_with_controlled_native_rasters[True]
+app/tests/test_post_fire_recovery.py::test_full_pipeline_with_controlled_native_rasters[True]
+app/tests/test_post_fire_recovery.py::test_full_pipeline_with_controlled_native_rasters[True]
+  /app/app/analysis/modis_science.py:212: PendingDeprecationWarning: Use `@` matmul instead of `*` mul operator for matrix multiplication
+    x1,y1 = affine * (int(col)+1, int(row)+1)
+
+app/tests/test_post_fire_recovery.py::test_persistent_queue_idempotence_lease_resume_atomic_result
+  /app/app/tests/test_post_fire_recovery.py:194: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    stale=await db.get(EventAnalysisJob,job.id);stale.lease_until=datetime.utcnow()-timedelta(seconds=1);await db.commit()
+
+app/tests/test_post_fire_recovery.py::test_persistent_queue_idempotence_lease_resume_atomic_result
+app/tests/test_post_fire_recovery.py::test_persistent_queue_idempotence_lease_resume_atomic_result
+  /app/app/services/analysis_jobs.py:94: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    values={'lease_until':datetime.utcnow()+timedelta(minutes=3),'updated_at':datetime.utcnow()}
+
+app/tests/test_post_fire_recovery.py::test_persistent_queue_idempotence_lease_resume_atomic_result
+  /app/app/services/analysis_jobs.py:109: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    .values(state=state,progress=100,lease_until=None,updated_at=datetime.utcnow()))
+
+app/tests/test_post_fire_recovery.py::test_persistent_queue_idempotence_lease_resume_atomic_result
+  /app/app/services/analysis_jobs.py:54: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    .values(state='queued',error=None,progress=0,owner=None,lease_until=None,updated_at=datetime.utcnow()))
+
+app/tests/test_post_fire_recovery.py::test_persistent_queue_idempotence_lease_resume_atomic_result
+app/tests/test_post_fire_recovery.py::test_deferred_job_survives_restart_and_waits_out_provider_limit
+  /app/app/services/analysis_jobs.py:154: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    .values(state=state,error=error[:1000],lease_until=None,updated_at=datetime.utcnow()))
+
+app/tests/test_post_fire_recovery.py::test_native_hdf4_subset_fixture
+app/tests/test_post_fire_recovery.py::test_native_hdf4_subset_fixture
+  /app/app/tests/test_post_fire_recovery.py:223: PendingDeprecationWarning: Use `@` matmul instead of `*` mul operator for matrix multiplication
+    x0,y0=affine*(1,1);x1,y1=affine*(2,2)
+
+app/tests/test_post_fire_recovery.py::test_pipeline_no_sources_publishes_diagnostics_without_claiming_success
+app/tests/test_post_fire_recovery.py::test_full_pipeline_with_controlled_native_rasters[False]
+app/tests/test_post_fire_recovery.py::test_full_pipeline_with_controlled_native_rasters[True]
+  /app/app/services/post_fire_pipeline.py:538: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    'elapsed_seconds':round(time.monotonic()-started,2),'created_at':datetime.utcnow().isoformat()+'Z',
+
+app/tests/test_post_fire_recovery.py::test_full_pipeline_with_controlled_native_rasters[False]
+app/tests/test_post_fire_recovery.py::test_full_pipeline_with_controlled_native_rasters[True]
+  /app/app/tests/test_post_fire_recovery.py:355: PendingDeprecationWarning: Use `@` matmul instead of `*` mul operator for matrix multiplication
+    col,row=~native*(point.x,point.y)
+
+app/tests/test_post_fire_recovery.py::test_full_pipeline_with_controlled_native_rasters[False]
+app/tests/test_post_fire_recovery.py::test_full_pipeline_with_controlled_native_rasters[True]
+  /app/app/tests/test_post_fire_recovery.py:356: PendingDeprecationWarning: Use `@` matmul instead of `*` mul operator for matrix multiplication
+    affine=native*Affine.translation(int(col),int(row))
+
+app/tests/test_post_fire_recovery.py: 10 warnings
+  /app/app/tests/test_post_fire_recovery.py:362: PendingDeprecationWarning: Use `@` matmul instead of `*` mul operator for matrix multiplication
+    '250m 16 days VI Quality':np.full((4,4),2048,dtype=np.uint16),'250m 16 days pixel reliability':np.zeros((4,4),dtype=np.int8)},affine*Affine.scale(0.5,0.5),np.ones((4,4),dtype=bool)
+
+app/tests/test_post_fire_recovery.py::test_deferred_job_survives_restart_and_waits_out_provider_limit
+  /app/app/services/analysis_jobs.py:167: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    now = datetime.utcnow()
+
+app/tests/test_post_fire_recovery.py::test_deferred_job_survives_restart_and_waits_out_provider_limit
+  /app/app/tests/test_post_fire_recovery.py:445: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    assert (record.lease_until-datetime.utcnow()).total_seconds() > 175
+
+app/tests/test_post_fire_recovery.py::test_deferred_job_survives_restart_and_waits_out_provider_limit
+  /app/app/tests/test_post_fire_recovery.py:446: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    record.lease_until = datetime.utcnow()-timedelta(seconds=1)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+126 passed, 630 warnings in 25.04s

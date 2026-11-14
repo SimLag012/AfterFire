@@ -1,0 +1,21 @@
+{
+  "status": "passed",
+  "checks": [
+    {
+      "table": "event_analysis_results",
+      "unchanged_publications": 165,
+      "new_publications": 0
+    },
+    {
+      "table": "reburn_histories",
+      "unchanged_publications": 5,
+      "new_publications": 0
+    },
+    {
+      "table": "recovery_assessments",
+      "unchanged_publications": 18,
+      "new_publications": 0
+    }
+  ],
+  "scope": "All persisted science, Recovery Intelligence and Reburn JSON publications. No writes."
+}

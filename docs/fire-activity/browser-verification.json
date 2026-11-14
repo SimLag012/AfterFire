@@ -1,0 +1,110 @@
+{
+  "desktop": {
+    "viewport": {
+      "width": 1440,
+      "height": 1000
+    },
+    "brazil": {
+      "month": "2024-08",
+      "aqua_cell_days": 194,
+      "modis_records": 1364,
+      "viirs_records": 5742,
+      "viirs_reference_scale": 143.2,
+      "interval_display": [
+        40.9,
+        474.6
+      ],
+      "historical_median": 130,
+      "anomaly": 64,
+      "relative_percent_display": 49.2,
+      "historical_n": 5,
+      "download": "/home/simlag012/Downloads/afterfire-00040e19c45a-harmonized.csv"
+    },
+    "drawn_circle": {
+      "latitude": -10.6444,
+      "longitude": -52.4817,
+      "radius_km": 36
+    },
+    "rhodes": {
+      "month": "2023-07",
+      "aqua_cell_days": 18,
+      "modis_records": 401,
+      "viirs_records": 2770,
+      "complete_products": [
+        "MODIS_SP",
+        "VIIRS_SNPP_SP",
+        "VIIRS_NOAA20_SP",
+        "VIIRS_NOAA21_SP"
+      ],
+      "study": "cf11c7cd9a6171178af946b2b1e236e1ac14f3e5d0d3ae5d592c133b838a0f62",
+      "state": "completed",
+      "recovery_id": "global-d77c8ac8d89369a61e7125f78cfe2e76",
+      "recovery_original_detections": 30,
+      "recovery_cached": true
+    },
+    "charts": [
+      {
+        "observedPoints": 12,
+        "originalSensorBars": 0
+      },
+      {
+        "observedPoints": 0,
+        "originalSensorBars": 24
+      },
+      {
+        "observedPoints": 0,
+        "originalSensorBars": 0
+      },
+      {
+        "observedPoints": 0,
+        "originalSensorBars": 0
+      }
+    ],
+    "finalDownload": "/home/simlag012/Downloads/afterfire-00040e19c45a-harmonized (1).csv",
+    "finalConsoleErrors": [],
+    "contextIsolation": {
+      "pinned": "◀ Previous period\nHistorical month observations · UTC\n2024-08\nNext period ▶",
+      "restored": "◀ Previous period\nFIRMS observations · UTC\n2023-07-21 → 2023-07-22\nNext period ▶",
+      "repinned": "◀ Previous period\nHistorical month observations · UTC\n2024-08\nNext period ▶",
+      "unrelatedCandidateLists": 0,
+      "nextPeriodEnabled": false
+    },
+    "lazyCalendar": {
+      "assetsBeforeOpening": [],
+      "assetsAfterOpening": [
+        "http://127.0.0.1:3000/assets/FireActivityPanel-CIuN9Raa.js",
+        "http://127.0.0.1:3000/assets/FireActivityPanel-Bf019fzK.css"
+      ]
+    },
+    "finalTimeline": "◀ Previous period\nHistorical month observations · UTC\n2024-08\nNext period ▶"
+  },
+  "mobile": {
+    "viewport": {
+      "width": 390,
+      "height": 844
+    },
+    "brazilCell": "2024-08: 194; reference_observed; MODIS Aqua; archive fractions: MODIS_SP 100%, MODIS_NRT 0%, VIIRS_SNPP_SP 100%, VIIRS_SNPP_NRT 0%, VIIRS_NOAA20_SP 0%, VIIRS_NOAA20_NRT 0%, VIIRS_NOAA21_SP 0%, VIIRS_NOAA21_NRT 0%; interval Unavailable–Unavailable; cloud-free coverage unknown",
+    "detail": "Fire Activity Intelligence\n✕\n\nHistorical thermal activity · UTC months · fire-activity-1.0.0\n\nArea: 27.167216,35.326264,28.832784,36.673736. A drawn circle uses its bounding box.\n\nCached study\nChoose acquired area\n27.167216, 35.326264, 28.832784, 36.673736 · 2023-07-01 → 2023-07-31 · completed\n-122, 39, -120, 41 · 2019-01-01 → 2024-12-31 · partial\n31, -25, 33, -23 · 2019-01-01 → 2024-12-31 · partial\n27, 35, 29, 37 · 2019-01-01 → 2024-12-31 · partial\n8.1205, 39.326264, 9.8795, 40.673736 · 2024-08-01 → 2024-08-31 · partial\n8, 39, 10, 41 · 2019-01-01 → 2024-12-31 · partial\n-55, -12, -53, -10 · 2019-01-01 → 2024-12-31 · partial\n148, -37, 150, -35 · 2019-01-01 → 2024-12-31 · partial\n8.1205, 39.326264, 9.8795, 40.673736 · 2000-11-01 → 2026-11-13 · partial\nHistory from\nHistory to\nAcquire history\nResume missing windows\n\nExplicit acquisition: up to 28 five-day product windows per batch. Pan/zoom does not acquire history. NASA: connected · quota available (287/5000).\n\nRefresh source availability\n\npartial · 0% · Fixed validation sample acquired: January/August only; remaining months not acquired.\n\nShowing study area -55, -12, -53, -10. Metric: MODIS Aqua-equivalent daytime occupied 10 km equal-area cell-days. Calibration: validated.\n\nArchive completeness is not cloud-free observational coverage. Early Terra-only years and unsupported estimates remain unavailable.\n\nYear\nJan\nFeb\nMar\nApr\nMay\nJun\nJul\nAug\nSep\nOct\nNov\nDec\n2019\n·\n·\n·\n·\n·\n·\n·\n·\n·\n·\n2020\n·\n·\n·\n·\n·\n·\n·\n·\n·\n·\n2021\n·\n·\n·\n·\n·\n·\n·\n·\n·\n·\n2022\n·\n·\n·\n·\n·\n·\n·\n·\n·\n·\n2023\n·\n·\n·\n·\n·\n·\n·\n·\n·\n·\n2024\n·\n·\n·\n·\n·\n·\n·\n·\n·\n·\n\n□ Gray: missing · ? purple: unsupported estimate · ▧ striped: partial archive · 0 pale: zero in acquired reference data · yellow → red: increasing activity.\n\nMonthly series and original sensor counts\nhotspots CSV\nmodis CSV\nviirs CSV\nharmonized CSV\nanomalies CSV\nMetadata JSON\n2024-08 · 194\n\nreference_observed · MODIS Aqua · uncertainty: Unavailable – Unavailable\n\nVIIRS on the reference scale: 143.2 · interval 40.9 – 474.6 · calibrated_estimate. Direct Aqua is preferred when available; estimates are never added together.\n\nOriginal records: MODIS 1,364; VIIRS 5,742. 7106 records; shown on map.\n\nCoverage by NASA product\n\nHistorical median: 130 · anomaly: 64 (49.2%) · 5 comparable years. supported.\n\nCompare month\nChoose a month\n2019-01\n2019-02\n2019-03\n2019-04\n2019-05\n2019-06\n2019-07\n2019-08\n2019-09\n2019-10\n2019-11\n2019-12\n2020-01\n2020-02\n2020-03\n2020-04\n2020-05\n2020-06\n2020-07\n2020-08\n2020-09\n2020-10\n2020-11\n2020-12\n2021-01\n2021-02\n2021-03\n2021-04\n2021-05\n2021-06\n2021-07\n2021-08\n2021-09\n2021-10\n2021-11\n2021-12\n2022-01\n2022-02\n2022-03\n2022-04\n2022-05\n2022-06\n2022-07\n2022-08\n2022-09\n2022-10\n2022-11\n2022-12\n2023-01\n2023-02\n2023-03\n2023-04\n2023-05\n2023-06\n2023-07\n2023-08\n2023-09\n2023-10\n2023-11\n2023-12\n2024-01\n2024-02\n2024-03\n2024-04\n2024-05\n2024-06\n2024-07\n2024-08\n2024-09\n2024-10\n2024-11\n2024-12\n\n2019-08: 130. Difference: 64.\n\nCandidate window startsExplore original candidates (7 days)\n\nRecovery links use the existing original candidate identity and observations. Recent thermal activity is browsable here independently of Recovery eligibility.",
+    "layout": {
+      "documentWidth": 384,
+      "viewport": 390
+    },
+    "download": "/home/simlag012/Downloads/afterfire-00040e19c45a-anomalies.csv",
+    "mapAfterClose": true,
+    "recovery": {
+      "url": "http://127.0.0.1:3000/events/global-d77c8ac8d89369a61e7125f78cfe2e76",
+      "status": "How did this territory change?\n\nVegetation greenness was below its seasonal reference range in the latest valid NDVI observation.\n\n2024-06-25 – 2024-07-10 · NDVI 0.292 · reference range 0.444 to 0.544 · 536/536 pixels passed quality checks.\n\nTerritory analyzed\n28.76 km²\nObserved burned cells\n134\nValid post-fire observations\n22 NDVI composites\n\nCached scientific analysis · 2021-07-21–2024-07-22\n\nBefore / After\nRecovery timeline\nTerritory map\nReburn history\nSaved analysis details\nRetry incomplete analysis\nQuality notices (1)\n\nTime series contains missing/QA-rejected composites; no interpolation applied"
+    },
+    "consoleErrors": [],
+    "finalContext": {
+      "timeline": "◀ Previous period\nHistorical month observations · UTC\n2024-08\nNext period ▶",
+      "layout": {
+        "documentWidth": 384,
+        "viewport": 390
+      },
+      "nextPeriodEnabled": false
+    }
+  },
+  "fixtures": false,
+  "checked_at": "2026-11-14T08:08:34.232Z"
+}
