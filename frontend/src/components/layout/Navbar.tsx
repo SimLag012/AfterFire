@@ -6,10 +6,6 @@ import { apiClient } from '../../api/client';
 
 const destinations = [
   { to: '/explorer', label: 'Explorer' },
-  { to: '/recovery', label: 'Recovery' },
-  { to: '/recurrence', label: 'Recurring fires' },
-  { to: '/compare', label: 'Compare' },
-  { to: '/datasets', label: 'Data sources' },
 ];
 
 const firmsLabels = {

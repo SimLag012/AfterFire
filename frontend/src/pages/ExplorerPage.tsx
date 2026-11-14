@@ -14,7 +14,7 @@ type Period = 'today' | '24h' | 'all' | '7d' | '30d' | '12mo' | 'custom';
 const ITALY_BBOX = '6.3,35.3,18.9,47.2';
 const ITALY_CENTER: [number,number] = [41.25,12.6];
 const PAGE_SIZE = 10;
-type LocationResult = {name:string;lat:number;lon:number;bbox?:[number,number,number,number];bounds?:[number,number,number,number][]};
+type LocationResult = {name:string;short_name?:string;lat:number;lon:number;bbox?:[number,number,number,number];bounds?:[number,number,number,number][]};
 type LocationMapBounds = [[number,number],[number,number]];
 
 function paddedLocationBounds(result: LocationResult): LocationMapBounds[] {
@@ -30,6 +30,11 @@ function paddedLocationBounds(result: LocationResult): LocationMapBounds[] {
 
 function pointInsideBounds(latitude:number,longitude:number,bounds:LocationMapBounds[]) {
   return bounds.some(([[south,west],[north,east]])=>latitude>=south&&latitude<=north&&longitude>=west&&longitude<=east);
+}
+
+function searchPlaceLabel(value:string) {
+  return value.trim().replace(/\s+/g,' ').split(' ').filter(Boolean)
+    .map(part=>part.charAt(0).toLocaleUpperCase()+part.slice(1)).join(' ') || 'Italy';
 }
 
 const parseNumber = (value: string | null, fallback: number): number => {
@@ -78,6 +83,7 @@ export const ExplorerPage: React.FC = () => {
   const [search,setSearch]=useState('');
   const [searchResults,setSearchResults]=useState<LocationResult[]>([]);
   const [searchError,setSearchError]=useState('');
+  const [returnPlace,setReturnPlace]=useState('Italy');
   const [focusPosition,setFocusPosition]=useState<[number,number]>();
   const [focusBounds,setFocusBounds]=useState<LocationMapBounds[]>();
   const [notice,setNotice]=useState('');
@@ -334,7 +340,7 @@ export const ExplorerPage: React.FC = () => {
   const findLocation=async(event:React.FormEvent)=>{
     event.preventDefault();setSearchError('');
     const coords=search.split(',').map(Number);
-    if(coords.length===2 && coords.every(Number.isFinite) && Math.abs(coords[0])<=85 && Math.abs(coords[1])<=180){setFocusBounds(undefined);setFocusPosition([coords[0],coords[1]]);return;}
+    if(coords.length===2 && coords.every(Number.isFinite) && Math.abs(coords[0])<=85 && Math.abs(coords[1])<=180){setReturnPlace(searchPlaceLabel(search));setFocusBounds(undefined);setFocusPosition([coords[0],coords[1]]);return;}
     try{const result=await apiClient.searchLocations(search);setSearchResults(result.results);if(!result.results.length)setSearchError('No location found. Try latitude, longitude.');}
     catch{setSearchError('Search unavailable. Enter latitude, longitude.');}
   };
@@ -358,7 +364,7 @@ export const ExplorerPage: React.FC = () => {
       </header>
       {notice && <div className="explorer-notice"><span role="status">{notice}</span><button aria-label="Dismiss message" onClick={()=>setNotice('')}><X size={16} aria-hidden="true" /></button></div>}
       <main className="explorer-workspace">
-        {(searchResults.length>0 || searchError) && <div className="explorer-search-results">{searchResults.map((r,i)=><button key={i} onClick={()=>{setFocusPosition(undefined);setFocusBounds(paddedLocationBounds(r));setSearchResults([]);}}>{r.name}</button>)}{searchError}<small>Search © OpenStreetMap contributors / Photon (ODbL) · country extents © Natural Earth</small></div>}
+        {(searchResults.length>0 || searchError) && <div className="explorer-search-results">{searchResults.map((r,i)=><button key={i} onClick={()=>{setReturnPlace(searchPlaceLabel(r.short_name||search));setFocusPosition(undefined);setFocusBounds(paddedLocationBounds(r));setSearchResults([]);}}>{r.name}</button>)}{searchError}<small>Search © OpenStreetMap contributors / Photon (ODbL) · country extents © Natural Earth</small></div>}
         <aside id="fire-data-filters" aria-label="Fire data filters" className={`explorer-sidebar ${sidebarOpen ? 'is-open' : ''}`}>
           <section>
             <details open><summary>Area, dates and sensor filters</summary>
@@ -707,14 +713,13 @@ export const ExplorerPage: React.FC = () => {
             contextDate={endDate || dateOnly(new Date())}
             visualClusters={fireVisible && source==='archive' && hasValidDates && !invalidCircle ? visibleClusters : []}
             focusedEvent={candidatesVisible && selectedEventId ? (focusedEvent?.id === selectedEventId ? focusedEvent : eventCandidates.find((event) => event.id === selectedEventId)) : undefined}
-            onReturnToItaly={() => {
-              setFocusBounds(undefined);
-              setFocusPosition(undefined);
+            onReturnToPlace={() => {
               setFocusedEvent(undefined);
               setDrawingCircle(false);
               updateParams({ lat: undefined, lon: undefined, radius: undefined, event: undefined, candidatePage: undefined });
             }}
-            showReturnToItaly
+            showReturnToPlace
+            returnPlace={returnPlace}
             visibleLayers={visibleLayers}
             selectedEventId={selectedEventId}
             returnTo={returnTo}

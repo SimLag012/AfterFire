@@ -53,9 +53,10 @@ interface LeafletMapProps {
   circleSelectionEnabled?: boolean;
   onCircleSelected?: (circle: { center: [number, number]; radiusKm: number }) => void;
   visualClusters?: ExplorerMapCluster[];
-  showReturnToItaly?: boolean;
+  showReturnToPlace?: boolean;
+  returnPlace?: string;
   returnTo?: string;
-  onReturnToItaly?: () => void;
+  onReturnToPlace?: () => void;
   focusedEvent?: EventMapItem;
 }
 
@@ -147,15 +148,27 @@ function CandidateFocus({ event, returnTo }: { event?: EventMapItem; returnTo?: 
   </CircleMarker> : null;
 }
 
-function ReturnToItalyControl({ onReturn }: { onReturn?: () => void }) {
+function ReturnToPlaceControl({ label, bounds, position, onReturn }: {
+  label:string;
+  bounds?:[[number,number],[number,number]][];
+  position?:[number,number];
+  onReturn?:()=>void;
+}) {
   const map = useMap();
+  const returnToPlace=(event:React.MouseEvent<HTMLButtonElement>)=>{
+    event.stopPropagation();
+    onReturn?.();
+    if(bounds?.length) map.fitBounds(L.latLngBounds(bounds.flatMap(([southWest,northEast])=>[southWest,northEast])),{padding:[30,30],maxZoom:12});
+    else if(position) map.setView(position,8);
+    else map.fitBounds(ITALY_BOUNDS,{padding:[30,30],maxZoom:7});
+  };
   return (
     <button
       type="button"
-      onClick={(event) => { event.stopPropagation(); onReturn?.(); map.fitBounds(ITALY_BOUNDS, { padding: [30, 30], maxZoom: 7 }); }}
+      onClick={returnToPlace}
       className="absolute right-3 top-3 z-[1000] inline-flex min-h-11 items-center border border-dark-600 bg-dark-950 px-3 text-sm font-medium text-slate-100 hover:bg-dark-800"
     >
-      Return to Italy
+      Return to {label}
     </button>
   );
 }
@@ -534,8 +547,9 @@ export const LeafletMap: React.FC<LeafletMapProps> = ({
   circleSelectionEnabled = false,
   onCircleSelected,
   visualClusters = [],
-  showReturnToItaly = false,
-  onReturnToItaly,
+  showReturnToPlace = false,
+  returnPlace = 'Italy',
+  onReturnToPlace,
   focusedEvent,
   returnTo,
 }) => {
@@ -573,7 +587,7 @@ export const LeafletMap: React.FC<LeafletMapProps> = ({
         <CircleViewController circle={selectionCircle} />
         <CandidateFocus event={focusedEvent} returnTo={returnTo} />
         {events.filter(e=>e.id!==focusedEvent?.id).map(event=><CircleMarker key={'candidate-'+event.id} center={[event.center_lat,event.center_lon]} radius={7} pathOptions={{color:'#34d399',weight:2,fillOpacity:0.2}}><Tooltip>Candidate: {event.name}</Tooltip><Popup><strong>{event.place || event.name}</strong><p className="break-all">{event.id}</p><p>{event.start_date} to {event.end_date} ({event.detection_count} observations)</p><Link to={`/events/${encodeURIComponent(event.id)}?returnTo=${encodeURIComponent(returnTo || '/explorer')}`}>Analyze candidate</Link><p>Algorithmic grouping, not an official perimeter.</p></Popup></CircleMarker>)}
-        {showReturnToItaly && <ReturnToItalyControl onReturn={onReturnToItaly} />}
+        {showReturnToPlace && <ReturnToPlaceControl label={returnPlace} bounds={focusBounds} position={focusPosition} onReturn={onReturnToPlace} />}
         <RegionClickSelector enabled={selectionEnabled} onBoundsSelected={onBoundsSelected} />
         <CircleDrawSelector enabled={circleSelectionEnabled} onCircleSelected={onCircleSelected} />
         <MapViewportReporter onViewportChange={onViewportChange} />

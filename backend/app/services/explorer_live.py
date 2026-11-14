@@ -12,6 +12,7 @@ _lock=asyncio.Lock()
 _cache=OrderedDict()
 _last={}
 _country_bounds=None
+_search_aliases={'spagna':'España'}
 
 
 def country_bounds():
@@ -42,7 +43,9 @@ async def recent(bbox,start,end,sensor,satellite):
 
 
 async def search(q):
-    key=('search',q.casefold().strip())
+    q=q.strip()
+    q=_search_aliases.get(q.casefold(),q)
+    key=('search',q.casefold())
     async with _lock:
         value=cached(key)
         if value is not None:return value
@@ -65,14 +68,18 @@ async def search(q):
                 continue
             extent=properties.get('extent')
             result={'name':', '.join(str(properties[k]) for k in ['name','city','country'] if properties.get(k)),
+                    'short_name':properties.get('name') or properties.get('city') or properties.get('country') or '',
                     'lat':coordinates[1],'lon':coordinates[0]}
             if properties.get('type')=='country':
+                country=country_bounds().get(str(properties.get('countrycode','')).upper()) or {}
+                if country.get('name'):
+                    result['short_name']=country['name']
                 try:
                     extent_width=abs(float(extent[2])-float(extent[0]))
                 except (TypeError,ValueError,IndexError):
                     extent_width=0
                 if extent_width>=300:
-                    boxes=country_bounds().get(str(properties.get('countrycode','')).upper())
+                    boxes=country.get('bounds')
                     if boxes:
                         result['bounds']=boxes
             if isinstance(extent,list) and len(extent)==4:
