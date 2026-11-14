@@ -28,9 +28,10 @@ export const App: React.FC = () => {
   return (
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
-        <div className="min-h-screen flex flex-col bg-dark-950 text-slate-100 font-sans selection:bg-accent-fire/30 selection:text-white">
+        <div className="app-shell min-h-screen flex flex-col bg-dark-950 text-slate-100 font-sans">
+          <div className="app-viewport">
           <Navbar />
-          <div className="flex-1">
+          <div className="app-route">
             <Suspense fallback={<p role="status" aria-live="polite" className="p-8">Loading page…</p>}><Routes>
               <Route path="/" element={<ExplorerPage />} />
               <Route path="/about" element={<HomePage />} />
@@ -47,6 +48,7 @@ export const App: React.FC = () => {
               <Route path="/datasets" element={<DatasetsPage />} />
               <Route path="*" element={<Navigate to="/" replace />} />
             </Routes></Suspense>
+          </div>
           </div>
           <Footer />
         </div>

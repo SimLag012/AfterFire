@@ -1,8 +1,8 @@
 import {ResourceDiagnostics} from '../components/analysis/ResourceDiagnostics';
 import React, { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { Database, Key, CheckCircle, AlertCircle, ExternalLink, Upload, RefreshCw, ShieldCheck, FileSpreadsheet } from 'lucide-react';
 import { apiClient } from '../api/client';
+import '../styles/field-pages.css';
 
 export const DatasetsPage: React.FC = () => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -10,7 +10,7 @@ export const DatasetsPage: React.FC = () => {
   const [uploadStatus, setUploadStatus] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
 
-  const { data: datasets = [], isLoading } = useQuery({
+  const { data: datasets = [], isLoading, isError: datasetsError } = useQuery({
     queryKey: ['datasets'],
     queryFn: apiClient.getDatasets,
   });
@@ -49,255 +49,139 @@ export const DatasetsPage: React.FC = () => {
     }
   };
 
+  const firms = health?.providers.firms;
+  const firmsStatus = firms?.connected ? 'Connected'
+    : firms?.configured === false ? 'Key required'
+    : firms?.status === 'auth_failed' ? 'Key rejected'
+    : firms?.status === 'not_checked' ? 'Connection not checked'
+    : firms ? 'API unavailable' : 'Status unavailable';
+
   return (
-    <div className="min-h-screen bg-dark-950 text-slate-100 flex flex-col pb-20">
-
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 w-full space-y-8">
-        <ResourceDiagnostics />
-        {/* Header */}
-        <div className="border-b border-dark-800 pb-5 space-y-1">
-          <h1 className="text-2xl sm:text-3xl font-extrabold text-white flex items-center gap-2">
-            <Database className="w-7 h-7 text-sky-400" />
-            <span>Satellite Datasets, Provenance & Ingestion</span>
-          </h1>
-          <p className="text-xs text-slate-400">
-            Authoritative Earth Observation products powering AfterFire: Collection versions, resolutions, and ingestion adapters
-          </p>
+    <main className="field-page">
+      <header className="field-header split">
+        <div>
+          <h1>Satellite data sources</h1>
+          <p>Product versions, observation cadence and coverage used by AfterFire.</p>
         </div>
+        <a className="field-link" href="#csv-import">Import a FIRMS CSV</a>
+      </header>
 
-        {/* Datasets Cards Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {datasets.map((ds) => (
-            <div
-              key={ds.id}
-              className="glass-panel p-6 rounded-2xl border border-dark-700/80 space-y-4 shadow-xl flex flex-col justify-between"
-            >
-              <div className="space-y-3">
-                <div className="flex items-center justify-between">
-                  <span className="text-[10px] font-mono uppercase px-2 py-0.5 rounded bg-dark-800 text-slate-300 border border-dark-700">
-                    {ds.provider}
-                  </span>
-                  {ds.id.includes('FIRMS') ? (
-                    health?.providers.firms.connected ? (
-                      <span className="inline-flex items-center gap-1 text-[11px] font-mono px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/30">
-                        <CheckCircle className="w-3 h-3" />
-                        Live API Connected
-                      </span>
-                    ) : health?.providers.firms.status === 'credentials_unconfigured' ? (
-                      <span className="inline-flex items-center gap-1 text-[11px] font-mono px-2 py-0.5 rounded bg-sky-500/10 text-sky-400 border border-sky-500/30">
-                        <Key className="w-3 h-3" />
-                        Key Required
-                      </span>
-                    ) : (
-                      <span className="inline-flex items-center gap-1 text-[11px] font-mono px-2 py-0.5 rounded bg-rose-500/10 text-rose-400 border border-rose-500/30">
-                        <AlertCircle className="w-3 h-3" />
-                        API Unavailable
-                      </span>
-                    )
-                  ) : (
-                    <span className="inline-flex items-center gap-1 text-[11px] font-mono px-2 py-0.5 rounded bg-sky-500/10 text-sky-300 border border-sky-500/30">
-                      <ShieldCheck className="w-3 h-3" />
-                      Import &amp; QA Ready
-                    </span>
-                  )}
+      <section className="field-section" aria-labelledby="product-catalog">
+        <h2 id="product-catalog">Product catalog</h2>
+        {isLoading && <p className="field-quiet" role="status">Loading product metadata…</p>}
+        {datasetsError && <p className="field-note" role="alert">The product catalog could not be loaded. Reload to try again.</p>}
+        {!isLoading && !datasetsError && !datasets.length && <p className="field-quiet">No product metadata is available.</p>}
+        {!!datasets.length && (
+          <div className="field-register">
+            {datasets.map(ds => (
+              <article key={ds.id} className="field-row">
+                <header>
+                  <h3>{ds.name}</h3>
+                  <p className="field-quiet">{ds.provider} ({ds.version})</p>
+                </header>
+                <div>
+                  <dl className="field-product-details">
+                    <div><dt>Spatial resolution</dt><dd className="field-data">{ds.spatial_resolution}</dd></div>
+                    <div><dt>Temporal cadence</dt><dd className="field-data">{ds.temporal_frequency}</dd></div>
+                  </dl>
+                  <p className="field-quiet">{ds.limitations}</p>
                 </div>
-
-                <h3 className="text-lg font-bold text-white">{ds.name}</h3>
-
-                <div className="grid grid-cols-2 gap-2 text-xs text-slate-300 font-mono">
-                  <div className="bg-dark-900 p-2 rounded border border-dark-800">
-                    <span className="text-slate-500 block text-[10px]">Spatial Resolution:</span>
-                    {ds.spatial_resolution}
-                  </div>
-                  <div className="bg-dark-900 p-2 rounded border border-dark-800">
-                    <span className="text-slate-500 block text-[10px]">Temporal Cadence:</span>
-                    {ds.temporal_frequency}
-                  </div>
+                <div>
+                  <a className="field-link" href={ds.official_url} target="_blank" rel="noreferrer" aria-label={`Official source: ${ds.name}`}>Official source</a>
+                  <p className="field-quiet">{ds.id.includes('FIRMS') ? firmsStatus : 'Import and QA available'}</p>
                 </div>
-
-                <div className="text-xs text-slate-400 space-y-1">
-                  <strong className="text-slate-300 block">Instrument Limitations:</strong>
-                  <p className="leading-relaxed text-[11px]">{ds.limitations}</p>
-                </div>
-              </div>
-
-              <div className="pt-4 border-t border-dark-800 flex items-center justify-between text-xs">
-                <a
-                  href={ds.official_url}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="text-sky-400 hover:underline flex items-center gap-1"
-                >
-                  Official NASA LP DAAC Portal <ExternalLink className="w-3 h-3" />
-                </a>
-                <span className="text-[10px] font-mono text-slate-500">Version: {ds.version}</span>
-              </div>
-            </div>
-          ))}
-        </div>
-
-        <section className="glass-panel space-y-4 rounded-2xl border border-dark-700/80 p-6 shadow-xl">
-          <div className="flex items-center justify-between gap-3">
-            <div>
-              <h2 className="text-sm font-bold text-white">Database-derived Italy archive status</h2>
-              <p className="mt-1 text-[11px] text-slate-400">
-                Counts and date windows describe records currently stored in the database, not total product availability.
-              </p>
-            </div>
-            <span className="rounded border border-amber-700/60 bg-amber-950/30 px-2 py-1 text-[10px] font-mono text-amber-200">
-              Completeness: {italyCoverage?.completeness ?? 'not assessed'}
-            </span>
+              </article>
+            ))}
           </div>
+        )}
+      </section>
 
-          {coverageLoading && <p role="status" className="text-xs text-slate-400">Loading imported product status…</p>}
-          {coverageError && (
-            <p role="alert" className="rounded border border-amber-800 bg-amber-950/30 p-3 text-xs text-amber-200">
-              Database coverage status could not be loaded. Product metadata and ingestion options remain available above.
-            </p>
-          )}
-          {italyCoverage && (
-            <>
-              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-                <div className="rounded-lg border border-emerald-800/60 bg-emerald-950/20 p-3">
-                  <div className="text-[10px] uppercase tracking-wide text-emerald-300">Real records inside Italy</div>
-                  <div className="mt-1 text-lg font-bold text-white">{italyCoverage.real.count.toLocaleString()}</div>
-                  <div className="text-[11px] text-slate-300">
-                    Imported date range: {italyCoverage.real.min_date ?? 'not available'} – {italyCoverage.real.max_date ?? 'not available'}
-                  </div>
-                  <div className="mt-1 text-[10px] text-slate-500">
-                    Last import: {italyCoverage.real.last_import_at ?? 'never'} · Sensors: {italyCoverage.real.sensors.join(', ') || 'none reported'} · Satellites: {italyCoverage.real.satellites.join(', ') || 'none reported'}
-                  </div>
-                </div>
-
-              </div>
-
-              <div className="overflow-x-auto rounded-lg border border-dark-700">
-                <table className="w-full min-w-[650px] text-left text-xs">
-                  <thead className="bg-dark-900 text-[10px] uppercase text-slate-400">
-                    <tr>
-                      <th className="px-3 py-2">Product</th>
-                      <th className="px-3 py-2">Real records in DB</th>
-                      <th className="px-3 py-2">Imported date range</th>
-                      <th className="px-3 py-2">Import state</th>
+      <section className="field-section" aria-labelledby="italy-archive">
+        <header>
+          <h2 id="italy-archive">Imported Italy archive</h2>
+          <p>Counts and dates reflect records stored in the database. Archive completeness: {italyCoverage?.completeness ?? 'not assessed'}.</p>
+        </header>
+        {coverageLoading && <p role="status" className="field-quiet">Loading imported product status…</p>}
+        {coverageError && <p role="alert" className="field-note">Database coverage status could not be loaded. Product metadata and ingestion remain available.</p>}
+        {italyCoverage && (
+          <>
+            <dl className="field-measures">
+              <div><dt>Real records in Italy</dt><dd className="field-data">{italyCoverage.real.count.toLocaleString()}</dd></div>
+              <div><dt>Imported date range</dt><dd className="field-data">{italyCoverage.real.min_date ?? 'Unavailable'} to {italyCoverage.real.max_date ?? 'Unavailable'}</dd></div>
+              <div><dt>Last import</dt><dd className="field-data break-words">{italyCoverage.real.last_import_at ?? 'Never'}</dd></div>
+              <div><dt>Sensors</dt><dd>{italyCoverage.real.sensors.join(', ') || 'None reported'}</dd></div>
+              <div><dt>Satellites</dt><dd>{italyCoverage.real.satellites.join(', ') || 'None reported'}</dd></div>
+            </dl>
+            <div className="field-ledger" role="region" aria-label="Imported Italy archive by product" tabIndex={0}>
+              <table className="min-w-[36rem]">
+                <thead>
+                  <tr>
+                    <th scope="col">Product</th>
+                    <th scope="col">Real records</th>
+                    <th scope="col">Imported dates</th>
+                    <th scope="col">Import state</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {italyCoverage.products.map(product => (
+                    <tr key={product.dataset_name}>
+                      <th scope="row">
+                        <h3>{product.name}</h3>
+                        <p className="field-quiet">{product.dataset_name}</p>
+                        <p className="field-quiet">{product.satellites}</p>
+                      </th>
+                      <td className="field-data">{product.loaded_count.toLocaleString()}</td>
+                      <td className="field-data">{product.loaded_min_date ?? '—'} to {product.loaded_max_date ?? '—'}</td>
+                      <td>
+                        <p>{product.loaded_count > 0 ? 'Real rows imported' : 'No real rows recorded'}</p>
+                        <p className="field-quiet">{product.recent_api.replace(/_/g, ' ')}</p>
+                        <p className="field-quiet">{product.coverage_status.replace(/_/g, ' ')}</p>
+                      </td>
                     </tr>
-                  </thead>
-                  <tbody className="divide-y divide-dark-800">
-                    {italyCoverage.products.map((product) => {
-                      return (
-                        <tr key={product.dataset_name} className="text-slate-300">
-                          <td className="px-3 py-2">
-                            <div className="font-medium text-white">{product.name}</div>
-                            <div className="text-[10px] text-slate-500">{product.dataset_name} · {product.satellites}</div>
-                          </td>
-                          <td className="px-3 py-2 font-mono">{product.loaded_count.toLocaleString()}</td>
-                          <td className="px-3 py-2 font-mono text-[11px]">
-                            {product.loaded_min_date ?? '—'} – {product.loaded_max_date ?? '—'}
-                          </td>
-                          <td className="px-3 py-2">
-                            <span className={`rounded px-2 py-1 text-[10px] ${
-                              product.loaded_count > 0
-                                ? 'bg-emerald-950 text-emerald-300'
-                                : 'bg-dark-800 text-slate-400'
-                            }`}>
-                              {product.loaded_count > 0 ? 'Real rows imported' : 'No real rows recorded'}
-                            </span>
-                            <div className="mt-1 text-[10px] text-slate-500">{product.recent_api.replace(/_/g, ' ')}</div>
-                            <div className="mt-1 text-[10px] text-slate-500">
-                              {product.coverage_status.replace(/_/g, ' ')}
-                            </div>
-                          </td>
-                        </tr>
-                      );
-                    })}
-                  </tbody>
-                </table>
-              </div>
-              <p className="text-xs text-slate-300">Historical ingestion: run <code>python ../scripts/import_italy_fire_history.py</code> from the backend directory with its environment. Rebuild candidates after CSV or recent imports with <code>python ../scripts/index_fire_events.py</code>.</p>
-              <p className="text-[10px] leading-relaxed text-amber-200/80">
-                Presence, absence, and imported date windows do not prove complete spatial or temporal coverage. A zero count is not evidence that no fire occurred.
-              </p>
-            </>
-          )}
-        </section>
-
-        {/* API Credentials Configuration Guide */}
-        <div className="glass-panel p-6 rounded-2xl border border-dark-700/80 space-y-4">
-          <div className="flex items-center space-x-2 text-amber-400 font-bold text-sm">
-            <Key className="w-5 h-5" />
-            <h3>Enabling Live NASA FIRMS Queries</h3>
-          </div>
-          <p className="text-xs text-slate-300 leading-relaxed max-w-3xl">
-            AfterFire displays the real records actually imported into the local archive. To query real-time active fire observations directly from NASA FIRMS Area API:
-          </p>
-
-          <div className="bg-dark-900 p-4 rounded-xl border border-dark-800 font-mono text-xs text-slate-300 space-y-2">
-            <div className="text-slate-400"># 1. Request a free NASA FIRMS MAP KEY at:</div>
-            <div className="text-sky-400">https://firms.modaps.eosdis.nasa.gov/api/map_key/</div>
-            <div className="text-slate-400 pt-2"># 2. Add your key to .env file in the backend directory:</div>
-            <div className="text-emerald-400">FIRMS_MAP_KEY=your_esdis_map_key_here</div>
-            <div className="text-slate-400 pt-2"># 3. Restart the backend service (or docker-compose up).</div>
-          </div>
-        </div>
-
-        {/* Custom FIRMS CSV Upload Section */}
-        <div className="glass-panel p-6 rounded-2xl border border-dark-700/80 space-y-4">
-          <div className="flex items-center space-x-2 text-sky-400 font-bold text-sm">
-            <FileSpreadsheet className="w-5 h-5" />
-            <h3>Import Official NASA FIRMS CSV Downloads</h3>
-          </div>
-          <p className="text-xs text-slate-300 leading-relaxed max-w-3xl">
-            Downloaded active fire CSVs from the official FIRMS download tool (MODIS C6.1 or VIIRS 375m) can be ingested directly into any study area.
-          </p>
-
-          <form onSubmit={handleUpload} className="grid grid-cols-1 sm:grid-cols-3 gap-4 items-end pt-2">
-            <div>
-              <label className="block text-xs text-slate-400 mb-1">Target Study Area:</label>
-              <select
-                value={targetAreaId}
-                onChange={(e) => setTargetAreaId(e.target.value)}
-                className="w-full bg-dark-900 border border-dark-700 rounded-lg px-3 py-2 text-xs text-white"
-              >
-                {areas.map((a) => (
-                  <option key={a.id} value={a.id}>
-                    {a.name}
-                  </option>
-                ))}
-              </select>
+                  ))}
+                </tbody>
+              </table>
             </div>
+            <p className="field-note">A zero count means the database currently has no records for that product. Fire activity and archive completeness remain unknown.</p>
+            <details>
+              <summary>Import historical records through the backend</summary>
+              <p className="field-prose mt-2">Run <code>python ../scripts/import_italy_fire_history.py</code> from the backend directory with its environment. Rebuild candidates after CSV or recent imports with <code>python ../scripts/index_fire_events.py</code>.</p>
+            </details>
+          </>
+        )}
+      </section>
 
-            <div>
-              <label className="block text-xs text-slate-400 mb-1">Select FIRMS CSV File:</label>
-              <input
-                type="file"
-                accept=".csv"
-                onChange={(e) => setSelectedFile(e.target.files?.[0] || null)}
-                className="w-full text-xs text-slate-300 file:mr-3 file:py-1.5 file:px-3 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-dark-800 file:text-white hover:file:bg-dark-700"
-              />
-            </div>
+      <section className="field-section" aria-labelledby="csv-import">
+        <header>
+          <h2 id="csv-import">Import a FIRMS CSV</h2>
+          <p>Import official active-fire downloads for MODIS C6.1 or VIIRS 375 m into a study area.</p>
+        </header>
+        <form onSubmit={handleUpload} className="field-form">
+          <label>
+            <span>Study area</span>
+            <select value={targetAreaId} onChange={(e) => setTargetAreaId(e.target.value)} className="field-filter" disabled={!areas.length}>
+              {!areas.some(a => a.id === targetAreaId) && <option value={targetAreaId} disabled>{areas.length ? 'Select an area' : 'No study areas available'}</option>}
+              {areas.map(a => <option key={a.id} value={a.id}>{a.name}</option>)}
+            </select>
+          </label>
+          <label>
+            <span>FIRMS CSV file</span>
+            <input type="file" accept=".csv" onChange={(e) => setSelectedFile(e.target.files?.[0] || null)} className="field-filter" />
+          </label>
+          <button type="submit" className="field-button primary" disabled={!selectedFile || uploading || !areas.some(a => a.id === targetAreaId)}>{uploading ? 'Importing…' : 'Import CSV'}</button>
+        </form>
+        {uploadStatus && <p className="field-note" role={uploadStatus.startsWith('Upload error') ? 'alert' : 'status'}>{uploadStatus}</p>}
+        <details>
+          <summary>Configure live NASA FIRMS queries</summary>
+          <ol className="mt-2 list-decimal pl-6 space-y-2 field-prose">
+            <li>Request a free <a className="field-link whitespace-nowrap" href="https://firms.modaps.eosdis.nasa.gov/api/map_key/" target="_blank" rel="noreferrer">NASA FIRMS MAP key</a>.</li>
+            <li>Add <code>FIRMS_MAP_KEY=your_esdis_map_key_here</code> to the backend <code>.env</code> file.</li>
+            <li>Restart the backend service or run <code>docker-compose up</code>.</li>
+          </ol>
+        </details>
+      </section>
 
-            <div>
-              <button
-                type="submit"
-                disabled={!selectedFile || uploading}
-                className="w-full py-2 px-4 rounded-lg bg-sky-600 hover:bg-sky-500 disabled:opacity-50 text-white font-semibold text-xs transition-colors flex items-center justify-center gap-2"
-              >
-                {uploading ? <RefreshCw className="w-4 h-4 animate-spin" /> : <Upload className="w-4 h-4" />}
-                <span>Ingest CSV Dataset</span>
-              </button>
-            </div>
-          </form>
-
-          {uploadStatus && (
-            <div className={`p-3 rounded-lg text-xs font-mono border ${
-              uploadStatus.startsWith('Success')
-                ? 'bg-emerald-500/10 text-emerald-300 border-emerald-500/30'
-                : 'bg-red-500/10 text-red-300 border-red-500/30'
-            }`}>
-              {uploadStatus}
-            </div>
-          )}
-        </div>
-      </main>
-    </div>
+      <ResourceDiagnostics />
+    </main>
   );
 };

@@ -9,9 +9,11 @@ import {
   Tooltip,
   CartesianGrid,
   ReferenceLine,
+  ReferenceArea,
   Legend,
 } from 'recharts';
 import { RecoveryTrajectoryPoint } from '../../types';
+import { SatelliteObservation } from '../../types/satellite';
 
 interface RecoveryChartProps {
   trajectory: RecoveryTrajectoryPoint[];
@@ -21,210 +23,116 @@ interface RecoveryChartProps {
   selectedDate?: string;
 }
 
-export const RecoveryChart: React.FC<RecoveryChartProps> = ({
-  trajectory,
-  baselineMean,
-  fireDate,
-  troughNdvi,
-  selectedDate,
-}) => {
-  if (!trajectory || trajectory.length === 0) {
-    return (
-      <div className="h-64 flex items-center justify-center text-slate-500 bg-dark-900 rounded-xl border border-dark-800">
-        No trajectory observations available.
-      </div>
-    );
+const axisTick = { fill: 'var(--color-muted)', fontSize: 12 };
+const tooltipStyle = {
+  background: 'var(--color-paper-2)',
+  borderColor: 'var(--color-rule-strong)',
+  color: 'var(--color-ink)',
+};
+const formatNumber = (value: number | null | undefined) => typeof value === 'number' && Number.isFinite(value) ? value.toFixed(3) : 'Unavailable';
+
+export const RecoveryChart: React.FC<RecoveryChartProps> = ({ trajectory, baselineMean, fireDate, selectedDate }) => {
+  if (!trajectory?.length) {
+    return <p className="field-note">No trajectory observations available.</p>;
   }
 
-  // Format data for Recharts
-  const chartData = trajectory.map((pt) => ({
-    date: pt.date,
-    observedNdvi: pt.observed_ndvi,
-    baseline: pt.pre_fire_baseline,
-    upperBound: pt.baseline_upper_bound,
-    lowerBound: pt.baseline_lower_bound,
-    anomaly: pt.anomaly,
-    qa: pt.qa_status,
+  const data = trajectory.map(point => ({
+    date: point.date,
+    observedNdvi: point.observed_ndvi,
+    baseline: point.pre_fire_baseline,
+    referenceBand: [point.baseline_lower_bound, point.baseline_upper_bound],
+    qa: point.qa_status,
   }));
 
   return (
-    <div className="w-full h-80 sm:h-96">
-      <ResponsiveContainer width="100%" height="100%">
-        <ComposedChart data={chartData} margin={{ top: 15, right: 20, bottom: 25, left: 0 }}>
-          <defs>
-            {/* Green gradient for NDVI */}
-            <linearGradient id="ndviGradient" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="5%" stopColor="#10b981" stopOpacity={0.8} />
-              <stop offset="95%" stopColor="#059669" stopOpacity={0.1} />
-            </linearGradient>
-            {/* Baseline confidence band fill */}
-            <linearGradient id="bandGradient" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="#38bdf8" stopOpacity={0.15} />
-              <stop offset="100%" stopColor="#38bdf8" stopOpacity={0.05} />
-            </linearGradient>
-          </defs>
-
-          <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" vertical={false} />
-          
-          <XAxis
-            dataKey="date"
-            stroke="#64748b"
-            tick={{ fill: '#94a3b8', fontSize: 11 }}
-            tickFormatter={(val) => val.slice(0, 7)}
-            minTickGap={30}
-          />
-
-          <YAxis
-            stroke="#64748b"
-            tick={{ fill: '#94a3b8', fontSize: 11 }}
-            domain={[0.0, 0.9]}
-            tickFormatter={(val) => val.toFixed(2)}
-          />
-
-          <Tooltip
-            content={({ active, payload, label }) => {
-              if (active && payload && payload.length) {
-                const data = payload[0].payload;
-                const obs = data.observedNdvi;
-                const base = data.baseline;
-                const diff = (obs - base).toFixed(3);
+    <figure aria-label="Observed NDVI and pre-fire reference" className="w-full min-w-0">
+      <div className="h-80 w-full sm:h-96">
+        <ResponsiveContainer width="100%" height="100%">
+          <ComposedChart data={data} margin={{ top: 12, right: 12, bottom: 4, left: 0 }}>
+            <CartesianGrid stroke="var(--color-rule)" vertical={false} />
+            <XAxis dataKey="date" stroke="var(--color-rule-strong)" tick={axisTick} tickFormatter={value => value.slice(0, 7)} minTickGap={30} />
+            <YAxis stroke="var(--color-rule-strong)" tick={axisTick} domain={[0, .9]} tickFormatter={value => value.toFixed(2)} width={38} />
+            <Tooltip
+              cursor={{ stroke: 'var(--color-rule-strong)' }}
+              content={({ active, payload, label }) => {
+                if (!active || !payload?.length) return null;
+                const { observedNdvi, baseline, qa } = payload[0].payload;
+                const anomaly = observedNdvi != null && baseline != null ? observedNdvi - baseline : null;
                 return (
-                  <div className="glass-panel p-3 rounded-lg text-xs shadow-xl space-y-1.5 border border-dark-700">
-                    <div className="font-bold text-slate-100 border-b border-dark-700 pb-1">{label}</div>
-                    <div className="flex items-center justify-between space-x-3">
-                      <span className="text-emerald-400 font-medium">Observed NDVI:</span>
-                      <span className="font-mono text-white">{obs.toFixed(3)}</span>
-                    </div>
-                    <div className="flex items-center justify-between space-x-3">
-                      <span className="text-sky-400">Pre-fire Baseline:</span>
-                      <span className="font-mono text-slate-200">{base.toFixed(3)}</span>
-                    </div>
-                    <div className="flex items-center justify-between space-x-3">
-                      <span className="text-slate-400">Baseline Anomaly:</span>
-                      <span className={`font-mono font-semibold ${Number(diff) >= 0 ? 'text-emerald-400' : 'text-accent-fire'}`}>
-                        {Number(diff) > 0 ? `+${diff}` : diff}
-                      </span>
-                    </div>
-                    <div className="text-[10px] text-slate-400 italic pt-1 border-t border-dark-800">
-                      QA: {data.qa}
-                    </div>
+                  <div className="space-y-1 border border-dark-600 bg-dark-900 p-3 text-sm text-slate-100">
+                    <time className="font-mono">{label}</time>
+                    <dl>
+                      <div><dt className="inline">Observed NDVI </dt><dd className="inline font-mono">{formatNumber(observedNdvi)}</dd></div>
+                      <div><dt className="inline">Pre-fire baseline </dt><dd className="inline font-mono">{formatNumber(baseline)}</dd></div>
+                      <div><dt className="inline">Anomaly </dt><dd className="inline font-mono">{anomaly != null && anomaly > 0 && '+'}{formatNumber(anomaly)}</dd></div>
+                      <div><dt className="inline">Quality screening </dt><dd className="inline">{qa || 'Unavailable'}</dd></div>
+                    </dl>
                   </div>
                 );
-              }
-              return null;
-            }}
-          />
-
-          <Legend
-            verticalAlign="top"
-            height={36}
-            iconType="circle"
-            wrapperStyle={{ fontSize: '12px', color: '#cbd5e1' }}
-          />
-
-          {/* Reference line for Fire Disturbance Date */}
-          {fireDate && (
-            <ReferenceLine
-              x={fireDate}
-              stroke="#ff4d2e"
-              strokeDasharray="4 4"
-              strokeWidth={2}
-              label={{
-                value: 'Fire Disturbance',
-                position: 'top',
-                fill: '#ff4d2e',
-                fontSize: 11,
-                fontWeight: 600,
               }}
             />
-          )}
-
-          {selectedDate && selectedDate !== fireDate && (
-            <ReferenceLine
-              x={selectedDate}
-              stroke="#fbbf24"
-              strokeDasharray="3 3"
-              label={{ value: 'Selected observation date', position: 'insideTopRight', fill: '#fbbf24', fontSize: 10 }}
+            <Legend verticalAlign="top" wrapperStyle={{ fontSize: '12px' }} />
+            {fireDate && (
+              <ReferenceLine x={fireDate} stroke="var(--color-accent)" strokeDasharray="4 4" strokeWidth={2} />
+            )}
+            {selectedDate && selectedDate !== fireDate && (
+              <ReferenceLine x={selectedDate} stroke="var(--color-warning)" strokeDasharray="3 3" />
+            )}
+            <ReferenceLine y={baselineMean} stroke="var(--color-accent-2)" strokeDasharray="7 4" strokeWidth={1.5} />
+            <Area dataKey="referenceBand" stroke="none" fill="var(--color-accent-2)" fillOpacity={.17} name="Baseline spread (±1σ)" isAnimationActive={false} />
+            <Line
+              dataKey="observedNdvi"
+              stroke="var(--color-positive)"
+              strokeWidth={2}
+              dot={{ r: 2.5, fill: 'var(--color-positive)', stroke: 'var(--color-paper)' }}
+              activeDot={{ r: 5, fill: 'var(--color-positive)', stroke: 'var(--color-ink)' }}
+              name="Observed NDVI"
+              isAnimationActive={false}
+              connectNulls={false}
             />
-          )}
-
-          {/* Baseline reference line */}
-          <ReferenceLine
-            y={baselineMean}
-            stroke="#38bdf8"
-            strokeDasharray="5 5"
-            strokeWidth={1.5}
-            label={{
-              value: `Pre-Fire Baseline (${baselineMean.toFixed(2)})`,
-              position: 'right',
-              fill: '#38bdf8',
-              fontSize: 10,
-            }}
-          />
-
-          {/* Baseline Confidence Band */}
-          <Area
-            type="monotone"
-            dataKey="upperBound"
-            stroke="none"
-            fill="url(#bandGradient)"
-            name="Baseline ±1σ Range"
-          />
-          <Area
-            type="monotone"
-            dataKey="lowerBound"
-            stroke="none"
-            fill="#090d16"
-            name="Band Floor"
-            legendType="none"
-          />
-
-          {/* Observed NDVI Trajectory */}
-          <Line
-            type="monotone"
-            dataKey="observedNdvi"
-            stroke="#10b981"
-            strokeWidth={2.5}
-            dot={{ r: 2.5, fill: '#10b981', strokeWidth: 1, stroke: '#090d16' }}
-            activeDot={{ r: 5, fill: '#34d399', stroke: '#ffffff' }}
-            name="Observed NDVI (16-day MOD13Q1)"
-          />
-        </ComposedChart>
-      </ResponsiveContainer>
-    </div>
+          </ComposedChart>
+        </ResponsiveContainer>
+      </div>
+      <figcaption className="field-quiet">
+        Baseline {baselineMean.toFixed(2)} (blue dashed line). {fireDate && `Fire date ${fireDate} (orange dashed line where plotted).`}
+      </figcaption>
+    </figure>
   );
 };
 
 // Event-scoped Collection 6.1 observations, including explicit null composites.
-import { ReferenceArea } from 'recharts';
-import { SatelliteObservation } from '../../types/satellite';
-
 export const SatelliteRecoveryChart: React.FC<{
-  observations: SatelliteObservation[]; selectedDate: string;
-  eventStart: string; eventEnd: string; recurrenceDates: string[]; onSelect: (date: string) => void;
-}> = ({observations,selectedDate,eventStart,eventEnd,recurrenceDates,onSelect}) => {
-  const data = observations.map(o=>({...o,time:Date.parse(o.date)}));
-  return <div className="h-80 w-full" aria-label="Observed vegetation and seasonal baseline">
-    <ResponsiveContainer width="100%" height="100%">
-      <ComposedChart data={data} onClick={state => {
-        const time=Number(state?.activeLabel);
-        if (Number.isFinite(time)) onSelect(new Date(time).toISOString().slice(0,10));
-      }}>
-        <CartesianGrid stroke="#263244" strokeDasharray="3 3" />
-        <XAxis dataKey="time" type="number" domain={['dataMin','dataMax']} tickFormatter={v=>new Date(v).toISOString().slice(0,10)} tick={{fill:'#94a3b8',fontSize:10}} />
-        <YAxis domain={[-0.2,1]} tick={{fill:'#94a3b8',fontSize:10}} />
-        <Tooltip labelFormatter={v=>new Date(Number(v)).toISOString().slice(0,10)} contentStyle={{background:'#0f172a',borderColor:'#334155'}} />
-        <Legend />
-        <ReferenceArea x1={Date.parse(eventStart)} x2={Date.parse(eventEnd)+86400000} fill="#f97316" fillOpacity={0.18} />
-        {recurrenceDates.map(d=><ReferenceLine key={d} x={Date.parse(d)} stroke="#fb7185" strokeDasharray="4 4" />)}
-        <ReferenceLine x={Date.parse(selectedDate)} stroke="#fbbf24" />
-        <Line isAnimationActive={false} dataKey="baseline" name="Seasonal median" stroke="#38bdf8" dot={false} connectNulls={false} />
-        <Line isAnimationActive={false} dataKey="baseline_lower" name="Reference lower band" stroke="#64748b" strokeDasharray="3 3" dot={false} connectNulls={false} />
-        <Line isAnimationActive={false} dataKey="baseline_upper" name="Reference upper band" stroke="#64748b" strokeDasharray="3 3" dot={false} connectNulls={false} />
-        <YAxis yAxisId="anomaly" orientation="right" domain={[-1.2,1.2]} tick={{fill:'#fbbf24',fontSize:10}} width={35} />
-        <Line isAnimationActive={false} yAxisId="anomaly" dataKey="anomaly" name="Anomaly Δ (right axis)" stroke="#fbbf24" dot={false} connectNulls={false} />
-        <Line isAnimationActive={false} dataKey="value" name={observations[0]?.index ?? 'Vegetation'} stroke="#34d399" dot={{r:2}} connectNulls={false} />
-      </ComposedChart>
-    </ResponsiveContainer>
-  </div>;
+  observations: SatelliteObservation[];
+  selectedDate: string;
+  eventStart: string;
+  eventEnd: string;
+  recurrenceDates: string[];
+  onSelect: (date: string) => void;
+}> = ({ observations, selectedDate, eventStart, eventEnd, recurrenceDates, onSelect }) => {
+  const data = observations.map(observation => ({ ...observation, time: Date.parse(observation.date) }));
+  return (
+    <div className="h-80 w-full min-w-0" aria-label="Observed vegetation and seasonal baseline">
+      <ResponsiveContainer width="100%" height="100%">
+        <ComposedChart data={data} onClick={state => {
+          const time = Number(state?.activeLabel);
+          if (Number.isFinite(time)) onSelect(new Date(time).toISOString().slice(0, 10));
+        }}>
+          <CartesianGrid stroke="var(--color-rule)" vertical={false} />
+          <XAxis dataKey="time" type="number" domain={['dataMin', 'dataMax']} tickFormatter={value => new Date(value).toISOString().slice(0, 10)} tick={axisTick} minTickGap={24} />
+          <YAxis domain={[-.2, 1]} tick={axisTick} width={38} />
+          <YAxis yAxisId="anomaly" orientation="right" domain={[-1.2, 1.2]} tick={axisTick} width={38} />
+          <Tooltip labelFormatter={value => new Date(Number(value)).toISOString().slice(0, 10)} contentStyle={tooltipStyle} />
+          <Legend wrapperStyle={{ fontSize: '12px' }} />
+          <ReferenceArea x1={Date.parse(eventStart)} x2={Date.parse(eventEnd) + 86400000} fill="var(--color-accent)" fillOpacity={.18} />
+          {recurrenceDates.map(date => <ReferenceLine key={date} x={Date.parse(date)} stroke="var(--color-danger)" strokeDasharray="4 4" />)}
+          <ReferenceLine x={Date.parse(selectedDate)} stroke="var(--color-focus)" strokeDasharray="2 4" />
+          <Line isAnimationActive={false} dataKey="baseline" name="Seasonal median" stroke="var(--color-accent-2)" strokeDasharray="7 4" dot={false} connectNulls={false} />
+          <Line isAnimationActive={false} dataKey="baseline_lower" name="Reference lower band" stroke="var(--color-muted)" strokeDasharray="3 3" dot={false} connectNulls={false} />
+          <Line isAnimationActive={false} dataKey="baseline_upper" name="Reference upper band" stroke="var(--color-muted)" strokeDasharray="3 3" dot={false} connectNulls={false} />
+          <Line isAnimationActive={false} yAxisId="anomaly" dataKey="anomaly" name="Anomaly (right axis)" stroke="var(--color-warning)" strokeDasharray="2 3" dot={false} connectNulls={false} />
+          <Line isAnimationActive={false} dataKey="value" name={observations[0]?.index ?? 'Vegetation'} stroke="var(--color-positive)" dot={{ r: 2.5 }} connectNulls={false} />
+        </ComposedChart>
+      </ResponsiveContainer>
+    </div>
+  );
 };

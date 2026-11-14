@@ -1,22 +1,10 @@
 import React, { useMemo, useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
-import {
-  Clock,
-  Compass,
-  Activity,
-  Layers,
-  ArrowRight,
-  Calendar,
-  AlertCircle,
-  TrendingDown,
-  TrendingUp,
-  MapPin,
-  CheckCircle,
-} from 'lucide-react';
 import { apiClient } from '../api/client';
 import { LeafletMap } from '../components/map/LeafletMap';
 import { TimelineBar, TimelinePhase } from '../components/timeline/TimelineBar';
+import '../styles/field-pages.css';
 
 const toDateValue = (date: string | undefined, fallback: string): string => {
   if (!date || Number.isNaN(new Date(`${date}T00:00:00.000Z`).getTime())) {
@@ -36,7 +24,7 @@ export const TerritoryPage: React.FC = () => {
   const [selectedDate, setSelectedDate] = useState<string>('2023-07-22');
 
   // Query territory
-  const { data: area } = useQuery({
+  const { data: area, isLoading: areaLoading, isError: areaError } = useQuery({
     queryKey: ['area', areaId],
     queryFn: () => apiClient.getArea(areaId),
   });
@@ -48,7 +36,7 @@ export const TerritoryPage: React.FC = () => {
   });
 
   // Query candidate events
-  const { data: events = [] } = useQuery({
+  const { data: events = [], isLoading: eventsLoading, isError: eventsError } = useQuery({
     queryKey: ['events', areaId],
     queryFn: () => apiClient.getEvents(areaId),
   });
@@ -69,6 +57,7 @@ export const TerritoryPage: React.FC = () => {
 
   const fireStartDate = toDateValue(firstEvent?.start_date, '2023-07-18');
   const fireEndDate = toDateValue(firstEvent?.end_date, '2023-07-28');
+  const hasFireWindow = Boolean(firstEvent?.start_date && firstEvent?.end_date);
   const beforeDate = addDays(fireStartDate, -30);
   const afterDate = addDays(fireEndDate, 18);
   const recoveryDate = addDays(fireEndDate, 320);
@@ -92,98 +81,43 @@ export const TerritoryPage: React.FC = () => {
 
   const mapContextDate = toDateValue(resolvedDate, fireStartDate);
 
-  let displayedDetections = allDetections.filter((detection) => {
-    const detectionDate = detection.acq_date ?? '';
-    if (!detectionDate) return false;
-    return detectionDate <= mapContextDate || detectionDate >= mapContextDate;
-  });
-
-  let phaseDescription = '';
-  let phaseMetrics = {
-    title: '',
-    value: '',
-    subtext: '',
-  };
-
+  const displayedDetections = currentPhase === 'fire' ? allDetections.filter(detection =>
+    detection.acq_date && detection.acq_date >= fireStartDate && detection.acq_date <= fireEndDate,
+  ) : [];
   const visibleLayers = {
     modis: currentPhase === 'fire',
     viirs: currentPhase === 'fire',
     burnedArea: currentPhase === 'after' || currentPhase === 'recovery',
     satelliteContext: true,
   };
-
-  if (currentPhase === 'before') {
-    displayedDetections = [];
-    phaseDescription = 'Territory prior to fire disturbance. Demonstrates intact vegetative canopy with seasonal baseline NDVI ~0.65.';
-    phaseMetrics = {
-      title: 'Baseline Canopy State',
-      value: 'NDVI 0.65 ± 0.08',
-      subtext: 'Intact Mediterranean pine canopy',
-    };
-  } else if (currentPhase === 'fire') {
-    displayedDetections = allDetections.filter((detection) => {
-      const detectionDate = detection.acq_date ?? '';
-      if (!detectionDate) return false;
-      return detectionDate >= fireStartDate && detectionDate <= fireEndDate;
-    });
-    phaseDescription = `Active wildfire disturbance. ${displayedDetections.length} harmonized MODIS and VIIRS thermal detections recorded across active flaming frontiers.`;
-    phaseMetrics = {
-      title: 'Peak Detection Phase',
-      value: `${displayedDetections.length} Hotspots`,
-      subtext: `Max FRP: ${firstEvent?.max_frp_mw || 650} MW`,
-    };
-  } else if (currentPhase === 'after') {
-    displayedDetections = [];
-    phaseDescription = 'Immediate post-fire disturbance. Burn scar verified by MODIS MCD64A1 500m product. Severe canopy chlorophyll drop down to 0.17.';
-    phaseMetrics = {
-      title: 'Post-Fire Char / Scar',
-      value: summary?.total_burned_area_hectares ? `${summary.total_burned_area_hectares.toLocaleString()} ha` : 'Mapped Burn Area',
-      subtext: 'NDVI drop: -73.8% disturbance magnitude',
-    };
-  } else if (currentPhase === 'recovery') {
-    displayedDetections = [];
-    phaseDescription = 'Regeneration and vegetative succession. Multi-year trajectory monitored by 16-day MOD13Q1 composites with QA quality masking.';
-    phaseMetrics = {
-      title: 'Current Recovery Progress',
-      value: 'Partial Recovery (64%)',
-      subtext: 'Pioneer maquis regrowth observed',
-    };
-  }
+  const phases = {
+    before: { title: 'Before the fire', description: 'Satellite imagery provides context for the territory before the selected fire window.' },
+    fire: { title: 'Fire observations', description: 'The map displays MODIS and VIIRS thermal detections inside the fire date window.' },
+    after: { title: 'After the fire', description: 'MCD64A1 mapped burned area is shown where observations are available.' },
+    recovery: { title: 'Vegetation after fire', description: 'Open the vegetation report for the MOD13Q1 time series and quality-screened observations.' },
+  };
+  const activePhase = phases[currentPhase];
 
   return (
-    <div className="min-h-screen bg-dark-950 text-slate-100 flex flex-col pb-16">
-
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 w-full space-y-6">
-        {area?.is_demo_preset === "true" && <p role="note">Historical synthetic study area</p>}
-      {/* Header Breadcrumbs & Actions */}
-        <div className="flex flex-wrap items-center justify-between gap-4 border-b border-dark-800 pb-5">
-          <div className="space-y-1">
-            <div className="flex items-center space-x-2 text-xs text-slate-400">
-              <Link to="/explorer" className="hover:text-slate-200">Explorer</Link>
-              <span>/</span>
-              <span className="text-white font-medium">Territory Story</span>
-            </div>
-            <h1 className="text-2xl sm:text-3xl font-extrabold text-white">
-              {area?.name || 'Territory Story'}
-            </h1>
-            <p className="text-xs text-slate-400 font-mono">
-              Coordinates: {area?.min_lat.toFixed(2)}° to {area?.max_lat.toFixed(2)}° N, {area?.min_lon.toFixed(2)}° to {area?.max_lon.toFixed(2)}° E • Extent: {area?.area_km2.toFixed(0)} km²
-            </p>
-          </div>
-
-          <div className="flex items-center space-x-3">
-            <Link
-              to={`/recovery/${areaId}`}
-              className="flex items-center space-x-1.5 px-4 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-xs shadow-lg shadow-emerald-600/20 transition-all"
-            >
-              <Activity className="w-3.5 h-3.5" />
-              <span>Full Recovery Explorer</span>
-              <ArrowRight className="w-3.5 h-3.5" />
-            </Link>
-          </div>
+    <main className="field-page">
+      <header className="field-header split">
+        <div>
+          <Link to="/explorer" className="field-link">Fire map</Link>
+          <h1>{area?.name || 'Territory story'}</h1>
+          {area && <p className="field-data">{area.min_lat.toFixed(2)}° to {area.max_lat.toFixed(2)}° latitude, {area.min_lon.toFixed(2)}° to {area.max_lon.toFixed(2)}° longitude ({area.area_km2.toFixed(0)} km²)</p>}
         </div>
-
-        {/* 4-Phase Synchronized Scrubber */}
+        <Link to={`/recovery/${areaId}`} className="field-button primary">Open vegetation report</Link>
+      </header>
+      {areaLoading && <p role="status" className="field-quiet">Loading territory…</p>}
+      {areaError && <p role="alert" className="field-note">Territory details are unavailable. Return to the fire map to select another area.</p>}
+      {area?.is_demo_preset === 'true' && <p role="note" className="field-note">Historical synthetic study area</p>}
+      {area && !hasFireWindow && (
+        eventsLoading ? <p role="status" className="field-quiet">Loading the territory’s fire window…</p>
+          : eventsError ? <p role="alert" className="field-note">The territory’s fire window is unavailable. Retry or return to the fire map.</p>
+            : <p className="field-note">No fire window has been recorded for this territory. Open the fire map to search by location and date.</p>
+      )}
+      {hasFireWindow && <section className="field-section" aria-labelledby="territory-observations">
+        <h2 id="territory-observations">Territory observations</h2>
         <TimelineBar
           currentPhase={currentPhase}
           onPhaseChange={(p) => {
@@ -209,69 +143,45 @@ export const TerritoryPage: React.FC = () => {
           fireStartDate={fireStartDate}
           fireEndDate={fireEndDate}
         />
-
-        {/* Dynamic Phase Inspection Card */}
-        <div className="glass-panel p-4 rounded-xl border border-dark-700/80 grid grid-cols-1 md:grid-cols-3 gap-4 items-center">
-          <div className="md:col-span-2 space-y-1">
-            <div className="text-[11px] font-mono uppercase tracking-wider text-accent-fire font-bold">
-              Active Timeline Inspection:
-            </div>
-            <p className="text-sm text-slate-200 leading-relaxed">
-              {phaseDescription}
-            </p>
+        <div className="field-territory">
+          <div className="field-map" aria-label="Territory observation map">
+            <LeafletMap
+              area={area}
+              detections={displayedDetections}
+              burnedArea={burnedSummary?.observations || []}
+              visibleLayers={visibleLayers}
+              contextDate={mapContextDate}
+            />
           </div>
-
-          <div className="bg-dark-900 p-3 rounded-lg border border-dark-800 text-right md:text-right">
-            <div className="text-xs text-slate-400">{phaseMetrics.title}</div>
-            <div className="text-lg font-bold text-white mt-0.5">{phaseMetrics.value}</div>
-            <div className="text-[11px] text-emerald-400 font-mono">{phaseMetrics.subtext}</div>
-          </div>
-        </div>
-
-        {/* Map Synchronized with Current Phase */}
-        <div className="h-[460px] rounded-xl overflow-hidden border border-dark-700 shadow-2xl">
-          <LeafletMap
-            area={area}
-            detections={displayedDetections}
-            burnedArea={burnedSummary?.observations || []}
-            visibleLayers={visibleLayers}
-            contextDate={mapContextDate}
-          />
-        </div>
-
-        {/* Data Quality & Traceability Callout */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
-          <div className="p-4 rounded-xl bg-dark-900 border border-dark-800 space-y-2">
-            <div className="font-semibold text-white flex items-center gap-1.5">
-              <CheckCircle className="w-4 h-4 text-emerald-400" />
-              <span>Sensor Harmonization</span>
-            </div>
-            <p className="text-slate-400 leading-relaxed">
-              Dual-sensor integration preserves MODIS (1km) and VIIRS (375m) instrument identity without artificial double-counting.
-            </p>
-          </div>
-
-          <div className="p-4 rounded-xl bg-dark-900 border border-dark-800 space-y-2">
-            <div className="font-semibold text-white flex items-center gap-1.5">
-              <Layers className="w-4 h-4 text-amber-400" />
-              <span>MCD64A1 Burned Area</span>
-            </div>
-            <p className="text-slate-400 leading-relaxed">
-              500m global monthly burned area product distinguishes confirmed charred surfaces from transient flaming pixels.
-            </p>
-          </div>
-
-          <div className="p-4 rounded-xl bg-dark-900 border border-dark-800 space-y-2">
-            <div className="font-semibold text-white flex items-center gap-1.5">
-              <Activity className="w-4 h-4 text-sky-400" />
-              <span>MOD13Q1 Vegetation Series</span>
-            </div>
-            <p className="text-slate-400 leading-relaxed">
-              16-day 250m composite with bit-level QA filtering removes snow, cloud, and heavy aerosol artifacts.
-            </p>
+          <div className="field-section">
+            <header>
+              <h3>{activePhase.title}</h3>
+              <p>{activePhase.description}</p>
+            </header>
+            <dl className="field-measures">
+              <div><dt>Requested imagery date (UTC)</dt><dd className="field-data">{mapContextDate}</dd></div>
+              {currentPhase === 'fire' && (
+                <div><dt>Thermal detections</dt><dd className="field-data">{displayedDetections.length.toLocaleString()}</dd></div>
+              )}
+              {currentPhase === 'fire' && firstEvent?.max_frp_mw != null && (
+                <div><dt>Maximum fire radiative power</dt><dd className="field-data">{firstEvent.max_frp_mw.toLocaleString()} MW</dd></div>
+              )}
+              {visibleLayers.burnedArea && (
+                <div><dt>Mapped burned area</dt><dd className="field-data">{summary?.total_burned_area_hectares != null ? `${summary.total_burned_area_hectares.toLocaleString()} ha` : 'Unavailable'}</dd></div>
+              )}
+            </dl>
           </div>
         </div>
-      </main>
-    </div>
+      </section>}
+
+      <section className="field-section" aria-labelledby="territory-sources">
+        <h2 id="territory-sources">Satellite products</h2>
+        <dl className="field-register">
+          <div className="field-row"><dt>MODIS and VIIRS</dt><dd>Harmonization preserves instrument identity for MODIS (1 km) and VIIRS (375 m) thermal detections.</dd></div>
+          <div className="field-row"><dt>MCD64A1</dt><dd>The global monthly 500 m burned-area product shows mapped surface change. Thermal detections indicate active heat.</dd></div>
+          <div className="field-row"><dt>MOD13Q1</dt><dd>The 16-day, 250 m vegetation series masks observations affected by snow, cloud and heavy aerosol.</dd></div>
+        </dl>
+      </section>
+    </main>
   );
 };

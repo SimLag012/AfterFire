@@ -1,5 +1,5 @@
+import { ArrowLeft, ArrowRight, Pause, Play } from 'lucide-react';
 import { CandidateSearch } from '../components/common/CandidateSearch';
-import '../styles/event-story.css';
 import { CoverageEvidence } from '../components/analysis/CoverageEvidence';
 import { RecoveryIntelligencePanel } from '../components/analysis/RecoveryIntelligencePanel';
 import { AnalysisProgressPanel } from '../components/analysis/AnalysisProgressPanel';
@@ -16,6 +16,7 @@ const ReburnIntelligencePanel = lazy(() => import('../components/analysis/Reburn
 
 const panel = 'story-section space-y-4';
 const number = (value: number | null | undefined, digits = 3) => value == null ? 'Unavailable' : value.toFixed(digits);
+const dateWindow = (start: string, end: string) => start === end ? start : `${start} to ${end}`;
 const activeStates = new Set(['queued','fetching','processing']);
 
 export const EventAnalysisPage: React.FC = () => {
@@ -123,8 +124,12 @@ function EventStory({eventId}:{eventId:string}) {
   const error=start.error ?? opening.error;
   const errorMessage=axios.isAxiosError(error) ? (typeof error.response?.data?.detail==='string' ? error.response.data.detail : 'Unable to request analysis; verify configuration and service') : error?.message;
 
-  if (detailQuery.isLoading) return <main role="status" className="p-8">Loading event…</main>;
-  if (!event || !detailQuery.data) return <main className="p-8"><p role="alert">Event candidate unavailable.</p><Link to={returnTo}>Return to Fire Explorer</Link></main>;
+  if (detailQuery.isLoading) return <main className="event-story story-state"><p role="status">Loading event…</p></main>;
+  if (!event || !detailQuery.data) return <main className="event-story story-state">
+    <h1>Event candidate unavailable</h1>
+    <p role="alert">This event could not be loaded.</p>
+    <Link to={returnTo} className="story-back"><ArrowLeft aria-hidden="true" size={16}/> Return to Fire Explorer</Link>
+  </main>;
   const detail=detailQuery.data;
   const bounds: [[number,number],[number,number]]=[[event.min_lat-0.01,event.min_lon-0.01],[event.max_lat+0.01,(event.max_lon < event.min_lon ? event.max_lon + 360 : event.max_lon)+0.01]];
   const selectedPosition=dates.indexOf(currentDate);
@@ -135,31 +140,42 @@ function EventStory({eventId}:{eventId:string}) {
     ? latest.value<latest.baseline_lower?'below':latest.value>latest.baseline_upper?'above':'within' : undefined;
   const filteredHistory = result?.recurrence.filter(r=>[r.name,r.place,r.event_id,r.start_date,r.end_date].some(value=>value?.toLowerCase().includes(historySearch.trim().toLowerCase()))) ?? [];
   const burned=result?.burned_area as import('geojson').FeatureCollection|undefined;
-  return <main className="event-story mx-auto w-full max-w-6xl space-y-6 px-4 py-6 sm:px-8">
+  return <main className="event-story">
       <header className="story-header">
-        <Link to={returnTo} className="story-back">← Fire Explorer</Link>
-        <p className="story-kicker">Satellite Recovery Story</p>
+        <Link to={returnTo} className="story-back" aria-label="← Fire Explorer"><ArrowLeft aria-hidden="true" size={16}/> Fire Explorer</Link>
         <h1>{event.name}</h1>
-        <p className="story-location">{event.place || detail.area?.name || 'Place unavailable'} · {event.start_date} – {event.end_date} · {event.center_lat.toFixed(3)}°, {event.center_lon.toFixed(3)}°</p>
-        <p className="text-sm text-slate-400"><span className="break-all">{event.id}</span> · {detail.detections.length} associated FIRMS observations · algorithmic fire candidate</p>
+        <dl className="story-location">
+          <div><dt>Place</dt><dd>{event.place || detail.area?.name || 'Place unavailable'}</dd></div>
+          <div><dt>Detection dates, UTC</dt><dd className="story-date-window">
+            <time dateTime={event.start_date}>{event.start_date}</time>
+            {event.end_date!==event.start_date && <span>to <time dateTime={event.end_date}>{event.end_date}</time></span>}
+          </dd></div>
+        </dl>
+        <p className="story-caption">Algorithmic fire candidate based on {detail.detections.length} FIRMS {detail.detections.length===1 ? 'observation' : 'observations'}.</p>
         {event.is_synthetic_demo==='true' && <p className="text-amber-300">This historical record contains synthetic observations.</p>}
       </header>
+      {result && <nav aria-label="Recovery story chapters" className="story-nav">
+        <a href="#before-after">Before / After</a><a href="#trajectory">Recovery timeline</a><a href="#territory">Territory map</a><a href="#reburn">Reburn history</a>
+      </nav>}
+      <div className={result ? 'story-spread' : 'story-spread story-spread-single'}>
       <section className={panel} aria-label="Analysis Status">
-        <h2>How did this territory change?</h2>
+        <h2>Vegetation after the fire</h2>
         {result ? <>
           <p className="story-finding">{comparison ? `Vegetation greenness was ${comparison} its seasonal reference range in the latest valid ${index} observation.` : 'The available observations cannot establish a seasonal comparison for the latest post-fire conditions.'}</p>
-          <CoverageEvidence result={result}/>
-          {latest && <p className="text-sm text-slate-300">{latest.date} – {latest.period_end} · {index} {number(latest.value)} · reference range {number(latest.baseline_lower)} to {number(latest.baseline_upper)} · {latest.valid_pixels}/{latest.total_pixels} pixels passed quality checks.</p>}
-          <dl className="story-facts">
-            <div><dt>Territory analyzed</dt><dd>{number(result.analysis_area_km2,2)} km²</dd></div>
-            <div><dt>Observed burned cells</dt><dd>{result.burned_area_summary.available_granules ? burned?.features?.length ?? 'Unavailable' : 'Unavailable'}</dd></div>
-            <div><dt>Valid post-fire observations</dt><dd>{metric?.post_observations ?? 0} <small>{index} composites</small></dd></div>
-          </dl>
-          <p role="status" className="text-xs text-slate-400">Cached scientific analysis · {result.period.start}–{result.period.end}</p>
-          <nav aria-label="Recovery story chapters" className="story-nav"><a href="#before-after">Before / After</a><a href="#trajectory">Recovery timeline</a><a href="#territory">Territory map</a><a href="#reburn">Reburn history</a></nav>
+          {result.scientific_support && <p className="story-caption">
+            {result.scientific_support.burn_confirmation === 'MCD64A1_mapped_cells' ? 'MCD64A1 mapped burned cells in the analysis area.' : 'Burning remains unconfirmed in the candidate area.'}
+          </p>}
+          <p role="status" className="story-caption">Cached scientific analysis from {result.period.start} to {result.period.end}.</p>
+          <details><summary>Measurements behind this finding</summary>
+            {latest && <p className="story-caption">{index} for {dateWindow(latest.date, latest.period_end)}: {number(latest.value)} against a reference range of {number(latest.baseline_lower)} to {number(latest.baseline_upper)}. {latest.valid_pixels}/{latest.total_pixels} pixels passed quality checks.</p>}
+            <dl className="story-facts">
+              <div><dt>Territory analyzed</dt><dd>{number(result.analysis_area_km2,2)} km²</dd></div>
+              <div><dt>Observed burned cells</dt><dd>{result.burned_area_summary.available_granules ? burned?.features?.length ?? 'Unavailable' : 'Unavailable'}</dd></div>
+              <div><dt>Valid post-fire observations</dt><dd>{metric?.post_observations ?? 0} <small>{index} composites</small></dd></div>
+            </dl>
+          </details>
         </> : <p role="status">{job?.availability?.message ?? (job?.state==='insufficient_observations' ? job.warning || 'Satellite coverage is insufficient for this territory and observation window.' : active ? 'Your satellite analysis is running. You can return here to follow its progress.' : job?.state==='failed' ? 'The analysis stopped before publication.' : event.is_synthetic_demo==='true' ? 'Satellite acquisition requires observed fire detections.' : 'Checking available satellite observations…')}</p>}
-        {!result && <div className="h-64 overflow-hidden rounded-lg"><EventSatelliteMap eventId={eventId} detections={detail.detections} bounds={bounds} selectedDate={event.start_date}/></div>}
-        {job?.availability && <p className="text-sm text-amber-200">Burned-area mapping · {job.availability.burned_area_mapping.replace(/_/g,' ')}. Recovery · {job.availability.recovery_analysis.replace(/_/g,' ')}.</p>}
+        {job?.availability && <p className="story-caption">Burned-area mapping: {job.availability.burned_area_mapping.replace(/_/g,' ')}. Recovery: {job.availability.recovery_analysis.replace(/_/g,' ')}.</p>}
         {job?.state==='insufficient_observations' && result && <p role="status">{job.warning || 'The latest analysis window has insufficient satellite coverage.'}</p>}
         {job?.id && job.state!=='insufficient_observations' && (active || !result ? <AnalysisProgressPanel job={job} disconnected={statusQuery.isError}/> : <details><summary>Saved analysis details</summary><AnalysisProgressPanel job={job} disconnected={statusQuery.isError}/></details>)}
         {statusQuery.isError && <p role="alert">Could not check the saved analysis. <button onClick={()=>statusQuery.refetch()}>Reconnect</button></p>}
@@ -168,75 +184,106 @@ function EventStory({eventId}:{eventId:string}) {
         {resultQuery.isError && <p role="alert">The published result could not be loaded. <button onClick={()=>resultQuery.refetch()}>Retry loading</button></p>}
         {(job?.state==='failed'||job?.state==='partial') && <details><summary>Retry incomplete analysis</summary><button disabled={start.isPending} onClick={()=>start.mutate(true)}>Resume available work</button></details>}
         {result && result.job_id !== job?.id && <p className="text-amber-300">Showing the previous published result while the current job is pending.</p>}
-        {result && result.warnings.length>0 && <details open><summary>Quality notices ({result.warnings.length})</summary>{result.warnings.map(w=><p key={w}>{w}</p>)}</details>}
+        {result && result.warnings.length>0 && <details><summary>Quality notices ({result.warnings.length})</summary><ul className="story-notices">{result.warnings.map(w=><li key={w}>{w}</li>)}</ul></details>}
       </section>
+      {!result && <figure className="story-figure story-unpublished-map">
+        <div className="story-map"><EventSatelliteMap eventId={eventId} detections={detail.detections} bounds={bounds} selectedDate={event.start_date}/></div>
+        <figcaption>FIRMS detections on {event.start_date} (UTC). The satellite basemap provides geographic context.</figcaption>
+      </figure>}
       {result && <>
       <section id="before-after" className={panel} aria-label="Before After comparison">
         <h2 className="text-lg font-semibold">Before / After</h2>
         {result.high_resolution?.before && result.high_resolution?.after && <>
-          <div className="grid gap-4 sm:grid-cols-2">{[result.high_resolution.before,result.high_resolution.after].map(scene=><figure key={scene.id}>
-            <img loading="lazy" className="w-full rounded-lg" alt={`Quality-screened true-colour candidate territory ${scene.date}`} src={`/api/v1/events/${encodeURIComponent(eventId)}/analysis/optical-preview?job_id=${encodeURIComponent(result.job_id)}&scene_id=${encodeURIComponent(scene.id)}`}/>
-            <figcaption>{scene.date} · {scene.source} · {scene.source==='Sentinel_2'?'10/20':scene.resolution_m} m source</figcaption>
+          <div className="story-optical-pair">{[result.high_resolution.before,result.high_resolution.after].map((scene, position)=><figure className="story-figure" key={scene.id}>
+            <img loading="lazy" className="w-full" alt={`Quality-screened true-colour candidate territory ${scene.date}`} src={`/api/v1/events/${encodeURIComponent(eventId)}/analysis/optical-preview?job_id=${encodeURIComponent(result.job_id)}&scene_id=${encodeURIComponent(scene.id)}`}/>
+            <figcaption><strong>{position === 0 ? 'Before' : 'After'} the event</strong><br/><time dateTime={scene.date}>{scene.date}</time>, {scene.source} at {scene.source==='Sentinel_2'?'10/20':scene.resolution_m} m</figcaption>
           </figure>)}</div>
           <p className="text-xs text-slate-400">Dated true-colour previews of the candidate area. Clouds and rejected pixels are transparent. Display previews are resampled; index statistics use native sensor grids. This comparison does not confirm burning.</p>
         </>}
-        <p>Compare MODIS vegetation indices across two valid composites on the same ground. Move the divider to reveal each side when both layers are available.</p>
+        <p>Move the divider to compare two MODIS vegetation composites on the same ground.</p>
         {!beforeOptions.length||!afterOptions.length ? <p className="text-sm text-slate-400">Two valid comparable pre/post MODIS composites are not yet available.</p> : <>
-          <div className="flex flex-wrap gap-4">
+          <div className="story-settings">
             <label>Before <select aria-label="Before observation" className="bg-dark-800" value={beforeDate} onChange={e=>setBefore(e.target.value)}>{beforeOptions.map(o=><option key={o.date}>{o.date}</option>)}</select></label>
             <label>After <select aria-label="After observation" className="bg-dark-800" value={afterDate} onChange={e=>setAfter(e.target.value)}>{afterOptions.map(o=><option key={o.date}>{o.date}</option>)}</select></label>
           </div>
-          <div className="flex justify-between text-sm"><span>A: {b?.date}–{b?.period_end} · {index} {number(b?.value)} · valid {number((b?.valid_fraction??0)*100,1)}%</span><span>B: {a?.date}–{a?.period_end} · {index} {number(a?.value)} · valid {number((a?.valid_fraction??0)*100,1)}%</span></div>
-          <div className="h-[440px] overflow-hidden rounded-lg"><EventSatelliteMap eventId={eventId} result={result} observation={b} comparison={a} divider={divider} detections={[]} bounds={bounds} selectedDate={b?.date??''} /></div>
-          <p className="story-legend"><i aria-hidden="true"/> Low greenness (−0.2) to high (1) · transparent where quality checks exclude a pixel. The imagery underneath is a present-day reference basemap.</p>
+          <div className="story-map"><EventSatelliteMap eventId={eventId} result={result} observation={b} comparison={a} divider={divider} detections={[]} bounds={bounds} selectedDate={b?.date??''} /></div>
           <label className="block text-sm">Before / After divider <input type="range" aria-label="Before After divider" className="w-full" min={0} max={100} value={divider} onChange={e=>setDivider(Number(e.target.value))} /></label>
+          <dl className="story-composite-pair">
+            <div><dt>A / Before</dt><dd>{b && dateWindow(b.date,b.period_end)}<br/>{index} {number(b?.value)} with {number((b?.valid_fraction??0)*100,1)}% valid coverage</dd></div>
+            <div><dt>B / After</dt><dd>{a && dateWindow(a.date,a.period_end)}<br/>{index} {number(a?.value)} with {number((a?.valid_fraction??0)*100,1)}% valid coverage</dd></div>
+          </dl>
+          <p className="story-legend"><i aria-hidden="true"/> Low greenness (−0.2) to high (1). Pixels excluded by quality checks are transparent. The imagery underneath is a present-day reference basemap.</p>
           <p className="text-sm">Difference of area medians (B − A): {a?.value!=null && b?.value!=null?number(a.value-b.value):'Unavailable'}. This is not a pixelwise change map.</p>
           <p className="text-xs text-amber-300">Same analysis geometry, product, QA and colour scale. Seasonal and cloud-coverage differences can affect comparison; valid pixels may differ between composites.</p>
         </>}
       </section>
+      </>}
+      </div>
+      {result && <>
 
       <section id="trajectory" className={panel} aria-label="Vegetation Recovery">
-        <h2 className="text-lg font-semibold">Recovery timeline · {index}</h2>
+        <div className="story-section-heading">
+          <h2>{index} recovery timeline</h2>
+          <label>Index <select aria-label="Vegetation index" value={index} onChange={e=>setIndex(e.target.value as 'NDVI'|'EVI')}><option>NDVI</option><option>EVI</option></select></label>
+        </div>
         <p>Follow the observed index across the fire interval and compare it with the same season before the fire. Select a point to explore its map below.</p>
-        <label>Index <select aria-label="Vegetation index" value={index} onChange={e=>setIndex(e.target.value as 'NDVI'|'EVI')}><option>NDVI</option><option>EVI</option></select></label>
-        {result ? <><p>{metric?.status} · pre-event descriptive median {number(metric?.pre_median)} · latest post-event {number(metric?.post_latest)} ({metric?.post_date ?? 'unavailable'})</p>
-          <p className="text-sm">Selected anomaly: {number(observation?.anomaly)} · seasonal reference {number(observation?.baseline)} · {observation?.baseline_n ?? 0} composites in {observation?.baseline_years ?? 0} reference years.</p>
+        {result ? <>
+          <dl className="evidence-metrics">
+            <div><dt>Pre-fire median</dt><dd>{number(metric?.pre_median)}</dd></div>
+            <div><dt>Latest post-fire observation</dt><dd>{number(metric?.post_latest)} ({metric?.post_date ?? 'unavailable'})</dd></div>
+            <div><dt>Selected anomaly</dt><dd>{number(observation?.anomaly)}</dd></div>
+            <div><dt>Seasonal reference</dt><dd>{number(observation?.baseline)} from {observation?.baseline_n ?? 0} composites across {observation?.baseline_years ?? 0} years</dd></div>
+          </dl>
+          {!!metric?.status && <p className="story-caption">Analysis status: {metric.status.replace(/_/g,' ')}.</p>}
           {observations.filter(o=>o.value!=null).length>=2 && observations.some(o=>o.phase==='before' && o.value!=null) && observations.some(o=>o.phase==='after' && o.value!=null) ? <SatelliteRecoveryChart observations={observations} selectedDate={currentDate} eventStart={event.start_date} eventEnd={event.end_date} recurrenceDates={result.recurrence.map(r=>r.start_date)} onSelect={chooseDate} /> : <p>No adequate pre/post MODIS observations to draw a recovery timeline. Available optical evidence is listed above.</p>}
           <p className="text-xs text-slate-400">NDVI/EVI = raw × 0.0001. Spatial median of strict good-quality land pixels; gaps remain missing. Baseline: median of seasonally comparable pre-event composites; band = ±max(0.05, 1.4826 × MAD), not a confidence interval.</p></> : <p className="text-sm text-slate-400">No event-scoped observations yet. Request an analysis to acquire NASA measurements.</p>}
       </section>
 
       <section className={panel} aria-label="Satellite Timeline">
         <h2 className="text-lg font-semibold">Explore dated observations</h2>
-        <p className="text-sm text-amber-300">Fire interval · {event.start_date}–{event.end_date}. Coloured vegetation indices are scientific layers, not natural-colour photographs.</p>
-        <div className="flex flex-wrap items-center gap-4">
-          <button aria-label={playing?'Pause playback':'Play observations'} disabled={!available.length} onClick={()=>{if(!playing && (!available.some(o=>o.date===currentDate) || currentDate===available[available.length-1]?.date)){setSelectedDate(available[0].date);}setPlaying(v=>!v);}}>{playing?'Pause':'▶ Play'}</button>
+        <p className="story-caption">Fire interval: {event.start_date} to {event.end_date} UTC. Coloured vegetation indices are scientific layers, not natural-colour photographs.</p>
+        <div className="story-observation-control">
+          <button aria-label={playing?'Pause playback':'Play observations'} disabled={!available.length} onClick={()=>{if(!playing && (!available.some(o=>o.date===currentDate) || currentDate===available[available.length-1]?.date)){setSelectedDate(available[0].date);}setPlaying(v=>!v);}}>{playing?<Pause aria-hidden="true" size={16}/>:<Play aria-hidden="true" size={16}/>}{playing?'Pause':'Play'}</button>
           <label>Playback speed <select className="bg-dark-800" aria-label="Playback speed" value={speed} onChange={e=>setSpeed(Number(e.target.value))}><option value={4000}>Slow</option><option value={2000}>Normal</option><option value={800}>Fast</option></select></label>
           <label>Year <select className="bg-dark-800" aria-label="Observation year" value={currentDate.slice(0,4)} onChange={e=>{const day=dates.find(d=>d.startsWith(e.target.value));if(day)chooseDate(day);}}>{Array.from(new Set(dates.map(d=>d.slice(0,4)))).map(y=><option key={y}>{y}</option>)}</select></label>
           <label className="min-w-0 max-w-full">Observation date <select aria-label="Observation date" className="block max-w-full bg-dark-800 sm:ml-2 sm:inline-block" value={dates.includes(currentDate)?currentDate:''} onChange={e=>chooseDate(e.target.value)}>
-            {!dates.includes(currentDate) && <option value="">{currentDate} · no acquisition</option>}
-            {dates.map(d=><option key={d} value={d}>{d} · {observations.find(o=>o.date===d)?.availability ?? observations.find(o=>o.date===d)?.quality ?? 'FIRMS only'}</option>)}
+            {!dates.includes(currentDate) && <option value="">{currentDate} / no acquisition</option>}
+            {dates.map(d=><option key={d} value={d}>{d} / {observations.find(o=>o.date===d)?.availability ?? observations.find(o=>o.date===d)?.quality ?? 'FIRMS only'}</option>)}
           </select></label>
-          <button disabled={selectedPosition<=0} onClick={()=>chooseDate(dates[selectedPosition-1])}>← Previous</button>
-          <button disabled={selectedPosition<0||selectedPosition>=dates.length-1} onClick={()=>chooseDate(dates[selectedPosition+1])}>Next →</button>
+          <button disabled={selectedPosition<=0} onClick={()=>chooseDate(dates[selectedPosition-1])}><ArrowLeft aria-hidden="true" size={16}/> Previous</button>
+          <button disabled={selectedPosition<0||selectedPosition>=dates.length-1} onClick={()=>chooseDate(dates[selectedPosition+1])}>Next <ArrowRight aria-hidden="true" size={16}/></button>
           <label>Index <select aria-label="Observation map index" className="ml-2 bg-dark-800" value={index} onChange={e=>setIndex(e.target.value as 'NDVI'|'EVI')}><option>NDVI</option><option>EVI</option></select></label>
         </div>
-        <div className="flex flex-wrap gap-4 text-sm">
-          <button disabled={!beforeOptions.length} onClick={()=>chooseDate(beforeOptions[beforeOptions.length-1].date)}>1. Before Fire</button>
-          <button onClick={()=>chooseDate(event.start_date)}>2. Fire Period</button>
-          <button disabled={!afterOptions.length} onClick={()=>chooseDate(afterOptions[0].date)}>3. Immediate Post-Fire</button>
-          <button disabled={!afterOptions.length} onClick={()=>chooseDate(afterOptions[afterOptions.length-1].date)}>4. Recovery Trajectory</button>
+        <div className="story-periods" role="group" aria-label="Jump to a period">
+          <button disabled={!beforeOptions.length} aria-pressed={currentDate===beforeOptions[beforeOptions.length-1]?.date} onClick={()=>chooseDate(beforeOptions[beforeOptions.length-1].date)}>Before fire</button>
+          <button aria-pressed={currentDate===event.start_date} onClick={()=>chooseDate(event.start_date)}>Fire period</button>
+          <button disabled={!afterOptions.length} aria-pressed={currentDate===afterOptions[0]?.date} onClick={()=>chooseDate(afterOptions[0].date)}>First after fire</button>
+          <button disabled={!afterOptions.length} aria-pressed={currentDate===afterOptions[afterOptions.length-1]?.date} onClick={()=>chooseDate(afterOptions[afterOptions.length-1].date)}>Latest observation</button>
         </div>
         {dates.length>1 && <input className="w-full" type="range" aria-label="Satellite timeline" min={0} max={dates.length-1} value={Math.max(0,selectedPosition)} onChange={e=>chooseDate(dates[Number(e.target.value)])} />}
-        <p className="text-sm">Selected {currentDate} · {observation ? `MOD13Q1.061 · composite ${observation.date}–${observation.period_end} · ${observation.phase} · 250 m` : 'No MOD13Q1 composite at this date. Select an available observation; no substitute frame is used.'}</p>
-        <details className="text-sm text-slate-400"><summary>What do NDVI, EVI and seasonal anomalies mean?</summary><p>NDVI describes vegetation greenness from red and near-infrared reflectance. EVI also uses blue reflectance to reduce some atmospheric and soil-background effects and improve sensitivity in dense vegetation. Both are dimensionless satellite indices, not measurements of biodiversity or full ecosystem recovery.</p><p>The baseline is the median of comparable seasons before the fire. Anomaly means observed index minus that reference. Missing or rejected observations are unavailable, not zero; the reference band describes variability, not a confidence interval.</p></details>
-        <p className="text-sm">NDVI {number(result?.observations.find(o=>o.date===currentDate && o.index==='NDVI')?.value)} · EVI {number(result?.observations.find(o=>o.date===currentDate && o.index==='EVI')?.value)} · {Math.round((Date.parse(currentDate)-Date.parse(event.end_date))/86400000)} days from last detection · {observation?.status ?? 'insufficient data'}</p>
-        <p className="text-sm">{index}: {number(observation?.value)} · valid pixels {observation?.valid_pixels ?? 0}/{observation?.total_pixels ?? 0} · coverage {number((observation?.valid_fraction ?? 0)*100,1)}%</p>
-        <p className="text-xs text-slate-400">Observation state: {observation?.availability ?? observation?.quality ?? 'No composite at selected date'}. No temporal interpolation or silent substitution is used.</p>
-        <label className="text-sm"><input type="checkbox" checked={showBurned} onChange={e=>setShowBurned(e.target.checked)} /> Show event-associated MCD64A1 cells (burn dates cover the event interval)</label>
-        <div className="h-[440px] overflow-hidden rounded-lg">
+        <p className="text-sm">Selected {currentDate}. {observation ? `MOD13Q1.061 ${observation.phase} composite, ${observation.date} to ${observation.period_end} at 250 m.` : 'No MOD13Q1 composite at this date. Select an available observation; no substitute frame is used.'}</p>
+        <div className="story-map">
           <EventSatelliteMap eventId={eventId} result={result} observation={observation} detections={detail.detections} bounds={bounds} selectedDate={currentDate} showBurned={showBurned} onFrameReady={ready} />
         </div>
-        <p className="text-xs text-slate-400">Red: FIRMS detections on selected date (nominal 375 m VIIRS / 1 km MODIS) · violet dashed: candidate territory · blue: analysis area · orange: event-associated MCD64A1.061 cells (monthly, nominal 500 m). Index colour scale: −0.2 brown → 1 green; QA-rejected pixels are transparent. Satellite basemap: Esri World Imagery, acquisition date varies/unknown; it does not depict the selected event date.</p>
+        <label className="text-sm"><input type="checkbox" checked={showBurned} onChange={e=>setShowBurned(e.target.checked)} /> Show event-associated MCD64A1 cells (burn dates cover the event interval)</label>
+        <details className="text-sm text-slate-400"><summary>What do NDVI, EVI and seasonal anomalies mean?</summary><p>NDVI describes vegetation greenness from red and near-infrared reflectance. EVI also uses blue reflectance to reduce some atmospheric and soil-background effects and improve sensitivity in dense vegetation. Both are dimensionless satellite indices, not measurements of biodiversity or full ecosystem recovery.</p><p>The baseline is the median of comparable seasons before the fire. Anomaly means observed index minus that reference. Missing or rejected observations are unavailable, not zero; the reference band describes variability, not a confidence interval.</p></details>
+        <dl className="evidence-metrics">
+          <div><dt>NDVI</dt><dd>{number(result?.observations.find(o=>o.date===currentDate && o.index==='NDVI')?.value)}</dd></div>
+          <div><dt>EVI</dt><dd>{number(result?.observations.find(o=>o.date===currentDate && o.index==='EVI')?.value)}</dd></div>
+          <div><dt>Days since last detection</dt><dd>{Math.round((Date.parse(currentDate)-Date.parse(event.end_date))/86400000)}</dd></div>
+          <div><dt>Valid {index} pixels</dt><dd>{observation?.valid_pixels ?? 0}/{observation?.total_pixels ?? 0} ({number((observation?.valid_fraction ?? 0)*100,1)}%)</dd></div>
+        </dl>
+        <p className="story-caption">{index} status: {observation?.status ?? 'insufficient data'}.</p>
+        <p className="text-xs text-slate-400">Observation state: {observation?.availability ?? observation?.quality ?? 'No composite at selected date'}. No temporal interpolation or silent substitution is used.</p>
+        <details><summary>Map legend and imagery source</summary>
+          <dl className="evidence-metrics">
+            <div><dt>Red markers</dt><dd>FIRMS detections on the selected date (nominal 375 m VIIRS or 1 km MODIS)</dd></div>
+            <div><dt>Dashed violet outline</dt><dd>Candidate territory</dd></div>
+            <div><dt>Blue outline</dt><dd>Analysis area</dd></div>
+            <div><dt>Orange cells</dt><dd>Event-associated MCD64A1.061 (monthly, nominal 500 m)</dd></div>
+          </dl>
+          <p className="story-caption">Index colours range from brown (−0.2) to green (1). Quality-rejected pixels are transparent. Esri World Imagery is provided for geographic context and uses varying acquisition dates.</p>
+        </details>
 
       </section>
 
@@ -250,9 +297,11 @@ function EventStory({eventId}:{eventId:string}) {
         {(result?.recurrence.length ?? 0)>0 && <CandidateSearch value={historySearch} onChange={setHistorySearch}/>}
         {historySearch && filteredHistory.length===0 && <p>No matching candidates.</p>}
         {filteredHistory.map(r=><article key={r.event_id} className="border-t border-dark-800 pt-3 text-sm">
-          <Link className="text-emerald-300 underline" to={`/events/${encodeURIComponent(r.event_id)}`}>{r.name}</Link> · {r.place || "Place unavailable"} · <span className="break-all">{r.event_id}</span> · {r.start_date}–{r.end_date}
-          <p>{r.gap_start_days} days between candidate starts · {r.gap_since_end_days} days since first candidate end · prior vegetation: {r.indicator_status}</p>
-          <p className="text-xs text-slate-400">{r.association} · prior usable composite {r.vegetation_before?.date ?? 'unavailable'}.</p>
+          <Link className="underline" to={`/events/${encodeURIComponent(r.event_id)}`}>{r.name}</Link>
+          <p className="story-caption">{r.place || 'Place unavailable'}, {r.start_date} to {r.end_date} UTC</p>
+          <p>{r.gap_start_days} days between candidate starts and {r.gap_since_end_days} days since the first candidate ended.</p>
+          <p>Prior vegetation: {r.indicator_status}. Latest usable composite: {r.vegetation_before?.date ?? 'unavailable'}.</p>
+          <p className="story-caption break-all">{r.association}. Candidate ID: {r.event_id}.</p>
         </article>)}
         <p className="text-xs text-slate-400">Hotspot candidates do not confirm an official reburn. Missing observations cannot establish that vegetation had failed to recover.</p>
       </section>
@@ -260,8 +309,12 @@ function EventStory({eventId}:{eventId:string}) {
       </>}
       <section className={panel} aria-label="Burned Area">
         <h2 className="text-lg font-semibold">Burned Area</h2>
-        <p className="text-sm">{result ? `${result.analysis_area_source} · analysis area ${number(result.analysis_area_km2)} km²` : 'Awaiting event-scoped satellite analysis.'}</p>
-        {result && <><p className="text-sm">MCD64A1.061: {result.burned_area_summary.available_granules} processed granules · {number(result.burned_area_summary.observed_cell_area_km2)} km² observed cells · {result.burned_area_summary.ambiguous_cells} ambiguous cells.</p>
+        <p className="text-sm">{result ? `Analysis area: ${number(result.analysis_area_km2)} km² (${result.analysis_area_source}).` : 'Awaiting event-scoped satellite analysis.'}</p>
+        {result && <><dl className="evidence-metrics">
+          <div><dt>MCD64A1.061 granules processed</dt><dd>{result.burned_area_summary.available_granules}</dd></div>
+          <div><dt>Observed cell area</dt><dd>{number(result.burned_area_summary.observed_cell_area_km2)} km²</dd></div>
+          <div><dt>Ambiguous cells</dt><dd>{result.burned_area_summary.ambiguous_cells}</dd></div>
+        </dl>
           <p className="text-xs text-slate-400">Cells are selected using burn date, date uncertainty, quality and hotspot-buffer intersection. Ambiguous cells are excluded from selecting the analysis area. This is not an official fire perimeter; zero selected cells does not prove absence of burning.</p></>}
       </section>
 
@@ -269,6 +322,14 @@ function EventStory({eventId}:{eventId:string}) {
         <h2 className="text-lg font-semibold">Sources & Scientific Limitations</h2>
         <p className="text-sm">NASA LP DAAC: <a className="underline" href="https://lpdaac.usgs.gov/products/mod13q1v061/">MOD13Q1 Collection 6.1</a> (250 m, 16 days), <a className="underline" href="https://lpdaac.usgs.gov/products/mcd64a1v061/">MCD64A1 Collection 6.1</a> (500 m, monthly). Sources discovered with NASA CMR; verified native subsets and configured Collection 6.1 APIs. </p>
         {[...detail.limitations,...(result?.limitations ?? [])].map(s=><p key={s} className="text-xs text-slate-400">{s}</p>)}
+        <details>
+          <summary>Candidate record</summary>
+          <dl className="evidence-metrics">
+            <div><dt>Candidate ID</dt><dd className="break-all font-mono">{event.id}</dd></div>
+            <div><dt>Candidate centre</dt><dd className="font-mono">{event.center_lat.toFixed(3)}°, {event.center_lon.toFixed(3)}°</dd></div>
+          </dl>
+        </details>
+        {result && <CoverageEvidence result={result}/>}
       </section>
       <details className={panel}><summary>Analysis settings</summary>
         <p className="text-sm">Changing the time window or territory buffer requests a separate analysis. Previous publications remain available.</p>
@@ -283,8 +344,14 @@ function EventStory({eventId}:{eventId:string}) {
       {result && <details className={panel}><summary>Downloads and source files</summary>
         <div ref={setDownloadSection}/>
         {observation?.assets.map(asset=><a key={asset.raster} className="mr-4 text-xs text-emerald-300 underline" href={satelliteApi.asset(eventId,result!.job_id,asset.raster)}>Download {asset.raster} GeoTIFF</a>)}
-        {result && <><p className="text-xs">This run downloaded {result.downloaded_granules} granules · {(result.downloaded_bytes/1024**2).toFixed(2)} MiB · {result.elapsed_seconds}s. {result.observations.filter(o=>o.value!==null).length} valid index observations.</p>
-          <details><summary>Granule provenance ({result.granules.length})</summary><ul className="space-y-2 break-all text-xs">{result.granules.map(g=><li key={g.id}>{g.provider ?? 'NASA CMR / LP DAAC'} · {g.task_id && `task ${g.task_id} · `}{g.original_id} · {g.period.start}–{g.period.end} · CMR {g.cmr_id} · SHA256 {g.checksum} · {g.bytes} bytes · {g.cache_hit?'cache':'acquired'}</li>)}</ul></details></>}
+        {result && <><p className="story-caption">Downloaded {result.downloaded_granules} granules ({(result.downloaded_bytes/1024**2).toFixed(2)} MiB) in {result.elapsed_seconds}s. {result.observations.filter(o=>o.value!==null).length} valid index observations.</p>
+          <details><summary>Granule provenance ({result.granules.length})</summary>
+            <ul className="break-all text-sm">{result.granules.map(g=><li key={g.id} className="evidence-row">
+              <strong>{g.original_id}</strong>
+              <p>{g.provider ?? 'NASA CMR / LP DAAC'}. {g.period.start} to {g.period.end} UTC. {g.bytes} bytes ({g.cache_hit?'cached':'acquired'}).</p>
+              <p className="story-caption">CMR {g.cmr_id}. {g.task_id && `Task ${g.task_id}. `}SHA256 {g.checksum}.</p>
+            </li>)}</ul>
+          </details></>}
       </details>}
   </main>;
 };

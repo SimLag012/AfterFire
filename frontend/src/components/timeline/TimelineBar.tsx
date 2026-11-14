@@ -87,12 +87,12 @@ export const TimelineBar: React.FC<TimelineBarProps> = ({
   const dateRangePercent = ((currentTimestamp - minTimestamp) / Math.max(1, maxTimestamp - minTimestamp)) * 100;
 
   return (
-    <div className="glass-panel p-4 rounded-xl border border-dark-700/80 shadow-2xl space-y-4">
+    <section className="territory-timeline border-y border-dark-700 py-4 space-y-4" aria-label="Observation timeline">
       {/* Top Header & Controls */}
       <div className="flex flex-wrap items-center justify-between gap-3 border-b border-dark-800 pb-3">
         <div className="flex items-center space-x-2">
           <Clock className="w-4 h-4 text-accent-fire" />
-          <span className="text-sm font-bold text-white uppercase tracking-wider">Synchronized Timeline</span>
+          <h2 className="font-semibold">Observation timeline</h2>
           <span className="text-xs px-2 py-0.5 rounded bg-dark-800 font-mono text-slate-300 border border-dark-700">
             {currentDate}
           </span>
@@ -102,22 +102,24 @@ export const TimelineBar: React.FC<TimelineBarProps> = ({
         <div className="flex items-center space-x-2">
           <button
             onClick={stepBackward}
-            className="p-1.5 rounded-lg bg-dark-800 hover:bg-dark-700 text-slate-300 transition-colors"
+            className="grid size-11 place-items-center bg-dark-800 hover:bg-dark-700 text-slate-300"
             title="Step backward"
+            aria-label="Step backward"
           >
             <SkipBack className="w-4 h-4" />
           </button>
           <button
             onClick={() => setIsPlaying(!isPlaying)}
-            className="flex items-center space-x-1.5 px-3 py-1.5 rounded-lg bg-accent-fire hover:bg-accent-fire/90 text-white font-medium text-xs transition-colors shadow-lg shadow-accent-fire/20"
+            className="timeline-play flex min-h-11 items-center gap-2 px-3 text-sm font-medium"
           >
             {isPlaying ? <Pause className="w-3.5 h-3.5" /> : <Play className="w-3.5 h-3.5" />}
-            <span>{isPlaying ? 'Pause' : 'Play Timeline'}</span>
+            <span>{isPlaying ? 'Pause' : 'Play timeline'}</span>
           </button>
           <button
             onClick={stepForward}
-            className="p-1.5 rounded-lg bg-dark-800 hover:bg-dark-700 text-slate-300 transition-colors"
+            className="grid size-11 place-items-center bg-dark-800 hover:bg-dark-700 text-slate-300"
             title="Step forward"
+            aria-label="Step forward"
           >
             <SkipForward className="w-4 h-4" />
           </button>
@@ -132,9 +134,10 @@ export const TimelineBar: React.FC<TimelineBarProps> = ({
             <button
               key={phase.id}
               onClick={() => onPhaseChange(phase.id)}
-              className={`p-3 rounded-lg border text-left transition-all ${
+              aria-pressed={isActive}
+              className={`p-3 border text-left transition-colors ${
                 isActive
-                  ? `bg-dark-800/90 shadow-md ${phase.color}`
+                  ? `bg-dark-800 ${phase.color}`
                   : 'bg-dark-900/60 border-dark-800 text-slate-400 hover:border-dark-700 hover:text-slate-200'
               }`}
             >
@@ -142,9 +145,6 @@ export const TimelineBar: React.FC<TimelineBarProps> = ({
                 <span className={`text-xs font-bold ${isActive ? 'text-white' : 'text-slate-300'}`}>
                   {phase.label}
                 </span>
-                {isActive && (
-                  <span className="w-2 h-2 rounded-full bg-accent-fire animate-ping"></span>
-                )}
               </div>
               <div className="text-[11px] text-slate-400 truncate font-mono">
                 {phase.period}
@@ -155,7 +155,7 @@ export const TimelineBar: React.FC<TimelineBarProps> = ({
       </div>
 
       <div className="border-t border-dark-800 pt-3 space-y-3">
-        <div className="flex items-center justify-between gap-2 text-[11px] text-slate-400 uppercase tracking-wider">
+        <div className="flex items-center justify-between gap-2 text-sm text-slate-400">
           <div className="flex items-center gap-1.5">
             <Calendar className="w-3.5 h-3.5 text-accent-fire" />
             Historical date
@@ -180,14 +180,14 @@ export const TimelineBar: React.FC<TimelineBarProps> = ({
           <span>{maximumDate}</span>
         </div>
 
-        <div className="h-1.5 w-full rounded-full bg-dark-800 overflow-hidden">
+        <div aria-hidden="true" className="h-1 w-full bg-dark-800 overflow-hidden">
           <div
-            className="h-full rounded-full bg-gradient-to-r from-sky-500 via-amber-500 to-emerald-500"
+            className="h-full bg-accent-fire"
             style={{ width: `${Math.max(3, dateRangePercent)}%` }}
           />
         </div>
       </div>
-    </div>
+    </section>
   );
 };
 
