@@ -27,6 +27,10 @@ function paddedLocationBounds(result: LocationResult): LocationMapBounds[] {
   });
 }
 
+function pointInsideBounds(latitude:number,longitude:number,bounds:LocationMapBounds[]) {
+  return bounds.some(([[south,west],[north,east]])=>latitude>=south&&latitude<=north&&longitude>=west&&longitude<=east);
+}
+
 const parseNumber = (value: string | null, fallback: number): number => {
   if (value === null || value.trim() === '') return fallback;
   const parsed = Number(value);
@@ -157,6 +161,7 @@ export const ExplorerPage: React.FC = () => {
     : undefined;
   const onlineBounds = circleBox || outlinedBox || regionalBox || (tooWide ? '' : viewport);
   const queryBounds = source === 'online' ? onlineBounds : viewport;
+  const insideSelectedTerritory=(latitude:number,longitude:number)=>hasCircle || !focusBounds || pointInsideBounds(latitude,longitude,focusBounds);
 
   const updateParams = useCallback((updates: Record<string, string | undefined>) => {
     // Debounced map events must merge into the current URL, not an older render's filters.
@@ -219,7 +224,7 @@ export const ExplorerPage: React.FC = () => {
 
   const refine=useRef(false);
   const hotspotQuery=useQuery({
-    queryKey:['explorerHotspots',source,queryBounds,startDate,endDate,sensor,satellite,hasCircle,hasCircle ? centerLat : null,hasCircle ? centerLon : null,hasCircle ? radiusKm : null,source==='archive' ? afterUtc : null],
+    queryKey:['explorerHotspots',source,queryBounds,focusBounds,startDate,endDate,sensor,satellite,hasCircle,hasCircle ? centerLat : null,hasCircle ? centerLon : null,hasCircle ? radiusKm : null,source==='archive' ? afterUtc : null],
     queryFn:({signal})=>source==='online' ? loadObservations({bbox:queryBounds,start_date:startDate,end_date:endDate,sensor:aggregateSensor,satellite},refine.current,signal) : apiClient.getExplorerHotspots({bbox:queryBounds,start_date:startDate || undefined,end_date:endDate || undefined,
       sensor:aggregateSensor,satellite,after_utc:source==='archive' ? afterUtc : undefined,...(source==='archive' ? circleParams : {})},false,signal),
     enabled:(fireVisible || (source==='online' && candidatesVisible)) && supportedDates && !!queryBounds && hasValidViewport && hasValidDates && !invalidCircle && (source==='online' ? !!startDate && !!endDate : zoom>=10),
@@ -237,15 +242,19 @@ export const ExplorerPage: React.FC = () => {
   const firmsKeyMissing = source === 'online' && /api key not configured/i.test(observationErrorText ?? '');
   const detections = (hasValidDates && !invalidCircle ? hotspotQuery.data?.detections ?? [] : [])
     .filter(d => d.acq_date <= cutoff && (!afterUtc || d.acq_date === endDate))
-    .filter(d => source !== 'online' || !circleCenter || circleCenter.distanceTo([d.latitude,d.longitude]) <= radiusKm * 1000);
+    .filter(d => !circleCenter || circleCenter.distanceTo([d.latitude,d.longitude]) <= radiusKm * 1000)
+    .filter(d => insideSelectedTerritory(d.latitude,d.longitude));
 
   const matchingIds = new Set(detections.map(d => d.candidate_event_id));
   const onlineEvents = (hotspotQuery.data?.events ?? []).filter(event =>
     (!circleCenter || circleCenter.distanceTo([event.center_lat,event.center_lon]) <= radiusKm * 1000)
+    && insideSelectedTerritory(event.center_lat,event.center_lon)
     && (selectedPeriod !== '24h' || matchingIds.has(event.id))
     && [event.id,event.name,event.place,event.start_date,event.end_date].some(value=>value?.toLowerCase().includes(candidateSearch.trim().toLowerCase())));
   const candidateData=source==='online' ? hotspotQuery.data && {...hotspotQuery.data,events:onlineEvents,total_events:onlineEvents.length,total_detections:detections.length,index_status:'ready'} : candidateQuery.data;
-  const eventCandidates = hasValidDates && !invalidCircle ? candidateData?.events ?? [] : [];
+  const eventCandidates = (hasValidDates && !invalidCircle ? candidateData?.events ?? [] : [])
+    .filter(event=>!circleCenter || circleCenter.distanceTo([event.center_lat,event.center_lon])<=radiusKm*1000)
+    .filter(event=>insideSelectedTerritory(event.center_lat,event.center_lon));
   const scienceStatus=useQuery({queryKey:['satellite-status',selectedEventId],queryFn:({signal})=>satelliteApi.status(selectedEventId!,signal),enabled:!!selectedEventId && !!scienceLayer,retry:false});
   const scienceResult=useQuery({queryKey:['explorer-science',selectedEventId,scienceStatus.data?.result_job_id],queryFn:({signal})=>satelliteApi.result(selectedEventId!,scienceStatus.data?.result_job_id || undefined,signal),enabled:!!selectedEventId && !!scienceLayer && !!scienceStatus.data?.result_available,retry:false});
   const scienceObservations=scienceResult.data?.observations.filter(o=>o.index===scienceLayer && o.valid_pixels>0 && o.assets.length>0) || [];
@@ -262,6 +271,9 @@ export const ExplorerPage: React.FC = () => {
     burnedArea: false,
     satelliteContext: context,
   }), [sensor,context]);
+  const visibleClusters=(clusterQuery.data?.clusters??[])
+    .filter(cluster=>!circleCenter || circleCenter.distanceTo([cluster.latitude,cluster.longitude])<=radiusKm*1000)
+    .filter(cluster=>insideSelectedTerritory(cluster.latitude,cluster.longitude));
 
   const outsideArchive = Boolean(
     (startDate && archiveEnd && startDate > archiveEnd)
@@ -514,7 +526,7 @@ export const ExplorerPage: React.FC = () => {
                 </p>
               )}
               </>
-              {source==='online' && <p className="text-xs text-slate-400">{hasCircle ? 'Shows observations and candidate centers inside the circle. Candidate totals describe the whole grouping.' : outlinedBox ? 'Query area: Italy bounding box.' : regionalBox ? 'Query area: a 12° window around the map centre.' : 'Query area: visible map viewport.'}</p>}
+              {source==='online' && <p className="text-xs text-slate-400">{hasCircle ? 'Shows observations and candidate centers inside the circle. Candidate totals describe the whole grouping.' : focusBounds ? 'Results are restricted to the selected territory bounds.' : outlinedBox ? 'Query area: Italy bounding box.' : regionalBox ? 'Query area: a 12° window around the map centre.' : 'Query area: visible map viewport.'}</p>}
             </div>
             </details>
           </section>
@@ -609,7 +621,7 @@ export const ExplorerPage: React.FC = () => {
             <div className="flex items-center justify-between gap-2 border-b border-dark-700 pb-2">
               <h2 className="font-semibold">Map aggregates</h2>
               <span className="text-[11px] text-slate-400">
-                {clusterQuery.data?.clusters.length ?? 0} clusters from {(clusterQuery.data?.total_observations ?? clusterQuery.data?.total_detections ?? 0).toLocaleString()} observations
+                {visibleClusters.length} clusters from {visibleClusters.reduce((total,cluster)=>total+cluster.count,0).toLocaleString()} observations
               </span>
             </div>
             {clusterQuery.isFetching && <p role="status" className="py-2 text-xs text-slate-400">Updating visible map…</p>}
@@ -649,7 +661,7 @@ export const ExplorerPage: React.FC = () => {
                 ? <Link to={`/events/${selectedEventId}?returnTo=${encodeURIComponent(returnTo)}${name.includes('Reburn') || name==='Recovery Gap' ? '&view=reburn' : ''}`}>{name}</Link>
                 : <span>{name}</span>}</li>
             ))}</ul>
-            <p className="text-[11px] text-emerald-200">Area filter: {hasCircle ? 'search circle' : 'visible viewport'}</p>
+            <p className="text-[11px] text-emerald-200">Area filter: {hasCircle ? 'search circle' : focusBounds ? 'selected territory' : 'visible viewport'}</p>
           </div>}
           <div className="explorer-map-status" aria-label="Observation query status">
           {source === 'online' && !hasCircle && tooWide && !outlinedBox && !regionalBox && <p role="status" className="explorer-status-message">Zoom in to search a region up to 30° wide and high.</p>}
@@ -663,7 +675,7 @@ export const ExplorerPage: React.FC = () => {
           </div>}
           {hotspotQuery.data?.truncated && <div role="status" className="explorer-status-message">Partial acquisition. <button className="underline" disabled={hotspotQuery.isFetching} onClick={async()=>{refine.current=true;try{await hotspotQuery.refetch();}finally{refine.current=false;}}}>Load more of this area</button></div>}
           {source==='online' && hotspotQuery.data && hasValidDates && <details className="explorer-status-message">
-            <summary>{detections.length} online observations in {hasCircle ? 'the search circle' : outlinedBox ? 'Italy' : regionalBox ? 'the regional window' : 'the visible area'}</summary>
+            <summary>{detections.length} online observations in {hasCircle ? 'the search circle' : focusBounds ? 'the selected territory' : outlinedBox ? 'Italy' : regionalBox ? 'the regional window' : 'the visible area'}</summary>
             {hotspotQuery.data.coverage?.state === 'cached' && <p>Results loaded from cache.</p>}
             {hotspotQuery.data.coverage?.message.includes('partially') && <p>Partial coverage.</p>}
             <p>{hotspotQuery.data.coverage?.message}. Candidate totals describe their original acquisition window.</p>
@@ -689,7 +701,7 @@ export const ExplorerPage: React.FC = () => {
             labels={labels}
             terrain={terrain}
             contextDate={endDate || dateOnly(new Date())}
-            visualClusters={fireVisible && source==='archive' && hasValidDates && !invalidCircle && (zoom<10 || hotspotQuery.data?.truncated) ? clusterQuery.data?.clusters ?? [] : []}
+            visualClusters={fireVisible && source==='archive' && hasValidDates && !invalidCircle && (zoom<10 || hotspotQuery.data?.truncated) ? visibleClusters : []}
             focusedEvent={candidatesVisible && selectedEventId ? (focusedEvent?.id === selectedEventId ? focusedEvent : eventCandidates.find((event) => event.id === selectedEventId)) : undefined}
             onReturnToItaly={() => {
               setFocusBounds(undefined);
