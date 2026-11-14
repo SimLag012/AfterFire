@@ -283,8 +283,10 @@
 .return-to-place{max-width:calc(100% - 76px)}
 
 /* Candidates stay beside the map; opening filters never hides their list. */
-.explorer-candidate-panel{order:2;flex:0 0 340px;min-width:0;overflow-y:auto;background:var(--color-paper-2);border-left:1px solid var(--color-rule)}
-.explorer-candidate-panel>section{padding:16px;border-bottom:1px solid var(--color-rule)}
+.explorer-candidate-panel{order:2;flex:0 0 340px;min-width:0;overflow:hidden;display:flex;flex-direction:column;background:var(--color-paper-2);border-left:1px solid var(--color-rule)}
+.explorer-candidate-content>section{padding:16px;border-bottom:1px solid var(--color-rule)}
+.explorer-candidate-title{flex-shrink:0;padding:12px 16px;border-bottom:1px solid var(--color-rule)}
+.explorer-candidate-content{flex:1;min-height:0;overflow-y:auto}
 .explorer-candidate-panel h2{font-weight:620}
 @media(max-width:900px){
  .explorer-workspace{display:grid;grid-template-columns:minmax(0,1fr);grid-template-rows:minmax(260px,1fr) minmax(130px,35%)}
@@ -292,3 +294,5 @@
  .explorer-candidate-panel{grid-row:2;width:100%;border-left:0;border-top:1px solid var(--color-rule)}
  .explorer-sidebar{max-height:100%}
 }
+/* Long candidate lists scroll without pushing the hotspot calendar away. */
+.explorer-candidates>.space-y-2{max-height:32vh;overflow-y:auto;overscroll-behavior:contain}

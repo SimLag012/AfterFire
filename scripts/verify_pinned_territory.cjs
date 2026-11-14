@@ -15,7 +15,7 @@ const out=process.env.AFTERFIRE_BROWSER_EVIDENCE||'/tmp';
    return route.fulfill({json:{detections:[{id:'canaries',latitude:28.3,longitude:-16.5},{id:'balearics',latitude:39.6,longitude:3},{id:'mainland',latitude:40,longitude:-3},{id:'outside',latitude:40,longitude:9}].map(d=>({...d,acq_date:'2020-08-01',acq_time:'1300',satellite:'Aqua',instrument:'MODIS',confidence_level:'nominal',dataset_name:'UI-only fixture',is_synthetic_demo:'false'})),events:[],truncated:false,coverage:{state:'available',message:'UI regression fixture, not NASA evidence'}}});
   });
   await page.goto('http://127.0.0.1:3000/explorer?start=2020-08-01&end=2020-08-01&period=custom');
-  await page.getByRole('heading',{name:'Fire Activity Calendar',exact:true}).waitFor({state:viewport.width<500?'hidden':'visible'});
+  await page.getByRole('heading',{name:'Algorithmic candidate events',exact:true}).waitFor();
   await page.getByLabel('Search location or latitude, longitude').fill('spagna');
   const searchResponse=page.waitForResponse(r=>r.url().includes('/explorer/search?'));
   await page.getByRole('button',{name:'Search location',exact:true}).click();

@@ -19,10 +19,12 @@ async function get<T>(url:string,body?:unknown):Promise<T>{
 const value=(n:number|null|undefined)=>n==null?'Unavailable':n.toLocaleString(undefined,{maximumFractionDigits:1});
 const utcToday=()=>new Date().toISOString().slice(0,10);
 
-export function FireActivityPanel({bbox,circle,onArea,onClose,onMonth,onCandidates,inline=false}:{inline?:boolean;bbox:string;onArea:(area:{bbox:number[];geometry?:GeoJSON.Geometry;circle?:{lat:number;lon:number;radius_km:number}})=>void;circle?:{lat:number;lon:number;radius_km:number};onClose:()=>void;onMonth:(points:FireDetection[]|null,month:string)=>void;onCandidates:(start:string,end:string,bbox:number[])=>void}){
+export function FireActivityPanel({bbox,circle,onArea,onClose,onMonth,onCandidates,inline=false}:{inline?:boolean;bbox:string;onArea:(area:{bbox:number[];geometry?:GeoJSON.Geometry;circle?:{lat:number;lon:number;radius_km:number}})=>void;circle?:{lat:number;lon:number;radius_km:number};onClose:()=>void;onMonth:(points:FireDetection[]|null,month:string,partial?:boolean)=>void;onCandidates:(start:string,end:string,bbox:number[])=>void}){
   const location=useLocation();
   const [,setSearchParams]=useSearchParams();
   const initialParams=new URLSearchParams(location.search);
+  const requestedExplorerReturn=initialParams.get('returnTo');
+  const explorerReturn=requestedExplorerReturn && /^\/explorer(?:\?|$)/.test(requestedExplorerReturn) ? requestedExplorerReturn : '/explorer';
   const fromField=useRef<HTMLInputElement>(null);const toField=useRef<HTMLInputElement>(null);
   const [start,setStart]=useState('2000-11-01');const [end,setEnd]=useState(utcToday());
   const [study,setStudy]=useState(()=>(inline?'':initialParams.get('study'))||'');
@@ -40,7 +42,7 @@ export function FireActivityPanel({bbox,circle,onArea,onClose,onMonth,onCandidat
   useEffect(()=>{if(!detail.data)return;onMonth(detail.data.observations.map(o=>({id:o.id,latitude:o.latitude,longitude:o.longitude,acq_date:o.date,
     acq_time:o.timestamp_utc.slice(11,16).replace(':',''),satellite:o.satellite,instrument:o.sensor,confidence_raw:String(o.confidence??''),confidence_level:
     o.sensor==='MODIS'?(Number(o.confidence)>=80?'high':Number(o.confidence)>=30?'nominal':'low'):(String(o.confidence).toLowerCase()==='h'?'high':String(o.confidence).toLowerCase()==='l'?'low':'nominal'),
-    frp:o.frp_mw??undefined,daynight:o.daynight,dataset_name:o.product,is_synthetic_demo:'false'})),selected);
+    frp:o.frp_mw??undefined,daynight:o.daynight,dataset_name:o.product,is_synthetic_demo:'false'})),selected,detail.data.map_truncated);
       setCandidateDay(detail.data.observations.find(o=>o.date<=new Date(Date.now()-36*86400000).toISOString().slice(0,10))?.date||selected+'-01');
   },[detail.data,onMonth,selected,selectionRevision]);
   const remember=(key:string,month='')=>{
@@ -117,7 +119,7 @@ export function FireActivityPanel({bbox,circle,onArea,onClose,onMonth,onCandidat
     {chosen&&<div className="activity-detail"><h3>{selected} · {value(chosen.harmonized.value)}</h3>
       <p>{chosen.harmonized.status} · {chosen.harmonized.sensors.join(', ')} · uncertainty: {value(chosen.harmonized.lower)} – {value(chosen.harmonized.upper)}</p>
       {chosen.viirs_on_reference_scale&&<p>VIIRS on the reference scale: {value(chosen.viirs_on_reference_scale.value)} · interval {value(chosen.viirs_on_reference_scale.lower)} – {value(chosen.viirs_on_reference_scale.upper)} · {chosen.viirs_on_reference_scale.status}. Direct Aqua is preferred when available; estimates are never added together.</p>}
-      <p>Original records: MODIS {value(chosen.original_counts.MODIS)}; VIIRS {value(chosen.original_counts.VIIRS)}. {detail.data?.total_observations} records; {detail.data?.map_truncated?'first 20,000 shown on map':'shown on map'}.</p>
+      <p>Original records: MODIS {value(chosen.original_counts.MODIS)}; VIIRS {value(chosen.original_counts.VIIRS)}. {detail.data?.total_observations} records; {detail.data?.map_truncated?'first 20,000 records loaded':inline?'loaded for the observation calendar':'shown on map'}.</p>
       <details><summary>Coverage by NASA product</summary><table><thead><tr><th>Product</th><th>Archive acquired</th><th>State</th></tr></thead><tbody>{Object.entries(chosen.products).map(([p,d])=><tr key={p}><td>{p}</td><td>{Math.round(d.archive_fraction*100)}%</td><td>{d.states.join(', ')}</td></tr>)}</tbody></table></details>
       <p>Historical median: {value(chosen.anomaly.median)} · anomaly: {value(chosen.anomaly.absolute)} ({value(chosen.anomaly.relative_percent)}{chosen.anomaly.relative_percent!=null?'%':''}) · {chosen.anomaly.historical_n} comparable years. {chosen.anomaly.status}.</p>
       <label>Compare month<select value={compare} onChange={e=>setCompare(e.target.value)}><option value="">Choose a month</option>{months.map(m=><option key={m.month} value={m.month}>{m.month}</option>)}</select></label>
@@ -125,7 +127,7 @@ export function FireActivityPanel({bbox,circle,onArea,onClose,onMonth,onCandidat
       <label>Candidate window starts<input type="date" min={selected+'-01'} max={new Date(Date.now()-30*86400000).toISOString().slice(0,10)} value={candidateDay} onChange={e=>setCandidateDay(e.target.value)}/></label>
       <button onClick={()=>{const last=new Date(Date.parse(candidateDay+'T00:00:00Z')+6*86400000).toISOString().slice(0,10);onCandidates(candidateDay,last,data.data!.area.bbox);}} disabled={!candidateDay||candidateDay>new Date(Date.now()-36*86400000).toISOString().slice(0,10)}>Explore original candidates (7 days)</button>
       {detail.data?.candidate_links_limited&&<p>Candidate links are bounded; explore the original candidates for additional context.</p>}
-      {detail.data?.candidates.map(c=><div key={c.id}>{c.recovery_eligible?<Link to={c.url+'?returnTo='+encodeURIComponent('/explorer'+window.location.search)}>Recovery Story: {c.name}</Link>:<span>{c.name} · eligible after 30 days</span>}</div>)}
+      {detail.data?.candidates.map(c=><div key={c.id}>{c.recovery_eligible?<Link to={c.url+'?returnTo='+encodeURIComponent(inline ? explorerReturn : '/explorer'+window.location.search)}>Recovery Story: {c.name}</Link>:<span>{c.name} · eligible after 30 days</span>}</div>)}
       <p>Recovery links use the existing original candidate identity and observations. Recent thermal activity is browsable here independently of Recovery eligibility.</p>
     </div>}
   </section>;

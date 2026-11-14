@@ -37,7 +37,8 @@ function EventStory({eventId}:{eventId:string}) {
   const [historyOpen,setHistoryOpen]=useState(false);
   const [historyPoints,setHistoryPoints]=useState<import('../types').FireDetection[]|null>(null);
   const [historyMonth,setHistoryMonth]=useState('');
-  const showHistoryMonth=useCallback((points:import('../types').FireDetection[]|null,month:string)=>{setHistoryPoints(points);setHistoryMonth(month);},[]);
+  const [historyPartial,setHistoryPartial]=useState(false);
+  const showHistoryMonth=useCallback((points:import('../types').FireDetection[]|null,month:string,partial=false)=>{setHistoryPoints(points);setHistoryMonth(month);setHistoryPartial(partial);},[]);
   const client=useQueryClient();
   const [downloadSection,setDownloadSection]=useState<HTMLDivElement | null>(null);
   const [comparisonOpen,setComparisonOpen]=useState(params.has('assessment'));
@@ -167,7 +168,7 @@ function EventStory({eventId}:{eventId:string}) {
         {event.is_synthetic_demo==='true' && <p className="text-amber-300">This historical record contains synthetic observations.</p>}
       </header>
       <section className="story-section candidate-activity" aria-label="Candidate fire activity">
-        <ObservationCalendar detections={historyPoints??detail.detections} scope={historyPoints?'Historical observations · '+historyMonth:'Candidate · '+(event.place||event.name)} startDate={historyPoints?'':event.start_date} endDate={historyPoints?'':event.end_date}/>
+        <ObservationCalendar partial={!!historyPoints&&historyPartial} detections={historyPoints??detail.detections} scope={historyPoints?'Historical observations · '+historyMonth:'Candidate · '+(event.place||event.name)} startDate={historyPoints?'':event.start_date} endDate={historyPoints?'':event.end_date} description="Original FIRMS observation counts, not a fire count. Empty days do not establish absence of fire. Expand the historical calendar below to inspect acquired monthly activity for this candidate area."/>
         {historyPoints&&<button onClick={()=>setHistoryPoints(null)}>Return to candidate observations</button>}
         <button aria-expanded={historyOpen} onClick={()=>setHistoryOpen(v=>!v)}>Historical Fire Activity Calendar</button>
         {historyOpen&&<Suspense fallback={<p role="status">Loading historical calendar…</p>}><FireActivityPanel inline bbox={[bounds[0][1],bounds[0][0],bounds[1][1],bounds[1][0]].join(',')} onArea={()=>{}} onClose={()=>setHistoryOpen(false)} onMonth={showHistoryMonth} onCandidates={(start,end,box)=>{

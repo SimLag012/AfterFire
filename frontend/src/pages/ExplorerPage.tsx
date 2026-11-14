@@ -101,7 +101,6 @@ export const ExplorerPage: React.FC = () => {
   const colorMode=['sensor','date'].includes(searchParams.get('color') || '') ? searchParams.get('color') as 'sensor'|'date' : 'confidence';
   const opacity=Math.min(1,Math.max(0.1,parseNumber(searchParams.get('opacity'),0.85)));
   const [drawingCircle, setDrawingCircle] = useState(false);
-  const [activityOpen,setActivityOpen]=useState(true);
   useEffect(()=>{const next=restoredTerritory(searchParams.get('territory'));setFocusBounds(current=>JSON.stringify(current)===JSON.stringify(next)?current:next);setReturnPlace(searchParams.get('place')||'Italy');},[searchParams.get('territory'),searchParams.get('place')]);
   useEffect(()=>{
     if(searchParams.has('territory'))try{localStorage.setItem('afterfire-last-explorer',searchParams.toString());}catch{}
@@ -246,7 +245,7 @@ export const ExplorerPage: React.FC = () => {
     queryKey:['explorerHotspots',source,queryBounds,focusBounds,startDate,endDate,sensor,satellite,hasCircle,hasCircle ? centerLat : null,hasCircle ? centerLon : null,hasCircle ? radiusKm : null,source==='archive' ? afterUtc : null],
     queryFn:({signal})=>source==='online' ? loadSelectedObservations(selectedBoxes,{start_date:startDate,end_date:endDate,sensor:aggregateSensor,satellite},refine.current,signal) : apiClient.getExplorerHotspots({bbox:queryBounds,bounds:boundsFilter,start_date:startDate || undefined,end_date:endDate || undefined,
       sensor:aggregateSensor,satellite,after_utc:source==='archive' ? afterUtc : undefined,...(source==='archive' ? circleParams : {})},false,signal),
-    enabled:true && supportedDates && !!queryBounds && hasValidViewport && hasValidDates && !invalidCircle && (source==='online' ? !!startDate && !!endDate : true),
+    enabled:supportedDates && !!queryBounds && hasValidViewport && hasValidDates && !invalidCircle && (source==='online' ? !!startDate && !!endDate : true),
     retry:(attempt,error)=>attempt===0 && (error as {response?:{status?:number}}).response?.status===429,
     retryDelay:(_attempt,error)=>{
       const hint=(error as {response?:{headers?:Record<string,string>}}).response?.headers?.['retry-after'];
@@ -362,7 +361,7 @@ export const ExplorerPage: React.FC = () => {
           <input aria-label="Search location or latitude, longitude" placeholder="Search location or lat, lon" value={search} onChange={e=>setSearch(e.target.value)} minLength={2} maxLength={100}/>
           <button type="submit" aria-label="Search location"><Search size={18} aria-hidden="true" /></button>
         </form>
-        <button className="explorer-tool" aria-expanded={activityOpen} onClick={()=>{setActivityOpen(v=>!v);if(window.innerWidth<1024)setSidebarOpen(false);}}><CalendarDays className="inline h-4 w-4"/> Hotspot calendar</button>
+        <button className="explorer-tool" aria-controls="explorer-hotspot-calendar" onClick={()=>{setSidebarOpen(false);requestAnimationFrame(()=>document.getElementById('explorer-hotspot-calendar')?.scrollIntoView({block:'nearest'}));}}><CalendarDays className="inline h-4 w-4"/> Hotspot calendar</button>
         <Link className="explorer-tool" to={"/datasets?returnTo="+encodeURIComponent(returnTo)}>Data &amp; Sources</Link>
         <button className="explorer-tool" aria-expanded={layersOpen} aria-controls="map-layer-manager" onClick={()=>{setLayersOpen(v=>!v);if(window.innerWidth<1024)setSidebarOpen(false);}}><Layers3 size={16} aria-hidden="true" /> Layers</button>
         <button className="explorer-tool" onClick={()=>{localStorage.setItem('afterfire-view',window.location.search);setNotice('View saved on this device');}}>Save view</button>
@@ -518,7 +517,7 @@ export const ExplorerPage: React.FC = () => {
                 <button
                   type="button"
                   aria-pressed={drawingCircle}
-                  onClick={() => {setDrawingCircle((drawing) => !drawing);if(window.innerWidth<1024){setSidebarOpen(false);setActivityOpen(false);}}}
+                  onClick={() => {setDrawingCircle((drawing) => !drawing);if(window.innerWidth<1024){setSidebarOpen(false);}}}
                   className={`flex items-center justify-center gap-2 rounded px-3 py-2 text-xs font-semibold ${
                     drawingCircle ? 'bg-emerald-700 text-white' : 'bg-dark-800 text-slate-200 hover:bg-dark-700'
                   }`}
@@ -530,7 +529,7 @@ export const ExplorerPage: React.FC = () => {
                   type="button"
                   onClick={() => {
                     updateParams({ lat: undefined, lon: undefined, radius: undefined, event: undefined, candidatePage: undefined,study:undefined,month:undefined });
-                    setActivityGeometry(undefined);setDrawingCircle(false);
+                    setDrawingCircle(false);
                   }}
                   className="flex items-center justify-center gap-2 rounded border border-dark-700 px-3 py-2 text-xs text-slate-300 hover:bg-dark-800"
                 >
@@ -551,9 +550,10 @@ export const ExplorerPage: React.FC = () => {
 
           </aside>
           <aside className="explorer-candidate-panel" aria-label="Candidate events and hotspot calendar">
+          <header className="explorer-candidate-title"><h2>Algorithmic candidate events</h2></header>
+          <div className="explorer-candidate-content">
           <section className="explorer-candidates">
             <div className="explorer-section-heading">
-              <h2>Algorithmic candidate events</h2>
               {candidateData && (
                 <span className="text-[11px] text-slate-400">
                   {totalEvents.toLocaleString()} candidates from {candidateData.total_detections.toLocaleString()} observations
@@ -637,7 +637,7 @@ export const ExplorerPage: React.FC = () => {
               </p>
             )}
           </section>
-          {activityOpen && <ObservationCalendar detections={detections} scope={hasCircle ? 'Selected circle' : returnPlace+' · selected bounding box'} startDate={startDate} endDate={endDate} loading={hotspotQuery.isFetching} unavailable={hotspotQuery.isError || !hasValidDates || invalidCircle} partial={!!hotspotQuery.data?.truncated}/>}
+          <ObservationCalendar id="explorer-hotspot-calendar" detections={detections} scope={hasCircle ? 'Selected circle' : returnPlace+' · selected bounding box'} startDate={startDate} endDate={endDate} loading={hotspotQuery.isFetching} unavailable={hotspotQuery.isError || !hasValidDates || invalidCircle} partial={!!hotspotQuery.data?.truncated}/>
           {source === 'archive' && <section className="rounded-xl border border-dark-700 bg-dark-900 p-4">
             <div className="flex items-center justify-between gap-2 border-b border-dark-700 pb-2">
               <h2 className="font-semibold">Map aggregates</h2>
@@ -661,7 +661,7 @@ export const ExplorerPage: React.FC = () => {
               Aggregate markers are visual-only groups, not scientific event candidates.
             </p>
           </section>}
-
+          </div>
         </aside>
 
         <section className="explorer-map" aria-label="Satellite observation map">
@@ -694,7 +694,7 @@ export const ExplorerPage: React.FC = () => {
               <button onClick={()=>hotspotQuery.refetch()}>Retry observations</button>
             </div>
           </div>}
-          {hotspotQuery.data?.truncated && <div role="status" className="explorer-status-message">Partial acquisition. <button className="underline" disabled={hotspotQuery.isFetching} onClick={async()=>{refine.current=true;try{await hotspotQuery.refetch();}finally{refine.current=false;}}}>Load more of this area</button></div>}
+          {hotspotQuery.data?.truncated && <div role="status" className="explorer-status-message">{source==='archive'?'Archive display is limited to loaded records. Narrow the dates or area to see more.':'Partial acquisition.'} {source==='online'&&<button className="underline" disabled={hotspotQuery.isFetching} onClick={async()=>{refine.current=true;try{await hotspotQuery.refetch();}finally{refine.current=false;}}}>Load more of this area</button>}</div>}
           {source==='online' && hotspotQuery.data && hasValidDates && <details className="explorer-status-message">
             <summary>{detections.length} online observations in {hasCircle ? 'the search circle' : 'the selected territory'}</summary>
             {hotspotQuery.data.coverage?.state === 'cached' && <p>Results loaded from cache.</p>}
