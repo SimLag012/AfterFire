@@ -1,7 +1,0 @@
-{
-  "status": "passed",
-  "unchanged_files": 39064,
-  "new_files": 0,
-  "unchanged_bytes": 229392829,
-  "scope": "All retained TIFF/PNG/NumPy files in the existing analysis cache, byte-for-byte SHA-256."
-}

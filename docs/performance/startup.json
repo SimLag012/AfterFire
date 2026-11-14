@@ -1,1 +1,0 @@
-{"scope": "fresh isolated PostgreSQL schema + seed metadata; DEMO_MODE=false", "import_seconds": 1.0212346909975167, "lifespan_seconds": 0.8543445710020023, "total_seconds": 1.8757797040016158}

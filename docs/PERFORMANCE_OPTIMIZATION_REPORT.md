@@ -18,7 +18,7 @@ La baseline storica di 97,19 s di pipeline e 153,50 s request-to-result non vien
 
 - Cache operativa: 124.154 file fisici, 202.596.261 byte, con hardlink contati una volta. I blocchi allocati occupano 401.715.200 byte. L’inventario finale in sola lettura conferma lo stesso numero di file e byte (`performance/cache-volume.json`).
 - Inventario completo: 10,631 s. Conteggio byte via `scandir`: 0,886 s.
-- Import di `app.main` in runtime isolato: 1,363 s; non comprende l'inizializzazione della connessione DB o il preflight live. Misura completa su schema PostgreSQL vuoto isolato: import 1,021 s, lifespan (schema + seed metadati, demo disabilitata) 0,854 s, totale 1,876 s (`performance/startup.json`).
+- Import di `app.main` in runtime isolato: 1,363 s; non comprende l'inizializzazione della connessione DB o il preflight live. Misura completa su schema PostgreSQL vuoto isolato: import 1,021 s, lifespan (schema + soli metadati iniziali) 0,854 s, totale 1,876 s (`performance/startup.json`).
 - `prune_sources()` eseguiva l'inventario anche sotto soglia; il piano ripeteva un conteggio completo.
 - Ogni nuovo checkpoint chiamava `ensure_space()`, che ripercorreva l'intera cache sotto `quota.lock`. I download ripetevano anche la scansione dei `.part` per ogni blocco.
 - Il salvataggio comprimeva e calcolava il checksum rileggendo il file, mantenendo il lock di quota per tutta l'operazione.

@@ -16,7 +16,7 @@ Use `compose.yaml` plus `compose.clean.yaml`. The project is `afterfire-clean`; 
 sudo bash scripts/start_clean_environment.sh
 ```
 
-The database has no host port; API and frontend bind only 127.0.0.1:8000 and 127.0.0.1:3000. Schema creation and existing additive migrations run through `init_db`, serialized with the existing PostgreSQL advisory lock. Metadata is seeded, but DEMO_MODE=false prevents demo observations. There is no archive-import command in startup. No new migration framework or second queue is introduced.
+The database has no host port; API and frontend bind only 127.0.0.1:8000 and 127.0.0.1:3000. Schema creation and existing additive migrations run through `init_db`, serialized with the existing PostgreSQL advisory lock. Only dataset metadata is seeded. There is no archive-import command in startup. No new migration framework or second queue is introduced.
 
 The Explorer starts over Italy with on-demand FIRMS and the last seven UTC calendar days. Explicit archive URLs remain supported. An empty optional archive does not prevent global candidates being fetched and selected. Only selected candidates are persisted. NASA provider availability determines which dates are supported; no completeness claim follows from an empty response.
 
@@ -70,7 +70,7 @@ GitHub remote verification failed because HTTPS authentication is unavailable. N
 
 ## Verification performed for the clean configuration
 
-Compose validates with the clean overlay. Its resolved project, volumes, loopback ports and DEMO_MODE=false were checked without printing credentials. TypeScript compilation and Vite production build passed. FIRMS availability passed (12 products). All 186 SQLite regressions passed in 22.95 s in the isolated temporary test database, using Python 3.12.15. The sandbox blocked aiosqlite thread notifications even for SELECT 1; the same minimal query and suite passed outside the sandbox. Existing deprecation warnings remain (52,547); no test was changed. PostgreSQL tests, container schema/health, image/volume sizes, browser tests and live Earth Engine science remain pending. Localhost API/frontend were not reachable at the last check.
+Compose validates with the clean overlay. Its resolved project, volumes and loopback ports were checked without printing credentials. TypeScript compilation and Vite production build passed. FIRMS availability passed (12 products). All 186 SQLite regressions passed in 22.95 s in the isolated temporary test database, using Python 3.12.15. The sandbox blocked aiosqlite thread notifications even for SELECT 1; the same minimal query and suite passed outside the sandbox. Existing deprecation warnings remain (52,547); no test was changed. PostgreSQL tests, container schema/health, image/volume sizes, browser tests and live Earth Engine science remain pending. Localhost API/frontend were not reachable at the last check.
 
 
 ## Verified release deployment — 2026-11-06

@@ -92,3 +92,26 @@ compose*.bak.*
 # Native Windows runtime
 .local-runtime/
 .venv-windows/
+
+# Docs generated verification, test artifacts and audit dumps
+docs/*.json
+docs/*.jsonl
+docs/*.png
+docs/*.jpg
+docs/*.log
+docs/*.txt
+docs/*.xml
+docs/*.csv
+docs/**/*.json
+docs/**/*.jsonl
+docs/**/*.png
+docs/**/*.jpg
+docs/**/*.log
+docs/**/*.txt
+docs/**/*.xml
+docs/**/*.csv
+docs/performance/
+docs/universal-coverage/
+docs/unified-explorer/
+docs/fire-activity/
+
