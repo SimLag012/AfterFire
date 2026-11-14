@@ -509,7 +509,8 @@ export const ExplorerPage: React.FC = () => {
             </details>
           </section>
 
-          <section className="shrink-0 rounded-xl border border-dark-700 bg-dark-900 p-4">
+          {activityPoints&&<section className="rounded-xl border border-dark-700 bg-dark-900 p-4"><h2 className="font-semibold">Calendar observations</h2><p className="my-2 text-xs text-slate-300">The map shows original acquired records for {activityMonth}. Recovery links are in the selected calendar month.</p><button className="text-xs text-emerald-300 underline" onClick={()=>setActivityPoints(null)}>Return to Explorer observations</button></section>}
+          {!activityPoints && <section className="shrink-0 rounded-xl border border-dark-700 bg-dark-900 p-4">
             <div className="flex items-center justify-between gap-2 border-b border-dark-700 pb-2">
               <h2 className="font-semibold">Algorithmic candidate events</h2>
               {candidateData && (
@@ -597,8 +598,8 @@ export const ExplorerPage: React.FC = () => {
                 Candidate events are algorithmic groupings of real observations, not official fire perimeters or verified burned area.
               </p>
             )}
-          </section>
-          {source === 'archive' && <section className="rounded-xl border border-dark-700 bg-dark-900 p-4">
+          </section>}
+          {source === 'archive' && !activityPoints && <section className="rounded-xl border border-dark-700 bg-dark-900 p-4">
             <div className="flex items-center justify-between gap-2 border-b border-dark-700 pb-2">
               <h2 className="font-semibold">Map aggregates</h2>
               <span className="text-[11px] text-slate-400">
@@ -640,7 +641,7 @@ export const ExplorerPage: React.FC = () => {
             {['Burned Area','NDVI','EVI','Vegetation Anomalies','Recovery Story','Recovery Intelligence','Persistent Zones','Reburn History','Recovery Gap'].map(name=><div key={name} className="border-t border-dark-700 py-2">{selectedEventId ? <Link to={`/events/${selectedEventId}?returnTo=${encodeURIComponent(returnTo)}${name.includes('Reburn') || name==='Recovery Gap' ? '&view=reburn' : ''}`}>{name} → Event analysis</Link> : <span className="text-slate-500">{name} · select event</span>}</div>)}
             <p className="text-[11px] text-emerald-200">Area filter: {hasCircle ? 'search circle' : 'visible viewport'}</p>
           </div>}
-          <div className="explorer-map-status" aria-label="Observation query status">
+          <div className="explorer-map-status" aria-label="Observation query status" hidden={!!activityPoints}>
           {source === 'online' && !hasCircle && tooWide && !outlinedBox && !regionalBox && <p role="status" className="explorer-status-message">Zoom in to search a region up to 30° wide and high.</p>}
           {hotspotQuery.isFetching && <p role="status" className="explorer-status-message">{hotspotQuery.failureCount ? 'Request limit reached. Waiting to retry…' : 'Updating satellite observations…'}</p>}
           {hotspotQuery.isError && <div role="alert" className="explorer-status-message">{(hotspotQuery.error as {response?:{data?:{detail?:string}}}).response?.data?.detail || 'Hotspot request unavailable'} <button className="underline" onClick={()=>hotspotQuery.refetch()}>Retry observations</button></div>}
@@ -659,10 +660,10 @@ export const ExplorerPage: React.FC = () => {
             key={viewGeneration}
             showLegend={false}
             detections={activityPoints ?? (fireVisible ? detections : [])}
-            events={candidatesVisible ? eventCandidates : []}
-            scientificResult={scienceLayer ? scienceResult.data : undefined}
-            scientificObservation={scienceObservation}
-            showScientificBurned={scienceLayer==='burned'}
+            events={!activityPoints && candidatesVisible ? eventCandidates : []}
+            scientificResult={!activityPoints && scienceLayer ? scienceResult.data : undefined}
+            scientificObservation={activityPoints ? undefined : scienceObservation}
+            showScientificBurned={!activityPoints && scienceLayer==='burned'}
             initialBounds={initialBounds}
             initialZoom={initialZoom}
             observationBounds={searchParams.get('italyOutline') !== 'off' ? parseViewBounds(ITALY_BBOX) : undefined}
@@ -673,7 +674,7 @@ export const ExplorerPage: React.FC = () => {
             terrain={terrain}
             contextDate={endDate || dateOnly(new Date())}
             visualClusters={!activityPoints && fireVisible && source==='archive' && hasValidDates && !invalidCircle && (zoom<10 || hotspotQuery.data?.truncated) ? clusterQuery.data?.clusters ?? [] : []}
-            focusedEvent={candidatesVisible && selectedEventId ? (focusedEvent?.id === selectedEventId ? focusedEvent : eventCandidates.find((event) => event.id === selectedEventId)) : undefined}
+            focusedEvent={!activityPoints && candidatesVisible && selectedEventId ? (focusedEvent?.id === selectedEventId ? focusedEvent : eventCandidates.find((event) => event.id === selectedEventId)) : undefined}
             onReturnToItaly={() => {
               setFocusedEvent(undefined);
               setDrawingCircle(false);
@@ -697,13 +698,13 @@ export const ExplorerPage: React.FC = () => {
               setDrawingCircle(false);
             }}
           />
-          <div className="explorer-legend"><details><summary>Fire observation legend</summary><span>{colorMode==='sensor' ? '● Orange: MODIS · ● Blue: VIIRS' : colorMode==='date' ? 'Date colors · exact UTC date in popup' : '● Red: high · ● Amber: nominal · ● Yellow: low'}</span><small>Marker size is symbolic; it is not burned area. Aggregates show counts.</small>{candidatesVisible && <small>Green rings: algorithmic candidates, not official perimeters.</small>}{scienceObservation && <small>{scienceLayer}: −0.2 brown → 1 green · {scienceObservation.date} – {scienceObservation.period_end} · QA rejected transparent</small>}<small>Basemap: {terrain ? 'terrain' : 'satellite'} context · dates vary</small></details></div>
+          <div className="explorer-legend"><details><summary>Fire observation legend</summary><span>{colorMode==='sensor' ? '● Orange: MODIS · ● Blue: VIIRS' : colorMode==='date' ? 'Date colors · exact UTC date in popup' : '● Red: high · ● Amber: nominal · ● Yellow: low'}</span><small>Marker size is symbolic; it is not burned area. Aggregates show counts.</small>{!activityPoints && candidatesVisible && <small>Green rings: algorithmic candidates, not official perimeters.</small>}{!activityPoints && scienceObservation && <small>{scienceLayer}: −0.2 brown → 1 green · {scienceObservation.date} – {scienceObservation.period_end} · QA rejected transparent</small>}<small>Basemap: {terrain ? 'terrain' : 'satellite'} context · dates vary</small></details></div>
         </section>
       </main>
       <div className="explorer-timeline" aria-label="Fire observation timeline">
-        <button onClick={()=>shiftPeriod(-1)} disabled={!hasValidDates}>◀ Previous period</button>
-        <span><strong>FIRMS observations · UTC</strong><br/>{startDate || archiveStart || 'Archive start'} → {endDate || archiveEnd || 'Latest imported date'}</span>
-        <button onClick={()=>shiftPeriod(1)} disabled={!hasValidDates || endDate >= cutoff}>Next period ▶</button>
+        <button onClick={()=>shiftPeriod(-1)} disabled={!!activityPoints || !hasValidDates}>◀ Previous period</button>
+        <span><strong>{activityPoints ? 'Historical month observations · UTC' : 'FIRMS observations · UTC'}</strong><br/>{activityPoints ? activityMonth : `${startDate || archiveStart || 'Archive start'} → ${endDate || archiveEnd || 'Latest imported date'}`}</span>
+        <button onClick={()=>shiftPeriod(1)} disabled={!!activityPoints || !hasValidDates || endDate >= cutoff}>Next period ▶</button>
       </div>
     </div>
   );

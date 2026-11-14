@@ -23,7 +23,7 @@ export function FireActivityPanel({bbox,onClose,onMonth,onCandidates}:{bbox:stri
   const fromField=useRef<HTMLInputElement>(null);const toField=useRef<HTMLInputElement>(null);
   const [start,setStart]=useState('2000-11-01');const [end,setEnd]=useState(utcToday());
   const [study,setStudy]=useState(()=>localStorage.getItem('afterfire-activity-study')||'');
-  const [error,setError]=useState('');const [submitting,setSubmitting]=useState(false);const [selected,setSelected]=useState('');const [compare,setCompare]=useState('');const [candidateDay,setCandidateDay]=useState('');
+  const [error,setError]=useState('');const [submitting,setSubmitting]=useState(false);const [selected,setSelected]=useState('');const [selectionRevision,setSelectionRevision]=useState(0);const [compare,setCompare]=useState('');const [candidateDay,setCandidateDay]=useState('');
   const cached=useQuery({queryKey:['activity-studies'],queryFn:()=>get<{id:string;state:string;configuration:{bbox:number[];start_date:string;end_date:string}}[]>('/studies'),staleTime:30000});
   const status=useQuery({queryKey:['activity-status',study],queryFn:()=>get<{state:string;progress:number;error:string|null}>('/studies/'+study+'/status'),enabled:!!study,refetchInterval:q=>['queued','fetching'].includes(q.state.data?.state||'queued')?3000:false});
   const data=useQuery({queryKey:['activity-calendar',study,status.data?.state],queryFn:()=>get<Calendar>('/studies/'+study),enabled:!!study});
@@ -35,7 +35,7 @@ export function FireActivityPanel({bbox,onClose,onMonth,onCandidates}:{bbox:stri
     o.sensor==='MODIS'?(Number(o.confidence)>=80?'high':Number(o.confidence)>=30?'nominal':'low'):(String(o.confidence).toLowerCase()==='h'?'high':String(o.confidence).toLowerCase()==='l'?'low':'nominal'),
     frp:o.frp_mw??undefined,daynight:o.daynight,dataset_name:o.product,is_synthetic_demo:'false'})),selected);
       setCandidateDay(detail.data.observations.find(o=>o.date<=new Date(Date.now()-36*86400000).toISOString().slice(0,10))?.date||selected+'-01');
-  },[detail.data,onMonth,selected]);
+  },[detail.data,onMonth,selected,selectionRevision]);
   async function acquire(resume=false){setError('');setSubmitting(true);try{
     const config=resume&&data.data?{bbox:data.data.area.bbox,start_date:data.data.months[0]?.month+'-01',end_date:end}:{bbox:bbox.split(',').map(Number),start_date:fromField.current?.value||start,end_date:toField.current?.value||end};
     // Resume by the exact stored request, including partial boundary dates.
@@ -50,7 +50,7 @@ export function FireActivityPanel({bbox,onClose,onMonth,onCandidates}:{bbox:stri
   return <section className="fire-activity-panel" aria-label="Fire Activity Intelligence">
     <header><h2>Fire Activity Intelligence</h2><button onClick={onClose} aria-label="Close fire activity calendar">✕</button></header>
     <p>Historical thermal activity · UTC months · {data.data?.methodology_version||'fire-activity-1.0.0'}</p>
-    <p>Area: {bbox||'Select a region or draw an area on the map'}. A drawn circle uses its bounding box.</p>
+    <p>New request area: {bbox||'Select a region or draw an area on the map'}. A drawn circle uses its bounding box.</p>
     {!!cached.data?.length&&<label>Cached study<select aria-label="Cached study" value={study} onChange={e=>{const item=cached.data?.find(s=>s.id===e.target.value);if(!item)return;setStudy(item.id);setSelected('');onMonth(null,'');setStart(item.configuration.start_date);setEnd(item.configuration.end_date);localStorage.setItem('afterfire-activity-study',item.id);localStorage.setItem('afterfire-activity-config',JSON.stringify(item.configuration));}}><option value="">Choose acquired area</option>{cached.data.map(s=><option key={s.id} value={s.id}>{s.configuration.bbox.join(', ')} · {s.configuration.start_date} → {s.configuration.end_date} · {s.state}</option>)}</select></label>}
     <div className="activity-controls"><label>History from<input ref={fromField} type="date" min="2000-11-01" max={end} value={start} onInput={e=>setStart(e.currentTarget.value)} onChange={e=>setStart(e.target.value)}/></label>
       <label>History to<input ref={toField} type="date" min={start} max={utcToday()} value={end} onInput={e=>setEnd(e.currentTarget.value)} onChange={e=>setEnd(e.target.value)}/></label>
@@ -72,7 +72,7 @@ export function FireActivityPanel({bbox,onClose,onMonth,onCandidates}:{bbox:stri
           const acquired=m&&Object.values(m.products).some(p=>p.archive_fraction>0);
           const unsupported=n==null&&acquired&&!partial;
           const title=m?`${key}: ${value(n)}; ${m.harmonized.status}; ${m.harmonized.sensors.join(', ')||'no contributing sensors'}; archive fractions: ${Object.entries(m.products).map(([p,d])=>p+' '+Math.round(d.archive_fraction*100)+'%').join(', ')}; interval ${value(m.harmonized.lower)}–${value(m.harmonized.upper)}; cloud-free coverage unknown`:'Outside requested range';
-          return <button role="cell" key={key} aria-label={title} title={title} aria-selected={selected===key} disabled={!m} onClick={()=>setSelected(key)}
+          return <button role="cell" key={key} aria-label={title} title={title} aria-selected={selected===key} disabled={!m} onClick={()=>{setSelected(key);setSelectionRevision(v=>v+1);}}
             className={`activity-cell ${n==null?(partial?'partial':unsupported?'unreliable':'missing'):n===0?'zero':'available'} ${selected===key?'selected':''}`}
             style={n!=null&&n>0?{backgroundColor:`hsl(${45-35*Math.log1p(n)/Math.log1p(maximum)} 75% ${68-40*Math.log1p(n)/Math.log1p(maximum)}%)`}:undefined}>{n==null?(unsupported?'?':partial?'~':'·'):n===0?'0':''}</button>;
         })}</div>)}
