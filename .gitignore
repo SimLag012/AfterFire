@@ -63,6 +63,7 @@ Thumbs.db
 .codex/
 .agents/
 .aws/
+.hallmark/
 *.swp
 *.swo
 

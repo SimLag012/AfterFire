@@ -6,3 +6,22 @@
 .fire-activity-panel{top:12px;bottom:auto;max-height:calc(100% - 82px);z-index:1100}
 .fire-activity-panel select{max-width:100%;min-width:0}.fire-activity-panel table{width:100%;table-layout:fixed}.fire-activity-panel td,.fire-activity-panel th{text-align:left;overflow-wrap:anywhere;padding:3px}
 @media(max-width:640px){.fire-activity-panel{top:8px;max-height:calc(100% - 56px)}}
+
+.activity-intro{font-size:15px;color:#a7f3d0;font-weight:600}.activity-cell.anomalous{box-shadow:inset 0 0 0 2px #f472b6}.activity-calendar .activity-year{min-width:330px;grid-template-columns:36px repeat(12,minmax(18px,1fr));gap:3px}.activity-calendar .activity-year span.activity-cell{height:22px;border-radius:3px;color:#cbd5e1}
+
+.activity-year .activity-cell.provider{background:#881337;color:#fff}.fire-activity-panel textarea{width:100%;min-height:80px;background:#1e293b;border:1px solid #64748b;border-radius:4px;padding:8px}
+
+/* Match the shared frontend tokens while retaining distinct scientific states. */
+.fire-activity-panel{background:var(--color-paper-2);color:var(--color-ink);border-color:var(--color-rule);border-radius:0;box-shadow:none;font-size:13px}
+.fire-activity-panel header{gap:12px;align-items:start}.fire-activity-panel header h2{color:var(--color-accent);font-size:20px}
+.fire-activity-panel :is(button,input,select,textarea){background:var(--color-paper-3);color:var(--color-ink);border-color:var(--color-rule-strong);border-radius:0;min-height:36px;max-width:100%}
+.fire-activity-panel :is(button,summary):hover{color:var(--color-accent)}
+.fire-activity-panel button:disabled{opacity:1;color:var(--color-muted)}
+.fire-activity-panel .activity-intro{color:var(--color-positive)}
+.fire-activity-panel :is(.activity-exports,.activity-detail) a{color:var(--color-accent-2)}
+.fire-activity-panel .activity-detail{border-color:var(--color-rule)}
+.fire-activity-panel .activity-year .activity-cell{min-height:25px;border-color:var(--color-rule);color:#110f0d}
+.fire-activity-panel .activity-year .activity-cell.missing{background:var(--color-hover);color:var(--color-muted)}
+.fire-activity-panel .activity-year .activity-cell.unreliable{color:white}.fire-activity-panel .activity-year .activity-cell.provider{color:white}
+.fire-activity-panel .activity-year .activity-cell.selected{outline-color:var(--color-focus)}
+.fire-activity-panel .activity-year .activity-cell:focus-visible{outline:2px solid var(--color-focus);outline-offset:1px}

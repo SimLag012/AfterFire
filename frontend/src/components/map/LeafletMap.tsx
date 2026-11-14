@@ -47,6 +47,7 @@ interface LeafletMapProps {
   selectionEnabled?: boolean;
   onBoundsSelected?: (bounds: [[number, number], [number, number]]) => void;
   onViewportChange?: (bbox: string, zoom: number) => void;
+  selectionGeometry?: GeoJSON.Geometry;
   selectionCircle?: { center: [number, number]; radiusKm: number };
   circleSelectionEnabled?: boolean;
   onCircleSelected?: (circle: { center: [number, number]; radiusKm: number }) => void;
@@ -117,8 +118,8 @@ function CandidateFocus({ event, returnTo }: { event?: EventMapItem; returnTo?: 
   }, [event?.id, map]);
   return event ? <CircleMarker center={[event.center_lat, event.center_lon]} radius={16}
     pathOptions={{ color: '#34d399', weight: 4, fillOpacity: 0.15 }}>
-    <Tooltip permanent direction="top">Selected candidate · {event.detection_count} observations</Tooltip>
-    <Popup><strong>{event.place || event.name}</strong><p className="break-all">{event.id}</p><p>{event.start_date} – {event.end_date}</p>
+    <Tooltip permanent direction="top">Selected candidate ({event.detection_count} observations)</Tooltip>
+    <Popup><strong>{event.place || event.name}</strong><p className="break-all">{event.id}</p><p>{event.start_date} to {event.end_date}</p>
       <Link to={`/events/${encodeURIComponent(event.id)}?returnTo=${encodeURIComponent(returnTo || '/explorer')}`}>Analyze candidate</Link></Popup>
   </CircleMarker> : null;
 }
@@ -129,7 +130,7 @@ function ReturnToItalyControl({ onReturn }: { onReturn?: () => void }) {
     <button
       type="button"
       onClick={(event) => { event.stopPropagation(); onReturn?.(); map.fitBounds(ITALY_BOUNDS, { padding: [30, 30], maxZoom: 7 }); }}
-      className="absolute right-3 top-3 z-[1000] rounded-md border border-dark-600 bg-dark-950/90 px-3 py-2 text-xs font-semibold text-slate-100 shadow-lg hover:bg-dark-800"
+      className="absolute right-3 top-3 z-[1000] inline-flex min-h-11 items-center border border-dark-600 bg-dark-950 px-3 text-sm font-medium text-slate-100 hover:bg-dark-800"
     >
       Return to Italy
     </button>
@@ -157,7 +158,7 @@ function VisualClusterLayer({ clusters, colorMode, opacity }: { clusters: Explor
             <div className="space-y-1 text-xs">
               <div className="font-semibold text-orange-300">Visual observation aggregate</div>
               <div>{cluster.count.toLocaleString()} satellite detections</div>
-              <div>{cluster.start_date} – {cluster.end_date}</div>
+              <div>{cluster.start_date} to {cluster.end_date}</div>
               <div>Sensors: {cluster.sensors.join(', ') || 'not specified'}</div>
               <button type="button" onClick={() => map.setView([cluster.latitude, cluster.longitude], Math.min(19, map.getZoom() + 2))}>Zoom to observations</button>
               <div className="text-[10px] text-slate-400">
@@ -196,39 +197,89 @@ function RegionClickSelector({
   return null;
 }
 
-function CircleClickSelector({
+function CircleDrawSelector({
   enabled,
   onCircleSelected,
 }: {
   enabled: boolean;
   onCircleSelected?: (circle: { center: [number, number]; radiusKm: number }) => void;
 }) {
-  const points = useRef<L.LatLng[]>([]);
-  const [center, setCenter] = useState<L.LatLng | null>(null);
+  const map = useMap();
+  const selectCircle = useRef(onCircleSelected);
+  useEffect(() => { selectCircle.current = onCircleSelected; }, [onCircleSelected]);
+
   useEffect(() => {
-    points.current = [];
-    setCenter(null);
-  }, [enabled]);
-  useMapEvents({
-    click(event) {
-      if (!enabled || !onCircleSelected) return;
-      points.current.push(event.latlng);
-      if (points.current.length === 1) {
-        setCenter(event.latlng);
+    if (!enabled) return;
+    const container = map.getContainer();
+    const wasDraggable = map.dragging.enabled();
+    map.dragging.disable();
+
+    const style = { color: 'var(--color-positive)', interactive: false };
+    const preview = L.circle([0, 0], { ...style, radius: 0, dashArray: '6 4', fillOpacity: 0.15 });
+    const marker = L.circleMarker([0, 0], { ...style, radius: 4 });
+    let center: L.LatLng | undefined;
+    let press: { id: number; point: L.Point; location: L.LatLng } | undefined;
+    const radiusKm = (origin: L.LatLng, edge: L.LatLng) =>
+      Math.min(500, Math.max(0.1, Math.round(origin.distanceTo(edge) / 100) / 10));
+    const moved = (point: L.Point, start: L.Point) => point.distanceTo(start) >= 5;
+
+    const down = (event: PointerEvent) => {
+      if (!event.isPrimary || event.button !== 0 || press ||
+          (event.target as Element).closest('.leaflet-control, .leaflet-popup')) return;
+      press = { id: event.pointerId, point: map.mouseEventToContainerPoint(event), location: map.mouseEventToLatLng(event) };
+      container.setPointerCapture(event.pointerId);
+    };
+    const move = (event: PointerEvent) => {
+      const point = map.mouseEventToContainerPoint(event);
+      if (press ? event.pointerId !== press.id : !center || event.pointerType === 'touch') return;
+      const origin = center ?? press?.location;
+      if (!origin || (!center && press && !moved(point, press.point))) return;
+      preview.setLatLng(origin).setRadius(radiusKm(origin, map.mouseEventToLatLng(event)) * 1000).addTo(map);
+    };
+    const up = (event: PointerEvent) => {
+      if (event.pointerId !== press?.id) return;
+      const { point, location } = press;
+      press = undefined;
+      if (!center && !moved(map.mouseEventToContainerPoint(event), point)) {
+        center = location;
+        preview.remove();
+        marker.setLatLng(center).addTo(map);
         return;
       }
-
-      const [origin, edge] = points.current;
-      const radiusKm = origin.distanceTo(edge) / 1000;
-      onCircleSelected({
+      const origin = center ?? location;
+      center = undefined;
+      preview.remove();
+      marker.remove();
+      selectCircle.current?.({
         center: [origin.lat, origin.wrap().lng],
-        radiusKm: Math.min(500, Math.max(0.1, Math.round(radiusKm * 10) / 10)),
+        radiusKm: radiusKm(origin, map.mouseEventToLatLng(event)),
       });
-      points.current = [];
-      setCenter(null);
-    },
-  });
-  return center ? <CircleMarker center={center} radius={5} pathOptions={{ color: '#34d399' }} /> : null;
+    };
+    const cancel = (event: PointerEvent) => {
+      if (event.pointerId !== press?.id) return;
+      press = undefined;
+      preview.remove();
+    };
+
+    container.addEventListener('pointerdown', down);
+    container.addEventListener('pointermove', move);
+    container.addEventListener('pointerup', up);
+    container.addEventListener('pointercancel', cancel);
+    container.addEventListener('lostpointercapture', cancel);
+    return () => {
+      container.removeEventListener('pointerdown', down);
+      container.removeEventListener('pointermove', move);
+      container.removeEventListener('pointerup', up);
+      container.removeEventListener('pointercancel', cancel);
+      container.removeEventListener('lostpointercapture', cancel);
+      if (press && container.hasPointerCapture(press.id)) container.releasePointerCapture(press.id);
+      preview.remove();
+      marker.remove();
+      if (wasDraggable) map.dragging.enable();
+    };
+  }, [enabled, map]);
+
+  return null;
 }
 
 function ThermalDetectionClusters({
@@ -456,7 +507,7 @@ export const LeafletMap: React.FC<LeafletMapProps> = ({
   observationBounds,
   onViewportChange,
   selectedEventId,
-  selectionCircle,
+  selectionCircle, selectionGeometry,
   circleSelectionEnabled = false,
   onCircleSelected,
   visualClusters = [],
@@ -480,8 +531,8 @@ export const LeafletMap: React.FC<LeafletMapProps> = ({
   const gibsTileUrl = `https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/MODIS_Terra_CorrectedReflectance_TrueColor/default/${contextDate}/GoogleMapsCompatible_Level9/{z}/{y}/{x}.jpg`;
 
   return (
-    <div className={`relative w-full h-full min-h-[280px] rounded-xl overflow-hidden border border-dark-700 shadow-2xl bg-dark-950 ${circleSelectionEnabled ? 'afterfire-circle-drawing' : ''}`}>
-      <MapContainer
+    <div className={`relative w-full h-full min-h-[280px] overflow-hidden border border-dark-700 bg-dark-950 ${circleSelectionEnabled ? 'afterfire-circle-drawing' : ''}`}>
+      <MapContainer zoomAnimation={false}
         center={defaultCenter}
         zoom={area ? 10 : 5}
         maxZoom={19}
@@ -491,13 +542,14 @@ export const LeafletMap: React.FC<LeafletMapProps> = ({
       >
         <MapViewController bounds={selectionBounds || bounds || initialBounds || ITALY_BOUNDS} maxZoom={initialBounds ? 19 : area || selectionBounds ? 13 : 7} restore={!!initialBounds} restoreZoom={initialZoom} />
         {observationBounds && <Rectangle bounds={observationBounds} interactive={false} pathOptions={{color:"#d6e6e1", weight:1, dashArray:"5 6", fill:false}} />}
+        {selectionGeometry&&<GeoJSON key={JSON.stringify(selectionGeometry)} data={selectionGeometry} style={{color:"#38bdf8",weight:2,fillOpacity:.08}}/>}
         <SearchFocus position={focusPosition} />
         <CircleViewController circle={selectionCircle} />
         <CandidateFocus event={focusedEvent} returnTo={returnTo} />
-        {events.filter(e=>e.id!==focusedEvent?.id).map(event=><CircleMarker key={'candidate-'+event.id} center={[event.center_lat,event.center_lon]} radius={7} pathOptions={{color:'#34d399',weight:2,fillOpacity:0.2}}><Tooltip>Candidate · {event.name}</Tooltip><Popup><strong>{event.place || event.name}</strong><p className="break-all">{event.id}</p><p>{event.start_date} – {event.end_date} · {event.detection_count} observations</p><Link to={`/events/${encodeURIComponent(event.id)}?returnTo=${encodeURIComponent(returnTo || '/explorer')}`}>Analyze candidate</Link><p>Algorithmic grouping, not an official perimeter.</p></Popup></CircleMarker>)}
+        {events.filter(e=>e.id!==focusedEvent?.id).map(event=><CircleMarker key={'candidate-'+event.id} center={[event.center_lat,event.center_lon]} radius={7} pathOptions={{color:'#34d399',weight:2,fillOpacity:0.2}}><Tooltip>Candidate: {event.name}</Tooltip><Popup><strong>{event.place || event.name}</strong><p className="break-all">{event.id}</p><p>{event.start_date} to {event.end_date} ({event.detection_count} observations)</p><Link to={`/events/${encodeURIComponent(event.id)}?returnTo=${encodeURIComponent(returnTo || '/explorer')}`}>Analyze candidate</Link><p>Algorithmic grouping, not an official perimeter.</p></Popup></CircleMarker>)}
         {showReturnToItaly && <ReturnToItalyControl onReturn={onReturnToItaly} />}
         <RegionClickSelector enabled={selectionEnabled} onBoundsSelected={onBoundsSelected} />
-        <CircleClickSelector enabled={circleSelectionEnabled} onCircleSelected={onCircleSelected} />
+        <CircleDrawSelector enabled={circleSelectionEnabled} onCircleSelected={onCircleSelected} />
         <MapViewportReporter onViewportChange={onViewportChange} />
 
         <SatelliteBasemap labels={labels} terrain={terrain} />
@@ -513,8 +565,8 @@ export const LeafletMap: React.FC<LeafletMapProps> = ({
           />
         )}
 
-        {scientificResult && <GeoJSON key={scientificResult.job_id+'-aoi'} data={scientificResult.analysis_geometry} style={{color:'#38bdf8',fillOpacity:0,weight:2}} />}
-        {scientificResult && showScientificBurned && <GeoJSON key={scientificResult.job_id+'-burned'} data={scientificResult.burned_area} style={{color:'#fb923c',fillOpacity:0.25,weight:1}} />}
+        {scientificResult && <GeoJSON key={scientificResult.job_id+'-aoi'} data={scientificResult.analysis_geometry} style={{color:'var(--color-viirs)',fillOpacity:0,weight:2}} />}
+        {scientificResult && showScientificBurned && <GeoJSON key={scientificResult.job_id+'-burned'} data={scientificResult.burned_area} style={{color:'var(--color-modis)',fillOpacity:0.25,weight:1}} />}
         {scientificResult && scientificObservation?.assets.map(asset=><ImageOverlay key={scientificResult.job_id+asset.name} url={satelliteApi.asset(scientificResult.event_id,scientificResult.job_id,asset.name)} bounds={asset.bounds} opacity={opacity} />)}
         {/* Bounding box outline */}
         {bounds && (
@@ -535,11 +587,20 @@ export const LeafletMap: React.FC<LeafletMapProps> = ({
           />
         )}
         {selectionCircle && (
-          <Circle
-            center={selectionCircle.center}
-            radius={selectionCircle.radiusKm * 1000}
-            pathOptions={{ color: '#34d399', weight: 2, fillColor: '#34d399', fillOpacity: 0.1 }}
-          />
+          <>
+            <Circle
+              center={selectionCircle.center}
+              radius={selectionCircle.radiusKm * 1000}
+              pathOptions={{ color: '#34d399', weight: 2, fillColor: '#34d399', fillOpacity: 0.1 }}
+            />
+            {!circleSelectionEnabled && <Circle
+              center={selectionCircle.center}
+              radius={selectionCircle.radiusKm * 1000}
+              className="selection-circle-pulse"
+              interactive={false}
+              pathOptions={{ color: 'var(--color-positive)', weight: 2, fill: false }}
+            />}
+          </>
         )}
         {visualClusters.length > 0 && <VisualClusterLayer clusters={visualClusters} colorMode={colorMode} opacity={opacity} />}
 
@@ -588,13 +649,14 @@ export const LeafletMap: React.FC<LeafletMapProps> = ({
         />
       </MapContainer>
 
-      {showLegend && <div className="absolute bottom-4 left-4 right-4 z-20 rounded-lg glass-panel p-2 text-[10px] text-slate-200 sm:hidden">
-        <strong>Map legend</strong> · orange counts = observations, zoom to split.<br />
-        MODIS: 1 km nadir · VIIRS: 375 m nadir. Candidates are separate.
+      {showLegend && <div className="absolute bottom-4 left-4 right-4 z-20 glass-panel p-2 text-xs text-slate-200 sm:hidden">
+        <strong>Map legend</strong>
+        <p>Orange counts show observations. Zoom in to expand them.</p>
+        <p>MODIS: 1 km at nadir. VIIRS: 375 m at nadir.</p>
       </div>
       }
       {/* Floating Legend */}
-      {showLegend && <div className="absolute bottom-4 left-4 z-20 hidden sm:block glass-panel p-3 rounded-lg text-xs space-y-2 pointer-events-auto max-w-xs shadow-xl">
+      {showLegend && <div className="absolute bottom-4 left-4 z-20 hidden sm:block glass-panel p-3 text-xs space-y-2 pointer-events-auto max-w-xs">
         <div className="font-semibold text-slate-200 border-b border-dark-700 pb-1 flex items-center justify-between">
           <span>Map Legend</span>
           <span className="text-[10px] font-normal text-slate-400">Harmonized Layers</span>

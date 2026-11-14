@@ -1,5 +1,6 @@
 """Read-only, all-publication fingerprint comparison against the captured baseline."""
 import asyncio
+import argparse
 import hashlib
 import json
 from pathlib import Path
@@ -8,8 +9,8 @@ from app.db.database import AsyncSessionLocal
 from app.models.satellite_analysis import EventAnalysisResult,RecoveryAssessmentRecord,ReburnHistoryRecord
 
 async def main():
-    root=Path('/evidence')
-    before=json.loads((root/'recovery-fingerprints-before.json').read_text())
+    root=args.directory
+    before=json.loads((root/args.baseline).read_text())
     after={}
     async with AsyncSessionLocal() as db:
         for model in [EventAnalysisResult,RecoveryAssessmentRecord,ReburnHistoryRecord]:
@@ -27,4 +28,8 @@ async def main():
     (root/'recovery-preservation.json').write_text(json.dumps(result,indent=2)+'\n')
     print(json.dumps(result))
 
+parser=argparse.ArgumentParser(description=__doc__)
+parser.add_argument('--directory',type=Path,default=Path('/evidence'))
+parser.add_argument('--baseline',default='recovery-fingerprints-before.json')
+args=parser.parse_args()
 asyncio.run(main())

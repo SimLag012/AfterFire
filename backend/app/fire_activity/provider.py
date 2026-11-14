@@ -5,6 +5,7 @@ exhausted. Check the documented mapkey_status service BEFORE uncached transfers;
 keep a reserve for the Explorer and Recovery users. Never log authenticated URLs.
 """
 import asyncio
+from contextlib import asynccontextmanager
 import fcntl
 from datetime import datetime
 from pathlib import Path
@@ -28,6 +29,24 @@ async def quota_status():
         return {'status':'provider_unavailable'}
 
 
+@asynccontextmanager
+async def transfer_slot():
+    """Two cross-process activity transfers at most; quota is still checked each time."""
+    directory=settings.cache_dir/'fire-activity';directory.mkdir(parents=True,exist_ok=True)
+    handles=[(directory/f'transfer-{i}.lock').open('a') for i in range(2)]
+    acquired=None
+    try:
+        while acquired is None:
+            for handle in handles:
+                try: fcntl.flock(handle,fcntl.LOCK_EX|fcntl.LOCK_NB);acquired=handle;break
+                except BlockingIOError: pass
+            if acquired is None: await asyncio.sleep(.1)
+        yield
+    finally:
+        if acquired is not None: fcntl.flock(acquired,fcntl.LOCK_UN)
+        for handle in handles: handle.close()
+
+
 class ActivityFirms(FirmsProvider):
     @classmethod
     async def check_connectivity(cls,force=False):
@@ -49,7 +68,7 @@ class ActivityFirms(FirmsProvider):
 
     @classmethod
     async def _download_window(cls,destination,bbox,source,start_date,end_date,remaining_bytes,cache_result):
-        lock_path=settings.cache_dir/'fire-activity'/'download.lock'
+        lock_path=settings.cache_dir/'fire-activity'/'locks'/(destination.name+'.lock')
         lock_path.parent.mkdir(parents=True,exist_ok=True)
         with lock_path.open('a') as lock:
             while True:
@@ -58,13 +77,19 @@ class ActivityFirms(FirmsProvider):
             try:
                 # Another process may have filled the shared cache while this request waited.
                 if cache_result and destination.is_file():return destination,0
-                quota=await quota_status()
-                if quota['status']=='quota_reserved':
-                    raise FirmsProviderError('FIRMS transaction reserve reached. Resume after the 10-minute quota interval.',429,'600')
-                if quota['status']!='available':
-                    raise FirmsProviderError('FIRMS quota could not be verified; uncached acquisition paused.',503)
-                raw_bytes=sum(p.stat().st_size for p in settings.cache_dir.glob('*.csv') if p.is_file())
-                if raw_bytes+remaining_bytes>512*1024*1024:
-                    raise FirmsProviderError('FIRMS activity source cache budget reached.',413)
-                return await super()._download_window(destination,bbox,source,start_date,end_date,remaining_bytes,cache_result)
+                async with transfer_slot():
+                    quota=await quota_status()
+                    if quota['status']=='quota_reserved':
+                        raise FirmsProviderError('FIRMS transaction reserve reached. Resume after the 10-minute quota interval.',429,'600')
+                    if quota['status']!='available':
+                        raise FirmsProviderError('FIRMS quota could not be verified; uncached acquisition paused.',503)
+                    raw_bytes=sum(p.stat().st_size for p in settings.cache_dir.glob('*.csv') if p.is_file())
+                    if raw_bytes+2*remaining_bytes>512*1024*1024:
+                        raise FirmsProviderError('FIRMS activity source cache budget reached.',413)
+                    return await super()._download_window(destination,bbox,source,start_date,end_date,remaining_bytes,cache_result)
+            except asyncio.CancelledError:
+                # The parent writes a unique temporary file; cancellation must not leave it behind.
+                for temporary in destination.parent.glob(destination.name+'.*.part'):
+                    temporary.unlink(missing_ok=True)
+                raise
             finally:fcntl.flock(lock,fcntl.LOCK_UN)

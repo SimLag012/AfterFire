@@ -1,16 +1,25 @@
 """Scoped pre-commit scan; reports paths/rules, never credential values."""
 import json
+import argparse
 from pathlib import Path
 import re
 from app.core.config import settings
 
-root=Path('/repo')
-paths=['README.md','backend/app/fire_activity','backend/app/models/fire_activity.py','backend/app/tests/test_fire_activity.py',
+parser=argparse.ArgumentParser(description=__doc__)
+parser.add_argument('--root',type=Path,default=Path('/repo'))
+parser.add_argument('--output',default='docs/fire-activity/secret-scan.json')
+args=parser.parse_args()
+root=args.root
+paths=['.env.example','compose.yaml','design.md','frontend/src','frontend/index.html','frontend/tailwind.config.js','scripts/evaluate_activity_strata.py','scripts/confirm_activity_extension.py','scripts/verify_unified_browser.cjs','README.md','backend/app/fire_activity','backend/app/models/fire_activity.py','backend/app/tests/test_fire_activity.py',
        'backend/app/jobs/analysis_worker.py','backend/app/main.py','backend/app/models/__init__.py',
        'frontend/src/components/fireActivity','frontend/src/pages/ExplorerPage.tsx','docs/MODIS_VIIRS_HARMONIZATION.md',
        'docs/FIRE_ACTIVITY_CALENDAR.md','docs/HARMONIZATION_VALIDATION.md','docs/fire-activity',
        'scripts/validate_fire_activity.py','scripts/publish_fire_activity_sample.py','scripts/check_fire_activity_exports.py',
-       'scripts/verify_fire_activity_recovery.py','scripts/scan_fire_activity_secrets.py']
+       'scripts/verify_fire_activity_recovery.py','scripts/scan_fire_activity_secrets.py',
+       'frontend/src/app/App.tsx','frontend/src/components/layout','frontend/src/components/map/LeafletMap.tsx',
+       'frontend/src/pages/EventAnalysisPage.tsx','frontend/src/components/analysis/RecoveryComparisonPanel.tsx',
+       'frontend/src/styles/index.css','scripts/validate_activity_seasons.py','scripts/validate_activity_scales.py','scripts/verify_unified_activity.py','scripts/publish_activity_seasons.py','scripts/backfill_activity_accounting.py',
+       'docs/UNIFIED_EXPLORER_IMPLEMENTATION.md','docs/unified-explorer']
 secrets=[getattr(settings,key) for key in ('FIRMS_MAP_KEY','EARTHDATA_USERNAME','EARTHDATA_PASSWORD','EARTHDATA_TOKEN','AFTERFIRE_ADMIN_TOKEN','LLM_API_KEY') if len(getattr(settings,key))>=8]
 rules={'private_key':r'-----BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY-----',
        'aws_access_key':r'\b(?:AKIA|ASIA)[A-Z0-9]{16}\b','github_token':r'\bgh[pousr]_[A-Za-z0-9]{30,}\b',
@@ -28,6 +37,6 @@ for path in sorted(files):
         if re.search(pattern,text):findings.append({'path':str(path.relative_to(root)),'rule':rule})
     if any(value in text for value in secrets):findings.append({'path':str(path.relative_to(root)),'rule':'configured_credential'})
 report={'files_scanned':scanned,'findings':findings,'scope':'Task files only; configured credential values and named token/private-key patterns. No entropy scan.'}
-(root/'docs/fire-activity/secret-scan.json').write_text(json.dumps(report,indent=2)+'\n')
+(root/args.output).write_text(json.dumps(report,indent=2)+'\n')
 print(json.dumps(report))
 if findings:raise SystemExit(1)

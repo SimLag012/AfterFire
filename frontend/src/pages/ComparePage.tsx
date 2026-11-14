@@ -1,10 +1,16 @@
 import React from 'react';
-import {RecoveryComparisonPanel} from '../components/analysis/RecoveryComparisonPanel';
+import { RecoveryComparisonPanel } from '../components/analysis/RecoveryComparisonPanel';
+import '../styles/field-pages.css';
 
 export const ComparePage: React.FC = () => (
-  <main className="mx-auto w-full max-w-7xl space-y-6 px-4 py-8 text-slate-100 sm:px-6">
-    <h1 className="text-2xl font-bold">Compare post-fire vegetation evidence</h1>
-    <p className="text-sm text-slate-400">Compare locally referenced seasonal anomalies over a shared post-fire interval. Similar greenness does not establish full ecosystem recovery.</p>
+  <main className="field-page">
+    <header className="field-header">
+      <div>
+        <h1>Compare post-fire vegetation evidence</h1>
+        <p>Compare seasonal anomalies for two events over the same interval after the fire, each against its own local reference.</p>
+      </div>
+    </header>
     <RecoveryComparisonPanel />
+    <p className="field-quiet">Similar greenness does not establish full ecosystem recovery.</p>
   </main>
 );

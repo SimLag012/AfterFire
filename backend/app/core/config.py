@@ -66,6 +66,7 @@ class Settings(BaseSettings):
     MAX_DOWNLOAD_DAYS_PER_REQUEST: int = Field(default=5, ge=1, le=10)
     MAX_CONCURRENT_DOWNLOADS: int = Field(default=2, ge=1)
     MAX_DOWNLOAD_SIZE_MB: int = Field(default=250, ge=1)
+    AFTERFIRE_ACTIVITY_MAX_STORE_MB: int = Field(default=512, ge=32, le=4096)
     DATA_CACHE_ENABLED: bool = True
     ALLOW_GLOBAL_DOWNLOADS: bool = False
 

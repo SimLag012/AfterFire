@@ -1,0 +1,42 @@
+:root {
+  color-scheme: dark;
+  --color-paper: #161411;
+  --color-paper-2: #211e19;
+  --color-paper-3: #110f0d;
+  --color-hover: #302a23;
+  --color-rule: #423a31;
+  --color-rule-strong: #8d7d6d;
+  --color-ink: #f6efe4;
+  --color-ink-2: #ded3c4;
+  --color-muted: #bbac9a;
+  --color-accent: #ff9b65;
+  --color-accent-ink: #25150e;
+  --color-accent-2: #a8d8ef;
+  --color-focus: #bce6ff;
+  --color-positive: #a4d39b;
+  --color-warning: #f0cd89;
+  --color-danger: #ffb1a5;
+  --color-map: #152323;
+  --color-attribution: #100e0cee;
+  --color-scrim: #110f0d80;
+  --color-high: #ef4444;
+  --color-nominal: #f59e0b;
+  --color-low: #eab308;
+  --color-modis: #fb923c;
+  --color-viirs: #38bdf8;
+  --color-candidate-outline: #a78bfa;
+  --color-burned-outline: #f97316;
+  --color-detection: #ff3d16;
+  --font-body: "Instrument Sans", system-ui, sans-serif;
+  --font-data: "Geist Mono", ui-monospace, monospace;
+  --font-outlier: var(--font-data);
+  --control-height: 44px;
+  --app-header-height: 60px;
+}
+
+@media (prefers-contrast: more) {
+  :root {
+    --color-rule: var(--color-rule-strong);
+    --color-muted: var(--color-ink-2);
+  }
+}

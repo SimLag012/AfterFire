@@ -207,3 +207,201 @@ async def test_raw_exports_do_not_leak_unaccounted_partial_windows():
         # The retained original is still available to its actual acquisition scope.
         actual=ActivityStudy(id='part-scope',configuration=part,state='completed')
         assert len(await service.original_observations(db,actual,'2020-08'))==1
+
+
+def test_exact_shape_identity_area_and_conversion_guard():
+    circle=StudyRequest(bbox=(8,39,10,41),circle={'lat':40,'lon':9,'radius_km':20})
+    cfg=service.config(circle)
+    rectangle=service.config(StudyRequest(bbox=(8,39,10,41)))
+    assert service.area_key(cfg)!=service.area_key(rectangle)
+    assert 1250<service.selection_area(cfg)<1260
+    with pytest.raises(ValueError):StudyRequest(bbox=(9,40,9.01,40.01),circle={'lat':40,'lon':9,'radius_km':20})
+    geometry={'type':'Polygon','coordinates':[[[8,39],[10,39],[8,41],[8,39]]]}
+    polygon=service.config(StudyRequest(bbox=(8,39,10,41),geometry=geometry))
+    assert service.area_key(polygon) not in (service.area_key(cfg),service.area_key(rectangle))
+    assert service.selection_area(polygon)<service.selection_area(rectangle)
+    from app.fire_activity.science import load_model
+    estimate_input={'occupied_cell_days':{'SNPP':10},'month':'2020-08','area_km2':40000,'selection_supported_for_conversion':False}
+    assert estimate(estimate_input,['VIIRS_SNPP_SP'],load_model())['status']=='selection_shape_not_calibrated'
+    assert estimate(estimate_input,['MODIS_SP'],load_model())['status']=='reference_observed'
+
+
+@pytest.mark.asyncio
+async def test_shape_acquisition_filters_corners_and_preserves_originals(monkeypatch):
+    cfg=service.config(StudyRequest(bbox=(8,39,10,41),circle={'lat':40,'lon':9,'radius_km':20}))
+    async def fetch(*args,**kwargs):return [raw(),raw(longitude=9.8,latitude=40.8)]
+    monkeypatch.setattr(service.FirmsProvider,'fetch_area_firms',fetch)
+    state,points,evidence=await service.acquire(cfg,'MODIS_SP',date(2020,8,1),date(2020,8,5))
+    assert state=='complete' and len(points)==1
+    assert points[0]['original']['longitude']==9
+    assert evidence['record_count']==1
+    cfg=service.config(StudyRequest(bbox=(8,39,10,41),geometry={'type':'Polygon','coordinates':[[[8,39],[10,39],[8,41],[8,39]]]}))
+    state,points,_=await service.acquire(cfg,'MODIS_SP',date(2020,8,1),date(2020,8,5))
+    assert state=='complete' and len(points)==1
+
+
+@pytest.mark.asyncio
+async def test_history_yields_before_fetch_when_recovery_is_queued(monkeypatch):
+    from app.models.satellite_analysis import EventAnalysisJob
+    async with engine.begin() as conn:await conn.run_sync(Base.metadata.create_all)
+    async def available():return {'connected':True,'date_ranges':{}}
+    async def forbidden(*args,**kwargs):raise AssertionError('History must yield before provider acquisition')
+    monkeypatch.setattr(service.FirmsProvider,'check_connectivity',available)
+    monkeypatch.setattr(service.FirmsProvider,'fetch_area_firms',forbidden)
+    from sqlalchemy.ext.asyncio import AsyncSession
+    original=AsyncSession.scalar
+    async def priority(self,stmt,*args,**kwargs):
+        if 'event_analysis_jobs' in str(stmt):return 'queued-recovery'
+        return await original(self,stmt,*args,**kwargs)
+    monkeypatch.setattr(AsyncSession,'scalar',priority)
+    async with AsyncSessionLocal() as db:
+        study=await service.enqueue(db,StudyRequest(bbox=(13,40,13.1,40.1),start_date=date(2020,8,1),end_date=date(2020,8,31)))
+        key=study.id
+    # Select this specific lease; other tests may leave unrelated requests queued.
+    from datetime import timedelta
+    async with AsyncSessionLocal() as db:
+        study=await db.get(ActivityStudy,key);study.state='fetching';study.owner='priority-test';study.lease_until=datetime.utcnow()+timedelta(minutes=3)
+        await db.commit();await db.refresh(study)
+    await service.run(study)
+    async with AsyncSessionLocal() as db:
+        study=await db.get(ActivityStudy,key)
+        assert study.state=='queued' and study.progress==0
+
+
+@pytest.mark.asyncio
+async def test_pause_fences_inflight_checkpoint_and_status_reports_real_windows(monkeypatch):
+    from app.main import app
+    async with engine.begin() as conn:await conn.run_sync(Base.metadata.create_all)
+    request=StudyRequest(bbox=(14,40,14.1,40.1),start_date=date(2020,8,1),end_date=date(2020,8,31))
+    async with AsyncSessionLocal() as db:
+        study=await service.enqueue(db,request);key=study.id
+        study.state='fetching';study.owner='old-owner';await db.commit()
+    async with AsyncClient(transport=ASGITransport(app=app),base_url='http://test') as client:
+        status=(await client.get(f'/api/v1/fire-activity/studies/{key}/status')).json()
+        assert status['windows']['acquired']==0 and status['windows']['missing']==56
+        assert status['configuration']['start_date']=='2020-08-01'
+        response=await client.post(f'/api/v1/fire-activity/studies/{key}/pause')
+        assert response.status_code==200 and response.json()['state']=='partial'
+    async with AsyncSessionLocal() as db:
+        study=await db.get(ActivityStudy,key)
+        assert study.owner is None
+        resumed=await service.enqueue(db,request)
+        assert resumed.state=='queued'
+
+
+def test_annual_totals_do_not_mix_conversion_regimes():
+    from app.fire_activity.science import annual_statistics
+    months=[{'month':f'2020-{m:02}','complete':True,'harmonized':{'status':'reference_observed','calibration_id':None,'value':2}} for m in range(1,13)]
+    assert annual_statistics(months)[0]['value']==24
+    months[0]['harmonized'].update(status='calibrated_estimate',calibration_id='different-regime')
+    assert annual_statistics(months)[0]['value'] is None
+
+
+@pytest.mark.asyncio
+async def test_history_network_budget_is_resumable(monkeypatch):
+    async def timeout(*args):raise TimeoutError
+    monkeypatch.setattr(service,'acquire',timeout)
+    state,points,evidence=await service.acquire_bounded({},'MODIS_SP',date(2020,1,1),date(2020,1,5))
+    assert state=='provider_unavailable' and not points and '45-second' in evidence['reason']
+
+
+def test_extended_artifact_requires_content_hash_and_passed_seasons(monkeypatch,tmp_path):
+    from app.fire_activity import science
+    path=tmp_path/'calibration.json';monkeypatch.setattr(science,'MODEL_PATH',path)
+    artifact={'version':service.VERSION,'status':'validated','domain_calendar_months':[2],
+              'seasonal_validation':{'2':{'passed':True}}}
+    artifact['id']=service.identity(artifact)
+    extended=path.with_name('calibration-seasonal.json');extended.write_text(json.dumps(artifact))
+    assert len(science.load_extended_models())==1
+    artifact['domain_calendar_months']=[3];extended.write_text(json.dumps(artifact))
+    assert science.load_extended_models()==[]
+    artifact.pop('id');artifact['id']=service.identity(artifact);extended.write_text(json.dumps(artifact))
+    assert science.load_extended_models()==[]
+
+
+@pytest.mark.asyncio
+async def test_activity_transfer_limit_and_cancelled_atomic_download(monkeypatch,tmp_path):
+    import asyncio
+    from app.fire_activity import provider
+    active=0;maximum=0
+    async def contender():
+        nonlocal active,maximum
+        async with provider.transfer_slot():
+            active+=1;maximum=max(maximum,active)
+            await asyncio.sleep(.01)
+            active-=1
+    await asyncio.gather(*(contender() for _ in range(6)))
+    assert maximum==2
+    async def available():return {'status':'available'}
+    async def interrupted(cls,destination,*args):
+        destination.with_name(destination.name+'.test.part').write_text('partial bytes')
+        await asyncio.sleep(10)
+    monkeypatch.setattr(provider,'quota_status',available)
+    monkeypatch.setattr(provider.FirmsProvider,'_download_window',classmethod(interrupted))
+    destination=tmp_path/'atomic.csv'
+    with pytest.raises(TimeoutError):
+        await asyncio.wait_for(provider.ActivityFirms._download_window(destination,(8,39,10,41),'MODIS_SP',date(2020,1,1),date(2020,1,5),100,True),.1)
+    assert not destination.exists() and not list(tmp_path.glob('*.part'))
+
+
+@pytest.mark.asyncio
+async def test_history_does_not_download_redundant_nrt_when_standard_covers_dates(monkeypatch):
+    async with engine.begin() as conn:await conn.run_sync(Base.metadata.create_all)
+    async def available():return {'connected':True,'date_ranges':{p:{'min_date':'2020-01-01','max_date':'2024-12-31'} for p in ('MODIS_SP','MODIS_NRT')}}
+    products=[]
+    async def fetch(*args,**kwargs):products.append(kwargs['source']);return []
+    monkeypatch.setattr(service.FirmsProvider,'check_connectivity',available)
+    monkeypatch.setattr(service.FirmsProvider,'fetch_area_firms',fetch)
+    async with AsyncSessionLocal() as db:
+        study=await service.enqueue(db,StudyRequest(bbox=(15,40,15.1,40.1),start_date=date(2020,1,1),end_date=date(2020,1,5)))
+        key=study.id;study.state='fetching';study.owner='processing-test';await db.commit();await db.refresh(study)
+    await service.run(study)
+    assert products==['MODIS_SP']
+    async with AsyncSessionLocal() as db:
+        rows=(await db.execute(select(ActivityWindow).where(ActivityWindow.area_key==service.area_key(study.configuration)))).scalars().all()
+        assert next(r for r in rows if r.product=='MODIS_NRT').state=='standard_processing_preferred'
+
+
+@pytest.mark.asyncio
+async def test_provider_quota_pause_explains_why_and_retains_window(monkeypatch):
+    from app.providers.firms import FirmsProviderError
+    async with engine.begin() as conn:await conn.run_sync(Base.metadata.create_all)
+    async def available():return {'connected':True,'date_ranges':{'MODIS_SP':{'min_date':'2000-11-01','max_date':'2024-12-31'}}}
+    async def exhausted(*args,**kwargs):raise FirmsProviderError('Reserve reached',429,'600')
+    monkeypatch.setattr(service.FirmsProvider,'check_connectivity',available)
+    monkeypatch.setattr(service.FirmsProvider,'fetch_area_firms',exhausted)
+    async with AsyncSessionLocal() as db:
+        study=await service.enqueue(db,StudyRequest(bbox=(16,40,16.1,40.1),start_date=date(2020,1,1),end_date=date(2020,1,5)))
+        key=study.id;study.state='fetching';study.owner='quota-test';await db.commit();await db.refresh(study)
+    await service.run(study)
+    async with AsyncSessionLocal() as db:
+        study=await db.get(ActivityStudy,key)
+        assert study.state=='partial' and 'quota' in study.error.lower()
+        rows=(await db.execute(select(ActivityWindow).where(ActivityWindow.area_key==service.area_key(study.configuration)))).scalars().all()
+        assert len(rows)==1 and rows[0].state=='provider_unavailable' and rows[0].evidence['http_status']==429
+
+
+@pytest.mark.asyncio
+async def test_enclosing_archive_reuse_crops_originals_and_requires_full_day_coverage(monkeypatch):
+    async with engine.begin() as conn:await conn.run_sync(Base.metadata.create_all)
+    parent=service.config(StudyRequest(bbox=(20,39,22,41),start_date=date(2020,8,1),end_date=date(2020,8,5)))
+    points=[normalize(raw(longitude=21),'MODIS_SP'),normalize(raw(longitude=21.8,latitude=40.8),'MODIS_SP')]
+    async with AsyncSessionLocal() as db:
+        db.add(ActivityStudy(id='reuse-parent',configuration=parent,state='completed'))
+        db.add(ActivityWindow(id=service.window_id(parent,'MODIS_SP',date(2020,8,1),date(2020,8,5)),area_key=service.area_key(parent),
+            product='MODIS_SP',start_date='2020-08-01',end_date='2020-08-05',state='complete',observations=points,
+            evidence={'sha256':service.identity(points),'acquired_at':'2020-09-01T00:00:00Z'}))
+        await db.commit()
+    local=service.config(StudyRequest(bbox=(20.8,39.8,21.2,40.2),circle={'lat':40,'lon':21,'radius_km':10},start_date=date(2020,8,1),end_date=date(2020,8,5)))
+    async def no_network(*args,**kwargs):raise AssertionError('An enclosing verified query must be reused')
+    monkeypatch.setattr(service.FirmsProvider,'fetch_area_firms',no_network)
+    state,observations,evidence=await service.acquire(local,'MODIS_SP',date(2020,8,1),date(2020,8,5))
+    assert state=='complete' and len(observations)==1 and observations[0]['id']==points[0]['id']
+    assert len(evidence['source_window_ids'])==1 and evidence['source_query_bbox']==parent['bbox']
+    assert await service.enclosing_cached_observations(local,'MODIS_SP',date(2020,8,1),date(2020,8,6)) is None
+    assert await service.enclosing_cached_observations(local,'MODIS_NRT',date(2020,8,1),date(2020,8,5)) is None
+    # Changing shape while retaining the source bbox must also reuse the original CSV support.
+    polygon=service.config(StudyRequest(bbox=(20,39,22,41),geometry={'type':'Polygon','coordinates':[[[20,39],[22,39],[20,41],[20,39]]]},start_date=date(2020,8,1),end_date=date(2020,8,5)))
+    state,observations,evidence=await service.acquire(polygon,'MODIS_SP',date(2020,8,1),date(2020,8,5))
+    assert state=='complete' and [p['id'] for p in observations]==[points[0]['id']]
+    assert evidence['source_query_bbox']==parent['bbox'] and evidence['source_window_ids']

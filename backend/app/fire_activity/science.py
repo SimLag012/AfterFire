@@ -89,6 +89,26 @@ def load_model():
     return model
 
 
+def load_extended_models():
+    """Only reviewed, content-addressed, validated artifacts enter production."""
+    path=MODEL_PATH.with_name('calibration-seasonal.json')
+    if not path.exists(): return []
+    try: model=json.loads(path.read_text())
+    except (OSError,ValueError): return []
+    if not isinstance(model,dict): return []
+    if (model.get('version')!=VERSION or model.get('status')!='validated'
+        or model.get('id')!=identity({k:v for k,v in model.items() if k!='id'})
+        or not model.get('seasonal_validation')): return []
+    # Every enabled season must have independently passed the stored predeclared gates.
+    if not all(model['seasonal_validation'].get(str(m),{}).get('passed') is True for m in model.get('domain_calendar_months',[])): return []
+    return [model]
+
+
+def estimate_available(summary,products,models):
+    results=[estimate(summary,products,model) for model in models]
+    return next((point for point in results if point['value'] is not None),results[-1])
+
+
 def estimate(summary, complete_products, model):
     occ=summary['occupied_cell_days']
     if 'MODIS_SP' in complete_products:
@@ -100,11 +120,20 @@ def estimate(summary, complete_products, model):
     area=summary.get('area_km2')
     if 'VIIRS_SNPP_SP' not in complete_products or model.get('status')!='validated':
         return {'value':None,'status':'insufficient_calibration_or_coverage','lower':None,'upper':None,'sensors':[],'calibration_id':model.get('id')}
+    if summary.get('selection_supported_for_conversion') is False:
+        return {'value':None,'status':'selection_shape_not_calibrated','lower':None,'upper':None,'sensors':['VIIRS SNPP'],'calibration_id':model.get('id')}
+    side=model.get('domain_square_side_degrees')
+    bbox=summary.get('bbox')
+    if side is not None and (not bbox or abs(bbox[2]-bbox[0]-side)>1e-6 or abs(bbox[3]-bbox[1]-side)>1e-6):
+        return {'value':None,'status':'selection_support_not_calibrated','lower':None,'upper':None,'sensors':['VIIRS SNPP'],'calibration_id':model.get('id')}
     density=v*10000/area if area else None
     period=summary.get('month','')
     valid_time=(isinstance(period,str) and len(period)==7 and period[4]=='-' and period[:4].isdigit() and period[5:].isdigit()
                 and int(period[5:]) in model.get('domain_calendar_months',[])
                 and model.get('domain_years',[1,0])[0]<=int(period[:4])<=model.get('domain_years',[1,0])[1])
+    if valid_time and model.get('domain_years_by_month'):
+        years=model['domain_years_by_month'].get(str(int(period[5:])),[1,0])
+        valid_time=years[0]<=int(period[:4])<=years[1]
     if not valid_time or density is None or not model['domain_viirs_density'][0]<=density<=model['domain_viirs_density'][1] or not model['domain_area_km2'][0]<=area<=model['domain_area_km2'][1]:
         return {'value':None,'status':'outside_calibration_domain','lower':None,'upper':None,'sensors':['VIIRS SNPP'],'calibration_id':model['id']}
     a,b=model['coefficients']; z=a+b*np.log1p(density); q=model['log_residual_q80']; scale=area/10000
@@ -153,3 +182,14 @@ def history_statistics(months):
         seasonal.append({'month':month,'n':len(points),'median':float(np.median(points)) if valid else None,
                          'q25':float(np.quantile(points,.25)) if valid else None,'q75':float(np.quantile(points,.75)) if valid else None})
     return {'annual_trend':trend,'seasonal_distribution':seasonal}
+
+
+def annual_statistics(months):
+    output=[]
+    for year in sorted({m['month'][:4] for m in months}):
+        points=[m for m in months if m['month'].startswith(year) and m['complete']]
+        regimes={(m['harmonized']['status'],m['harmonized'].get('calibration_id')) for m in points}
+        supported=len(points)==12 and len(regimes)==1
+        output.append({'year':year,'value':sum(m['harmonized']['value'] for m in points) if supported else None,
+                       'complete_months':len(points),'status':'supported' if supported else 'incomplete_or_mixed_reference_year'})
+    return output
