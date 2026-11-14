@@ -16,16 +16,18 @@ import {
 
 const ITALY_BOUNDS: [[number, number], [number, number]] = [[35.3, 6.3], [47.2, 18.9]];
 const ITALY_CENTER: [number, number] = [41.25, 12.6];
+const WORLD_BOUNDS = L.latLngBounds([[-85.05112878, -180], [85.05112878, 180]]);
 
 interface LeafletMapProps {
   showLegend?: boolean;
   scientificResult?: SatelliteResult;
   scientificObservation?: SatelliteObservation;
   showScientificBurned?: boolean;
-  observationBounds?: [[number,number],[number,number]];
+  observationBounds?: [[number,number],[number,number]][];
   initialZoom?: number;
   initialBounds?: [[number,number],[number,number]];
   focusPosition?: [number,number];
+  focusBounds?: [[number,number],[number,number]][];
   colorMode?: 'confidence' | 'sensor' | 'date';
   labels?: boolean;
   terrain?: boolean;
@@ -46,7 +48,7 @@ interface LeafletMapProps {
   selectionBounds?: [[number, number], [number, number]];
   selectionEnabled?: boolean;
   onBoundsSelected?: (bounds: [[number, number], [number, number]]) => void;
-  onViewportChange?: (bbox: string, zoom: number) => void;
+  onViewportChange?: (bbox: string, zoom: number, center?: [number,number]) => void;
   selectionGeometry?: GeoJSON.Geometry;
   selectionCircle?: { center: [number, number]; radiusKm: number };
   circleSelectionEnabled?: boolean;
@@ -58,7 +60,7 @@ interface LeafletMapProps {
   focusedEvent?: EventMapItem;
 }
 
-function MapViewportReporter({ onViewportChange }: { onViewportChange?: (bbox: string, zoom: number) => void }) {
+function MapViewportReporter({ onViewportChange }: { onViewportChange?: (bbox: string, zoom: number, center?: [number,number]) => void }) {
   const map = useMap();
   const callback=useRef(onViewportChange);
   callback.current=onViewportChange;
@@ -66,12 +68,13 @@ function MapViewportReporter({ onViewportChange }: { onViewportChange?: (bbox: s
     const bounds = map.getBounds();
     const wrap = (lon: number) => ((lon + 180) % 360 + 360) % 360 - 180;
     const world = bounds.getEast() - bounds.getWest() >= 360;
+    const center=map.getCenter();
     callback.current?.([
       world ? -180 : wrap(bounds.getWest()),
       Math.max(-90, bounds.getSouth()),
       world ? 180 : wrap(bounds.getEast()),
       Math.min(90, bounds.getNorth()),
-    ].map((value) => value.toFixed(5)).join(','), map.getZoom());
+    ].map((value) => value.toFixed(5)).join(','), map.getZoom(), [center.lat,wrap(center.lng)]);
   }, [map]);
   const viewportEvents=useMemo(()=>({moveend:reportViewport,zoomend:reportViewport}),[reportViewport]);
   useMapEvents(viewportEvents);
@@ -81,9 +84,30 @@ function MapViewportReporter({ onViewportChange }: { onViewportChange?: (bbox: s
   return null;
 }
 
-function SearchFocus({position}: {position?: [number,number]}) {
+function WorldExtentController() {
   const map=useMap();
-  useEffect(()=>{if(position) map.setView(position,8);},[position,map]);
+  useEffect(()=>{
+    const fitViewportToWorld=()=>{
+      const minZoom=Math.max(0,map.getBoundsZoom(WORLD_BOUNDS,true));
+      map.setMinZoom(minZoom);
+      if(map.getZoom()<minZoom) map.setZoom(minZoom,{animate:false});
+      map.panInsideBounds(WORLD_BOUNDS,{animate:false});
+    };
+    fitViewportToWorld();
+    map.on('resize',fitViewportToWorld);
+    const observer=new ResizeObserver(fitViewportToWorld);
+    observer.observe(map.getContainer());
+    return ()=>{map.off('resize',fitViewportToWorld);observer.disconnect();};
+  },[map]);
+  return null;
+}
+
+function SearchFocus({position,bounds}: {position?: [number,number];bounds?: [[number,number],[number,number]][]}) {
+  const map=useMap();
+  useEffect(()=>{
+    if(bounds?.length) map.fitBounds(L.latLngBounds(bounds.flatMap(([southWest,northEast])=>[southWest,northEast])),{padding:[35,35],maxZoom:12});
+    else if(position) map.setView(position,8);
+  },[position,bounds,map]);
   return null;
 }
 
@@ -493,7 +517,7 @@ function DetectionPopup({ detection, events }: { detection: FireDetection; event
 
 export const LeafletMap: React.FC<LeafletMapProps> = ({
   showLegend = true, scientificResult, scientificObservation, showScientificBurned = false,
-  initialZoom, initialBounds, focusPosition, colorMode = 'confidence', labels = false, terrain = false, opacity = 0.85,
+  initialZoom, initialBounds, focusPosition, focusBounds, colorMode = 'confidence', labels = false, terrain = false, opacity = 0.85,
   area,
   detections = [],
   events = [],
@@ -535,15 +559,19 @@ export const LeafletMap: React.FC<LeafletMapProps> = ({
       <MapContainer zoomAnimation={false}
         center={defaultCenter}
         zoom={area ? 10 : 5}
+        minZoom={0}
         maxZoom={19}
+        maxBounds={WORLD_BOUNDS}
+        maxBoundsViscosity={1}
         scrollWheelZoom={true}
         className="absolute inset-0 z-10"
         worldCopyJump
       >
+        <WorldExtentController />
         <MapViewController bounds={selectionBounds || bounds || initialBounds || ITALY_BOUNDS} maxZoom={initialBounds ? 19 : area || selectionBounds ? 13 : 7} restore={!!initialBounds} restoreZoom={initialZoom} />
-        {observationBounds && <Rectangle bounds={observationBounds} interactive={false} pathOptions={{color:"#d6e6e1", weight:1, dashArray:"5 6", fill:false}} />}
+        {observationBounds?.map((outline,index)=><Rectangle key={`territory-outline-${index}`} bounds={outline} interactive={false} pathOptions={{color:"#d6e6e1", weight:1, dashArray:"5 6", fill:false}} />)}
+        <SearchFocus position={focusPosition} bounds={focusBounds} />
         {selectionGeometry&&<GeoJSON key={JSON.stringify(selectionGeometry)} data={selectionGeometry} style={{color:"#38bdf8",weight:2,fillOpacity:.08}}/>}
-        <SearchFocus position={focusPosition} />
         <CircleViewController circle={selectionCircle} />
         <CandidateFocus event={focusedEvent} returnTo={returnTo} />
         {events.filter(e=>e.id!==focusedEvent?.id).map(event=><CircleMarker key={'candidate-'+event.id} center={[event.center_lat,event.center_lon]} radius={7} pathOptions={{color:'#34d399',weight:2,fillOpacity:0.2}}><Tooltip>Candidate: {event.name}</Tooltip><Popup><strong>{event.place || event.name}</strong><p className="break-all">{event.id}</p><p>{event.start_date} to {event.end_date} ({event.detection_count} observations)</p><Link to={`/events/${encodeURIComponent(event.id)}?returnTo=${encodeURIComponent(returnTo || '/explorer')}`}>Analyze candidate</Link><p>Algorithmic grouping, not an official perimeter.</p></Popup></CircleMarker>)}

@@ -93,7 +93,7 @@ export const apiClient = {
     const res = await api.get(online ? '/global/hotspots' : '/explorer/hotspots', { params, signal, timeout: online ? 85000 : 30000 });
     return res.data;
   },
-  searchLocations: async (q: string): Promise<{results: {name:string;lat:number;lon:number}[];attribution:string}> => {
+  searchLocations: async (q: string): Promise<{results: {name:string;lat:number;lon:number;bbox?:[number,number,number,number];bounds?:[number,number,number,number][]}[];attribution:string}> => {
     const res = await api.get('/explorer/search', {params:{q}}); return res.data;
   },
 
