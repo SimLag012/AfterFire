@@ -1,17 +1,20 @@
 <div align="center">
 
-# AfterFire
+# 🔥 AfterFire
 
 ### The life of a forest after fire
+
+*Explore the fire. Compare the observations. Follow the vegetation.*
+
+[![Live demo](docs/images/link-demo.svg)](https://afterfire-public-demo.vercel.app)
+[![Watch video](docs/images/link-video.svg)](https://drive.google.com/file/d/1BwVHhXkj6QrwVJ8ON-PGzbh3a-ASdFA5/view?usp=sharing)
+[![Run locally](docs/images/link-local.svg)](#run-locally)
+[![Scientific methods](docs/images/link-science.svg)](docs/SCIENTIFIC_METHODOLOGY.md)
 
 ![NASA Space Apps 2026](docs/images/badge-space-apps.svg)
 ![FastAPI · Python](docs/images/badge-fastapi.svg)
 ![React · TypeScript](docs/images/badge-react.svg)
 [![License: MIT](docs/images/badge-license.svg)](LICENSE)
-
-Explore the fire. Compare the observations. Follow the vegetation.
-
-**[Open the live demo](https://afterfire-public-demo.vercel.app)** · **[Watch the demonstration](https://drive.google.com/file/d/1BwVHhXkj6QrwVJ8ON-PGzbh3a-ASdFA5/view?usp=sharing)** · [Run locally](#run-locally) · [Scientific methods](docs/SCIENTIFIC_METHODOLOGY.md)
 
 </div>
 
