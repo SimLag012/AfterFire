@@ -4,19 +4,26 @@
 
 ### The life of a forest after fire
 
+![NASA Space Apps 2026](docs/images/badge-space-apps.svg)
+![FastAPI · Python](docs/images/badge-fastapi.svg)
+![React · TypeScript](docs/images/badge-react.svg)
+[![License: MIT](docs/images/badge-license.svg)](LICENSE)
+
 Explore the fire. Compare the observations. Follow the vegetation.
 
-**[Open the live demo](https://afterfire-public-demo.vercel.app)** · [Run locally](#run-locally) · [Scientific methods](docs/SCIENTIFIC_METHODOLOGY.md)
+**[Open the live demo](https://afterfire-public-demo.vercel.app)** · **[Watch the demonstration](https://drive.google.com/file/d/1BwVHhXkj6QrwVJ8ON-PGzbh3a-ASdFA5/view?usp=sharing)** · [Run locally](#run-locally) · [Scientific methods](docs/SCIENTIFIC_METHODOLOGY.md)
 
 </div>
 
 AfterFire connects NASA MODIS and VIIRS fire observations with dated satellite evidence of vegetation change. Follow an event from thermal detections to burned cells, seasonal NDVI/EVI trajectories and evidence of repeated burning on the same ground.
 
+Built by **Ash Happens** for the **NASA Space Apps Challenge 2026**, addressing **Harmonization of MODIS and VIIRS Hot Spots**. The project brings historical fire activity and post-fire vegetation evidence into one workflow for researchers, environmental organizations and land managers.
+
 ## See it in action
 
-[![Recorded AfterFire walkthrough: Explorer, Before/After, vegetation timeline and native-cell recovery](docs/media/afterfire-demo.gif)](docs/media/afterfire-demo.mp4)
+[![Recorded AfterFire walkthrough: Explorer, Before/After, vegetation timeline and native-cell recovery](docs/media/afterfire-demo.gif)](https://drive.google.com/file/d/1BwVHhXkj6QrwVJ8ON-PGzbh3a-ASdFA5/view?usp=sharing)
 
-**[Watch the MP4 walkthrough](docs/media/afterfire-demo.mp4)** · Recorded from the real application with published scientific data. The [public demo](https://afterfire-public-demo.vercel.app) serves a limited, read-only snapshot; new acquisitions and analyses run in the full local application.
+**[Watch the project demonstration](https://drive.google.com/file/d/1BwVHhXkj6QrwVJ8ON-PGzbh3a-ASdFA5/view?usp=sharing)** — the video shared with the NASA Space Apps project submission. The animated preview above is a separate short walkthrough of the application using published scientific data. The [public demo](https://afterfire-public-demo.vercel.app) serves a limited, read-only snapshot; new acquisitions and analyses run in the full local application.
 
 ## From fire observations to recovery evidence
 
@@ -47,6 +54,19 @@ flowchart LR
 | Filter dates and sensors, inspect original records and follow candidate events. Historical calendars distinguish acquired coverage from missing periods. | Inspect individual cells, seasonal anomalies, descriptive trends and persistent negative evidence. Reburn follows repeated mapped burns on the same native cells. |
 
 Hotspots, candidate events and mapped burned cells have different meanings. Candidates are algorithmic groups, not official fire perimeters. Vegetation greenness does not establish complete ecological restoration, and missing observations do not establish absence of fire. Scientific overlays are dated measurements; the imagery beneath them is geographic context with independent dates. See the [methodology](docs/SCIENTIFIC_METHODOLOGY.md).
+
+## Data behind the story
+
+| Source | Role in AfterFire |
+| --- | --- |
+| NASA FIRMS · MODIS / VIIRS | Thermal observations with original sensor, acquisition time, confidence and FRP |
+| MODIS MCD64A1.061 | Mapped burned cells, burn dates and uncertainty at nominal 500 m resolution |
+| MODIS MOD13Q1.061 | NDVI/EVI at nominal 250 m resolution in 16-day composites |
+| NASA HLS v002 / ESA Sentinel-2 | High-resolution optical evidence where supported and available |
+| NASA GIBS / Worldview | Dated imagery for geographic context |
+| NASA CMR / AppEEARS · Google Earth Engine | Product discovery and configured, bounded data access |
+
+Geographic references also use GeoNames and OpenStreetMap-based services. Sources and acquisition paths retain their own coverage, access requirements and attribution. See [scientific methods](docs/SCIENTIFIC_METHODOLOGY.md) and [provider setup](docs/OPERATIONS.md).
 
 ## Run locally
 
@@ -116,4 +136,4 @@ TypeScript builds reject unused locals and parameters. Backend tests use isolate
 | [Scientific methodology](docs/SCIENTIFIC_METHODOLOGY.md) | Native grids, QA, seasonal references, harmonization, Reburn and limits |
 | [Static demo](docs/VERCEL_CLONE.md) | Export allowlist, snapshot integrity, preview and hosting |
 
-Developed for NASA Space Apps. AfterFire is an independent project, not an official NASA service or endorsement. Code is under the [MIT License](LICENSE); NASA data, geographic references and contextual imagery retain their respective [attribution and terms](docs/SCIENTIFIC_METHODOLOGY.md#visual-comparisons-limitations-and-attribution).
+Developed by Ash Happens for NASA Space Apps 2026. AfterFire is an independent project, not an official NASA service or endorsement. Code is under the [MIT License](LICENSE); NASA data, geographic references and contextual imagery retain their respective [attribution and terms](docs/SCIENTIFIC_METHODOLOGY.md#visual-comparisons-limitations-and-attribution).
