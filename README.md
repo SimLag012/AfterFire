@@ -1,20 +1,20 @@
 <div align="center">
 
-# AfterFire
+<h1><img src="docs/images/afterfire-mark.svg" width="38" height="38" alt="" /> AfterFire</h1>
+
+![NASA Space Apps 2026](https://img.shields.io/badge/NASA%20Space%20Apps-2026-0B3D91?labelColor=172554)
+[![FastAPI](https://img.shields.io/badge/FastAPI-Python-009688?logo=fastapi&logoColor=white&labelColor=00695C)](https://fastapi.tiangolo.com/)
+[![React](https://img.shields.io/badge/React-TypeScript-3178C6?logo=react&logoColor=white&labelColor=1E40AF)](https://react.dev/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-22A06B?labelColor=166534)](LICENSE)
+
+[![Live demo](https://img.shields.io/badge/Live%20demo-Open-E87932?logo=vercel&logoColor=white&labelColor=B64E1F)](https://afterfire-public-demo.vercel.app)
+[![Watch demonstration](https://img.shields.io/badge/Video-Watch-8B5CF6?logo=googledrive&logoColor=white&labelColor=6D28D9)](https://drive.google.com/file/d/1BwVHhXkj6QrwVJ8ON-PGzbh3a-ASdFA5/view?usp=sharing)
+[![Get started](https://img.shields.io/badge/Setup-Get%20started-0891B2?logo=github&logoColor=white&labelColor=0E7490)](#run-locally)
+[![Scientific methods](https://img.shields.io/badge/Docs-Scientific%20methods-D946EF?logo=readthedocs&logoColor=white&labelColor=A21CAF)](docs/SCIENTIFIC_METHODOLOGY.md)
 
 ### The life of a forest after fire
 
 *Explore the fire. Compare the observations. Follow the vegetation.*
-
-![NASA Space Apps 2026](https://img.shields.io/badge/NASA%20Space%20Apps-2026-0B3D91)
-[![FastAPI](https://img.shields.io/badge/FastAPI-Python-009688?logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
-[![React](https://img.shields.io/badge/React-TypeScript-3178C6?logo=react&logoColor=white)](https://react.dev/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-green)](LICENSE)
-
-[![Live demo](https://img.shields.io/badge/Live%20demo-Open-black?logo=vercel&logoColor=white)](https://afterfire-public-demo.vercel.app)
-[![Watch demonstration](https://img.shields.io/badge/Video-Watch-4285F4?logo=googledrive&logoColor=white)](https://drive.google.com/file/d/1BwVHhXkj6QrwVJ8ON-PGzbh3a-ASdFA5/view?usp=sharing)
-[![Get started](https://img.shields.io/badge/Setup-Get%20started-555?logo=github&logoColor=white)](#run-locally)
-[![Scientific methods](https://img.shields.io/badge/Docs-Scientific%20methods-555?logo=readthedocs&logoColor=white)](docs/SCIENTIFIC_METHODOLOGY.md)
 
 </div>
 
