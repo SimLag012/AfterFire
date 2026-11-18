@@ -1,20 +1,20 @@
 <div align="center">
 
-# 🔥 AfterFire
+# AfterFire
 
 ### The life of a forest after fire
 
 *Explore the fire. Compare the observations. Follow the vegetation.*
 
-[![Live demo](docs/images/link-demo.svg)](https://afterfire-public-demo.vercel.app)
-[![Watch video](docs/images/link-video.svg)](https://drive.google.com/file/d/1BwVHhXkj6QrwVJ8ON-PGzbh3a-ASdFA5/view?usp=sharing)
-[![Run locally](docs/images/link-local.svg)](#run-locally)
-[![Scientific methods](docs/images/link-science.svg)](docs/SCIENTIFIC_METHODOLOGY.md)
+![NASA Space Apps 2026](https://img.shields.io/badge/NASA%20Space%20Apps-2026-0B3D91)
+[![FastAPI](https://img.shields.io/badge/FastAPI-Python-009688?logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
+[![React](https://img.shields.io/badge/React-TypeScript-3178C6?logo=react&logoColor=white)](https://react.dev/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green)](LICENSE)
 
-![NASA Space Apps 2026](docs/images/badge-space-apps.svg)
-![FastAPI · Python](docs/images/badge-fastapi.svg)
-![React · TypeScript](docs/images/badge-react.svg)
-[![License: MIT](docs/images/badge-license.svg)](LICENSE)
+[![Live demo](https://img.shields.io/badge/Live%20demo-Open-black?logo=vercel&logoColor=white)](https://afterfire-public-demo.vercel.app)
+[![Watch demonstration](https://img.shields.io/badge/Video-Watch-4285F4?logo=googledrive&logoColor=white)](https://drive.google.com/file/d/1BwVHhXkj6QrwVJ8ON-PGzbh3a-ASdFA5/view?usp=sharing)
+[![Get started](https://img.shields.io/badge/Setup-Get%20started-555?logo=github&logoColor=white)](#run-locally)
+[![Scientific methods](https://img.shields.io/badge/Docs-Scientific%20methods-555?logo=readthedocs&logoColor=white)](docs/SCIENTIFIC_METHODOLOGY.md)
 
 </div>
 
