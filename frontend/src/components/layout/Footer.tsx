@@ -14,7 +14,7 @@ export const Footer: React.FC = () => {
               Open-source analysis of fire detections from MODIS and VIIRS and vegetation recovery after fire.
             </p>
             <div className="flex items-center space-x-2 text-xs text-slate-500 pt-2">
-              <span>NASA Space Apps Challenge 2026 Submission</span>
+              <span>Independent NASA Space Apps project</span>
             </div>
           </div>
 
@@ -50,11 +50,6 @@ export const Footer: React.FC = () => {
               <li>
                 <a href="https://worldview.earthdata.nasa.gov/" target="_blank" rel="noreferrer" className="flex items-center gap-1 hover:text-white transition-colors">
                   NASA Worldview / GIBS <ExternalLink className="w-3 h-3" />
-                </a>
-              </li>
-              <li>
-                <a href="https://www.spaceappschallenge.org/2026/challenges/harmonization-of-modis-and-viirs-hot-spots/" target="_blank" rel="noreferrer" className="flex items-center gap-1 hover:text-white transition-colors text-amber-400">
-                  Challenge Brief <ExternalLink className="w-3 h-3" />
                 </a>
               </li>
             </ul>

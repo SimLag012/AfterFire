@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Play, Pause, SkipBack, SkipForward, Calendar, Clock, Layers } from 'lucide-react';
+import { Play, Pause, SkipBack, SkipForward, Calendar, Clock } from 'lucide-react';
 
 export type TimelinePhase = 'before' | 'fire' | 'after' | 'recovery';
 

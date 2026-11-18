@@ -115,3 +115,7 @@ docs/universal-coverage/
 docs/unified-explorer/
 docs/fire-activity/
 
+
+# Curated README screenshots (generated execution artifacts stay ignored)
+!docs/images/
+!docs/images/*.webp

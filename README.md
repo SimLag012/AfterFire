@@ -1,364 +1,119 @@
-> **Release verification, 10 November 2026.** The Explorer reuses local FIRMS coverage; opening an event loads its saved Recovery Story or requests one analysis. The [requirements matrix](docs/ORIGINAL_REQUIREMENTS_AUDIT.md) records the browser scenarios, timings, database regressions and scientific limits.
+<div align="center">
 
+# AfterFire
 
-# AfterFire — The Life of a Forest After Fire
-*Understand the fire. Follow the recovery. Discover what happens next.*
+### The life of a forest after fire
 
-[![NASA Space Apps 2026](https://img.shields.io/badge/NASA%20Space%20Apps-2026%20Challenge-orange.svg)](https://www.spaceappschallenge.org/2026/challenges/harmonization-of-modis-and-viirs-hot-spots/)
-[![FastAPI](https://img.shields.io/badge/Backend-FastAPI%20%2F%20Python-009688.svg)](https://fastapi.tiangolo.com/)
-[![React 18](https://img.shields.io/badge/Frontend-React%2018%20%2F%20TypeScript-61dafb.svg)](https://react.dev/)
-[![TailwindCSS](https://img.shields.io/badge/Style-Dark%20Cinematic%20Tailwind-38bdf8.svg)](https://tailwindcss.com/)
-[![Tests](https://img.shields.io/badge/Tests-Pytest%20197%20SQLite%20%2B%20197%20PostGIS-brightgreen.svg)]()
+Explore the fire. Compare the observations. Follow the vegetation.
 
-An end-to-end scientific web application submitted for the **NASA Space Apps Challenge 2026**:
-**Harmonization of MODIS and VIIRS Hot Spots** with post-fire ecological recovery extension.
+**[Open the live demo](https://afterfire-public-demo.vercel.app)** · [Run locally](#run-locally) · [Scientific methods](docs/SCIENTIFIC_METHODOLOGY.md)
 
----
+</div>
 
-## 1. Project Vision
+AfterFire connects NASA MODIS and VIIRS fire observations with dated satellite evidence of vegetation change. Follow an event from thermal detections to burned cells, seasonal NDVI/EVI trajectories and evidence of repeated burning on the same ground.
 
-AfterFire reconstructs the complete environmental story of a territory before, during, and after a wildfire.
+## See it in action
 
-Rather than being another static map of fire markers, AfterFire addresses concrete scientific questions:
-- **Where and when was combustion activity detected?** Harmonizing NASA MODIS (1km) and VIIRS (375m) observations.
-- **What physical surface was burned?** Differentiating active point thermal hotspots from MODIS MCD64A1 500m pixel-mapped burned areas.
-- **What was the pre-fire baseline?** Calculating observed pre-fire seasonal median reference values from MODIS MOD13Q1 250m 16-day composites.
-- **How did canopy greenness evolve after the event?** Quantifying drop magnitude, seasonal anomalies and sustained returns to the reference band, and QA masking.
-- **Are there areas exhibiting delayed or truncated recovery?** Detecting recurring wildfires and compound disturbances before canopy restoration.
-- **How reliable are these conclusions?** Enforcing strict traceability, zero hallucinated figures, explicit remote-sensing limitations, and explicit observation provenance.
+[![Recorded AfterFire walkthrough: Explorer, Before/After, vegetation timeline and native-cell recovery](docs/media/afterfire-demo.gif)](docs/media/afterfire-demo.mp4)
 
-> **Disclaimer:** AfterFire is an independent community project developed for the NASA Space Apps Challenge 2026. It is not an official service or endorsement of NASA.
+**[Watch the MP4 walkthrough](docs/media/afterfire-demo.mp4)** · Recorded from the real application with published scientific data. The [public demo](https://afterfire-public-demo.vercel.app) serves a limited, read-only snapshot; new acquisitions and analyses run in the full local application.
 
----
+## From fire observations to recovery evidence
 
-## 2. Architecture & Technology Stack
-
-```
-afterfire/
-├── backend/
-│   ├── app/
-│   │   ├── main.py                     # FastAPI application & lifespan startup
-│   │   ├── core/config.py              # Pydantic BaseSettings & environment
-│   │   ├── db/database.py              # SQLAlchemy 2.0 async engine & session
-│   │   ├── models/                     # SQLAlchemy models (Area, Fire, Burned, Veg, Event, Rec)
-│   │   ├── schemas/                    # Pydantic validation & OpenAPI responses
-│   │   ├── providers/                  # NASA FIRMS, MCD64A1, MOD13Q1, GIBS adapters
-│   │   ├── analysis/                   # Harmonization, Recovery & Recurrence Engines, AI Analyst
-│   │   ├── jobs/seed_data.py           # Calibrated historical presets & initial data
-│   │   └── tests/                      # Automated test suite (Pytest & AsyncClient)
-│   ├── Dockerfile
-│   └── requirements.txt
-├── frontend/
-│   ├── src/
-│   │   ├── components/                 # Map, Timeline, Recovery & Calendar charts, Layout
-│   │   ├── pages/                      # Home, Explorer, Territory, Recovery, Recurrence, Compare, Report
-│   │   ├── api/client.ts               # Axios REST API client
-│   │   └── styles/index.css            # Dark cinematic Tailwind & Leaflet styles
-│   ├── Dockerfile                      # Multi-stage build + Nginx alpine
-│   ├── vite.config.ts
-│   └── package.json
-├── compose.yaml                        # Docker Compose deployment (PostGIS, Backend, Frontend)
-├── scripts/                            # dev.sh, test.sh
-├── .env.example
-└── README.md
+```mermaid
+flowchart LR
+    A["MODIS + VIIRS<br/>Thermal observations"] --> B["Explorer<br/>Candidate event"]
+    B --> C["MCD64A1<br/>Observed burned cells"]
+    B --> D["MOD13Q1<br/>Dated NDVI / EVI"]
+    C --> E["Recovery Story<br/>Before / After + timeline"]
+    D --> E
+    E --> F["Recovery Intelligence<br/>Seasonal and native-cell evidence"]
+    C --> G["Reburn + Recovery Gap<br/>Repeated burning on shared cells"]
+    D --> G
+    style A fill:#251e17,stroke:#f69c63,color:#fff4e6
+    style E fill:#1b2b25,stroke:#85b6a4,color:#effbf5
+    style F fill:#1b2b25,stroke:#85b6a4,color:#effbf5
 ```
 
-### Backend
-- **Python 3.12+** / **FastAPI**: Asynchronous REST API with automatic OpenAPI documentation (`/docs`).
-- **SQLAlchemy 2.0 (Async)**: Dual support for SQLite (`sqlite+aiosqlite`) for zero-setup local execution and PostgreSQL/PostGIS.
-- **NumPy, Pandas, SciPy, Shapely**: Remote-sensing numerical calculations and spatiotemporal clustering.
-- **HTTPX**: Non-blocking client for NASA FIRMS Area API and external feeds.
-- **Pytest & Pytest-Asyncio**: Comprehensive automated validation suite.
+### One territory, several kinds of evidence
 
-### Frontend
-- **React 18 & TypeScript (Vite)**: Component-driven architecture.
-- **Tailwind CSS**: Dark cinematic palette with emerald, fire-red, amber, and slate accents.
-- **React Leaflet & Leaflet**: High-performance interactive cartography with NASA GIBS true color context.
-- **Recharts**: Scientific time-series charts with confidence bands and dual-axis calendars.
-- **TanStack React Query**: Efficient client-side caching, stale-time handling, and loading states.
-- **Lucide React**: Vector scientific icons.
+![Before/After view of real MODIS composites for the July 2023 Ródos candidate](docs/images/recovery-story.webp)
 
----
+**Recovery Story** pairs dated composites on a shared map, with a movable divider, observation playback and NDVI/EVI charts. Seasonal references give context to the observed changes; missing and QA-rejected observations remain gaps.
 
-## 3. NASA Challenge Requirements & Scientific Engines
+| Explore the observations | Inspect recovery on the ground |
+| --- | --- |
+| [![Explorer with archived MODIS/VIIRS observations and a hotspot calendar](docs/images/explorer.webp)](docs/images/explorer.webp) | [![Recovery Intelligence with seasonal reference classes on native MODIS cells](docs/images/recovery-intelligence.webp)](docs/images/recovery-intelligence.webp) |
+| Filter dates and sensors, inspect original records and follow candidate events. Historical calendars distinguish acquired coverage from missing periods. | Inspect individual cells, seasonal anomalies, descriptive trends and persistent negative evidence. Reburn follows repeated mapped burns on the same native cells. |
 
-### 3.1 Harmonization of MODIS and VIIRS Hot Spots (Challenge Core)
-MODIS (1km nominal nadir) and VIIRS (375m I-band) differ fundamentally in pixel footprint and radiant sensitivity:
-- VIIRS detects fires up to 3x–5x more frequently than MODIS over the exact same flaming perimeter.
-- AfterFire **preserves full sensor provenance**: instrument, satellite, acquisition time, raw confidence, and Fire Radiative Power (MW).
-- Standardizes confidence into normalized tiers: `high`, `nominal`, `low`.
-- Groups observations into multi-sensor activity calendars without double-counting physical fire perimeters.
-- Implements greedy spatiotemporal proximity grouping (7km / 3-day max temporal gap) to infer candidate disturbance events.
+Hotspots, candidate events and mapped burned cells have different meanings. Candidates are algorithmic groups, not official fire perimeters. Vegetation greenness does not establish complete ecological restoration, and missing observations do not establish absence of fire. Scientific overlays are dated measurements; the imagery beneath them is geographic context with independent dates. See the [methodology](docs/SCIENTIFIC_METHODOLOGY.md).
 
-### 3.2 Seasonal post-fire vegetation evidence
+## Run locally
 
-The supported event workflow starts in [Explorer](http://localhost:3000/explorer) or the [published Recovery Stories](http://localhost:3000/recovery). FIRMS candidates lead to bounded MOD13Q1.061 and MCD64A1.061 analyses through Earth Engine. Hotspots and their provisional buffer are distinct from QA-screened native mapped burned cells.
+Run these commands from the directory containing this README and `compose.yaml`. From the parent NASA workspace, first run `cd afterfire`.
 
-For each NDVI/EVI composite, the reference uses wholly pre-fire observations within ±24 seasonal days, at least three observations from two years. Baseline = median; reference half-band = `max(0.05, 1.4826 × MAD)`; anomaly = observed − baseline. Missing values stay null. Descriptive trend, initial impact, latest supported anomaly, sustained return, historical negative periods and native-cell support are separate indicators. There is no recovery score or claim of full ecological restoration. See [methodology](docs/RECOVERY_ASSESSMENT_METHODOLOGY.md).
+### Docker Compose
 
-Legacy area reports remain accessible and explicitly identify their older non-seasonal mean/quotient method. They are not the event Recovery Story or the event comparison methodology.
-
-### 3.3 Multiple Wildfire Recurrence & Interrupted Regrowth
-- Tracks return intervals between consecutive events on the same territory.
-- Detects compound disturbances where a subsequent fire occurs before vegetation returns to pre-fire baseline.
-
-### 3.4 AI Analyst: Deterministic & Fact-Grounded LLM
-- **Default Mode**: 100% deterministic scientific explainer generating verified narrative syntheses directly from computed metrics.
-- **Optional Mode**: Fact-grounded LLM (OpenAI GPT-4o-mini) when `LLM_API_KEY` is provided, strictly constrained to cite only computed metrics and never hallucinate numbers.
-
----
-
-## 4. Quick Start & Execution
-
-### Option A: Local Development (Fastest, zero-setup)
-
-#### 1. Prerequisites
-- Python 3.12+
-- Node.js 20+ and npm (Router 7 requires Node 20+)
-
-#### 2. Backend Setup
-```bash
-cd afterfire/backend
-python3 -m venv .venv
-source .venv/bin/activate
-pip install -r requirements.txt
-cp ../.env.example .env
-uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
-```
-The backend initializes dataset metadata. Configure a NASA FIRMS MAP key to retrieve live observations.
-
-The Explorer opens on Italy and defaults to bounded online FIRMS observations. Select archive mode explicitly to inspect locally imported history.
-For complete Italy ingestion, resumable annual downloads, API backfill and indexing, see [backend/README.md](backend/README.md).
-The map remains globally navigable; its Italian starting view is not a geographic
-restriction on map movement or area searches. An optional WGS84 circle can be drawn
-anywhere on the map and searches only observations inside its radius, with the
-selected date and sensor filters. Outside the imported coverage, the Explorer reports
-that local data are unavailable rather than implying that no fires occurred.
-Synthetic detections are excluded from real-data results by default. Zoom-dependent
-map clusters are visual aggregations, not individual fires; the results list shows
-algorithmic event candidates separately and can highlight one on the map. Candidates and detection memberships are indexed outside map requests and paginated on the server.
-`GET /api/v1/events/{event_id}` supports direct, shareable event-analysis URLs at
-`/events/{event_id}`. These candidates are not official fire perimeters. Display clusters aggregate the full matching observation set in SQL; candidate pages refer to complete persisted histories. The Explorer
-search URL is preserved when navigating to and back from a candidate analysis.
-Open API documentation at: **http://localhost:8000/docs**
-
-#### Geographic analysis limits
-
-The preview API accepts a WGS84 bounding box as west,south,east,north.
-A deployment can supply an optional default with `ANALYSIS_BBOX`. Without a
-default, callers must provide the area in their preview request.
-Explorer uses the selected map area or search circle. Event analysis uses
-the candidate territory. Download size, concurrency and time-window limits
-are configured separately.
-
-The current automated remote downloader supports NASA FIRMS active-fire feeds
-(MODIS and VIIRS Suomi-NPP, NOAA-20 and NOAA-21; standard and NRT feeds). The event workflow retrieves bounded MCD64A1 and MOD13Q1 native-grid subsets through Earth Engine when configured. FIRMS NRT availability is
-provider-controlled, so a valid historical date range may still be rejected by
-NASA; the API reports provider failures instead of silently substituting data.
-See the [NASA FIRMS API documentation](https://firms.modaps.eosdis.nasa.gov/api/)
-for its MAP_KEY requirement and transaction limits.
-
-Downloaded FIRMS CSV responses are cached under `~/.cache/afterfire` for local
-development. Docker Compose stores them in the persistent `afterfire-cache`
-volume. Cache inspection and disposable-cache removal are available at
-`GET /api/v1/analysis/cache` and `DELETE /api/v1/analysis/cache`; these operate
-only on cached provider CSV files and never touch the application database.
-
-#### 3. Frontend Setup
-```bash
-cd afterfire/frontend
-npm install
-npm run dev
-```
-Open web application at: **http://localhost:3000** (or http://localhost:5173).
-
----
-
-
-### Windows: avvio da terminale senza Docker Desktop
-
-Dalla cartella del progetto (`nasa/afterfire` oppure `testnasa/AfterFire`), prepara una volta l'ambiente:
-
-```powershell
-python -m venv backend/.venv-windows
-backend/.venv-windows/Scripts/python.exe -m pip install -r backend/requirements.txt
-cd frontend
-npm ci
-cd ..
-```
-
-Avvio normale:
-
-```powershell
-backend/.venv-windows/Scripts/python.exe scripts/local.py
-```
-
-Il comando avvia API, worker e Vite su localhost, usa il database SQLite
-`backend/afterfire.db` di questo progetto e legge le credenziali dai suoi
-file `.env`. Il `DATABASE_URL` Docker viene sostituito solo nei processi locali:
-il server `db` esiste solo nella rete Compose. I dati dei volumi PostgreSQL Docker
-non vengono importati in SQLite. I log sono in `.local-runtime/`.
-Ctrl+C arresta i tre servizi; nessun motore Docker o macchina virtuale viene avviato.
-
-Per usare anche la seconda copia contemporaneamente:
-
-```powershell
-backend/.venv-windows/Scripts/python.exe scripts/local.py --api-port 8001 --web-port 3001
-```
-
-Se `docker compose up --build` segnala `dockerDesktopLinuxEngine` mancante,
-non sta cercando un file del repository: manca il canale verso il motore Docker.
-Compose richiede un motore attivo; `scripts/local.py` permette l'avvio nativo.
-
-### Option B: Docker Compose
+Requires Docker Engine and Compose. For the first installation:
 
 ```bash
-cd afterfire
 cp .env.example .env
+# Configure the providers you intend to use in .env.
 docker compose up --build
 ```
-Services started:
-- `frontend`: **http://localhost:3000**
-- `backend`: **http://localhost:8000**
-- `db`: PostgreSQL / PostGIS 15 on port `5432`
 
----
+Open the **[web application](http://localhost:3000)** or **[API documentation](http://localhost:8000/docs)**. Compose starts PostgreSQL/PostGIS, FastAPI, the analysis worker and the frontend. Database and cache volumes persist between restarts. A fresh installation needs imported or acquired observations; the screenshots are existing publications, not seed data.
 
-## 5. Running Verification & Automated Tests
+### Without Docker
 
-A dedicated test and build verification script is included:
+Requires Python 3.12, Node.js 22, npm and the backend's native raster/HDF libraries. Docker includes the packaged scientific runtime if these libraries are unavailable on your host.
 
 ```bash
-./afterfire/scripts/test.sh
+python3.12 -m venv backend/.venv
+backend/.venv/bin/python -m pip install -r backend/requirements.txt
+npm --prefix frontend ci
+cp .env.example .env
+backend/.venv/bin/python scripts/local.py
 ```
 
-Or execute tests manually:
+The launcher starts API, worker and Vite with local SQLite at `backend/afterfire.db`. Logs and the scientific cache are in `.local-runtime/`; Ctrl+C stops all three processes. This database is separate from Docker's PostgreSQL volume. On Windows, use `backend/.venv-windows/Scripts/python.exe` with a virtual environment created by `py -3.12 -m venv backend/.venv-windows`.
+
+FIRMS acquisition needs `FIRMS_MAP_KEY`. Earth Engine needs an externally registered project and credentials available to both API and worker. Configuration alone does not verify access. See [.env.example](.env.example) and [provider setup and archive import](docs/OPERATIONS.md).
+
+## How it fits together
+
+```mermaid
+flowchart TB
+    UI["React + TypeScript<br/>Leaflet maps / Recharts"] --> API["FastAPI"]
+    API --> DB[("SQLite or PostgreSQL / PostGIS")]
+    W["Persistent analysis worker"] --> DB
+    W --> P["Configured NASA / Earth Engine providers"]
+    W --> CACHE[("Native sources + published assets")]
+    API --> CACHE
+    EXPORT["Local snapshot export"] --> STATIC["Static public demo<br/>Same interface, saved publications"]
+    DB --> EXPORT
+    CACHE --> EXPORT
+```
+
+The full application persists jobs, source provenance and versioned results. The static demo reads explicitly exported publications through a local adapter and cannot request new science. Source code lives in `backend/`, `frontend/` and `public-demo/`; maintained commands live in `scripts/`.
+
+## Development checks
+
 ```bash
-# Backend Pytest Suite
-cd afterfire/backend
-PYTHONPATH=. .venv/bin/pytest app/tests/ -v
-
-# Frontend TypeScript & Vite Build
-cd afterfire/frontend
-npm run build
+backend/.venv/bin/python -m pytest backend/app/tests -q
+npm --prefix frontend run build
+python3 scripts/check_vercel_clone.py
+npm --prefix public-demo run build
 ```
 
----
+TypeScript builds reject unused locals and parameters. Backend tests use isolated temporary databases and caches. Optional PostgreSQL tests require a dedicated `AF_TEST_DATABASE_URL` whose database name starts with `afterfire_test_`.
 
-## 6. Explore a candidate
+## Read more
 
-Open Explorer, choose a period and search the candidates by ID, date or place.
-The Italy outline can be hidden in Layers. Place references give the distance
-from the candidate centre to the nearest city in the bundled GeoNames gazetteer
-(population threshold 15,000). They can refer to a city across a border.
-Geographic names and coordinates are from [GeoNames](https://www.geonames.org/)
-under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).
+| Guide | What it covers |
+| --- | --- |
+| [Operations](docs/OPERATIONS.md) | Provider access, historical imports, persistence, API and essential commands |
+| [Scientific methodology](docs/SCIENTIFIC_METHODOLOGY.md) | Native grids, QA, seasonal references, harmonization, Reburn and limits |
+| [Static demo](docs/VERCEL_CLONE.md) | Export allowlist, snapshot integrity, preview and hosting |
 
-Open a candidate to inspect its before/after imagery, vegetation trajectory,
-burned area and recurrence evidence. Downloads and source files are at the end
-of the analysis.
-
----
-
-## 7. Configuration & Environment Variables
-
-| Variable | Description | Default |
-| :--- | :--- | :--- |
-| `DATABASE_URL` | SQLAlchemy async connection string | `sqlite+aiosqlite:///./afterfire.db` |
-| `FIRMS_MAP_KEY` | NASA ESDIS FIRMS MAP KEY for live queries | *(Optional)* |
-| `EARTHDATA_USERNAME` | NASA Earthdata login username | *(Optional)* |
-| `EARTHDATA_PASSWORD` | NASA Earthdata login password | *(Optional)* |
-| `LLM_API_KEY` | OpenAI API key for AI Analyst narrative | *(Optional)* |
-| `ANALYSIS_BBOX` | Default region as west,south,east,north WGS84 coordinates | *(Optional)* |
-| `ANALYSIS_REGION_NAME` | Human-readable configured region label | *(Optional)* |
-| `ANALYSIS_START_DATE` / `ANALYSIS_END_DATE` | Initial analysis date interval | `2024-01-01` / today |
-| `MAX_DOWNLOAD_DAYS_PER_REQUEST` | Maximum days in one FIRMS API window (1–5) | `5` |
-| `MAX_CONCURRENT_DOWNLOADS` | Maximum simultaneous provider downloads | `2` |
-| `MAX_DOWNLOAD_SIZE_MB` | Maximum bytes accepted per provider operation/upload | `250` |
-| `DATA_CACHE_ENABLED` | Reuse downloaded provider responses | `true` |
-| `ALLOW_GLOBAL_DOWNLOADS` | Explicit opt-in for whole-globe requests | `false` |
-
----
-
-## 8. NASA Data Sources & Citations
-
-- **NASA FIRMS Active Fire (MODIS C6.1)**: Giglio, L., et al. (2016). *The collection 6 MODIS active fire detection algorithm*. Remote Sensing of Environment, 178, 31-41.
-- **NASA FIRMS Active Fire (VIIRS 375m)**: Schroeder, W., et al. (2014). *The New VIIRS 375 m active fire detection product*. Remote Sensing of Environment, 143, 85-96.
-- **MODIS MCD64A1 Burned Area (500m)**: Giglio, L., et al. (2018). *The Collection 6 MODIS burned area mapping algorithm and product*. Remote Sensing of Environment, 217, 72-85.
-- **MODIS MOD13Q1 Vegetation Indices (250m)**: Didan, K. (2015). *MOD13Q1 MODIS/Terra Vegetation Indices 16-Day L3 Global 250m SIN Grid V006*. NASA LP DAAC.
-- **NASA GIBS / Worldview**: NASA Earth Science Data and Information System (ESDIS).
-
----
-
-## 9. License
-
-This project is licensed under the MIT License — see the LICENSE file for details. Built for the NASA Space Apps Challenge 2026.
-
-## On-demand post-fire analysis
-
-The event page now supports a persistent NASA MODIS analysis worker, event-specific burned cells, QA-screened NDVI/EVI, seasonal baselines, dated rasters and descriptive recurrence evidence. Start with [Post-Fire Recovery](docs/POST_FIRE_RECOVERY.md), [pipeline](docs/SATELLITE_DATA_PIPELINE.md), [methodology](docs/SCIENTIFIC_METHODOLOGY.md), [cache configuration](docs/ANALYSIS_CACHE.md) and [verification evidence](docs/POST_FIRE_VERIFICATION.md). Real acquisition requires working backend Earthdata credentials; the checked-in verification report states what was actually acquired.
-
-## Phase 4 — Recovery Story
-
-Event analysis now previews cache-aware acquisition, requests annual NASA AppEEARS native spatial subsets with all required QA layers, and retains the original bounded HDF provider. Recovery Story adds real-composite playback, year/date selection, a shared-map Before/After divider and synchronized anomaly charts. The 5 GiB job limit applies to new network bytes; cache, block, temporary and derived-result limits are separate. See [Recovery Story](docs/RECOVERY_STORY.md), [subsetting](docs/SATELLITE_SUBSETTING.md) and [verification evidence](docs/PHASE4_VERIFICATION.md).
-
-
-## Fase 5 — Recovery Intelligence
-
-La pagina evento include assessment stagionale NDVI/EVI, persistenza osservata, baseline per pixel, mappa delle anomalie e GeoTIFF multibanda. Compare Recovery confronta eventi reali per mesi dall’incendio, con controlli di qualità. Preflight persistente asincrono, cache metadati TTL e cleanup conservativo con dry-run mantengono separati rete, catalogo e spazio locale.
-
-- [Architettura e API](docs/RECOVERY_INTELLIGENCE.md)
-- [Metodologia scientifica](docs/RECOVERY_ASSESSMENT_METHODOLOGY.md) e [analisi spaziale](docs/SPATIAL_RECOVERY_ANALYSIS.md)
-- [Preflight asincrono](docs/ASYNC_PREFLIGHT.md) e [gestione cache](docs/CACHE_MANAGEMENT.md)
-- [Risultati, test e limiti verificati](docs/PHASE5_VERIFICATION.md)
-
-Il POST preflight restituisce ora 202 e un planning ID: i client devono leggere il piano da GET/SSE quando ready. Nessun download o task NASA viene avviato dalla pianificazione. Gli indicatori descrivono gli indici vegetativi osservati e non certificano recupero ecologico completo.
-
-
-## Phase 6 — Reburn & Recovery Gap
-
-The existing implementation is extended by [Reburn Intelligence](docs/REBURN_INTELLIGENCE.md), [observed episode methodology](docs/REBURN_DETECTION_METHODOLOGY.md), [shared-area Recovery Gap](docs/RECOVERY_GAP.md) and [cumulative vegetation](docs/CUMULATIVE_VEGETATION.md). See [measured infrastructure changes](docs/PERFORMANCE_OPTIMIZATION.md) and [verification and limitations](docs/PHASE6_VERIFICATION.md). Previous-phase publications and reports are preserved.
-
-
-## Fast analysis update — 30 October 2026
-
-Analysis now opens saved scientific publications without preflight or automatic retry. New AppEEARS task submission defaults to disabled; missing sources use bounded direct NASA HDF access. See [Fast analysis](docs/FAST_ANALYSIS.md) and [measured verification](docs/ANALYSIS_PERFORMANCE_VERIFICATION.md).
-
-
-## Global Explorer and API-first analysis
-
-The Explorer now provides a world map, satellite filters, UTC date controls, timeline, searchable/saved/shareable views, bounded hotspots/SQL clusters and event-scoped persisted burned-area/NDVI/EVI overlays. The initial view remains Italy. Local archive coverage and recent online FIRMS access are distinguished; contextual satellite basemaps are not historical imagery of the selected fire date.
-
-Normal Analyze reuses scientific results and valid native caches, then compatible configured APIs. **Automatic full HDF downloads are disabled.** Earth Engine requires an externally registered project and runtime credentials; live ORNL Collection 6.1 equivalence is not verified and no substitution is made. No billing or NASA email orders are activated. The existing Recovery Story, Recovery Intelligence, comparison, reburn and gap flows remain available.
-
-See [global explorer](docs/FIRMS_STYLE_EXPLORER.md), [layers and timeline](docs/MAP_LAYERS_AND_TIMELINE.md), [API-first engine](docs/API_FIRST_SATELLITE_ENGINE.md), [Earth Engine setup](docs/EARTH_ENGINE_PROVIDER.md), [verification](docs/API_FIRST_VERIFICATION.md) and [Git history security](docs/GITHUB_HISTORY_SECURITY.md). Install local credential checks with `git config core.hooksPath .githooks`.
-
-Earth Engine activation requires an externally registered Google Cloud project.
-Follow [live setup](docs/EARTH_ENGINE_LIVE_SETUP.md) for registration, minimal IAM,
-private ADC authentication and the backend/worker secret overlay. Run
-`python -m app.providers.earth_engine_check --live` in both server runtimes to
-verify bounded real collection reads; `/api/v1/health` reports configuration
-without claiming live access. [Current activation evidence](docs/EARTH_ENGINE_LIVE_VERIFICATION.md)
-distinguishes verified software from the outstanding live scientific checks.
-
-## Phase 6.5 performance
-
-[Measured optimization report](docs/ULTRA_FAST_ANALYSIS.md): native temporal batches,
-source-specific grid verification, multiband source storage, early product availability
-and maps on demand. The isolated real three-year analysis took 22.84 s; the measured
-persistent-worker trial took 57.47 s. These are measured cases, not latency guarantees.
-
-### Historical thermal activity
-
-**Fire Activity → Historical Anomalies → Fire Candidate → Vegetation Recovery**
-
-Open **Explorer → Fire activity**, select a region and explicitly acquire historical
-NASA FIRMS windows. The calendar preserves original MODIS/VIIRS records, separates
-archive gaps from zero detections, and exposes the versioned reference-scale method,
-validation status, anomalies and scientific exports. Unsupported translations remain
-unavailable. Recovery uses its original candidates, observations and 30-day policy.
-This is retrospective observation and analysis, not fire prediction.
-
-See [harmonization](docs/MODIS_VIIRS_HARMONIZATION.md),
-[calendar/API](docs/FIRE_ACTIVITY_CALENDAR.md), and
-[validation evidence and limits](docs/HARMONIZATION_VALIDATION.md).
+Developed for NASA Space Apps. AfterFire is an independent project, not an official NASA service or endorsement. Code is under the [MIT License](LICENSE); NASA data, geographic references and contextual imagery retain their respective [attribution and terms](docs/SCIENTIFIC_METHODOLOGY.md#visual-comparisons-limitations-and-attribution).

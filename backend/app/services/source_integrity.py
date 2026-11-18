@@ -1,7 +1,6 @@
 """Cross-process integrity evidence; a filename or size alone never establishes trust."""
 import hashlib
 import json
-import os
 import re
 import sqlite3
 import time

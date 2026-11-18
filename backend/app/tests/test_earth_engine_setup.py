@@ -64,7 +64,7 @@ def test_unconfigured_probe_never_initializes_sdk(monkeypatch):
     assert report['status'] == 'blocked'
     assert report['explicit_api_operations'] == report['decoded_array_bytes'] == 0
     assert not report['authentication_verified']
-    assert 'register' in report['message'] and 'EARTH_ENGINE_LIVE_SETUP.md' in report['message']
+    assert 'register' in report['message'] and 'OPERATIONS.md#earth-engine' in report['message']
 
 
 def test_configured_settings_do_not_claim_live_access(monkeypatch):
@@ -103,7 +103,7 @@ def test_sdk_errors_are_actionable_and_redacted(monkeypatch, message, code):
     if code == 'rate_limited':
         assert 'Earth Engine quota exceeded' in str(raised.value)
     else:
-        assert 'EARTH_ENGINE_LIVE_SETUP.md' in str(raised.value)
+        assert 'OPERATIONS.md#earth-engine' in str(raised.value)
 
 
 def test_probe_failure_does_not_serialize_credentials(monkeypatch):

@@ -1,5 +1,5 @@
 import logging
-from typing import List, Dict, Any, Optional
+from typing import Dict, Any
 from datetime import datetime, date, timedelta
 from app.core.config import settings
 

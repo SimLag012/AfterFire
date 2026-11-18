@@ -4,7 +4,7 @@ import L from 'leaflet';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Link, useLocation, useSearchParams } from 'react-router-dom';
-import { Flame, CalendarDays, ChevronLeft, ChevronRight, CircleDot, Crosshair, Layers3, RotateCcw, Search, SlidersHorizontal, X } from 'lucide-react';
+import { Flame, CalendarDays, ChevronLeft, ChevronRight, CircleDot, Layers3, RotateCcw, Search, SlidersHorizontal, X } from 'lucide-react';
 import { loadSelectedObservations } from '../api/selectedObservations';
 import { satelliteApi } from '../api/satellite';
 import { apiClient } from '../api/client';

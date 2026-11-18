@@ -1,4 +1,4 @@
-import React,{useState} from 'react';
+import {useState} from 'react';
 import {useMutation} from '@tanstack/react-query';
 import axios from 'axios';
 interface Resources {used_bytes:number;volume_total_bytes:number;volume_used_bytes:number;free_bytes:number;quota_bytes:number;classes:Record<string,number>;last_cleanup:{at:string;recovered_bytes:number;warning:string|null}|null}

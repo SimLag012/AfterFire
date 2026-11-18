@@ -1,6 +1,6 @@
 import math
 import hashlib
-from typing import List, Dict, Any, Optional
+from typing import List, Dict, Any
 from datetime import datetime, date, timedelta
 from collections import defaultdict, deque
 

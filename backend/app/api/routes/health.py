@@ -48,7 +48,7 @@ async def build_system_status(probe: bool = True) -> Dict[str, Any]:
             "selected": configured_provider()[0] == 'earth_engine',
             "connected": False,
             "status": "not_live_verified" if settings.AFTERFIRE_EARTH_ENGINE_ENABLED and settings.AFTERFIRE_EE_PROJECT_ID.strip() else "provider_not_configured",
-            "message": "Project settings alone do not verify credentials or collection access. Follow docs/EARTH_ENGINE_LIVE_SETUP.md and run python -m app.providers.earth_engine_check --live in backend and worker.",
+            "message": "Project settings alone do not verify credentials or collection access. Follow docs/OPERATIONS.md#earth-engine and run python -m app.providers.earth_engine_check --live in backend and worker.",
             "available_products": ["MODIS/061/MOD13Q1", "MODIS/061/MCD64A1"],
             "date_ranges": {},
             "last_check": None,

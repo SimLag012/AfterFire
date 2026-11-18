@@ -1,6 +1,6 @@
 # Running and maintaining AfterFire
 
-Use the [README](../README.md#get-started) for installation and the [scientific methodology](SCIENTIFIC_METHODOLOGY.md) for interpretation. Run commands below from the repository root unless a different directory is specified.
+Use the [README](../README.md#run-locally) for installation and the [scientific methodology](SCIENTIFIC_METHODOLOGY.md) for interpretation. Run commands below from the repository root unless a different directory is specified.
 
 ## Services and acquisition
 

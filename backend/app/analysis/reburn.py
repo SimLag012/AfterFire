@@ -1,9 +1,7 @@
 """Observed native MODIS burn episodes. FIRMS associations are contextual evidence only."""
-import calendar
 import hashlib
 import json
 from datetime import date, timedelta
-from itertools import combinations
 from statistics import median
 from pydantic import BaseModel, Field, model_validator
 from shapely.geometry import box, mapping, shape

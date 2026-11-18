@@ -1,5 +1,5 @@
 import logging
-from typing import Dict, Any, List, Optional
+from typing import Dict, Any, Optional
 import httpx
 from app.core.config import settings
 

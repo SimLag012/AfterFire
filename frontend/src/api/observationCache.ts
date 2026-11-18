@@ -130,11 +130,6 @@ function snapshot(f:Filters,rows:Entry[],partial:boolean,network:number):Result 
   return {detections:[...detections.values()],events:[...events.values()].filter(e=>ids.has(e.id)),
     total_detections:detections.size,truncated:partial,coverage:{state:network?'available':'cached',message:messages.join(' · ')}};
 }
-export function hasLocalObservations(f:Filters){
-  if(!f.start_date || !f.end_date) return false;
-  const rows=Array.from(entries.values()).filter(r=>compatible(r,f));
-  return rows.length>0 && missing(f,rows).length===0;
-}
 export async function loadObservations(f:Filters,refine=false,signal?:AbortSignal):Promise<Result>{
   const db=await storage();
   const current=()=>Array.from(entries.values()).filter(r=>compatible(r,f) && boxes(f.bbox).some(b=>boxes(r.filters.bbox).some(c=>intersects(b,c))));

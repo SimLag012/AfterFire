@@ -5,7 +5,7 @@ import math
 import time
 from contextlib import ExitStack, nullcontext
 from functools import lru_cache
-from datetime import date, timedelta
+from datetime import date
 from pathlib import Path
 
 import httpx
@@ -64,7 +64,7 @@ def earth_engine_error(exc):
         'missing_data': 'The requested image is unavailable.',
         'timeout': 'Earth Engine timed out. Validated subsets are retained.',
     }.get(reason, 'Earth Engine could not complete the request. Validated subsets are retained.')
-    return ProviderUnavailable(reason, message + ' See docs/EARTH_ENGINE_LIVE_SETUP.md', delay)
+    return ProviderUnavailable(reason, message + ' See docs/OPERATIONS.md#earth-engine', delay)
 
 
 def ornl_batches(dates):
@@ -86,7 +86,7 @@ def configured_provider():
         return None, 'ORNL Collection 6.1/native-grid equivalence is not verified; configure Earth Engine'
     return None, ('provider_not_configured: register a project at https://code.earthengine.google.com/register; '
                   'set AFTERFIRE_EARTH_ENGINE_ENABLED=true and AFTERFIRE_EE_PROJECT_ID; '
-                  'supply Google credentials to both backend and worker. See docs/EARTH_ENGINE_LIVE_SETUP.md. '
+                  'supply Google credentials to both backend and worker. See docs/OPERATIONS.md#earth-engine. '
                   'ORNL Collection 6.1 is unverified. Full HDF auto-download is disabled')
 
 

@@ -8,7 +8,6 @@ import asyncio
 from contextlib import asynccontextmanager
 from app.core import file_locks as fcntl
 from datetime import datetime
-from pathlib import Path
 import httpx
 from app.core.config import settings
 from app.providers.firms import FirmsProvider,FirmsProviderError

@@ -1,173 +1,108 @@
-# AfterFire — Scientific Methodology & Algorithms
+# Scientific methodology
 
-## 1. Challenge Context: Harmonization of MODIS and VIIRS Hot Spots
+AfterFire distinguishes three kinds of evidence: FIRMS thermal observations, algorithmic event candidates, and QA-screened satellite measurements of burned cells or vegetation. A candidate is not an official fire identity; a detection or mapped grid cell is not an official fire perimeter. All interpretation is retrospective.
 
-### 1.1 Sensor Footprints & Radiant Disparity
-- **MODIS** (onboard Terra and Aqua): 1 km nominal nadir resolution with pixel broadening toward swath edges. High radiometric saturation limit on Channel 21/22 (4 µm) with Channel 31 (11 µm) for false alarm rejection.
-- **VIIRS** (onboard Suomi-NPP, NOAA-20, NOAA-21): 375 m nominal nadir resolution on I-band (I4 at 3.74 µm, I5 at 11.45 µm).
-- **Core Dilemma**: Because of the ~3-fold spatial resolution advantage, VIIRS detects smaller, lower-intensity, and smoldering fires that do not trigger the MODIS sub-pixel threshold. Directly summing detection points from both sensors over a single fire will grossly overestimate physical fire occurrences.
-- **AfterFire Harmonization Rule**:
-  1. Each raw record preserves instrument identifier, satellite, original confidence code, brightness temperature, and Fire Radiative Power (MW).
-  2. Detections are categorized into standardized confidence tiers:
-     - Numeric $\ge 80\%$ or categorical `'high'` $\rightarrow$ `high`
-     - Numeric $30\% - 79\%$ or categorical `'nominal'` $\rightarrow$ `nominal`
-     - Numeric $< 30\%$ or categorical `'low'` $\rightarrow$ `low`
-  3. Daily, weekly, and monthly calendars group detections with discrete sensor breakout counts (`modis_count`, `viirs_count`) rather than unified scalar addition.
-  4. Spatiotemporal clustering (greedy proximity rule: 7 km radius, 3-day gap, last 15 cluster observations; minimum 3 points) groups detections into candidate fire events without asserting official administrative perimeters.
+## Products, provenance and geometry
 
-  ### 1.2 Visual map clusters and candidate event identity
+| Product | Native evidence | Time support |
+| --- | --- | --- |
+| FIRMS MODIS / VIIRS | Thermal observations; nominal nadir footprints of 1 km / 375 m | Satellite overpass time, retained in UTC |
+| MCD64A1.061 | BurnDate, uncertainty, QA and mapping coverage; nominal 500 m | Monthly product with estimated pixel burn dates |
+| MOD13Q1.061 | NDVI/EVI, detailed QA and pixel reliability; nominal 250 m | 16-day composite periods |
 
-  The Explorer queries only observations within its current WGS84 map viewport and
-  selected acquisition-date interval. MODIS and VIIRS can be queried independently.
-  Visual marker clusters are screen-space groups that change with map zoom; they are
-  not scientific fire events. Selecting a visual group zooms to its contents and only
-  offers an event-analysis link when backend candidate membership identifies one or
-  more algorithmic candidates.
+Original sensor, satellite, processing/version, confidence, FRP and acquisition attributes remain traceable. Original records from different instruments are not interchangeable fire counts. Synthetic records are excluded from real-data Explorer results.
 
-  Candidate IDs are SHA-256-derived from the study-area ID and the sorted source
-  detection IDs. They remain the same for the same unchanged set of detections,
-  independent of input ordering. Candidate membership is stored separately from
-  source observations so a shareable event URL can load its details directly. New
-  observations can change cluster membership and therefore produce a new candidate ID.
-  If the viewport result exceeds the API cap, the backend does not infer events from a
-  partial subset; the user is asked to zoom in.
+Candidate grouping uses operational spatial/temporal proximity, not verified administrative boundaries. Map marker clusters vary with zoom and are separate from persisted scientific candidate membership. Updated source membership can change a candidate's identity.
 
----
+Event analysis distinguishes the linked hotspot footprint, a configurable provisional buffer and uniquely associated mapped burned cells. MCD64A1 cells are associated when their burn-date uncertainty interval overlaps the candidate interval plus configured tolerance, default three days. Cells compatible with competing candidates are marked ambiguous and excluded from unique association. Without associated mapped cells, vegetation may use an explicitly labelled provisional hotspot buffer; this is not evidence of mapped burned area.
 
-## 2. Differentiating Active Hotspots from MCD64A1 Burned Area
+The native MODIS sinusoidal grid uses sphere radius 6,371,007.181 m. A tile has 2,400 burned-area cells or 4,800 vegetation cells per axis, approximately 463.31 m or 231.66 m wide. Scientific areas use the actual native affine transform, not nominal 500 × 500 m areas. Cell-centre selection, grid identity and integral offsets determine correspondence. Display reprojection does not redefine scientific cells or QA.
 
-- **Point Hotspots**: Indicate thermal radiation emitted at the exact instant of satellite overpass (~4 passes daily per sensor). A single fire flaming over 5 days may generate 50+ detection records across overlapping passes.
-- **MCD64A1 Burned Area Product**: Global 500m monthly composite providing pixel-level classification of charred land surface. Each classified pixel carries an estimated burn date (DOY) and temporal uncertainty (typically $\pm 2$ days).
-- **AfterFire Separation**: The platform renders MCD64A1 as spatial polygon patches and displays total mapped hectares independently from hotspot detection totals.
+## Quality and vegetation extraction
 
----
+MCD64A1 requires valid land/mapping QA, positive valid burn day-of-year and uncertainty of 0–100 days for an observed burned cell. A shortened mapping period is rejected. Mapping coverage also excludes unsupported special conditions; unburned, unknown and missing observations remain distinct. Burn dates are decoded using the product year, not assumed from the file month. Repeated cell/date observations are deduplicated while retaining source provenance.
 
-## 3. Historical area-level recovery engine
+MOD13Q1 uses `index = raw × 0.0001`, with raw range −2,000…10,000. Out-of-range values remain missing. The strict mask requires pixel reliability 0; MODLAND bits 0–1 equal 0; usefulness bits 2–5 ≤2; aerosol bits 6–7 unequal to 3; adjacent/mixed cloud bits 8/10 clear; land/water bits 11–13 equal 1; snow/shadow bits 14/15 clear. Missing QA is rejected.
 
-**Legacy scope only.** Sections 3–4 describe the original area-level engine retained for compatibility. They do not define the supported event Recovery Story, Intelligence or comparison. The event workflow below uses strict QA and a seasonal median/MAD, with no recovery quotient. See [assessment methodology](RECOVERY_ASSESSMENT_METHODOLOGY.md).
+Area observations use the median of retained native pixels, with valid/expected counts, valid fraction and spatial dispersion. The default minimum valid fraction is 50%, counting missing intersecting tiles in expected coverage. Spatial dispersion is not a confidence interval. Valid masks can differ between dates even on the same analysis geometry.
 
-### 3.1 Pre-Fire Multi-Year Baseline
-The implemented baseline is the mean and standard deviation of valid pre-fire
-NDVI observations. It does not perform seasonal matching: phenology, sampling
-imbalance and drought can affect the comparison. At least three valid pre-fire
-and two valid post-fire observations are required; missing values never receive
-a fabricated baseline or trough. The mean ± one standard deviation is a
-sample-spread envelope, not a statistical confidence interval.
+Every expected composite has an explicit state. Missing, QA-rejected and incomplete periods keep null values; no interpolation or invented satellite frames are used. Composite dates describe periods, not every pixel's exact acquisition instant.
 
-### 3.2 Disturbance Drop & Recovery Percentage
-- **Fire Trough ($\text{NDVI}_{\text{trough}}$)**: Minimum valid composite value observed immediately post-disturbance.
-- **Drop Magnitude**: $\Delta_{\text{drop}} = \mu_{\text{pre}} - \text{NDVI}_{\text{trough}}$
-- **Drop Percentage**: $\%_{\text{drop}} = \left(\frac{\Delta_{\text{drop}}}{\mu_{\text{pre}}}\right) \times 100$
-- **Recovery Quotient**:
-  $$\text{Recovery \%} = \frac{\text{NDVI}_{\text{latest}} - \text{NDVI}_{\text{trough}}}{\mu_{\text{pre}} - \text{NDVI}_{\text{trough}}} \times 100$$
+## Seasonal reference and recovery
 
-### 3.3 Status Classification
-- **Substantially Recovered**: $\text{Recovery \%} \ge 90\%$
-- **Partial Recovery**: $60\% \le \text{Recovery \%} < 90\%$
-- **Stagnant / Slow Recovery**: $\text{Recovery \%} < 60\%$
+Current event assessments compare each index against wholly pre-event observations from the same season. Legacy area reports use an older non-seasonal method and must not be interpreted as the event assessment.
 
----
+For target date `t`, references must finish before the first FIRMS observation. Pre-event chart points additionally use only still-earlier references. Defaults require at least three valid composites from at least two years within ±24 seasonal days. Circular calendar distance uses the leap-stable reference year 2000:
 
-## 4. Quality Assurance (QA) Bitmask Masking
-
-MOD13Q1 provides a 16-bit QA word per composite. AfterFire inspects:
-- **Bits 0–1 (MODLAND QA)**:
-  - `00`: Ideal quality.
-  - `01`: Acceptable quality.
-  - `10` or `11`: Excluded due to cloud cover, aerosol, or unfilled values.
-- **Bit 14**: Snow/Ice flag. Observations with this flag set are excluded from vegetative calculations.
-
----
-
-## 5. Ecological Limitations
-
-1. **NDVI Represents Greenness, Not Full Biodiversity**: Opportunistic pyrophytic weeds and early-successional shrubs produce high chlorophyll reflectance rapidly, masking lingering devastation in mature tree canopies and soil seed banks.
-2. **Sub-Pixel Heterogeneity**: A 250m composite pixel averages 6.25 hectares; small unburned islands or severely scorched soil patches are integrated into a single spatial average.
-3. **Compound Re-Burns**: Successive fires occurring before vegetation re-attains reproductive maturity can trigger irreversible ecological regime shifts from mature woodland to degraded pyrophytic scrub.
-
-## Event-scoped MODIS analysis
-
-This section defines the event analysis workflow. Earlier area-level legacy recovery percentages are not used on this page. The new engine never reports a recovery percentage or `fully recovered`.
-
-### Three distinct geometries
-
-1. **Hotspot footprint**: convex extent of linked FIRMS coordinates (possibly a point/line), not a fire boundary. Actual linked dates define the observed event interval.
-2. **Observed burned cells**: MCD64A1.061 native cells with centres inside the provisional territory, valid QA and a compatible burn-date uncertainty interval. Whole cells are retained. This is satellite-classified grid area, not a high-precision or official perimeter.
-3. **Analysis area**: union of uniquely associated observed burned cells. If there are none, use the hotspot footprint buffered in a local azimuthal-equidistant metre CRS (default 1,000 m), explicitly labelled `provisional_hotspot_buffer`. NDVI/EVI across all dates use this **same** geometry.
-
-MCD64A1 association uses `[burn_date − uncertainty, burn_date + uncertainty]` overlapping `[first_hotspot − tolerance, last_hotspot + tolerance]`, default tolerance 3 days. Burn date must be a valid day of the granule year, positive, land/valid QA bits 0 and 1 set, shortened mapping bit 2 clear, uncertainty 0–100 days. Contextual relabelling bit 3 is retained and recorded. Adjacent months around the observed interval are searched to allow temporal uncertainty; dates themselves determine association. No whole month's burned area is assigned wholesale.
-
-All other non-demo candidates with linked detections in the buffered geographic search extent and overlapping temporal scope are tested using their metre-buffered nearby hotspots. A cell intersecting another temporally compatible candidate is `ambiguous`; competitor IDs are retained, and that cell is excluded from analysis-area selection. This is conservative candidate matching, not proof of causation. Monthly duplicate cell/date observations are deduplicated. A valid product with zero associated cells is distinguished from unavailable granules and insufficient mapping QA.
-
-Cell area is `abs(pixel_width × pixel_height) / 10^6` km² in the native equal-area MODIS sinusoidal CRS, not the nominal 500 × 500 m approximation. Whole-cell areas can include land beyond the hotspot buffer. Native grid resolution, mixed pixels, subpixel fires, composite timing, persistent industrial heat sources and clustering errors limit interpretation.
-
-### Vegetation extraction and quality
-
-MOD13Q1.061 NDVI/EVI use `index = raw_integer × 0.0001`, raw valid range −2,000…10,000 inclusive. Values outside this range are missing, never clamped to plausible observations. The strict mask requires pixel reliability 0, MODLAND quality bits 0–1 = 0, usefulness bits 2–5 ≤ 2, aerosol bits 6–7 != 3, adjacent cloud bit 8 clear, mixed cloud bit 10 clear, land/water bits 11–13 = 1, snow bit 14 and shadow bit 15 clear. Missing QA is not accepted by this engine.
-
-For each composite and index, compute the median and population spatial standard deviation of retained cell-centre pixels, valid count, expected count and valid fraction. Expected count covers all intersecting native tiles, including missing granules. The composite median is published only when valid fraction ≥ 0.5 (configurable). The `spatial_std` is spatial dispersion, **not** an uncertainty/confidence interval of the median. Pixel masks may differ across dates, so the fixed area does not imply exactly identical valid pixel samples.
-
-Every expected MODIS 16-day composite in the configured window has an entry; unavailable or rejected observations have `value=null`. No imputation or synthetic intermediate frames. Composite starts follow day-of-year 1,17,…,353; the last period stops at year-end. Composite dates denote a **period**, not the exact acquisition date of every contributing pixel. A composite overlapping the first hotspot is not pre-event.
-
-### Seasonal baseline and descriptive status
-
-Default window: up to three previous years, then at most ten years after the last linked hotspot, clipped at the requested `as_of` date. Actual product availability may be shorter. These are operational defaults, not universally optimal scientific windows.
-
-For target composite `t`, references `R(t)` are valid composites wholly before the event and within ±24 calendar days of the target season. Circular distance uses a leap-stable 366-day reference year to handle December/January. References are restricted to the requested historical window. At least three composites from at least two distinct years are required. Pre-event chart points additionally use only earlier composites to avoid reference leakage. Post-event values never enter the pre-event baseline.
-
-* Seasonal baseline: `B(t) = median{x(r): r ∈ R(t)}` (dimensionless).
-* Baseline variability: `MAD(t) = median{|x(r) − B(t)|: r ∈ R(t)}`.
-* Descriptive band: `b(t) = max(0.05, 1.4826 × MAD(t))`.
-* Seasonal anomaly: `A(t) = x(t) − B(t)`.
-* Pre-event descriptive summary: median of all valid wholly pre-event composites; this is explicitly distinct from the seasonal baseline.
-* Post-event summary: latest valid post-event composite and its actual period/date, with its seasonal anomaly.
-
-Status: `above baseline` if `A>b`; `near baseline` if `−b≤A≤b`; `approaching baseline` if `−2b≤A<−b`; otherwise `below seasonal baseline`. Missing index or insufficient seasonal reference gives `insufficient data`. The 0.05 floor is a conservative operational minimum band width to avoid dividing/classifying around zero dispersion; these thresholds are documented **descriptive conventions, not validated ecological recovery thresholds**. “Approaching” describes a distance band, not proof of a positive temporal trend. No normalized percentage, rate or return-time is inferred from inadequate data. Near-baseline vegetation indices do not demonstrate restoration of species composition, canopy structure, soil function or ecological recovery.
-
-### Later candidates and reburn gap
-
-Later candidates must start after the selected event's last detection and have a metre-buffered hotspot footprint intersecting the analysis area. The search is confined to the configured post-event window and non-demo linked detections. They remain candidate activity, not official confirmed repeat fires.
-
-`gap_start_days = later.start − first.start`; `gap_since_end_days = later.start − first.end`. Both are calendar days. Vegetation evidence before the later candidate uses the latest valid **NDVI composite wholly between the two events**, ending fewer than or equal to 48 days before the later start, on this result's geometry and original seasonal reference. Without such an observation, status is insufficient data. Historical uncertainty, quality/coverage, candidate geography and intervening disturbances remain explicit. Observations following a later candidate are not attributed exclusively to the first fire.
-
-```mermaid
-flowchart LR
-  Native[Native MODIS Collection 6.1 bands via bounded APIs or retained verified sources] --> QA[Range + detailed QA + pixel reliability]
-  QA --> Area[Identical event analysis geometry]
-  Area --> Median[Spatial medians and explicit gaps]
-  Median --> Reference[Pre-event seasonal median / MAD]
-  Reference --> Anomaly[Observed seasonal anomalies]
-  Anomaly --> Status[Descriptive indicator categories]
-  Median --> Later[Recent pre-reburn vegetation evidence]
+```text
+seasonal_distance = min(abs(day1 - day2), 366 - abs(day1 - day2))
+B(t) = median(valid seasonal references)
+MAD(t) = median(abs(reference - B(t)))
+H(t) = max(0.05, 1.4826 * MAD(t))
+A(t) = observed index(t) - B(t)
+reference band = [B(t) - H(t), B(t) + H(t)]
 ```
 
-Primary specifications: [MOD13 C6.1 User Guide](https://hodari.ece.arizona.edu/documents/MODIS/MODIS_VI_UsersGuide_09_18_2019_C61.pdf), [MCD64 C6.1 User Guide](https://lpdaac.usgs.gov/documents/1006/MCD64_User_Guide_V61.pdf), [CMR Search API](https://cmr.earthdata.nasa.gov/search/site/docs/search/api.html). See [pipeline](SATELLITE_DATA_PIPELINE.md), [cache](ANALYSIS_CACHE.md), [Recovery Story](RECOVERY_STORY.md).
+The band is an operational descriptive range, not a confidence interval or universally validated ecological threshold. Post-fire values do not enter the pre-fire reference. Missing support yields null baseline/anomaly, not a fabricated reference or zero.
 
-A MOD13Q1 composite ending after the requested observation cutoff is not acquired or used as a measurement; its expected slot remains missing with `incomplete_period`. `as_of` bounds observation periods, **not** a reconstruction of which processing revision was published on a historical date: CMR is queried against its current holdings, and production revision is recorded explicitly.
+| Indicator | Default evidence rule |
+| --- | --- |
+| Initial change | First valid post-event observation and supported minimum/anomaly within the first 90 days are reported separately |
+| Descriptive trend | Monthly anomaly medians; median pairwise slope using elapsed days and 365.2425 days/year; at least four months and 90 days |
+| Persistent negative anomaly | At least three consecutive supported observations spanning ≥32 days, each below the band and with anomaly ≤−0.05 |
+| Sustained return | Same observation count/duration, with supported values inside both band limits |
+| Sequence break | Missing/insufficient observations or a gap >32 days interrupts persistence |
+| Operational support | `insufficient` below three supported points; `limited` below 12 points or 70% completeness; otherwise `supported` |
 
-## Native optical comparisons and exports
+The directional trend threshold is ±0.01 index units/year, not a significance test. Sequence durations use observed date differences; gaps are not filled. Historical return and negative periods remain separately visible if later observations change the current classification. Values above the band are not automatically labelled complete recovery. NDVI/EVI evidence and discordance remain separate.
 
-Engine `modis-recovery-3.2.0`, optical method `optical-evidence-3` and assessment
-`assessment-5.0.2` create new publication identities. Existing publications and
-MODIS checkpoint identity remain unchanged. The strict source QA, MODIS scaling,
-seasonal reference, persistence and recovery-gap formulas are unchanged.
+### Native-cell maps and exports
 
-A MODIS pre/post comparison requires observations of the **same index**. Optical
-pair selection prefers supported scenes on one native pixel lattice. Equal CRS
-and pixel vectors with an integer origin offset describe the same lattice even
-when MGRS tile extents differ. dNBR uses the pre-scene CRS and affine transform,
-with the joint QA-valid footprint; fractional shifts, different resolution and
-different CRS remain unsupported. No interpolation or scene-median pooling is
-introduced. Optical medians explicitly retain up to the configured maximum raw
-pixel count, avoiding Earth Engine's default histogram approximation within the
-bounded AOI. This remains descriptive spectral change, without burn attribution
-or validated severity thresholds.
+Recovery Intelligence applies the seasonal method to each native vegetation cell. Per-cell support does not require an area-wide composite to pass the 50% threshold. Maps distinguish seasonal anomaly, period classification, descriptive trend and data reliability; nodata is distinct from zero. Persistent anomaly zones use four-neighbour native connectivity and at least three cells by default. Areas derive from actual cell counts and native areas, without causal attribution.
 
-Recovery cell support is a per-pixel post-event history assessment. It does not
-require any area composite to pass the 50% area-coverage threshold. New exports
-omit all-nodata bands and exports with no finite observation; remaining band
-labels, values, grid and nodata are preserved. Consumers must use band descriptions,
-not a fixed three-bands-per-date position. Tags and JSON identify observation and
-classification periods, geometry scope and area-composite support.
+GeoTIFF exports preserve native grid, scaling, nodata and band descriptions. Unsupported all-nodata bands/exports are omitted; consumers must use band descriptions rather than assuming a fixed number of bands per date. Parameters, assessment/source fingerprints and scientific versions are part of publication identity.
 
-For the detailed seasonal indicators, use [Recovery assessment](RECOVERY_ASSESSMENT_METHODOLOGY.md) and [spatial recovery](SPATIAL_RECOVERY_ANALYSIS.md). Repeated burning and between-episode vegetation evidence are defined in [burn reconstruction](REBURN_DETECTION_METHODOLOGY.md) and [Recovery Gap](RECOVERY_GAP.md). Acquisition follows the [API-first engine](API_FIRST_SATELLITE_ENGINE.md).
+## Repeated burning and Recovery Gap
+
+Repeated burning requires distinct valid MCD64A1 observations on the **same native cells**. Global native row/column IDs establish identity; rounded longitude/latitude does not. A 500 m burned cell corresponds to four 250 m vegetation children. Shifted or incompatible grids are rejected.
+
+Observed burn episodes are connected components on a cell and its four neighbours when uncertainty intervals fall within the configured separation, default 32 days. Disconnected patches can belong to one actual fire; a long connected chain can merge disturbances. Neither rule establishes official fire identity. Missing product coverage does not become a no-burn observation.
+
+Recovery Gap uses the intersection of native cell IDs for an episode pair, removing cells with an intervening episode. Its interval uncertainty is `[B.lower - A.upper, B.upper - A.lower]`. No common ground or overlapping bounds means insufficient evidence. Vegetation is reconstructed from the actual native children of the shared cells; full-event statistics are not copied onto a smaller overlap.
+
+The seasonal reference ends before the earliest episode's lower uncertainty bound. Eligible between-episode composites start after episode A's upper bound and finish strictly before episode B's lower bound. Default freshness is 48 days from the last eligible composite's end; fewer than three supported composites or stale support yields `insufficient_observations`.
+
+The assessment retains supported return, persistent negative anomaly, no sustained return demonstrated, insufficient observations and conflicting NDVI/EVI evidence as distinct outcomes. Absence of demonstrated return does not establish non-recovery. Cumulative histories preserve the same fixed pre-disturbance reference and explicit gaps; they do not infer causation or predict future risk.
+
+## Historical MODIS/VIIRS activity harmonization
+
+The activity calendar uses a separate metric: **daytime occupied 10 km equal-area cell-days**, on a fixed EPSG:6933 grid. A satellite/day/cell counts once when at least one daytime detection occurs. Original night observations remain available, but occupancy is not physical fire count, burned area or emitted energy.
+
+The direct reference is Aqua daytime occupancy. Terra is not concatenated into Aqua, and additional VIIRS missions are not summed to inflate the reference. A complete archive query establishes acquired records, not cloud-free observational coverage or absence of burning. Months before the Aqua reference retain missing-reference states.
+
+The released [calibration artifact](../backend/app/fire_activity/calibration.json) defines the supported pilot domain. For area `A`, S-NPP occupancy `V` and Aqua occupancy `M`, the translation uses nonnegative constrained least squares:
+
+```text
+x = log(1 + V * 10000 / A)
+y = log(1 + M * 10000 / A)
+y_hat = a + b*x, with a >= 0 and b >= 0
+M_hat = max(0, exp(y_hat) - 1) * A / 10000
+```
+
+The pilot uses six regions and January/August observations in 2019–2024, with separated training, interval-calibration, temporal-test and geographic-test sets. Translation requires improvement against identity, absolute relative bias ≤35% and interval coverage ≥70% on both holdouts. The nominal 80% split-conformal interval is not instrument accuracy. Broader scale/season evaluations failed the unchanged gates: there is no universal all-season, arbitrary-shape or all-mission conversion. Unsupported estimates remain null; original observations and directly measured Aqua occupancy stay usable.
+
+Anomalies require at least five other complete years of the same month and compatible method/calibration identity; relative departures require a positive baseline. Annual totals require all 12 months. Annual slopes require at least eight complete direct-reference years. Partial periods and gaps are not replaced with zero. This retrospective reference is independent of Recovery assessments and is not a prediction model.
+
+## Visual comparisons, limitations and attribution
+
+Before/After MODIS views compare the same index on one shared map, with dated composites, QA and coverage. The displayed difference of area medians is not a pixelwise change map. Optical comparisons require compatible native lattices and joint valid support; dNBR is descriptive spectral change, not automatically attributed burn severity.
+
+NDVI/EVI describe greenness, not forest structure, biodiversity or complete ecosystem restoration. Climate, drought, phenology, land management, mixed pixels, product omissions and other disturbances can affect the observed series. Current basemap imagery has acquisition dates independent of the historical scientific layers. No automatic causal attribution or future recovery date is claimed.
+
+The README screenshots were captured from the actual full application on 17 November 2026 at 1440 × 1000: Explorer archive observations for 8–17 July 2026, and the saved July 2023 Ródos event `global-d77c8ac8d89369a61e7125f78cfe2e76`. The Recovery publication spans 21 July 2021–22 July 2024. Map credits remain visible: Esri, Vantor, Earthstar Geographics, GIS User Community and, in Explorer, NASA GIBS. They are existing-publication examples, not data automatically seeded into a fresh installation.
+
+The README walkthrough was recorded on 18 November 2026 from the local static public demo, using the exported Ródos publication. It shows actual Explorer navigation, the Before/After divider, the NDVI/EVI timeline and Recovery Intelligence. The GIF and MP4 contain the same recording; captions and a cursor identify the interactions without changing scientific values.
+
+Country component bounds in `backend/data/country_bounds.json` derive from [Natural Earth 5.1.1 Admin 0 Countries](https://github.com/nvkelso/natural-earth-vector/blob/v5.1.1/geojson/ne_110m_admin_0_countries.geojson), public domain. Place references use [GeoNames](https://www.geonames.org/) under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). Context imagery and scientific datasets retain their respective terms.
+
+Primary product specifications: [MOD13 C6.1 user guide](https://lpdaac.usgs.gov/documents/621/MOD13_User_Guide_V61.pdf), [MCD64 C6.1 user guide](https://lpdaac.usgs.gov/documents/1006/MCD64_User_Guide_V61.pdf), [NASA FIRMS](https://firms.modaps.eosdis.nasa.gov/). Acquisition and provider setup are documented in [Operations](OPERATIONS.md).

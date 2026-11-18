@@ -1,6 +1,5 @@
 """Versioned assessment cache and publication using the existing worker queue."""
 from app.services.satellite_cache import cache_io
-import asyncio
 import hashlib
 import json
 from datetime import datetime

@@ -1,6 +1,5 @@
 """Reburn jobs share the persistent satellite queue, leases, cache and publication fence."""
 from app.services.satellite_cache import cache_io
-import asyncio
 import calendar
 import json
 import re

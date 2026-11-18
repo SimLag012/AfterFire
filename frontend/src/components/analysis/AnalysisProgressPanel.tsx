@@ -1,4 +1,3 @@
-import React from 'react';
 import { SatelliteJob } from '../../types/satellite';
 
 const bytes = (n?: number | null) => {

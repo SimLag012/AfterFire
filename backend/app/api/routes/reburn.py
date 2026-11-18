@@ -2,7 +2,6 @@ import asyncio
 import json
 from functools import lru_cache
 from pathlib import Path
-from datetime import date
 from fastapi import APIRouter, Depends, HTTPException, Query
 from fastapi.responses import StreamingResponse
 from pydantic import BaseModel, Field

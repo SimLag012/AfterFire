@@ -1,4 +1,4 @@
-import React, {useEffect,useState} from 'react';
+import {useEffect,useState} from 'react';
 import { ArrowLeft, ArrowRight } from 'lucide-react';
 import {useQuery,useMutation,useQueryClient} from '@tanstack/react-query';
 import {MapContainer,GeoJSON} from 'react-leaflet';
@@ -7,7 +7,7 @@ import {ResponsiveContainer,LineChart,Line,XAxis,YAxis,Tooltip,ReferenceArea,Ref
 import {Link} from 'react-router-dom';
 import {SatelliteBasemap} from '../map/SatelliteBasemap';
 import {reburnApi} from '../../api/reburn';
-import type {ReburnStatus,ReburnCell,VegetationPoint} from '../../types/reburn';
+import type {ReburnStatus,ReburnCell} from '../../types/reburn';
 import 'leaflet/dist/leaflet.css';
 
 const human=(s:string)=>s?.replace(/_/g,' ')??'Unavailable';
@@ -124,7 +124,7 @@ export function ReburnIntelligencePanel({eventId,sourceJobId,period}:{eventId:st
    {episodes.length>0&&<div className="flex flex-wrap items-center gap-3 text-sm">
     <button disabled={aPosition<=0} onClick={()=>selectEpisode(episodes[aPosition-1].id)}><ArrowLeft aria-hidden="true" size={16}/> Previous episode</button>
     <label>Episode A <select aria-label="Episode A" className="bg-dark-800" value={a??''} onChange={e=>selectEpisode(e.target.value)}>{episodes.map((e,i)=><option key={e.id} value={e.id}>{i+1} / {e.start}</option>)}</select></label>
-    <label>Episode B <select aria-label="Episode B" className="bg-dark-800" value={b??''} onChange={e=>setNextEpisode(e.target.value)}><option value="">Select next episode</option>{episodes.filter((e,i)=>i>aPosition).map(e=><option key={e.id} value={e.id}>{e.start}</option>)}</select></label>
+    <label>Episode B <select aria-label="Episode B" className="bg-dark-800" value={b??''} onChange={e=>setNextEpisode(e.target.value)}><option value="">Select next episode</option>{episodes.filter((_,i)=>i>aPosition).map(e=><option key={e.id} value={e.id}>{e.start}</option>)}</select></label>
     <button disabled={aPosition>=episodes.length-1} onClick={()=>selectEpisode(episodes[aPosition+1].id)}>Next episode <ArrowRight aria-hidden="true" size={16}/></button>
    </div>}
    <article aria-label="Recovery Gap" className={panel}><h3 className="font-semibold">Recovery Gap</h3>

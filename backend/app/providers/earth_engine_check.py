@@ -37,7 +37,7 @@ def check(live=False):
         if not report['enabled'] or not report['project_configured']:
             raise ProviderUnavailable('provider_not_configured',
                 'Register/select a project at https://code.earthengine.google.com/register; '
-                'follow docs/EARTH_ENGINE_LIVE_SETUP.md. No live request was attempted.')
+                'follow docs/OPERATIONS.md#earth-engine. No live request was attempted.')
         if live:
             ee = client.initialize()
             report['authentication_verified'] = True
@@ -83,7 +83,7 @@ def check(live=False):
     except Exception:
         # Never serialize SDK errors, credential paths, identities or bearer values.
         report.update(status='failed', error_code='earth_engine_access_failed',
-                      message='Check SDK installation, Google credentials, project registration, API enablement and IAM. See docs/EARTH_ENGINE_LIVE_SETUP.md')
+                      message='Check SDK installation, Google credentials, project registration, API enablement and IAM. See docs/OPERATIONS.md#earth-engine')
     report['explicit_api_operations'] = client.requests
     report['elapsed_seconds'] = round(time.monotonic()-started, 4)
     report['process_peak_rss_kib'] = peak_rss_kib()

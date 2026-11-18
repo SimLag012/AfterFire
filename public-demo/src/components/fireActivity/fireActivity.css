@@ -1,0 +1,37 @@
+.fire-activity-panel{position:absolute;z-index:650;left:12px;bottom:70px;width:min(740px,calc(100% - 24px));max-height:68vh;overflow:auto;padding:16px;border:1px solid var(--color-rule);border-radius:10px;background:var(--color-paper-2);color:var(--color-ink);box-shadow:0 8px 30px #0008;font-size:12px}
+.fire-activity-panel header{display:flex;align-items:center;justify-content:space-between}.fire-activity-panel h2{font-size:18px;font-weight:700}.fire-activity-panel h3{font-size:15px;font-weight:700}.fire-activity-panel p{margin:8px 0}.fire-activity-panel button,.fire-activity-panel input,.fire-activity-panel select{border:1px solid var(--color-rule-strong);border-radius:4px;padding:5px;background:var(--color-paper-3);color:var(--color-ink)}.fire-activity-panel button:disabled{opacity:.5}.activity-controls{display:flex;gap:8px;flex-wrap:wrap;align-items:end}.activity-controls label{display:flex;flex-direction:column;gap:4px}.activity-calendar{overflow-x:auto;margin:12px 0}.activity-year{display:grid;grid-template-columns:44px repeat(12,minmax(32px,1fr));gap:4px;min-width:500px;align-items:center;margin:4px 0;text-align:center}.activity-year .activity-cell{height:25px;padding:0;border-color:var(--color-rule);color:var(--color-paper-3)}.activity-cell.missing{background:var(--color-hover)}.activity-cell.partial{background:repeating-linear-gradient(45deg,var(--color-rule),var(--color-rule) 3px,var(--color-muted) 3px,var(--color-muted) 6px)}.activity-cell.zero{background:var(--color-ink)}.activity-cell.selected{outline:2px solid var(--color-focus);outline-offset:1px}.activity-exports{display:flex;flex-wrap:wrap;gap:12px}.activity-exports a,.activity-detail a{color:var(--color-accent-2);text-decoration:underline}.activity-detail{border-top:1px solid var(--color-rule);padding-top:12px;margin-top:12px}.activity-detail select{margin-left:8px}.fire-activity-panel button:focus-visible,.fire-activity-panel a:focus-visible{outline:2px solid var(--color-focus);outline-offset:2px}@media(max-width:640px){.fire-activity-panel{bottom:48px;max-height:60vh;padding:10px}.activity-controls button{min-height:38px}}
+
+.activity-year .activity-cell.unreliable{background:#7c3aed;color:white}
+/* Keep the panel inside the actual map, including short desktop viewports. */
+.fire-activity-panel{top:12px;bottom:auto;max-height:calc(100% - 82px);z-index:1100}
+.fire-activity-panel select{max-width:100%;min-width:0}.fire-activity-panel table{width:100%;table-layout:fixed}.fire-activity-panel td,.fire-activity-panel th{text-align:left;overflow-wrap:anywhere;padding:3px}
+@media(max-width:640px){.fire-activity-panel{top:8px;max-height:calc(100% - 56px)}}
+
+.activity-intro{font-size:15px;color:var(--color-positive);font-weight:600}.activity-cell.anomalous{box-shadow:inset 0 0 0 2px #f472b6}.activity-calendar .activity-year{min-width:330px;grid-template-columns:36px repeat(12,minmax(18px,1fr));gap:3px}.activity-calendar .activity-year span.activity-cell{height:22px;border-radius:3px;color:var(--color-muted)}
+
+.activity-year .activity-cell.provider{background:#881337;color:#fff}.fire-activity-panel textarea{width:100%;min-height:80px;background:var(--color-paper-3);border:1px solid var(--color-rule-strong);border-radius:4px;padding:8px}
+
+/* Match the shared frontend tokens while retaining distinct scientific states. */
+.fire-activity-panel{background:var(--color-paper-2);color:var(--color-ink);border-color:var(--color-rule);border-radius:0;box-shadow:none;font-size:13px}
+.fire-activity-panel header{gap:12px;align-items:start}.fire-activity-panel header h2{color:var(--color-accent);font-size:20px}
+.fire-activity-panel :is(button,input,select,textarea){background:var(--color-paper-3);color:var(--color-ink);border-color:var(--color-rule-strong);border-radius:0;min-height:36px;max-width:100%}
+.fire-activity-panel :is(button,summary):hover{color:var(--color-accent)}
+.fire-activity-panel button:disabled{opacity:1;color:var(--color-muted)}
+.fire-activity-panel .activity-intro{color:var(--color-positive)}
+.fire-activity-panel :is(.activity-exports,.activity-detail) a{color:var(--color-accent-2)}
+.fire-activity-panel .activity-detail{border-color:var(--color-rule)}
+.fire-activity-panel .activity-year .activity-cell{min-height:25px;border-color:var(--color-rule);color:var(--color-accent-ink)}
+.fire-activity-panel .activity-year .activity-cell.missing{background:var(--color-hover);color:var(--color-muted)}
+.fire-activity-panel .activity-year .activity-cell.unreliable{color:white}.fire-activity-panel .activity-year .activity-cell.provider{color:white}
+.fire-activity-panel .activity-year .activity-cell.selected{outline-color:var(--color-focus)}
+.fire-activity-panel .activity-year .activity-cell:focus-visible{outline:2px solid var(--color-focus);outline-offset:1px}
+
+.fire-activity-panel.activity-inline{position:static;width:100%;max-width:100%;max-height:none;margin-top:16px;overflow:visible}
+.observation-calendar{min-width:0;color:var(--color-ink);font-size:13px}
+.observation-calendar h2{font-size:17px;font-weight:620}.observation-calendar p{margin:8px 0;color:var(--color-muted)}
+.observation-calendar select{max-width:100%;background:var(--color-paper-3);border:1px solid var(--color-rule-strong);padding:6px;color:var(--color-ink)}
+.observation-days{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:3px;margin:12px 0;text-align:center}
+.observation-days>[role=cell]{display:flex;flex-direction:column;min-height:44px;padding:3px;background:var(--color-paper-3);border:1px solid var(--color-rule);color:var(--color-muted)}
+.observation-days>[role=cell].has-observations{border-color:var(--color-accent);color:var(--color-accent)}
+.observation-days [role=columnheader]{font-size:10px}.observation-days strong{font-variant-numeric:tabular-nums}
+.candidate-activity>.observation-calendar{max-width:600px}.candidate-activity>button{border:1px solid var(--color-rule-strong);padding:8px;margin-top:8px}

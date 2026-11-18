@@ -23,8 +23,25 @@ def import_runtime(name,names,relative):
     p=CLONE/name;p.write_text(f"import {{ {names} }} from '{relative}';\n"+p.read_text())
 
 
+def remove_stale_sources():
+    """Remove only source copies owned by the previous preparation manifest."""
+    manifest = CLONE / 'clone-source.json'
+    if not manifest.is_file():
+        return
+    for name in json.loads(manifest.read_text()).get('source_files', {}):
+        relative = Path(name)
+        if relative.is_absolute() or '..' in relative.parts or not relative.parts or relative.parts[0] != 'src':
+            raise ValueError('Invalid managed source path in clone manifest')
+        target = CLONE / relative
+        if not target.resolve().is_relative_to(CLONE.resolve()):
+            raise ValueError('Managed source escapes clone directory')
+        if not (SOURCE / relative).is_file() and target.is_file():
+            target.unlink()
+
+
 def main():
     CLONE.mkdir(exist_ok=True)
+    remove_stale_sources()
     sources={}
     for source in (SOURCE/'src').rglob('*'):
         if not source.is_file():continue
@@ -39,9 +56,11 @@ def main():
     name='src/main.tsx';import_runtime(name,'initializeDemo','./demo/runtime')
     patch(name,"ReactDOM.createRoot(document.getElementById('root')!).render(","initializeDemo().then(() => ReactDOM.createRoot(document.getElementById('root')!).render(")
     patch(name,'  </React.StrictMode>\n);', "  </React.StrictMode>\n)).catch(error => { document.getElementById('root')!.textContent = 'Public snapshot unavailable: ' + error.message; });")
-    name='src/api/selectedObservations.ts';import_runtime(name,'staticObservations','../demo/runtime')
-    patch(name,'  const parts:number[][]=[];', '  return staticObservations(boxes, filters);\n  /* Original live acquisition path is intentionally unreachable in the static clone.\n  const parts:number[][]=[];')
-    patch(name,"coverage:{state:truncated?'partial':allCached?'cached':'available',message:[...messages].join(' · ')}};", "coverage:{state:truncated?'partial':allCached?'cached':'available',message:[...messages].join(' · ')}}; */")
+    name='src/api/selectedObservations.ts'
+    target=CLONE/name
+    signature=next(line for line in target.read_text().splitlines() if line.startswith('export async function loadSelectedObservations('))
+    signature=signature.replace('refine=false','_refine=false').replace('signal?:AbortSignal','_signal?:AbortSignal')
+    target.write_text("import { staticObservations } from '../demo/runtime';\n\n"+signature+"\n  return staticObservations(boxes, filters);\n}\n")
     name='src/api/satellite.ts';import_runtime(name,'visualAsset','../demo/runtime')
     patch(name,'=> `/api/v1${eventPath(eventId)}/analysis/assets/${encodeURIComponent(jobId)}/${encodeURIComponent(name)}`', '=> visualAsset(eventId,jobId,name)')
     name='src/pages/ExplorerPage.tsx';import_runtime(name,'READ_ONLY_NOTICE','../demo/runtime')
@@ -83,6 +102,11 @@ def main():
     patch(name,'  const location=useLocation();', "  const location=useLocation();\n  const snapshot=useQuery({queryKey:['public-snapshot'],queryFn:manifest});")
     patch(name,'History starts only when you choose Acquire history.', 'Only studies listed under Cached study are available in the public demo; new acquisition is disabled.')
     name='src/components/layout/Navbar.tsx';patch(name,'health ? firmsLabels[health.effective_status]', "health ? 'PUBLIC DEMO · saved data'")
+    target=CLONE/name
+    content=target.read_text()
+    begin=content.index('const firmsLabels = {')
+    end=content.index('};',begin)+2
+    target.write_text(content[:begin]+content[end:])
     name='src/pages/DatasetsPage.tsx';import_runtime(name,'READ_ONLY_NOTICE','../demo/runtime')
     patch(name,"const firmsStatus = firms?.connected ? 'Connected'", "const firmsStatus = firms?.status==='static_snapshot' ? 'PUBLIC DEMO · saved observations' : firms?.connected ? 'Connected'")
     patch(name,'Imported Italy archive', 'Public demo archive · selected candidates')
@@ -91,7 +115,6 @@ def main():
     name='src/components/analysis/ResourceDiagnostics.tsx';patch(name,'disabled={!token||query.isPending}', 'disabled={true} title="Administration is unavailable in the public demo"')
     name='src/pages/ReportPage.tsx';patch(name,"queryKey: ['report', areaId],", "queryKey: ['report', areaId], enabled: false,")
     patch(name,"queryKey: ['recovery', areaId],", "queryKey: ['recovery', areaId], enabled: false,")
-    name='src/components/common/AIAnalystCard.tsx';patch(name,'disabled={loading}', 'disabled={true} title="New observation notes are unavailable in the public demo"')
     name='src/components/analysis/RecoveryComparisonPanel.tsx';import_runtime(name,'manifest','../../demo/runtime')
     patch(name,"  const data=result.data;", "  const data=result.data;\n  const snapshot=useQuery({queryKey:['public-snapshot'],queryFn:manifest});")
     patch(name,"disabled={!ids.includes(o.assessment_id)&&ids.length>=4}", "disabled={!snapshot.data?.comparisons.some(c=>c.assessment_ids.includes(o.assessment_id))||(!ids.includes(o.assessment_id)&&ids.length>=4)} title='Only previously published comparisons are available in this public snapshot'")

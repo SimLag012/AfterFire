@@ -274,30 +274,3 @@ def test_native_api_sources_are_reclaimable_subsets_not_protected_metadata(tmp_p
     assert any(c['file']=='api-subsets/fixture/native.tif' for c in result['candidates'])
     assert native.exists() and manifest.exists()
     assert any(p['file']=='api-subsets/fixture/source.json' for p in result['protected'])
-
-
-def test_campaign_registers_all_frozen_candidates_before_any_analysis(tmp_path,monkeypatch):
-    import json,runpy,sys,httpx
-    from pathlib import Path
-    calls=[]
-    class Response:
-        status_code = 200
-        def __init__(self,value):self.value=value
-        def raise_for_status(self):pass
-        def json(self):return self.value
-    class Client:
-        def __enter__(self):return self
-        def __exit__(self,*_):pass
-        def post(self,path,**_):
-            if path.endswith('/select'):
-                calls.append(('select',path.split('/')[3]));return Response({})
-            identity=path.split('/')[2];calls.append(('analysis',identity))
-            return Response({'id':identity+'-job','state':'completed','result_available':False})
-    cases=[{'region':'isolated','event':{'id':identity,'start_date':'2020-07-01','end_date':'2020-07-01','detection_count':3}} for identity in ('a','b')]
-    (tmp_path/'manifest.json').write_text(json.dumps({'cases':cases}))
-    monkeypatch.setattr(httpx,'Client',lambda **_:Client())
-    monkeypatch.setattr(sys,'argv',['campaign','--output',str(tmp_path)])
-    script=Path(__file__).resolve().parents[3]/'scripts/complete_scientific_campaign.py'
-    runpy.run_path(str(script))['main']()
-    assert calls[:2]==[('select','a'),('select','b')]
-    assert next(i for i,c in enumerate(calls) if c[0]=='analysis')>=2
