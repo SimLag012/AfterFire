@@ -44,8 +44,7 @@
 
 ## 3. Historical area-level recovery engine
 
-**Legacy scope only.** Sections 3–4 describe the original area-level engine retained for compatibility. They do not define the supported event Recovery Story, Intelligence or comparison. The event workflow below uses strict QA and a seasonal median/MAD, with no recovery quotient. See [current audit](POST_FIRE_RECOVERY_VALIDATION.md) and [assessment methodology](RECOVERY_ASSESSMENT_METHODOLOGY.md).
-
+**Legacy scope only.** Sections 3–4 describe the original area-level engine retained for compatibility. They do not define the supported event Recovery Story, Intelligence or comparison. The event workflow below uses strict QA and a seasonal median/MAD, with no recovery quotient. See [assessment methodology](RECOVERY_ASSESSMENT_METHODOLOGY.md).
 
 ### 3.1 Pre-Fire Multi-Year Baseline
 The implemented baseline is the mean and standard deviation of valid pre-fire
@@ -86,9 +85,9 @@ MOD13Q1 provides a 16-bit QA word per composite. AfterFire inspects:
 2. **Sub-Pixel Heterogeneity**: A 250m composite pixel averages 6.25 hectares; small unburned islands or severely scorched soil patches are integrated into a single spatial average.
 3. **Compound Re-Burns**: Successive fires occurring before vegetation re-attains reproductive maturity can trigger irreversible ecological regime shifts from mature woodland to degraded pyrophytic scrub.
 
-## Phase 2: event-scoped real MODIS engine (`modis-recovery-2.0.0`)
+## Event-scoped MODIS analysis
 
-This section defines the **event analysis page's new engine**. Earlier area-level legacy recovery percentages are not used on this page. The new engine never reports a recovery percentage or `fully recovered`.
+This section defines the event analysis workflow. Earlier area-level legacy recovery percentages are not used on this page. The new engine never reports a recovery percentage or `fully recovered`.
 
 ### Three distinct geometries
 
@@ -142,55 +141,11 @@ flowchart LR
   Median --> Later[Recent pre-reburn vegetation evidence]
 ```
 
-Primary specifications: [MOD13 C6.1 User Guide](https://hodari.ece.arizona.edu/documents/MODIS/MODIS_VI_UsersGuide_09_18_2019_C61.pdf), [MCD64 C6.1 User Guide](https://lpdaac.usgs.gov/documents/1006/MCD64_User_Guide_V61.pdf), [CMR Search API](https://cmr.earthdata.nasa.gov/search/site/docs/search/api.html). See [pipeline](SATELLITE_DATA_PIPELINE.md), [cache](ANALYSIS_CACHE.md), [user flow](POST_FIRE_RECOVERY.md).
+Primary specifications: [MOD13 C6.1 User Guide](https://hodari.ece.arizona.edu/documents/MODIS/MODIS_VI_UsersGuide_09_18_2019_C61.pdf), [MCD64 C6.1 User Guide](https://lpdaac.usgs.gov/documents/1006/MCD64_User_Guide_V61.pdf), [CMR Search API](https://cmr.earthdata.nasa.gov/search/site/docs/search/api.html). See [pipeline](SATELLITE_DATA_PIPELINE.md), [cache](ANALYSIS_CACHE.md), [Recovery Story](RECOVERY_STORY.md).
 
 A MOD13Q1 composite ending after the requested observation cutoff is not acquired or used as a measurement; its expected slot remains missing with `incomplete_period`. `as_of` bounds observation periods, **not** a reconstruction of which processing revision was published on a historical date: CMR is queried against its current holdings, and production revision is recorded explicitly.
 
-## Phase 3 — verified pipeline and monitoring
-
-Engine `modis-recovery-2.1.0` retains the strict event-scoped masks and seasonal formulas above, with explicit native HDF identity/georeferencing/calibration checks. NASA HDF NDVI/EVI scale_factor=10000 denotes the divisor; applied values remain raw × 0.0001. Independent real-raster verification confirmed 44 valid observations per index and 94 observed burned cells. See [formulas, QA and numerical evidence](PHASE3_VALIDATION.md).
-
-## Phase 4 native subset equivalence
-
-AppEEARS output must preserve the native MODIS sinusoidal grid, cell size, integer QA and burn-date classes. Already-scaled float VI output is restored to its source integer quantization before the unchanged strict QA and ×0.0001 conversion. Statistics select the same native pixel centres inside the same analysis geometry. Actual independent HDF/subset evidence and the explicitly motivated tolerances are in [subsetting](SATELLITE_SUBSETTING.md) and [verification](PHASE4_VERIFICATION.md). Before/After reports a difference of spatial medians; it does not claim a common-pixel change map or full ecological recovery. No scientific temporal interpolation is introduced.
-
-
-## Integrazione Fase 5 — Recovery Intelligence
-
-La Fase 5 estende questa implementazione preservandone osservazioni e risultati. Il preflight ora restituisce 202 con una pianificazione persistente, non un piano sincrono. Si vedano [architettura/API](RECOVERY_INTELLIGENCE.md), [metodologia degli indicatori](RECOVERY_ASSESSMENT_METHODOLOGY.md), [analisi per pixel](SPATIAL_RECOVERY_ANALYSIS.md), [preflight asincrono](ASYNC_PREFLIGHT.md), [gestione cache](CACHE_MANAGEMENT.md) e [verifica Fase 5](PHASE5_VERIFICATION.md). Le descrizioni delle prove Fase 3/4 restano evidenze storiche, non misurazioni della nuova implementazione.
-
-
-## Phase 6 — Reburn & Recovery Gap
-
-The existing implementation is extended by [Reburn Intelligence](REBURN_INTELLIGENCE.md), [observed episode methodology](REBURN_DETECTION_METHODOLOGY.md), [shared-area Recovery Gap](RECOVERY_GAP.md) and [cumulative vegetation](CUMULATIVE_VEGETATION.md). See [measured infrastructure changes](PERFORMANCE_OPTIMIZATION.md) and [verification and limitations](PHASE6_VERIFICATION.md). Previous-phase publications and reports are preserved.
-
-
-## Fast analysis update — 30 October 2026
-
-The fast-analysis changes preserve native cells, strict QA, scale factors, reliability, fill, seasonal baseline and burn-date/uncertainty rules. Actual native HDF/subset equivalence and offline replay evidence are in [verification](ANALYSIS_PERFORMANCE_VERIFICATION.md).
-
-
-## API-first acquisition update (2026-10-30)
-
-Normal Analyze now prefers persisted results and verified native sources/subsets, then configured compatible Collection 6.1 APIs. Missing data never triggers automatic full-tile HDF transfer or new AppEEARS submission. Scientific QA, baselines, anomalies, recovery and reburn calculations are unchanged. ORNL collection equivalence and live Earth Engine access remain explicit limitations. See [API-first engine](API_FIRST_SATELLITE_ENGINE.md), [provider equivalence](PROVIDER_EQUIVALENCE.md) and [verification](API_FIRST_VERIFICATION.md) for current behavior; older acquisition descriptions above are historical.
-
-## Phase 6.5
-
-See [measured performance and verification](ULTRA_FAST_ANALYSIS.md),
-[native batching](EARTH_ENGINE_BATCHING.md) and
-[on-demand visualization](LAZY_RASTER_GENERATION.md). Scientific formulas and QA
-thresholds are unchanged; native spatial consumers retain the original float32 contract.
-
-
-## Release verification — 2026-11-06
-
-See [the current release record](FINAL_RELEASE_VERIFICATION.md) for newly executed multi-continent FIRMS/Earth Engine checks, strict QA and baseline evidence, cold/warm/cache measurements, 189 tests on each database, frontend verification and explicit remaining limits. Earlier measurements in this document remain historical; they were not newly revalidated against deleted HDF sources.
-
-## Final audit — 6 November 2026
-
-[Independent validation](POST_FIRE_RECOVERY_VALIDATION.md) recomputes raw QA, source scaling, native cell areas, seasonal references and trend/persistence from the current three publications. Historical HDF equivalence reports remain historical: deleted HDF files were not reacquired. Home no longer presents fixed synthetic recovery percentages, Compare uses only seasonal event assessments, and native-cell histories are connected to Recovery Intelligence. [Requirements matrix](ORIGINAL_REQUIREMENTS_AUDIT.md).
-
-## Complete audit — 11 November 2026
+## Native optical comparisons and exports
 
 Engine `modis-recovery-3.2.0`, optical method `optical-evidence-3` and assessment
 `assessment-5.0.2` create new publication identities. Existing publications and
@@ -213,6 +168,6 @@ require any area composite to pass the 50% area-coverage threshold. New exports
 omit all-nodata bands and exports with no finite observation; remaining band
 labels, values, grid and nodata are preserved. Consumers must use band descriptions,
 not a fixed three-bands-per-date position. Tags and JSON identify observation and
-classification periods, geometry scope and area-composite support. See the
-[complete audit](COMPLETE_SCIENTIFIC_AUDIT.md) for the real Tunisia regression,
-56-candidate campaign, independent calculations and measured limits.
+classification periods, geometry scope and area-composite support.
+
+For the detailed seasonal indicators, use [Recovery assessment](RECOVERY_ASSESSMENT_METHODOLOGY.md) and [spatial recovery](SPATIAL_RECOVERY_ANALYSIS.md). Repeated burning and between-episode vegetation evidence are defined in [burn reconstruction](REBURN_DETECTION_METHODOLOGY.md) and [Recovery Gap](RECOVERY_GAP.md). Acquisition follows the [API-first engine](API_FIRST_SATELLITE_ENGINE.md).

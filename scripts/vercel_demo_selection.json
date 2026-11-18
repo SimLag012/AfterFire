@@ -1,0 +1,11 @@
+{
+  "require_before_after": true,
+  "events": [
+    {"event_id":"global-d77c8ac8d89369a61e7125f78cfe2e76","source_job_id":"8553c3f357e4874558e228482e7298d4e162f7dbd7c27c8b1a793db059abf3fc"},
+    {"event_id":"global-b8c470958eecd0e05a07b897973848ea","source_job_id":"fb53ccb87ddb84d4e6277ce01fcb1f98da9a96e11ca004a0802765c6b13fef42"},
+    {"event_id":"global-a67a52521ea9434f0783e0677b664c42","source_job_id":"4d7ebffb9755e7ffb7f9dee17d993a203551d93685c2d0a8fd46a70a7deffbda"},
+    {"event_id":"global-8ab308b435230781004c8e0d80c7dba6","source_job_id":"d146f804917157cf55ad30b744b094f85bcc54f53f472efccc9fe820b3c059da"},
+    {"event_id":"global-730fd3db3b65e67698840df5cf924b77","source_job_id":"8d0dcc63fd353ab3b70d4d331fba427c71e99472791c638a9761b77bdd65bfd9"}
+  ],
+  "studies": ["cf11c7cd9a6171178af946b2b1e236e1ac14f3e5d0d3ae5d592c133b838a0f62", "1a25d8adbbd276755ac5b8c1921223a02c11bd84cabdaaf24f470508d5e56e24", "15097767505960013744584e1b16a2c70e9b9692f358210c4574acf78c7115a9"]
+}
